@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Optimizable — Malemaxxing, Quantified.</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #0e0e0e;
+      --bg-2:        #141414;
+      --bg-3:        #1a1a1a;
+      --bg-4:        #1f1f1f;
+      --green:       #00E676;
+      --green-dim:   rgba(0,230,118,0.12);
+      --green-glow:  rgba(0,230,118,0.35);
+      --gold:        #FFB300;
+      --gold-dim:    rgba(255,179,0,0.12);
+      --red:         #FF5252;
+      --amber:       #FFB300;
+      --white:       #FFFFFF;
+      --gray-1:      #E0E0E0;
+      --gray-2:      #9A9A9A;
+      --gray-3:      #4A4A4A;
+      --border:      rgba(255,255,255,0.07);
+      --border-g:    rgba(0,230,118,0.25);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Oswald', sans-serif;
+      letter-spacing: 0.02em;
+    }
+
+    /* ─── SCROLLBAR ─── */
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 2px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(14,14,14,0.88);
+      backdrop-filter: blur(24px);
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--border-g); }
+
+    .nav-logo {
+      display: flex; align-items: center; gap: 0.65rem;
+      text-decoration: none;
+    }
+    .nav-wordmark {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.15rem; font-weight: 700;
+      letter-spacing: 0.14em; color: var(--white);
+    }
+    .nav-sub {
+      font-size: 0.58rem; letter-spacing: 0.18em;
+      color: var(--gray-2); font-weight: 400;
+      display: block; margin-top: -2px;
+    }
+
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--green); color: #000;
+      font-family: 'Oswald', sans-serif; font-weight: 700;
+      font-size: 0.8rem; letter-spacing: 0.1em;
+      padding: 0.55rem 1.25rem;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .nav-cta:hover {
+      background: #1affa0;
+      transform: translateY(-1px);
+      box-shadow: 0 6px 24px var(--green-glow);
+    }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: flex; align-items: center;
+      padding: 9rem 2.5rem 5rem;
+      position: relative; overflow: hidden;
+    }
+    .hero-glow-top {
+      position: absolute; top: -10%; right: -5%;
+      width: 700px; height: 700px; pointer-events: none;
+      background: radial-gradient(circle, rgba(0,230,118,0.07) 0%, transparent 65%);
+    }
+    .hero-glow-bot {
+      position: absolute; bottom: 0; left: -10%;
+      width: 500px; height: 300px; pointer-events: none;
+      background: radial-gradient(ellipse, rgba(0,230,118,0.04) 0%, transparent 70%);
+    }
+    .hero-line {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent 0%, var(--green) 50%, transparent 100%);
+      opacity: 0.4;
+    }
+
+    .hero-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 5rem; align-items: center;
+      position: relative; z-index: 1;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      background: var(--green-dim); border: 1px solid var(--border-g);
+      padding: 0.35rem 0.9rem; margin-bottom: 1.75rem;
+      font-size: 0.7rem; letter-spacing: 0.18em; color: var(--green); font-weight: 600;
+    }
+    .badge-dot {
+      width: 5px; height: 5px; border-radius: 50%;
+      background: var(--green); animation: blink 2s ease-in-out infinite;
+    }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    .hero h1 {
+      font-size: clamp(2.75rem, 5vw, 4.25rem);
+      font-weight: 700; line-height: 1.0; margin-bottom: 1.5rem;
+    }
+    .hero h1 em { color: var(--green); font-style: normal; }
+
+    .hero-sub {
+      font-size: 1rem; color: var(--gray-2);
+      line-height: 1.75; max-width: 500px; margin-bottom: 2.5rem;
+    }
+
+    .cta-stack { display: flex; flex-direction: column; gap: 0.65rem; align-items: flex-start; }
+
+    .btn-primary {
+      display: inline-flex; align-items: center; gap: 0.75rem;
+      background: var(--green); color: #000;
+      font-family: 'Oswald', sans-serif; font-weight: 700;
+      font-size: 1.05rem; letter-spacing: 0.1em;
+      padding: 1rem 2rem; text-decoration: none; border: none; cursor: pointer;
+      position: relative; overflow: hidden;
+      transition: background 0.2s, transform 0.25s, box-shadow 0.25s;
+    }
+    .btn-primary::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(130deg, rgba(255,255,255,0.18) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .btn-primary:hover {
+      background: #1affa0;
+      transform: translateY(-3px);
+      box-shadow: 0 12px 36px rgba(0,230,118,0.45);
+    }
+    .btn-arrow { font-size: 1.1rem; }
+
+    .cta-micro { font-size: 0.75rem; color: var(--gray-3); }
+
+    .hero-divider {
+      height: 1px; background: var(--border);
+      margin: 2.5rem 0;
+    }
+    .hero-stats { display: flex; gap: 2.5rem; }
+    .stat-num {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.9rem; font-weight: 700; color: var(--green);
+      line-height: 1;
+    }
+    .stat-lbl { font-size: 0.72rem; color: var(--gray-2); margin-top: 0.2rem; }
+
+    /* Phone mockup */
+    .hero-visual { display: flex; justify-content: center; align-items: center; }
+    .phone-wrapper { position: relative; }
+    .phone-aura {
+      position: absolute; inset: -50px;
+      background: radial-gradient(ellipse at center, rgba(0,230,118,0.1) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .phone {
+      width: 272px;
+      background: #080808;
+      border-radius: 44px;
+      border: 1.5px solid rgba(255,255,255,0.1);
+      padding: 14px;
+      box-shadow:
+        0 50px 100px rgba(0,0,0,0.85),
+        0 0 0 1px rgba(255,255,255,0.04),
+        inset 0 0 0 1px rgba(255,255,255,0.03);
+      position: relative;
+    }
+    .phone-notch {
+      width: 72px; height: 22px;
+      background: #080808;
+      border-radius: 0 0 14px 14px;
+      border: 1.5px solid rgba(255,255,255,0.08);
+      border-top: none;
+      margin: 0 auto 10px;
+    }
+    .phone-screen {
+      background: #101010; border-radius: 32px;
+      padding: 1.1rem; overflow: hidden; min-height: 520px;
+    }
+
+    /* App UI */
+    .app-topbar {
+      display: flex; justify-content: space-between; align-items: center;
+      margin-bottom: 0.8rem;
+    }
+    .app-label {
+      font-size: 0.6rem; letter-spacing: 0.18em;
+      color: var(--gray-2); text-transform: uppercase;
+    }
+    .app-streak {
+      font-size: 0.6rem; color: var(--gold);
+      background: rgba(255,179,0,0.1); border: 1px solid rgba(255,179,0,0.2);
+      padding: 0.15rem 0.4rem; border-radius: 20px;
+    }
+
+    .score-ring-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: 0.9rem; }
+    .score-ring {
+      width: 88px; height: 88px; border-radius: 50%;
+      background: conic-gradient(var(--green) 0% 72%, #1e1e1e 72% 100%);
+      display: flex; align-items: center; justify-content: center;
+      position: relative; margin-bottom: 0.4rem;
+    }
+    .score-ring::before {
+      content: ''; position: absolute; inset: 8px;
+      background: #101010; border-radius: 50%;
+    }
+    .score-ring-val {
+      position: relative; z-index: 1;
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.4rem; font-weight: 700;
+    }
+    .score-caption { font-size: 0.6rem; color: var(--green); letter-spacing: 0.08em; }
+
+    .bm-list { display: flex; flex-direction: column; gap: 0.35rem; margin-bottom: 0.7rem; }
+    .bm-row {
+      display: flex; align-items: center; justify-content: space-between;
+      background: rgba(255,255,255,0.03); border-radius: 5px;
+      padding: 0.35rem 0.5rem; font-size: 0.58rem;
+    }
+    .bm-name { color: var(--gray-2); flex-shrink: 0; width: 52px; }
+    .bm-bar-track {
+      flex: 1; margin: 0 0.4rem; height: 3px;
+      background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden;
+    }
+    .bm-bar { height: 100%; border-radius: 2px; }
+    .bm-val { font-family: 'Oswald', sans-serif; font-size: 0.65rem; font-weight: 600; flex-shrink: 0; }
+    .c-g { color: var(--green); }
+    .c-a { color: var(--gold); }
+    .c-r { color: var(--red); }
+
+    .app-plan {
+      background: rgba(0,230,118,0.07); border: 1px solid var(--border-g);
+      border-radius: 7px; padding: 0.55rem 0.65rem;
+    }
+    .app-plan-title {
+      font-family: 'Oswald', sans-serif; font-size: 0.65rem;
+      color: var(--green); letter-spacing: 0.1em; margin-bottom: 0.35rem;
+    }
+    .app-plan-item {
+      font-size: 0.58rem; color: var(--gray-2);
+      display: flex; align-items: center; gap: 0.35rem; padding: 0.15rem 0;
+    }
+    .app-plan-item::before { content: '✓'; color: var(--green); font-size: 0.58rem; }
+
+    /* ─── SECTION COMMON ─── */
+    .section { padding: 6.5rem 2.5rem; }
+    .section-inner { max-width: 1200px; margin: 0 auto; }
+    .tag {
+      display: block; font-family: 'Oswald', sans-serif;
+      font-size: 0.7rem; letter-spacing: 0.22em;
+      color: var(--green); margin-bottom: 0.6rem; text-transform: uppercase;
+    }
+    .section-title { font-size: clamp(1.8rem, 3vw, 2.6rem); font-weight: 700; margin-bottom: 0.85rem; }
+    .section-intro { font-size: 0.97rem; color: var(--gray-2); max-width: 620px; line-height: 1.75; margin-bottom: 3rem; }
+
+    /* ─── SECTION 2: DECLINE ─── */
+    .decline { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+
+    .persona-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.25rem; }
+    .persona-card {
+      background: var(--bg-3); border: 1px solid var(--border);
+      padding: 2rem; position: relative; overflow: hidden;
+      transition: transform 0.3s, border-color 0.3s, background 0.3s;
+    }
+    .persona-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: var(--green); transform: scaleX(0); transform-origin: left;
+      transition: transform 0.35s ease;
+    }
+    .persona-card:hover::before { transform: scaleX(1); }
+    .persona-card:hover {
+      border-color: var(--border-g);
+      background: var(--bg-4);
+      transform: translateY(-5px);
+    }
+    .persona-icon { font-size: 1.75rem; margin-bottom: 0.85rem; display: block; }
+    .persona-age { font-size: 0.65rem; letter-spacing: 0.14em; color: var(--green); font-weight: 600; margin-bottom: 0.35rem; text-transform: uppercase; }
+    .persona-name { font-family: 'Oswald', sans-serif; font-size: 1.1rem; font-weight: 600; margin-bottom: 0.85rem; }
+    .persona-who { font-size: 0.83rem; color: var(--gray-2); line-height: 1.65; margin-bottom: 0.85rem; padding-bottom: 0.85rem; border-bottom: 1px solid var(--border); }
+    .problem-lbl { font-size: 0.62rem; letter-spacing: 0.14em; color: var(--red); font-weight: 700; text-transform: uppercase; margin-bottom: 0.3rem; }
+    .problem-text { font-size: 0.83rem; color: var(--gray-1); line-height: 1.65; }
+
+    /* ─── SECTION 3: PHILOSOPHY ─── */
+    .philosophy {
+      background: #090909; padding: 9rem 2.5rem; text-align: center; position: relative; overflow: hidden;
+    }
+    .philosophy::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(ellipse at 25% 60%, rgba(0,230,118,0.055) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 40%, rgba(0,230,118,0.04) 0%, transparent 55%);
+      pointer-events: none;
+    }
+    .philosophy .section-inner { position: relative; z-index: 1; }
+    .phil-opener {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.1rem, 2vw, 1.5rem); font-weight: 400;
+      color: var(--gray-2); max-width: 600px; margin: 0 auto 2.5rem; line-height: 1.4;
+    }
+    .phil-headline {
+      font-size: clamp(2rem, 4.5vw, 3.75rem); font-weight: 700; line-height: 1.05;
+      color: var(--green); margin-bottom: 3rem;
+    }
+    .phil-body {
+      max-width: 720px; margin: 0 auto;
+      font-size: 1rem; color: var(--gray-2); line-height: 1.85;
+    }
+    .phil-body p { margin-bottom: 1.4rem; }
+    .phil-body p:last-child { margin-bottom: 0; }
+    .phil-em { color: var(--white); }
+
+    /* ─── SECTION 4: PROTOCOL ─── */
+    .protocol { background: var(--bg); }
+    .protocol-track { position: relative; }
+    .track-line {
+      position: absolute; top: 27px; left: calc(10% + 28px); right: calc(10% + 28px);
+      height: 1px; background: var(--border);
+    }
+    .track-line-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--green), rgba(0,230,118,0.3));
+      width: 100%;
+    }
+    .steps-row {
+      display: grid; grid-template-columns: repeat(5,1fr);
+      gap: 0.75rem; position: relative; z-index: 1; margin-bottom: 2.5rem;
+    }
+    .step {
+      display: flex; flex-direction: column; align-items: center;
+      text-align: center; padding: 0 0.5rem;
+    }
+    .step-num-wrap {
+      width: 54px; height: 54px; border-radius: 50%;
+      background: var(--bg-3); border: 1.5px solid var(--border-g);
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 700;
+      color: var(--green); margin-bottom: 1rem;
+      transition: all 0.3s; position: relative; z-index: 1;
+    }
+    .step:hover .step-num-wrap {
+      background: var(--green); color: #000;
+      box-shadow: 0 0 24px var(--green-glow);
+      transform: scale(1.08);
+    }
+    .step-tag-lbl { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--green); text-transform: uppercase; font-weight: 600; margin-bottom: 0.3rem; }
+    .step-name { font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
+    .step-copy { font-size: 0.78rem; color: var(--gray-2); line-height: 1.6; }
+
+    .range-legend {
+      display: flex; gap: 1.5rem; align-items: center; justify-content: center;
+      margin-top: 3rem; padding-top: 2.5rem; border-top: 1px solid var(--border);
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.45rem; font-size: 0.78rem; color: var(--gray-2); }
+    .legend-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+
+    /* ─── SECTION 5: LOOP ─── */
+    .loop { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .loop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
+
+    .loop-features { display: flex; flex-direction: column; gap: 1.75rem; }
+    .loop-feature { display: flex; gap: 1rem; align-items: flex-start; }
+    .feature-icon {
+      width: 42px; height: 42px; flex-shrink: 0;
+      background: var(--green-dim); border: 1px solid var(--border-g);
+      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+    }
+    .feature-title { font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
+    .feature-desc { font-size: 0.82rem; color: var(--gray-2); line-height: 1.65; }
+
+    /* Trend chart */
+    .chart-wrap {
+      margin-top: 2.25rem; background: #0c0c0c;
+      border: 1px solid var(--border); padding: 1.25rem;
+    }
+    .chart-label-top { font-size: 0.65rem; letter-spacing: 0.14em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 1rem; }
+    .chart-months { display: flex; justify-content: space-between; margin-top: 0.5rem; }
+    .chart-month { font-size: 0.58rem; color: var(--gray-3); }
+
+    /* Impact card */
+    .impact-card {
+      background: var(--bg-3); border: 1px solid var(--border);
+      padding: 2rem; position: sticky; top: 6.5rem;
+    }
+    .impact-headline {
+      font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
+      color: var(--gold); letter-spacing: 0.04em;
+      padding-bottom: 1.25rem; border-bottom: 1px solid var(--border);
+      margin-bottom: 1.5rem;
+    }
+    .impact-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
+    .impact-list li {
+      display: flex; align-items: flex-start; gap: 0.7rem;
+      font-size: 0.87rem; color: var(--gray-1); line-height: 1.55;
+    }
+    .impact-list li::before { content: '→'; color: var(--green); flex-shrink: 0; margin-top: 0.05rem; }
+
+    /* Pricing mini */
+    .price-divider { height: 1px; background: var(--border); margin-bottom: 1.5rem; }
+    .price-lbl { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 1rem; }
+    .price-cards { display: flex; gap: 0.75rem; }
+    .price-tier {
+      flex: 1; background: rgba(255,255,255,0.025); border: 1px solid var(--border);
+      padding: 0.85rem; position: relative;
+    }
+    .price-tier.featured {
+      background: var(--green-dim); border-color: var(--border-g);
+    }
+    .price-badge {
+      position: absolute; top: -1px; right: -1px;
+      background: var(--gold); color: #000;
+      font-size: 0.55rem; font-weight: 700; letter-spacing: 0.08em;
+      padding: 0.15rem 0.4rem;
+    }
+    .price-amount { font-family: 'Oswald', sans-serif; font-size: 1.1rem; margin-bottom: 0.25rem; }
+    .price-amount span { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--gray-2); }
+    .price-amount.highlighted { color: var(--green); }
+    .price-desc { font-size: 0.7rem; color: var(--gray-2); line-height: 1.55; }
+
+    /* ─── SECTION 6: CTA ─── */
+    .final-cta {
+      background: #080808; padding: 9rem 2.5rem;
+      text-align: center; position: relative; overflow: hidden;
+    }
+    .final-cta::before {
+      content: '';
+      position: absolute; bottom: -40%; left: 50%; transform: translateX(-50%);
+      width: 900px; height: 450px; pointer-events: none;
+      background: radial-gradient(ellipse, rgba(0,230,118,0.07) 0%, transparent 65%);
+    }
+    .final-cta .section-inner { position: relative; z-index: 1; }
+    .cta-title { font-size: clamp(2.2rem, 5vw, 3.75rem); font-weight: 700; line-height: 1.05; margin-bottom: 1.5rem; }
+    .cta-title em { color: var(--green); font-style: normal; }
+    .cta-body { max-width: 580px; margin: 0 auto 3rem; font-size: 1rem; color: var(--gray-2); line-height: 1.75; }
+    .cta-micro-note { font-size: 0.8rem; color: var(--gray-3); margin-top: 1.25rem; }
+    .cta-micro-note strong { color: var(--gray-2); }
+    .cta-micro-note span { color: var(--gold); }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: #060606; border-top: 1px solid var(--border);
+      padding: 1.75rem 2.5rem;
+      display: flex; align-items: flex-start; justify-content: space-between;
+      flex-wrap: wrap; gap: 1rem;
+    }
+    .footer-brand { font-family: 'Oswald', sans-serif; font-size: 0.85rem; letter-spacing: 0.12em; color: var(--gray-3); }
+    .footer-disc { font-size: 0.68rem; color: var(--gray-3); max-width: 640px; line-height: 1.65; }
+
+    /* ─── ANIMATIONS ─── */
+    .fade-up {
+      opacity: 0; transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .fade-up.in { opacity: 1; transform: translateY(0); }
+    .d1 { transition-delay: 0.1s; }
+    .d2 { transition-delay: 0.2s; }
+    .d3 { transition-delay: 0.3s; }
+    .d4 { transition-delay: 0.4s; }
+    .d5 { transition-delay: 0.5s; }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+      .hero-visual { order: -1; }
+      .phone { width: 240px; }
+      .phone-screen { min-height: 460px; }
+      .persona-grid { grid-template-columns: 1fr; }
+      .steps-row { grid-template-columns: 1fr 1fr; }
+      .track-line { display: none; }
+      .loop-grid { grid-template-columns: 1fr; gap: 3rem; }
+      .impact-card { position: static; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 0.85rem 1.25rem; }
+      .hero { padding: 7rem 1.25rem 4rem; }
+      .section { padding: 4.5rem 1.25rem; }
+      .philosophy, .final-cta { padding: 6rem 1.25rem; }
+      .hero-stats { flex-wrap: wrap; gap: 1.25rem; }
+      .steps-row { grid-template-columns: 1fr; }
+      .range-legend { flex-wrap: wrap; gap: 1rem; }
+      .loop-grid { gap: 2.5rem; }
+      footer { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <!-- Logo SVG — segmented male symbol with upward arrow -->
+    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%" stop-color="#00E676"/>
+          <stop offset="100%" stop-color="#007A3D"/>
+        </linearGradient>
+      </defs>
+      <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
+      <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.7"/>
+      <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.45"/>
+      <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.25"/>
+      <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" stroke-width="2.5" stroke-linecap="round"/>
+      <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </svg>
+    <div>
+      <div class="nav-wordmark">OPTIMIZABLE</div>
+      <span class="nav-sub">MALEMAXXING QUANTIFIED</span>
+    </div>
+  </a>
+  <a href="#cta" class="nav-cta">START FREE →</a>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-glow-top"></div>
+  <div class="hero-glow-bot"></div>
+  <div class="hero-line"></div>
+  <div class="hero-inner">
+
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span>WORLD'S FIRST END-TO-END HORMONE PLATFORM</div>
+      <h1>YOUR VITALITY,<br><em>QUANTIFIED.</em></h1>
+      <p class="hero-sub">Stop guessing why you're tired, foggy, and lacking drive. Optimizable is the world's first end-to-end platform for men who refuse to settle for "normal" hormonal health. We analyze your bloodwork, track your daily habits, and give you an algorithmic protocol to reclaim your peak masculine baseline.</p>
+      <div class="cta-stack">
+        <a href="#cta" class="btn-primary">START YOUR PROTOCOL <span class="btn-arrow">→</span></a>
+        <span class="cta-micro">No prescription required. Takes 5 minutes.</span>
+      </div>
+      <div class="hero-divider"></div>
+      <div class="hero-stats">
+        <div>
+          <div class="stat-num">5-Phase</div>
+          <div class="stat-lbl">Optimization loop</div>
+        </div>
+        <div>
+          <div class="stat-num">AI</div>
+          <div class="stat-lbl">Bloodwork analysis</div>
+        </div>
+        <div>
+          <div class="stat-num">90-Day</div>
+          <div class="stat-lbl">Re-test cycle</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="phone-wrapper">
+        <div class="phone-aura"></div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="app-topbar">
+              <span class="app-label">TESTOSTERONE HEALTH</span>
+              <span class="app-streak">🔥 14-day streak</span>
+            </div>
+            <div class="score-ring-wrap">
+              <div class="score-ring">
+                <span class="score-ring-val">72</span>
+              </div>
+              <div class="score-caption">↑ +12 pts this quarter</div>
+            </div>
+            <div class="bm-list">
+              <div class="bm-row">
+                <span class="bm-name">Total T</span>
+                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:78%;background:#00E676"></div></div>
+                <span class="bm-val c-g">648 ng/dL</span>
+              </div>
+              <div class="bm-row">
+                <span class="bm-name">Free T</span>
+                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:61%;background:#00E676"></div></div>
+                <span class="bm-val c-g">14.2 pg</span>
+              </div>
+              <div class="bm-row">
+                <span class="bm-name">Estradiol</span>
+                <div class="bm-bar-track"><div class="bm-bar c-a" style="width:54%;background:#FFB300"></div></div>
+                <span class="bm-val c-a">31 pg/mL</span>
+              </div>
+              <div class="bm-row">
+                <span class="bm-name">SHBG</span>
+                <div class="bm-bar-track"><div class="bm-bar c-r" style="width:82%;background:#FF5252"></div></div>
+                <span class="bm-val c-r">58 nmol/L</span>
+              </div>
+              <div class="bm-row">
+                <span class="bm-name">Vitamin D</span>
+                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:70%;background:#00E676"></div></div>
+                <span class="bm-val c-g">52 ng/mL</span>
+              </div>
+              <div class="bm-row">
+                <span class="bm-name">Cortisol</span>
+                <div class="bm-bar-track"><div class="bm-bar c-a" style="width:67%;background:#FFB300"></div></div>
+                <span class="bm-val c-a">18 mcg/dL</span>
+              </div>
+            </div>
+            <div class="app-plan">
+              <div class="app-plan-title">TODAY'S PROTOCOL</div>
+              <div class="app-plan-item">Compound lifts — squats &amp; deadlifts</div>
+              <div class="app-plan-item">Zinc 30mg + Vitamin D3 5000 IU</div>
+              <div class="app-plan-item">Sleep target: 10:30 PM · Cool room 18°C</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ SECTION 2: INVISIBLE DECLINE ═══ -->
+<section class="section decline">
+  <div class="section-inner">
+    <span class="tag fade-up">WHO IS THIS FOR</span>
+    <h2 class="section-title fade-up">THE INVISIBLE DECLINE</h2>
+    <p class="section-intro fade-up">You felt it, but you didn't have a word for it. Waking up unrefreshed. That 3 PM crash. Difficulty maintaining lean muscle. That subtle shift in libido. You've googled it. Your doctor said you're <em>"in range"</em> for your age. We know you don't want to be "in range." You want to be at your absolute best.</p>
+
+    <div class="persona-grid">
+      <div class="persona-card fade-up d1">
+        <span class="persona-icon">⚡</span>
+        <div class="persona-age">Age 28–40</div>
+        <div class="persona-name">The Curious Optimizer</div>
+        <p class="persona-who">A biohacker, a high-performer. You're fine, but "fine" is an insult. You want data, not theories. You track sleep, macros, HRV — everything except what matters most.</p>
+        <div class="problem-lbl">The Gap</div>
+        <p class="problem-text">You want to unlock that extra 10% of energy and focus, but you're just guessing with supplements and sleep protocols.</p>
+      </div>
+      <div class="persona-card fade-up d2">
+        <span class="persona-icon">🧭</span>
+        <div class="persona-age">Age 35–50</div>
+        <div class="persona-name">The Concerned Googler</div>
+        <p class="persona-who">You've noticed a decline. Energy is down. Mood is volatile. Drive is slipping. You've searched everywhere but end up more overwhelmed than before you started.</p>
+        <div class="problem-lbl">The Gap</div>
+        <p class="problem-text">Online forums are a mess. Doctors are dismissive. You need a structured, scientific path to clarity — not another rabbit hole.</p>
+      </div>
+      <div class="persona-card fade-up d3">
+        <span class="persona-icon">🛡️</span>
+        <div class="persona-age">Age 30–60</div>
+        <div class="persona-name">The Post-Diagnosis Tracker</div>
+        <p class="persona-who">You know you have low T. Maybe you're on TRT, maybe going natural. You have a diagnosis but no real intelligence about what's actually driving your numbers.</p>
+        <div class="problem-lbl">The Gap</div>
+        <p class="problem-text">Your clinic gives you numbers twice a year. You need to know how your daily habits are impacting your hormones right now.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 3: PHILOSOPHY ═══ -->
+<section class="philosophy">
+  <div class="section-inner">
+    <p class="phil-opener fade-up">"The world tells you to accept the decline. We don't."</p>
+    <h2 class="phil-headline fade-up">WHAT YOU CANNOT MEASURE,<br>YOU CANNOT MASTER.</h2>
+    <div class="phil-body fade-up">
+      <p>Malemaxxing is simply the act of taking radical ownership of your masculine biology. But motivation is temporary. <span class="phil-em">Data is forever.</span> We don't believe in motivation. We believe in algorithms.</p>
+      <p>Think about it: you track your bank accounts, your investments, your KPIs at work. Why are you treating your own endocrine system — the foundation of your energy, focus, and drive — like a black box?</p>
+      <p>Optimizable changes everything. We turn your bloodwork from a dead PDF into a <span class="phil-em">living, dynamic health score.</span> Every meal, every workout, every 10-minute meditation is quantified, addressed, and optimized. This isn't just about "health tracking." It's about <span class="phil-em">data-driven self-mastery.</span></p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 4: PROTOCOL ═══ -->
+<section class="section protocol">
+  <div class="section-inner">
+    <span class="tag fade-up">THE SYSTEM</span>
+    <h2 class="section-title fade-up">THE OPTIMIZABLE PROTOCOL</h2>
+    <p class="section-intro fade-up">A five-phase, continuously repeating cycle that transforms your bloodwork, symptoms, and lifestyle into a compounding, longitudinal advantage.</p>
+
+    <div class="protocol-track fade-up">
+      <div class="track-line"><div class="track-line-fill"></div></div>
+      <div class="steps-row">
+        <div class="step">
+          <div class="step-num-wrap">01</div>
+          <div class="step-tag-lbl">Profile</div>
+          <div class="step-name">Baseline Snapshot</div>
+          <p class="step-copy">5-minute onboarding captures every variable that directly impacts how your body produces and metabolizes testosterone. Immediate personalized baseline — no guesswork.</p>
+        </div>
+        <div class="step">
+          <div class="step-num-wrap">02</div>
+          <div class="step-tag-lbl">Assessment</div>
+          <div class="step-name">Hormone Risk Score</div>
+          <p class="step-copy">We quantify your symptoms to generate a clinical risk score. This is clarity: exactly how severe your situation is, and which bloodwork markers are mandatory for you.</p>
+        </div>
+        <div class="step">
+          <div class="step-num-wrap">03</div>
+          <div class="step-tag-lbl">Testing</div>
+          <div class="step-name">Personalized Diagnostics</div>
+          <p class="step-copy">Stop asking what to test. We generate a printable Doctor's Request Sheet with exact clinical codes and plain-language explanations of why each test matters for you specifically.</p>
+        </div>
+        <div class="step">
+          <div class="step-num-wrap">04</div>
+          <div class="step-tag-lbl">Analysis</div>
+          <div class="step-name">AI-Powered Diagnostics</div>
+          <p class="step-copy">Upload your lab PDF or photo. Our OCR extracts every biomarker, compares against both standard and optimal ranges, and returns a color-coded dashboard you can actually act on.</p>
+        </div>
+        <div class="step">
+          <div class="step-num-wrap">05</div>
+          <div class="step-tag-lbl">Optimization</div>
+          <div class="step-name">Your Daily Protocol</div>
+          <p class="step-copy">An actionable daily and weekly tracker: sleep hacks, nutrition and supplement advice keyed to your labs, specific exercise programming, and stress protocols. Follow the plan. See the change.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="range-legend fade-up">
+      <div class="legend-item"><span class="legend-dot" style="background:var(--red)"></span>Needs Attention</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--gold)"></span>Suboptimal</div>
+      <div class="legend-item"><span class="legend-dot" style="background:var(--green)"></span>Optimal</div>
+      <div style="width:1px;height:14px;background:var(--border);"></div>
+      <div class="legend-item" style="font-size:0.72rem; color:var(--gray-3);">Results compared against Standard <em>and</em> Optimal reference ranges — not just what's "normal."</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ═══ SECTION 5: CLOSED LOOP ═══ -->
+<section class="section loop">
+  <div class="section-inner">
+    <div class="loop-grid">
+      <div>
+        <span class="tag fade-up">THE LONG GAME</span>
+        <h2 class="section-title fade-up">THE CLOSED-LOOP ADVANTAGE</h2>
+        <p class="section-intro fade-up">A single lab test is a snapshot. A longitudinal health record is a power move. Optimizable creates a continuous feedback loop between your body and your choices — month after month.</p>
+
+        <div class="loop-features fade-up">
+          <div class="loop-feature">
+            <div class="feature-icon">📓</div>
+            <div>
+              <div class="feature-title">Daily Journal — 60 Seconds</div>
+              <p class="feature-desc">Morning energy. End-of-day libido, mood, and plan adherence. This connects how you feel to what you did, automatically surfacing the patterns that move your numbers.</p>
+            </div>
+          </div>
+          <div class="loop-feature">
+            <div class="feature-icon">📈</div>
+            <div>
+              <div class="feature-title">Compounding Data</div>
+              <p class="feature-desc">See trend graphs correlating subjective wellbeing (energy 2.3 → 3.8) with objective changes — Vitamin D supplementation, sleep duration gains, alcohol reduction. The data tells the story.</p>
+            </div>
+          </div>
+          <div class="loop-feature">
+            <div class="feature-icon">🔄</div>
+            <div>
+              <div class="feature-title">Quarterly Re-Testing</div>
+              <p class="feature-desc">When it's time, re-test. Optimizable runs a side-by-side comparison of every biomarker. See precisely where you improved, where you declined, and receive an updated protocol for the next 90 days.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trend chart -->
+        <div class="chart-wrap fade-up">
+          <div class="chart-label-top">Wellbeing Score — 6-Month Trend</div>
+          <svg viewBox="0 0 300 70" preserveAspectRatio="none" height="70" style="width:100%;overflow:visible;">
+            <defs>
+              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#00E676" stop-opacity="0.25"/>
+                <stop offset="100%" stop-color="#00E676" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,65 C30,62 55,55 100,50 C145,45 155,36 200,26 C225,20 260,14 300,6"
+                  stroke="#00E676" stroke-width="2" fill="none" stroke-linecap="round"/>
+            <path d="M0,65 C30,62 55,55 100,50 C145,45 155,36 200,26 C225,20 260,14 300,6 L300,70 L0,70Z"
+                  fill="url(#chartGrad)"/>
+            <circle cx="0"   cy="65" r="3.5" fill="#00E676"/>
+            <circle cx="60"  cy="54" r="3.5" fill="#00E676"/>
+            <circle cx="120" cy="46" r="3.5" fill="#00E676"/>
+            <circle cx="180" cy="30" r="3.5" fill="#00E676"/>
+            <circle cx="240" cy="18" r="3.5" fill="#00E676"/>
+            <circle cx="300" cy="6"  r="3.5" fill="#00E676"/>
+          </svg>
+          <div class="chart-months">
+            <span class="chart-month">Month 1</span>
+            <span class="chart-month">Month 2</span>
+            <span class="chart-month">Month 3</span>
+            <span class="chart-month">Month 4</span>
+            <span class="chart-month">Month 5</span>
+            <span class="chart-month">Month 6</span>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="impact-card fade-up">
+          <div class="impact-headline">THE IMPACT? YOU FEEL LIKE YOURSELF AGAIN.</div>
+          <ul class="impact-list">
+            <li>Waking up with focus — not dread. Mornings feel like yours again.</li>
+            <li>All-day energy without the 3 PM crash that's been following you for years.</li>
+            <li>Reclaiming your confidence in every area of life — professional, physical, personal.</li>
+            <li>Knowing exactly why you feel the way you do, and exactly what to do about it.</li>
+            <li>A longitudinal health record that compounds in value — month after month, year after year.</li>
+          </ul>
+          <div class="price-divider"></div>
+          <div class="price-lbl">Pricing</div>
+          <div class="price-cards">
+            <div class="price-tier">
+              <div class="price-amount">FREE</div>
+              <p class="price-desc">Full onboarding, symptom assessment, core bloodwork recommendations, basic score.</p>
+            </div>
+            <div class="price-tier featured">
+              <div class="price-badge">PREMIUM</div>
+              <div class="price-amount highlighted">$9.99<span>/mo</span></div>
+              <p class="price-desc">OCR scanning, AI analysis, full protocol, unlimited panels, complete trend history.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6: FINAL CTA ═══ -->
+<section class="final-cta" id="cta">
+  <div class="section-inner">
+    <span class="tag" style="display:block;margin-bottom:1rem;">YOUR MOVE</span>
+    <h2 class="cta-title fade-up">WHAT YOU ADDRESS,<br>YOU CAN <em>OPTIMIZE.</em></h2>
+    <p class="cta-body fade-up">Stop accepting "normal." Take radical ownership of your biology. Get the data. Get the protocol. Get your edge back. Your 90-day malemaxxing protocol starts right now.</p>
+    <a href="#" class="btn-primary fade-up" style="font-size:1.15rem;padding:1.15rem 2.5rem;">
+      START MY PROTOCOL <span class="btn-arrow">→</span>
+    </a>
+    <p class="cta-micro-note fade-up">Basic onboarding is <strong>FREE.</strong> Premium (OCR, AI analysis, full protocol) is only <span>$9.99/mo</span> — less than the cost of one blood panel.</p>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-brand">OPTIMIZABLE © 2026</div>
+  <p class="footer-disc">
+    Optimizable is a wellness tool, not a medical device. It does not provide medical advice, diagnosis, or treatment.
+    Always consult a qualified healthcare professional before making changes to your health regimen.
+    Results vary by individual. All health data is encrypted at rest and in transit and is never sold to third parties.
+  </p>
+</footer>
+
+<script>
+  // Intersection Observer — fade-up animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
+  }, { threshold: 0.08 });
+  document.querySelectorAll('.fade-up').forEach(el => observer.observe(el));
+
+  // Nav border color on scroll
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+  }, { passive: true });
+</script>
+</body>
+</html>
