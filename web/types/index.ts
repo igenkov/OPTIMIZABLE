@@ -1,0 +1,150 @@
+export interface User {
+  id: string;
+  email: string;
+  subscription_tier: 'free' | 'premium' | 'expert';
+  subscription_status: 'active' | 'expired' | 'trial';
+  created_at: string;
+}
+
+export interface Phase1Data {
+  age: number;
+  height_cm: number;
+  weight_kg: number;
+  body_fat_percent?: number;
+  medical_conditions: string[];
+  unit_preference: 'metric' | 'imperial';
+}
+
+export interface Phase2Data {
+  avg_sleep_hours: number;
+  sleep_quality: number;
+  smoking_status: string;
+  alcohol_frequency: string;
+  coffee_per_day: string;
+  sugar_consumption: string;
+  exercise_frequency: string;
+  exercise_types: string[];
+  sedentary_hours: number;
+  sexual_frequency: string;
+  libido_rating: number;
+  erectile_rating?: number;
+}
+
+export interface Phase3Data {
+  taking_medications: boolean;
+  medications: string[];
+  taking_supplements: boolean;
+  supplements: string[];
+  steroid_history: 'never' | 'past' | 'current';
+  steroid_stopped_ago?: string;
+  steroid_pct?: boolean;
+  trt_history: 'never' | 'past' | 'current';
+  trt_type?: string;
+  previous_bloodwork: boolean;
+  known_total_t?: number;
+  known_total_t_unit?: 'ng/dL' | 'nmol/L';
+}
+
+export interface SymptomAssessment {
+  id: string;
+  user_id: string;
+  symptoms_selected: string[];
+  symptom_count: number;
+  weighted_score: number;
+  risk_level: 'low' | 'moderate' | 'high' | 'very_high';
+  created_at: string;
+}
+
+export interface BloodworkValue {
+  marker: string;
+  value: number;
+  unit: string;
+}
+
+export interface BloodworkPanel {
+  id: string;
+  user_id: string;
+  panel_number: number;
+  cycle_id?: string;
+  upload_type: 'manual';
+  values: Record<string, BloodworkValue>;
+  collection_date: string;
+  lab_name?: string;
+  created_at: string;
+}
+
+export type MarkerStatus = 'optimal' | 'suboptimal' | 'attention';
+
+export interface MarkerAnalysis {
+  marker: string;
+  value: number;
+  unit: string;
+  status: MarkerStatus;
+  explanation: string;
+  standard_range: { low: number; high: number };
+  optimal_range: { low: number; high: number };
+}
+
+export interface KeyRatio {
+  name: string;
+  value: number;
+  interpretation: string;
+  status: MarkerStatus;
+}
+
+export interface AnalysisReport {
+  id: string;
+  user_id: string;
+  bloodwork_panel_id: string;
+  health_score: number;
+  marker_analysis: MarkerAnalysis[];
+  key_ratios: KeyRatio[];
+  report_summary: string;
+  concerns: { marker: string; severity: 'low' | 'medium' | 'high'; explanation: string }[];
+  recommendations: OptimizationPlan;
+  medical_referral_needed: boolean;
+  medical_referral_reason?: string;
+  created_at: string;
+}
+
+export interface OptimizationPlan {
+  eating: string[];
+  exercise: string[];
+  supplements: SupplementRecommendation[];
+  sleep: string[];
+  stress: string[];
+  habits: string[];
+}
+
+export interface SupplementRecommendation {
+  name: string;
+  dose: string;
+  timing: string;
+  reason: string;
+}
+
+export interface DailyCheckin {
+  id: string;
+  user_id: string;
+  cycle_id: string;
+  date: string;
+  mood: number;
+  energy: number;
+  sleep_quality: number;
+  sleep_hours: number;
+  libido: number;
+  stress: number;
+  exercised: boolean;
+  plan_adherence: 'fully' | 'mostly' | 'partially' | 'not_today';
+  notes?: string;
+  created_at: string;
+}
+
+export interface OptimizationCycle {
+  id: string;
+  user_id: string;
+  start_date: string;
+  end_date: string;
+  status: 'active' | 'completed' | 'paused';
+  current_day: number;
+}

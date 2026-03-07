@@ -1,0 +1,16 @@
+export const Colors = {
+  bg: '#0e0e0e',
+  bg2: '#141414',
+  bg3: '#1a1a1a',
+  bg4: '#1f1f1f',
+  green: '#00E676',
+  greenDim: 'rgba(0,230,118,0.12)',
+  gold: '#FFB300',
+  red: '#FF5252',
+  white: '#FFFFFF',
+  gray1: '#E0E0E0',
+  gray2: '#9A9A9A',
+  gray3: '#4A4A4A',
+  border: 'rgba(255,255,255,0.07)',
+  borderGreen: 'rgba(0,230,118,0.25)',
+} as const;
