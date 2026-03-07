@@ -19,13 +19,20 @@ export default function SignupPage() {
     if (password.length < 6) { setError('Password must be at least 6 characters'); return; }
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signUp({ email, password });
+    const { data, error } = await supabase.auth.signUp({ email, password });
     if (error) {
       setError(error.message);
       setLoading(false);
-    } else {
+    } else if (data.session) {
+      // Email confirmation disabled — session is live, go straight to onboarding
       router.push('/onboarding/phase1');
       router.refresh();
+    } else {
+      // Email confirmation required — show message
+      setError('');
+      setLoading(false);
+      alert('Check your email and click the confirmation link, then sign in.');
+      router.push('/login');
     }
   }
 

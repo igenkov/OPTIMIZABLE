@@ -18,12 +18,18 @@ export default function LoginPage() {
     setError('');
     setLoading(true);
     const supabase = createClient();
-    const { error } = await supabase.auth.signInWithPassword({ email, password });
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password });
     if (error) {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push('/dashboard');
+      // Check if onboarding was completed
+      const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', data.user.id).single();
+      if (profile?.age) {
+        router.push('/dashboard');
+      } else {
+        router.push('/onboarding/phase1');
+      }
       router.refresh();
     }
   }
