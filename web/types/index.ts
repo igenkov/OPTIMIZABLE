@@ -11,6 +11,8 @@ export interface Phase1Data {
   height_cm: number;
   weight_kg: number;
   body_fat_percent?: number;
+  body_type_level?: number;
+  high_muscle_override?: boolean;
   medical_conditions: string[];
   unit_preference: 'metric' | 'imperial';
 }
@@ -19,30 +21,33 @@ export interface Phase2Data {
   avg_sleep_hours: number;
   sleep_quality: number;
   smoking_status: string;
-  alcohol_frequency: string;
+  beer_frequency: string;
+  spirits_wine_frequency: string;
   coffee_per_day: string;
   sugar_consumption: string;
+  keto_diet: boolean;
   exercise_frequency: string;
   exercise_types: string[];
   sedentary_hours: number;
-  sexual_frequency: string;
+  stress_level: number;
+  morning_erection_frequency: string;
   libido_rating: number;
   erectile_rating?: number;
 }
 
 export interface Phase3Data {
   taking_medications: boolean;
+  medication_categories: string[];
   medications: string[];
   taking_supplements: boolean;
+  supplement_categories: string[];
   supplements: string[];
   steroid_history: 'never' | 'past' | 'current';
-  steroid_stopped_ago?: string;
+  steroid_stopped_ago?: 'lt_6mo' | '6_12mo' | '1_3yr' | '3_5yr' | '5plus_yr';
+  steroid_cycle_count?: '1' | '2_3' | '4_10' | '10plus';
   steroid_pct?: boolean;
   trt_history: 'never' | 'past' | 'current';
   trt_type?: string;
-  previous_bloodwork: boolean;
-  known_total_t?: number;
-  known_total_t_unit?: 'ng/dL' | 'nmol/L';
 }
 
 export interface SymptomAssessment {
@@ -51,7 +56,7 @@ export interface SymptomAssessment {
   symptoms_selected: string[];
   symptom_count: number;
   weighted_score: number;
-  risk_level: 'low' | 'moderate' | 'high' | 'very_high';
+  risk_level: 'low' | 'moderate' | 'high' | 'critical';
   created_at: string;
 }
 

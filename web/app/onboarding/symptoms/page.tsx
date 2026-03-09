@@ -26,13 +26,10 @@ export default function SymptomsPage() {
     setLoading(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { router.push('/login'); return; }
 
     const { weighted_score, symptom_count } = scoreSymptoms(selected);
-    const risk_level = weighted_score >= 12 ? 'very_high' : weighted_score >= 8 ? 'high' : weighted_score >= 4 ? 'moderate' : 'low';
-
-    const data = { symptoms_selected: selected, symptom_count, weighted_score, risk_level };
-    await supabase.from('symptom_assessments').insert({ user_id: user.id, ...data });
+    const data = { symptoms_selected: selected, symptom_count, weighted_score };
+    if (user) await supabase.from('symptom_assessments').insert({ user_id: user.id, ...data });
     sessionStorage.setItem('symptoms', JSON.stringify(data));
     router.push('/onboarding/summary');
   }

@@ -4,6 +4,11 @@ import { NextResponse, type NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
+  // Dev bypass — set NEXT_PUBLIC_DEV_BYPASS_AUTH=true in .env.local to skip auth during testing
+  if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+    return supabaseResponse;
+  }
+
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -25,7 +30,7 @@ export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup');
-  const isProtected = pathname.startsWith('/dashboard') || pathname.startsWith('/onboarding') ||
+  const isProtected = pathname.startsWith('/dashboard') ||
     pathname.startsWith('/bloodwork') || pathname.startsWith('/results') ||
     pathname.startsWith('/plan') || pathname.startsWith('/journal') || pathname.startsWith('/profile');
 

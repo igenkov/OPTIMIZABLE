@@ -17,7 +17,7 @@ export default async function Home() {
       <nav className="flex items-center justify-between px-10 py-6 border-b border-[rgba(255,255,255,0.05)]">
         <div className="text-[#00E676] font-black text-sm tracking-[4px] uppercase">OPTIMIZABLE</div>
         <Link href="/login" className="text-xs text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
-          Sign In
+          Already a member?
         </Link>
       </nav>
 
@@ -34,9 +34,9 @@ export default async function Home() {
             AI-powered testosterone health analysis. Upload your bloodwork, get your score, and follow a personalized 90-day optimization protocol.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link href="/signup"
+            <Link href="/onboarding/phase1"
               className="px-8 py-4 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase hover:bg-[#00c864] transition-colors">
-              GET STARTED FREE →
+              GET YOUR FREE ASSESSMENT →
             </Link>
             <Link href="/login"
               className="px-8 py-4 border border-[rgba(255,255,255,0.15)] text-white text-sm font-bold tracking-widest uppercase hover:border-[rgba(255,255,255,0.3)] transition-colors">
@@ -44,7 +44,7 @@ export default async function Home() {
             </Link>
           </div>
           <p className="text-[10px] text-[#4A4A4A] mt-8">
-            Wellness information only · Not medical advice · Your data is encrypted
+            No account required · 3 minutes · Wellness information only · Not medical advice
           </p>
         </div>
       </div>
