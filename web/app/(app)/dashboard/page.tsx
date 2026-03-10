@@ -1,141 +1,301 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
-import { ScoreRing } from '@/components/ui/ScoreRing';
-import { StatusBadge, getStatusColor } from '@/components/ui/StatusBadge';
 import { Card } from '@/components/ui/Card';
-import type { AnalysisReport, OptimizationCycle } from '@/types';
+import {
+  calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
+  getKeyFactors, getPersonalizedExtendedTests, isExcluded,
+} from '@/lib/scoring';
+import { BIOMARKERS, CORE_PANEL_IDS, TRT_PANEL_IDS } from '@/constants/biomarkers';
+import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
 export default async function DashboardPage() {
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const [reportRes, cycleRes, checkinRes] = await Promise.all([
-    supabase.from('analysis_reports').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
-    supabase.from('optimization_cycles').select('*').eq('user_id', user.id).eq('status', 'active').single(),
-    supabase.from('daily_checkins').select('date').eq('user_id', user.id).order('date', { ascending: false }),
+  const [profileRes, lifestyleRes, medHistRes, symptomsRes, reportRes] = await Promise.all([
+    supabase.from('profiles').select('*').eq('user_id', user.id).single(),
+    supabase.from('lifestyle').select('*').eq('user_id', user.id).single(),
+    supabase.from('medical_history').select('*').eq('user_id', user.id).single(),
+    supabase.from('symptom_assessments').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('analysis_reports').select('health_score,created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
   ]);
 
-  const report = reportRes.data as AnalysisReport | null;
-  const cycle = cycleRes.data as OptimizationCycle | null;
+  const profile = profileRes.data as unknown as Phase1Data | null;
+  if (!profile?.age) redirect('/onboarding/phase1');
 
-  // Calculate streak
-  let streak = 0;
-  if (checkinRes.data) {
-    const dates = checkinRes.data.map(c => c.date);
-    const today = new Date().toISOString().split('T')[0];
-    let check = today;
-    for (const d of dates) {
-      if (d === check) { streak++; const dt = new Date(check); dt.setDate(dt.getDate() - 1); check = dt.toISOString().split('T')[0]; }
-      else break;
-    }
+  const lifestyle = lifestyleRes.data as unknown as Phase2Data | null;
+  const medHistory = medHistRes.data as unknown as Phase3Data | null;
+  const symptoms = symptomsRes.data as { symptoms_selected: string[] } | null;
+  const hasReport = !!reportRes.data;
+
+  const p1 = profile;
+  const p2 = lifestyle ?? {} as Phase2Data;
+  const p3 = medHistory ?? { steroid_history: 'never', trt_history: 'never' } as Phase3Data;
+  const symptomIds: string[] = symptoms?.symptoms_selected ?? [];
+
+  const excluded = isExcluded(p3);
+  const riskScore = excluded ? null : calculateRiskScore(p1, p2, p3, symptomIds);
+  const keyFactors = excluded ? [] : getKeyFactors(p1, p2, p3, symptomIds);
+  const extendedTestIds = excluded ? [] : getPersonalizedExtendedTests(p1, p2, p3, symptomIds);
+
+  const level = riskScore !== null ? getRiskLevel(riskScore) : 'low';
+  const color = getRiskColor(level);
+  const label = getRiskLabel(level);
+  const action = getRiskAction(level);
+
+  const core = BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id));
+  const extendedTests = BIOMARKERS.filter(b => extendedTestIds.includes(b.id));
+  const trtPanel = BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id));
+
+  const bmi = p1.weight_kg && p1.height_cm
+    ? (p1.weight_kg / Math.pow(p1.height_cm / 100, 2)).toFixed(1)
+    : null;
+
+  // Build lifestyle flags
+  const flags: { severity: 'warn' | 'critical'; text: string }[] = [];
+  if (lifestyle) {
+    if (lifestyle.avg_sleep_hours < 6) flags.push({ severity: 'critical', text: `Sleep: ${lifestyle.avg_sleep_hours}h/night — severely low` });
+    else if (lifestyle.avg_sleep_hours < 7) flags.push({ severity: 'warn', text: `Sleep: ${lifestyle.avg_sleep_hours}h/night — below optimal` });
+    if (lifestyle.stress_level >= 4) flags.push({ severity: lifestyle.stress_level >= 5 ? 'critical' : 'warn', text: `Stress: ${lifestyle.stress_level}/5` });
+    if (lifestyle.smoking_status === 'daily') flags.push({ severity: 'critical', text: 'Daily smoking' });
+    else if (lifestyle.smoking_status === 'occasional') flags.push({ severity: 'warn', text: 'Occasional smoking' });
+    if (lifestyle.sedentary_hours >= 12) flags.push({ severity: 'critical', text: `Sedentary: ${lifestyle.sedentary_hours}h/day` });
+    else if (lifestyle.sedentary_hours >= 8) flags.push({ severity: 'warn', text: `Sedentary: ${lifestyle.sedentary_hours}h/day` });
+    if (lifestyle.morning_erection_frequency === 'never') flags.push({ severity: 'critical', text: 'Morning erections: never' });
+    else if (lifestyle.morning_erection_frequency === 'rarely') flags.push({ severity: 'warn', text: 'Morning erections: rarely' });
+    if (lifestyle.libido_rating <= 2) flags.push({ severity: 'warn', text: `Libido: ${lifestyle.libido_rating}/5` });
   }
-
-  const cycleDay = cycle ? Math.floor((Date.now() - new Date(cycle.start_date).getTime()) / 86400000) + 1 : null;
-  const daysToRetest = cycle ? Math.max(0, 90 - (cycleDay ?? 0)) : null;
-
-  if (!report) {
-    return (
-      <div className="flex-1 flex items-center justify-center p-12 min-h-screen">
-        <div className="text-center max-w-md">
-          <div className="text-6xl mb-6">⚗</div>
-          <h1 className="text-2xl font-bold text-white tracking-wide mb-3">Welcome to Optimizable</h1>
-          <p className="text-[#9A9A9A] text-sm leading-relaxed mb-8">
-            Upload your lab results to get your AI-powered analysis, Testosterone Health Score, and personalized 90-day optimization plan.
-          </p>
-          <Link href="/bloodwork/upload"
-            className="inline-block px-8 py-3 bg-[#00E676] text-black font-bold text-sm tracking-widest uppercase hover:bg-[#00c864] transition-colors">
-            UPLOAD BLOODWORK →
-          </Link>
-        </div>
-      </div>
-    );
+  if (medHistory?.medication_categories?.length) {
+    flags.push({ severity: 'warn', text: `Hormonal medications: ${medHistory.medication_categories.length} category${medHistory.medication_categories.length > 1 ? 'ies' : 'y'}` });
   }
-
-  const topMarkers = report.marker_analysis?.slice(0, 5) ?? [];
-  const supplements = (report.recommendations?.supplements ?? []).slice(0, 3);
+  if (p1.medical_conditions?.length) {
+    flags.push({ severity: 'warn', text: `Diagnosed conditions: ${p1.medical_conditions.join(', ')}` });
+  }
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-6 max-w-2xl mx-auto">
+
+      {/* Header */}
       <div className="mb-8">
-        <h1 className="text-lg font-bold tracking-[3px] uppercase text-white mb-1">Dashboard</h1>
-        <p className="text-xs text-[#4A4A4A]">{new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}</p>
-      </div>
-
-      {/* Score + Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
-        <Card className="md:col-span-1 flex flex-col items-center justify-center py-6">
-          <ScoreRing score={report.health_score} size={120} />
-          <div className="text-[10px] tracking-[2px] text-[#9A9A9A] uppercase mt-3">Health Score</div>
-        </Card>
-        <div className="md:col-span-3 grid grid-cols-3 gap-4">
-          {[
-            { label: 'Cycle Day', value: cycleDay ? `${cycleDay}/90` : '—', sub: 'Current cycle' },
-            { label: 'Days to Retest', value: daysToRetest !== null ? daysToRetest : '—', sub: 'Until next panel' },
-            { label: 'Check-in Streak', value: `${streak}d`, sub: 'Consecutive days' },
-          ].map(stat => (
-            <Card key={stat.label} className="flex flex-col justify-center">
-              <div className="text-[10px] tracking-[2px] text-[#9A9A9A] uppercase mb-2">{stat.label}</div>
-              <div className="text-3xl font-black text-[#00E676] mb-1">{stat.value}</div>
-              <div className="text-[10px] text-[#4A4A4A]">{stat.sub}</div>
-            </Card>
-          ))}
+        <div className="text-[10px] tracking-[3px] text-[#4A4A4A] uppercase mb-1">
+          {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' })}
         </div>
+        <h1 className="text-xl font-bold text-white tracking-wide mb-1">Your Health Dashboard</h1>
+        <p className="text-xs text-[#4A4A4A]">Based on your onboarding assessment</p>
+        {hasReport && (
+          <Link href="/results" className="text-xs text-[#00E676] hover:underline mt-1 inline-block">
+            View bloodwork analysis →
+          </Link>
+        )}
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {/* Biomarker Preview */}
-        <Card>
-          <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">Latest Biomarkers</div>
-          {topMarkers.map(m => (
-            <div key={m.marker} className="flex items-center justify-between py-2.5 border-b border-[rgba(255,255,255,0.05)]">
-              <span className="text-xs text-[#E0E0E0] font-medium">{m.marker.replace(/_/g, ' ').toUpperCase()}</span>
-              <div className="flex items-center gap-3">
-                <span className="text-sm font-bold" style={{ color: getStatusColor(m.status) }}>{m.value} {m.unit}</span>
-                <StatusBadge status={m.status} />
+      {/* Risk Score */}
+      {excluded ? (
+        <Card className="mb-5 text-center py-8">
+          <div className="text-[10px] tracking-[3px] text-[#FFB300] uppercase mb-3">Assessment Paused</div>
+          <div className="text-base font-bold text-white mb-2">
+            {p3.trt_history === 'current' && p3.steroid_history === 'current'
+              ? 'Active TRT + Steroid Use'
+              : p3.trt_history === 'current' ? 'Currently on TRT' : 'Active Steroid Use'}
+          </div>
+          <p className="text-xs text-[#9A9A9A] leading-relaxed max-w-xs mx-auto">
+            Hormonal risk score is not applicable while on exogenous androgens. Your monitoring panel is below.
+          </p>
+        </Card>
+      ) : (
+        <Card className="mb-5 text-center py-8">
+          <div className="text-[10px] tracking-[3px] text-[#9A9A9A] uppercase mb-3">Hormonal Risk Score</div>
+          <div className="text-7xl font-black mb-2" style={{ color }}>{riskScore}</div>
+          <div className="text-sm font-bold tracking-widest uppercase mb-1" style={{ color }}>{label}</div>
+          <div className="text-xs text-[#4A4A4A] mb-5">out of 100</div>
+          <div className="h-1.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden max-w-xs mx-auto mb-5">
+            <div className="h-full rounded-full" style={{ width: `${riskScore ?? 0}%`, background: color }} />
+          </div>
+          <p className="text-xs font-semibold" style={{ color: '#FFB300' }}>{action}</p>
+          <p className="text-[10px] text-[#4A4A4A] mt-2 leading-relaxed max-w-xs mx-auto">
+            Calculated from self-reported data. Bloodwork is required for objective measurements.
+          </p>
+        </Card>
+      )}
+
+      {/* Contributing Risk Factors */}
+      {keyFactors.length > 0 && (
+        <Card className="mb-5">
+          <div className="text-[10px] font-bold tracking-[3px] uppercase mb-1" style={{ color }}>
+            Contributing Risk Factors
+          </div>
+          <p className="text-xs text-[#4A4A4A] mb-5">Specific factors from your profile driving your score:</p>
+          <div className="flex flex-col gap-4">
+            {keyFactors.map((f, i) => (
+              <div key={i} className="border-l-2 pl-4" style={{ borderColor: color }}>
+                <div className="text-sm font-semibold text-white mb-1">{f.title}</div>
+                <div className="text-xs text-[#9A9A9A] leading-relaxed">{f.explanation}</div>
               </div>
-            </div>
-          ))}
-          <Link href="/results" className="block mt-4 text-xs text-[#00E676] hover:underline">View full results →</Link>
-        </Card>
-
-        {/* Today's Protocol */}
-        <Card>
-          <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">Today's Protocol</div>
-          {supplements.length > 0 ? (
-            <>
-              <div className="text-[10px] text-[#4A4A4A] tracking-widest uppercase mb-3">Supplements</div>
-              {supplements.map(s => (
-                <div key={s.name} className="py-2.5 border-b border-[rgba(255,255,255,0.05)]">
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-white font-medium">{s.name}</span>
-                    <span className="text-xs text-[#00E676]">{s.dose}</span>
-                  </div>
-                  <div className="text-xs text-[#4A4A4A] mt-0.5">{s.timing}</div>
-                </div>
-              ))}
-              <Link href="/plan" className="block mt-4 text-xs text-[#00E676] hover:underline">View full plan →</Link>
-            </>
-          ) : (
-            <p className="text-xs text-[#4A4A4A]">Upload bloodwork to generate your personalized protocol.</p>
-          )}
-        </Card>
-
-        {/* Check-in CTA */}
-        <Card accent className="md:col-span-2">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Daily Check-in</div>
-              <p className="text-xs text-[#9A9A9A]">Log today's energy, mood, and sleep to track your progress.</p>
-            </div>
-            <Link href="/journal"
-              className="px-5 py-2 border border-[#00E676] text-[#00E676] text-xs font-bold tracking-widest uppercase hover:bg-[rgba(0,230,118,0.1)] transition-colors shrink-0 ml-4">
-              LOG TODAY →
-            </Link>
+            ))}
           </div>
         </Card>
+      )}
+
+      {/* Health Profile Summary */}
+      <Card className="mb-5">
+        <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">Health Profile</div>
+        <div className="grid grid-cols-3 gap-4 mb-5">
+          {([
+            { label: 'Age', value: `${p1.age} yrs`, color: undefined },
+            { label: 'BMI', value: bmi ?? '—', color: undefined },
+            { label: 'Body Fat', value: p1.body_fat_percent ? `~${p1.body_fat_percent}%` : '—', color: undefined },
+            { label: 'Sleep', value: lifestyle ? `${lifestyle.avg_sleep_hours}h` : '—', color: lifestyle && lifestyle.avg_sleep_hours < 7 ? '#FFB300' : undefined },
+            { label: 'Exercise', value: lifestyle?.exercise_frequency ?? '—', color: undefined },
+            { label: 'Stress', value: lifestyle ? `${lifestyle.stress_level}/5` : '—', color: lifestyle && lifestyle.stress_level >= 4 ? '#FF5252' : undefined },
+          ] as { label: string; value: string; color?: string }[]).map((stat, i) => (
+            <div key={i}>
+              <div className="text-[10px] text-[#4A4A4A] uppercase tracking-widest mb-0.5">{stat.label}</div>
+              <div className="text-sm font-semibold" style={{ color: stat.color ?? '#E0E0E0' }}>{stat.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {flags.length > 0 && (
+          <>
+            <div className="text-[10px] font-bold tracking-[3px] text-[#FFB300] uppercase mb-3 pt-4 border-t border-[rgba(255,255,255,0.05)]">
+              Health Flags
+            </div>
+            <div className="flex flex-col gap-2">
+              {flags.map((f, i) => (
+                <div key={i} className="flex items-start gap-2.5">
+                  <div
+                    className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
+                    style={{ background: f.severity === 'critical' ? '#FF5252' : '#FFB300' }}
+                  />
+                  <span className="text-xs text-[#9A9A9A]">{f.text}</span>
+                </div>
+              ))}
+            </div>
+          </>
+        )}
+
+        {symptomIds.filter(s => s !== 'none').length > 0 && (
+          <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)]">
+            <div className="text-[10px] font-bold tracking-[3px] text-[#9A9A9A] uppercase mb-2">
+              Reported Symptoms ({symptomIds.filter(s => s !== 'none').length})
+            </div>
+            <div className="flex flex-wrap gap-1.5">
+              {symptomIds.filter(s => s !== 'none').map(s => (
+                <span key={s} className="px-2 py-0.5 text-[10px] border border-[rgba(255,255,255,0.1)] text-[#9A9A9A]">
+                  {s.replace(/_/g, ' ')}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </Card>
+
+      {/* Recommended Bloodwork */}
+      {excluded ? (
+        <Card className="mb-5">
+          <div className="text-[10px] font-bold tracking-[3px] text-[#FFB300] uppercase mb-2">Monitoring Panel</div>
+          <p className="text-xs text-[#4A4A4A] mb-4">Test every 3–6 months while on TRT or active steroid use:</p>
+          <div className="flex flex-col gap-1">
+            {trtPanel.map(b => (
+              <div key={b.id} className="flex items-start gap-3 py-2.5 border-b border-[rgba(255,255,255,0.05)]">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#FFB300] shrink-0 mt-1.5" />
+                <div>
+                  <div className="text-sm text-white font-medium">{b.name}</div>
+                  <div className="text-xs text-[#4A4A4A] mt-0.5">{b.description}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </Card>
+      ) : (
+        <>
+          <Card className="mb-4">
+            <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">Recommended Core Panel</div>
+            <p className="text-xs text-[#4A4A4A] mb-4">Essential tests for a complete hormonal picture:</p>
+            <div className="flex flex-col gap-1">
+              {core.map(b => (
+                <div key={b.id} className="flex items-start gap-3 py-2.5 border-b border-[rgba(255,255,255,0.05)]">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#00E676] shrink-0 mt-1.5" />
+                  <div>
+                    <div className="text-sm text-white font-medium">{b.name}</div>
+                    <div className="text-xs text-[#4A4A4A] mt-0.5">{b.description}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+
+          {extendedTests.length > 0 && (
+            <Card className="mb-5">
+              <div className="text-[10px] font-bold tracking-[3px] text-[#FFB300] uppercase mb-2">Additional Tests — Recommended For You</div>
+              <p className="text-xs text-[#4A4A4A] mb-4">Based on your specific profile and symptoms:</p>
+              <div className="flex flex-col gap-1">
+                {extendedTests.map(b => (
+                  <div key={b.id} className="flex items-start gap-3 py-2.5 border-b border-[rgba(255,255,255,0.05)]">
+                    <div className="w-1.5 h-1.5 rounded-full bg-[#FFB300] shrink-0 mt-1.5" />
+                    <div>
+                      <div className="text-sm text-white font-medium">{b.name}</div>
+                      <div className="text-xs text-[#4A4A4A] mt-0.5">{b.description}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </Card>
+          )}
+
+          {/* Pre-draw tips */}
+          <Card className="mb-5" accent>
+            <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-3">Before Your Blood Draw</div>
+            {[
+              'Schedule between 7:00–10:00 AM — testosterone peaks in early morning',
+              'Fast 10–12 hours beforehand (water is fine)',
+              'Avoid heavy exercise for 24 hours prior',
+              'No alcohol for 48 hours before the test',
+              'Get a normal night of sleep the night before',
+            ].map((t, i) => (
+              <div key={i} className="flex gap-3 mb-2">
+                <span className="text-[#00E676] font-bold shrink-0">{i + 1}.</span>
+                <span className="text-xs text-[#9A9A9A] leading-relaxed">{t}</span>
+              </div>
+            ))}
+          </Card>
+        </>
+      )}
+
+      {/* Upgrade CTA */}
+      <div className="border border-[rgba(0,230,118,0.25)] bg-[rgba(0,230,118,0.04)] p-6">
+        <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">
+          Next Step: AI Bloodwork Analysis
+        </div>
+        <p className="text-base font-bold text-white mb-2">Turn Your Lab Results Into a Protocol</p>
+        <p className="text-xs text-[#9A9A9A] leading-relaxed mb-5">
+          Upload your bloodwork to get a deep AI analysis of every biomarker, a personalized supplement stack,
+          and a 90-day optimization protocol built around your specific hormonal profile.
+        </p>
+        <div className="flex flex-col gap-2 mb-5">
+          {[
+            'AI analysis of every biomarker against optimal (not just standard) ranges',
+            'Personalized supplement stack with exact doses and timing',
+            '90-day optimization protocol assigned to your profile',
+            'Re-test reminders and progress tracking',
+            'Medical referral flags if levels require physician review',
+          ].map((f, i) => (
+            <div key={i} className="flex items-start gap-2">
+              <span className="text-[#00E676] font-bold text-xs shrink-0 mt-0.5">✓</span>
+              <span className="text-xs text-[#9A9A9A]">{f}</span>
+            </div>
+          ))}
+        </div>
+        <Link
+          href="/bloodwork/upload"
+          className="block w-full py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors"
+        >
+          UPLOAD BLOODWORK →
+        </Link>
       </div>
+
     </div>
   );
 }
