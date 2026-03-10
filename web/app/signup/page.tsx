@@ -46,12 +46,18 @@ export default function SignupPage() {
         const p2 = p2Raw ? JSON.parse(p2Raw) : null;
         const p3 = p3Raw ? JSON.parse(p3Raw) : null;
         const sym = symRaw ? JSON.parse(symRaw) : null;
-        await Promise.all([
+        const results = await Promise.all([
           p1.age && supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
           p2?.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
           p3?.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
           sym?.symptoms_selected && supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }),
         ]);
+        const saveError = results.find(r => r && typeof r === 'object' && 'error' in r && r.error);
+        if (saveError && typeof saveError === 'object' && 'error' in saveError) {
+          setError(`Save failed: ${(saveError.error as { message: string }).message}`);
+          setLoading(false);
+          return;
+        }
         router.push('/dashboard');
       } else {
         router.push('/onboarding/phase1');
