@@ -37,10 +37,10 @@ export default function SignupPage() {
       setLoading(false);
     } else if (data.session) {
       const userId = data.session.user.id;
-      const p1Raw = sessionStorage.getItem('phase1');
-      const p2Raw = sessionStorage.getItem('phase2');
-      const p3Raw = sessionStorage.getItem('phase3');
-      const symRaw = sessionStorage.getItem('symptoms');
+      const p1Raw = localStorage.getItem('phase1');
+      const p2Raw = localStorage.getItem('phase2');
+      const p3Raw = localStorage.getItem('phase3');
+      const symRaw = localStorage.getItem('symptoms');
       if (p1Raw) {
         const p1 = JSON.parse(p1Raw);
         const p2 = p2Raw ? JSON.parse(p2Raw) : null;

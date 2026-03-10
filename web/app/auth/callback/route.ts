@@ -36,7 +36,7 @@ export async function GET(request: NextRequest) {
       if (profile?.age) {
         return NextResponse.redirect(`${origin}/dashboard`);
       } else {
-        return NextResponse.redirect(`${origin}/onboarding/phase1`);
+        return NextResponse.redirect(`${origin}/onboarding/summary`);
       }
     }
   }

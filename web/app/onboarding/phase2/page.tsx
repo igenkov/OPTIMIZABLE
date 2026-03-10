@@ -96,7 +96,7 @@ export default function Phase2Page() {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (user) await supabase.from('lifestyle').upsert({ user_id: user.id, ...form });
-    sessionStorage.setItem('phase2', JSON.stringify(form));
+    localStorage.setItem('phase2', JSON.stringify(form));
     router.push('/onboarding/phase3');
   }
 

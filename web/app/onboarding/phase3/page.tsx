@@ -131,7 +131,7 @@ export default function Phase3Page() {
     };
 
     if (user) await supabase.from('medical_history').upsert({ user_id: user.id, ...data });
-    sessionStorage.setItem('phase3', JSON.stringify(data));
+    localStorage.setItem('phase3', JSON.stringify(data));
     router.push('/onboarding/symptoms');
   }
 

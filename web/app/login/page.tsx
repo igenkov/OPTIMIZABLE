@@ -35,11 +35,26 @@ export default function LoginPage() {
       setError(error.message);
       setLoading(false);
     } else {
-      const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', data.user.id).single();
-      if (profile?.age) {
+      const userId = data.user.id;
+      const p1Raw = localStorage.getItem('phase1');
+      const p2Raw = localStorage.getItem('phase2');
+      const p3Raw = localStorage.getItem('phase3');
+      const symRaw = localStorage.getItem('symptoms');
+      if (p1Raw) {
+        const p1 = JSON.parse(p1Raw);
+        const p2 = p2Raw ? JSON.parse(p2Raw) : null;
+        const p3 = p3Raw ? JSON.parse(p3Raw) : null;
+        const sym = symRaw ? JSON.parse(symRaw) : null;
+        await Promise.all([
+          p1.age && supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
+          p2?.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
+          p3?.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
+          sym?.symptoms_selected && supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }),
+        ]);
         router.push('/dashboard');
       } else {
-        router.push('/onboarding/phase1');
+        const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', userId).single();
+        router.push(profile?.age ? '/dashboard' : '/onboarding/phase1');
       }
       router.refresh();
     }

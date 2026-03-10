@@ -30,7 +30,7 @@ export default function SymptomsPage() {
     const { weighted_score, symptom_count } = scoreSymptoms(selected);
     const data = { symptoms_selected: selected, symptom_count, weighted_score };
     if (user) await supabase.from('symptom_assessments').insert({ user_id: user.id, ...data });
-    sessionStorage.setItem('symptoms', JSON.stringify(data));
+    localStorage.setItem('symptoms', JSON.stringify(data));
     router.push('/onboarding/summary');
   }
 

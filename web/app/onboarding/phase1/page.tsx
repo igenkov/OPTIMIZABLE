@@ -73,7 +73,7 @@ export default function Phase1Page() {
     };
 
     if (user) await supabase.from('profiles').upsert({ user_id: user.id, ...data });
-    sessionStorage.setItem('phase1', JSON.stringify(data));
+    localStorage.setItem('phase1', JSON.stringify(data));
     router.push('/onboarding/phase2');
   }
 

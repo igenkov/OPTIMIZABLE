@@ -25,10 +25,10 @@ export default function SummaryPage() {
 
   useEffect(() => {
     createClient().auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user));
-    const p1 = JSON.parse(sessionStorage.getItem('phase1') || '{}') as Phase1Data;
-    const p2 = JSON.parse(sessionStorage.getItem('phase2') || '{}') as Phase2Data;
-    const p3 = JSON.parse(sessionStorage.getItem('phase3') || '{}') as Phase3Data;
-    const sym = JSON.parse(sessionStorage.getItem('symptoms') || '{}');
+    const p1 = JSON.parse(localStorage.getItem('phase1') || '{}') as Phase1Data;
+    const p2 = JSON.parse(localStorage.getItem('phase2') || '{}') as Phase2Data;
+    const p3 = JSON.parse(localStorage.getItem('phase3') || '{}') as Phase3Data;
+    const sym = JSON.parse(localStorage.getItem('symptoms') || '{}');
     const symptomIds: string[] = sym.symptoms_selected || [];
 
     if (p1.age && p2.avg_sleep_hours !== undefined && p3.steroid_history) {
