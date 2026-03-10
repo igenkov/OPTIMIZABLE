@@ -24,12 +24,33 @@ export default function SummaryPage() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    createClient().auth.getUser().then(({ data }) => setIsLoggedIn(!!data.user));
-    const p1 = JSON.parse(localStorage.getItem('phase1') || '{}') as Phase1Data;
-    const p2 = JSON.parse(localStorage.getItem('phase2') || '{}') as Phase2Data;
-    const p3 = JSON.parse(localStorage.getItem('phase3') || '{}') as Phase3Data;
-    const sym = JSON.parse(localStorage.getItem('symptoms') || '{}');
+    const p1Raw = localStorage.getItem('phase1');
+    const p2Raw = localStorage.getItem('phase2');
+    const p3Raw = localStorage.getItem('phase3');
+    const symRaw = localStorage.getItem('symptoms');
+    const p1 = JSON.parse(p1Raw || '{}') as Phase1Data;
+    const p2 = JSON.parse(p2Raw || '{}') as Phase2Data;
+    const p3 = JSON.parse(p3Raw || '{}') as Phase3Data;
+    const sym = JSON.parse(symRaw || '{}');
     const symptomIds: string[] = sym.symptoms_selected || [];
+
+    createClient().auth.getUser().then(async ({ data }) => {
+      const loggedIn = !!data.user;
+      setIsLoggedIn(loggedIn);
+      if (loggedIn && p1Raw && p1.age) {
+        const supabase = createClient();
+        const userId = data.user!.id;
+        const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', userId).single();
+        if (!profile?.age) {
+          await Promise.all([
+            supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
+            p2Raw && p2.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
+            p3Raw && p3.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
+            symRaw && sym.symptoms_selected && supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }),
+          ]);
+        }
+      }
+    });
 
     if (p1.age && p2.avg_sleep_hours !== undefined && p3.steroid_history) {
       if (isExcluded(p3)) {
