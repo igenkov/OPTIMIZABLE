@@ -5,8 +5,8 @@ export async function POST(req: NextRequest) {
   try {
     const { panelValues, phase1, phase2, phase3, symptoms } = await req.json();
 
-    const apiKey = process.env.ANTHROPIC_API_KEY;
-    if (!apiKey) return NextResponse.json({ error: 'Anthropic API key not configured' }, { status: 500 });
+    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
+    if (!apiKey) return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
 
     // Build biomarker context
     const biomarkerContext = BIOMARKERS.map(b => {
@@ -80,27 +80,29 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
   "medical_referral_reason": "<reason if true, null if false>"
 }`;
 
-    const response = await fetch('https://api.anthropic.com/v1/messages', {
-      method: 'POST',
-      headers: {
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        model: 'claude-sonnet-4-6',
-        max_tokens: 4096,
-        messages: [{ role: 'user', content: prompt }],
-      }),
-    });
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            maxOutputTokens: 4096,
+            temperature: 0.1,
+            responseMimeType: 'application/json',
+          },
+        }),
+      }
+    );
 
     if (!response.ok) {
       const err = await response.text();
-      return NextResponse.json({ error: `Claude API error: ${err}` }, { status: 500 });
+      return NextResponse.json({ error: `Gemini API error: ${err}` }, { status: 500 });
     }
 
-    const claudeData = await response.json();
-    const text = claudeData.content[0].text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const geminiData = await response.json();
+    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
     const analysis = JSON.parse(text);
 
     return NextResponse.json(analysis);
