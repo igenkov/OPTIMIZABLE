@@ -234,16 +234,20 @@ export function getKeyFactors(
   const conditions = phase1.medical_conditions || [];
 
   // 1. Sleep
+  const highCoffee = phase2.coffee_per_day === '4-5' || phase2.coffee_per_day === '6+';
+  const highStress = (phase2.stress_level ?? 3) >= 4;
+
   if (phase2.avg_sleep_hours < 6) {
-    factors.push({
-      title: `Sleep deprivation (${phase2.avg_sleep_hours}h average)`,
-      explanation: `Sleeping less than 6 hours reduces testosterone by 10–15% within a single week. This is one of the most significant and reversible risk factors you have.`,
-    });
+    let explanation = `Sleeping less than 6 hours reduces testosterone by 10–15% within a single week. This is one of the most significant and reversible risk factors you have.`;
+    if (highCoffee && highStress) explanation += ` With ${phase2.coffee_per_day} coffees/day and high chronic stress, both late caffeine and elevated cortisol are likely compressing your sleep — addressing all three together will have a compounding effect.`;
+    else if (highCoffee) explanation += ` With ${phase2.coffee_per_day} coffees/day, late caffeine intake is likely a direct contributor — caffeine has a 5–6 hour half-life and significantly delays sleep onset and reduces deep sleep.`;
+    else if (highStress) explanation += ` Chronic stress at your reported level elevates cortisol into the evening, which actively suppresses melatonin and fragments deep sleep — making stress management a prerequisite for sleep improvement.`;
+    factors.push({ title: `Sleep deprivation (${phase2.avg_sleep_hours}h average)`, explanation });
   } else if (phase2.avg_sleep_hours < 7) {
-    factors.push({
-      title: `Suboptimal sleep (${phase2.avg_sleep_hours}h average)`,
-      explanation: `Most testosterone is produced during deep sleep stages. Consistently sleeping under 7 hours measurably suppresses your nocturnal T production surge.`,
-    });
+    let explanation = `Most testosterone is produced during deep sleep stages. Consistently sleeping under 7 hours measurably suppresses your nocturnal T production surge.`;
+    if (highCoffee) explanation += ` Your coffee intake (${phase2.coffee_per_day}/day) may be reducing sleep quality even if it doesn't shorten duration — caffeine suppresses deep sleep stages where testosterone production peaks.`;
+    else if (highStress) explanation += ` High stress raises evening cortisol, which competes with the hormonal recovery that happens during deep sleep — reducing the actual quality of the hours you do get.`;
+    factors.push({ title: `Suboptimal sleep (${phase2.avg_sleep_hours}h average)`, explanation });
   }
 
   // 2. Beer
@@ -294,16 +298,15 @@ export function getKeyFactors(
   }
 
   // 6. Sedentary
+  const highSugar = phase2.sugar_consumption === 'very_high' || phase2.sugar_consumption === 'frequent';
   if (phase2.sedentary_hours >= 10) {
-    factors.push({
-      title: `Highly sedentary lifestyle (${phase2.sedentary_hours}h/day)`,
-      explanation: 'Prolonged sitting is independently associated with reduced testosterone and elevated insulin resistance — even in men who exercise.',
-    });
+    let explanation = 'Prolonged sitting is independently associated with reduced testosterone and elevated insulin resistance — even in men who exercise.';
+    if (highSugar) explanation += ` Combined with your high sugar intake, this creates a compounding insulin resistance loop: inactivity reduces glucose uptake, sugar spikes insulin further, and chronic high insulin directly suppresses testosterone synthesis and accelerates aromatization of T to estrogen.`;
+    factors.push({ title: `Highly sedentary lifestyle (${phase2.sedentary_hours}h/day)`, explanation });
   } else if (phase2.sedentary_hours >= 7) {
-    factors.push({
-      title: `Moderately sedentary (${phase2.sedentary_hours}h/day)`,
-      explanation: 'Extended daily sitting impairs circulation and metabolic health, reducing the effectiveness of testosterone synthesis.',
-    });
+    let explanation = 'Extended daily sitting impairs circulation and metabolic health, reducing the effectiveness of testosterone synthesis.';
+    if (highSugar) explanation += ` With frequent sugar consumption on top of this, insulin sensitivity is likely impaired — elevated insulin promotes fat storage and aromatase activity, converting more of your testosterone to estrogen.`;
+    factors.push({ title: `Moderately sedentary (${phase2.sedentary_hours}h/day)`, explanation });
   }
 
   // 7. Exercise (no exercise)
@@ -460,16 +463,15 @@ export function getKeyFactors(
   }
 
   // 15. Stress
+  const poorSleep = phase2.avg_sleep_hours < 7;
   if ((phase2.stress_level ?? 3) >= 5) {
-    factors.push({
-      title: 'Severe chronic stress — pregnenolone steal',
-      explanation: 'At this stress level, your body is likely diverting pregnenolone — the shared precursor to both cortisol and testosterone — almost entirely toward cortisol production. This is one of the most underdiagnosed causes of hormonal suppression in otherwise healthy men.',
-    });
+    let explanation = 'At this stress level, your body is likely diverting pregnenolone — the shared precursor to both cortisol and testosterone — almost entirely toward cortisol production. This is one of the most underdiagnosed causes of hormonal suppression in otherwise healthy men.';
+    if (poorSleep) explanation += ` The interaction with your sleep deprivation creates a vicious cycle: high cortisol degrades sleep quality, and poor sleep raises cortisol further — continuously draining your testosterone precursor pool from both directions.`;
+    factors.push({ title: 'Severe chronic stress — pregnenolone steal', explanation });
   } else if ((phase2.stress_level ?? 3) >= 4) {
-    factors.push({
-      title: 'High chronic stress — cortisol competition',
-      explanation: 'Sustained high stress elevates cortisol, which competes with testosterone for the same biochemical precursors. Chronically elevated cortisol directly suppresses LH signaling and testosterone production.',
-    });
+    let explanation = 'Sustained high stress elevates cortisol, which competes with testosterone for the same biochemical precursors. Chronically elevated cortisol directly suppresses LH signaling and testosterone production.';
+    if (poorSleep) explanation += ` This is compounded by your sleep deficit — cortisol and poor sleep are mutually reinforcing, and breaking one often improves the other significantly.`;
+    factors.push({ title: 'High chronic stress — cortisol competition', explanation });
   }
 
   // 16. Keto / low-carb diet (no points — SHBG warning only)
