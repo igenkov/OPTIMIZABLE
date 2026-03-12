@@ -166,7 +166,16 @@ export function calculateRiskScore(
   const p3_capped = Math.min(p3, 35);
 
   // --- Phase 4: Symptoms (max 40) ---
-  const primaryWeights: Record<string, number> = { low_libido: 15, ed: 15, fat_gain: 10 };
+  const primaryWeights: Record<string, number> = {
+    low_libido: 15,
+    ed: 15,
+    gynecomastia: 15,    // most objective sign of E2/T imbalance
+    fat_gain: 10,
+    hot_flashes: 10,     // strong estrogen signal in men
+    testicular_ache: 10, // direct anatomical indicator
+    muscle_loss: 8,      // primary anabolic deficiency signal
+    reduced_strength: 7,
+  };
 
   let p4 = 0;
   const secondaryCount = symptoms.filter(id => !(id in primaryWeights)).length;
@@ -560,6 +569,15 @@ export function getKeyFactors(
     { id: 'fat_gain', title: 'Unexplained fat gain reported', explanation: 'Accumulating fat despite unchanged diet or exercise — especially around the abdomen — is a hallmark sign of declining testosterone and worsening insulin sensitivity.' },
     { id: 'gynecomastia', title: 'Breast tissue development reported', explanation: 'Gynecomastia is almost always caused by an elevated estrogen-to-testosterone ratio. One of the clearest clinical signs of hormonal imbalance — warrants immediate bloodwork.' },
     { id: 'muscle_loss', title: 'Muscle loss or difficulty building muscle', explanation: 'Testosterone is the primary anabolic hormone. Losing muscle despite training, or being unable to build it, is a strong indicator of suboptimal androgen levels.' },
+    { id: 'hot_flashes', title: 'Hot flashes or night sweats reported', explanation: 'Hot flashes in men are typically caused by estrogen fluctuation or rapid estrogen decline — the same mechanism as in menopause. This can occur with low testosterone, post-cycle, or with aromatase inhibitor use. Estradiol bloodwork is essential.' },
+    { id: 'testicular_ache', title: 'Testicular discomfort reported', explanation: 'Chronic testicular pain or aching can indicate varicocele, epididymal inflammation, or primary hypogonadism — conditions where the testes themselves are compromised. LH and FSH will distinguish primary from secondary hypogonadism.' },
+    { id: 'fertility_concerns', title: 'Fertility concerns reported', explanation: 'Male fertility depends on adequate LH and FSH signaling to drive sperm production, independent of testosterone levels. Fertility issues can exist even with normal testosterone — LH, FSH, and a semen analysis are the appropriate starting point.' },
+    { id: 'reduced_ejaculate', title: 'Reduced ejaculate volume reported', explanation: 'Ejaculate volume decline often reflects reduced testosterone and DHT driving accessory gland function (prostate and seminal vesicles), or early FSH/LH axis impairment. It correlates closely with total androgen status.' },
+    { id: 'insomnia', title: 'Insomnia or poor sleep onset reported', explanation: 'Difficulty initiating or maintaining sleep is frequently linked to elevated evening cortisol — which directly suppresses the testosterone production that occurs during deep sleep stages. This creates a compounding cycle: poor sleep raises cortisol, high cortisol worsens sleep.' },
+    { id: 'non_restorative', title: 'Waking unrefreshed despite adequate sleep', explanation: 'Unrefreshing sleep despite sufficient hours suggests disrupted sleep architecture — typically from elevated cortisol or undiagnosed sleep apnea. Both suppress the nocturnal testosterone surge. You may be logging hours but not achieving the deep sleep stages where testosterone is produced.' },
+    { id: 'anxiety', title: 'Increased anxiety or irritability reported', explanation: 'Chronic anxiety elevates cortisol, which competes with testosterone for the same biosynthetic precursors (pregnenolone steal). Low testosterone itself also worsens mood stability and stress tolerance — the relationship is bidirectional.' },
+    { id: 'afternoon_crash', title: 'Afternoon energy crashes reported', explanation: 'Afternoon energy drops often reflect cortisol dysregulation or blood glucose instability driven by insulin resistance — a frequent downstream effect of low testosterone and high sedentary time. Morning cortisol testing distinguishes HPA axis dysfunction from simple sleep debt.' },
+    { id: 'slow_recovery', title: 'Slow recovery from exercise reported', explanation: 'Impaired recovery from training is a hallmark of testosterone deficiency and elevated cortisol — both of which reduce the anabolic signaling required for muscle repair. Vitamin D deficiency also independently impairs recovery and is frequently overlooked.' },
   ];
 
   for (const s of flaggedSymptoms) {
@@ -658,10 +676,12 @@ export function getPersonalizedExtendedTests(
   // Estrogen modulators (DIM etc.) → Estradiol (user suspects estrogen imbalance)
   if (suppCats.includes('estrogen_modulators')) tests.add('estradiol');
 
-  // TSH + Free T3 + Free T4: brain fog, depression symptoms, OR hypothyroidism condition
+  // TSH + Free T3 + Free T4: brain fog, depression, poor memory, dry skin symptoms, OR hypothyroidism condition
   if (
     symptoms.includes('brain_fog') ||
     symptoms.includes('depression') ||
+    symptoms.includes('poor_memory') ||
+    symptoms.includes('dry_skin') ||
     conditions.some(c => c.toLowerCase().includes('hypothyroidism'))
   ) {
     tests.add('tsh');
@@ -677,16 +697,63 @@ export function getPersonalizedExtendedTests(
     tests.add('dht');
   }
 
-  // Glucose + Fasting Insulin: diabetes condition, very high sugar, OR highly sedentary
-  // High sedentary hours is an independent driver of insulin resistance
+  // LH + FSH: fertility concerns, testicular pain, reduced ejaculate volume, or hot flashes
+  // → assessing HPT axis output / primary vs secondary hypogonadism
+  if (
+    symptoms.includes('fertility_concerns') ||
+    symptoms.includes('reduced_ejaculate') ||
+    symptoms.includes('testicular_ache') ||
+    symptoms.includes('hot_flashes')
+  ) {
+    tests.add('lh');
+    tests.add('fsh');
+  }
+
+  // Estradiol: hot flashes in men = estrogen fluctuation signal
+  if (symptoms.includes('hot_flashes')) {
+    tests.add('estradiol');
+  }
+
+  // Prolactin: low motivation (dopamine suppression link) or anxiety (elevated prolactin → GnRH suppression)
+  if (symptoms.includes('low_motivation') || symptoms.includes('anxiety')) {
+    tests.add('prolactin');
+  }
+
+  // Cortisol AM: high stress, insomnia, waking unrefreshed, afternoon crash, or slow recovery
+  if (
+    (phase2.stress_level ?? 3) >= 4 ||
+    symptoms.includes('insomnia') ||
+    symptoms.includes('non_restorative') ||
+    symptoms.includes('afternoon_crash') ||
+    symptoms.includes('slow_recovery')
+  ) {
+    tests.add('cortisol_am');
+  }
+
+  // TSH: anxiety (hyperthyroidism mimics anxiety disorder)
+  if (symptoms.includes('anxiety')) {
+    tests.add('tsh');
+  }
+
+  // Vitamin D: slow recovery, joint pain, or fatigue — all linked to deficiency
+  if (
+    symptoms.includes('slow_recovery') ||
+    symptoms.includes('joint_pain') ||
+    symptoms.includes('low_energy')
+  ) {
+    tests.add('vitamin_d');
+  }
+
+  // Glucose + Fasting Insulin: diabetes condition, very high sugar, highly sedentary, or afternoon crash
   if (
     conditions.some(c => c.toLowerCase().includes('diabetes')) ||
     phase2.sugar_consumption === 'very_high' ||
-    phase2.sedentary_hours >= 10
+    phase2.sedentary_hours >= 10 ||
+    symptoms.includes('afternoon_crash')
   ) {
     tests.add('glucose');
   }
-  if (phase2.sedentary_hours >= 10) {
+  if (phase2.sedentary_hours >= 10 || symptoms.includes('afternoon_crash')) {
     tests.add('fasting_insulin');
   }
 
@@ -712,11 +779,6 @@ export function getPersonalizedExtendedTests(
     tests.add('ldl');
     tests.add('triglycerides');
     tests.add('prolactin');
-  }
-
-  // Morning Cortisol: high stress (pregnenolone steal)
-  if ((phase2.stress_level ?? 3) >= 4) {
-    tests.add('cortisol_am');
   }
 
   // Hematocrit: always include as safety baseline
