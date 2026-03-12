@@ -133,12 +133,14 @@ export interface DailyCheckin {
   user_id: string;
   cycle_id: string;
   date: string;
-  mood: number;
-  energy: number;
-  sleep_quality: number;
+  mood: number;            // 1–10
+  energy: number;          // 1–10
+  sleep_quality: number;   // 1–10
   sleep_hours: number;
-  libido: number;
-  stress: number;
+  libido: number;          // 1–10
+  stress: number;          // 1–10
+  mental_clarity: number;  // 1–10
+  morning_erection: boolean | null;
   exercised: boolean;
   plan_adherence: 'fully' | 'mostly' | 'partially' | 'not_today';
   notes?: string;

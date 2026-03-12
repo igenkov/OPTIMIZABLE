@@ -32,7 +32,9 @@ export async function middleware(request: NextRequest) {
   const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup');
   const isProtected = pathname.startsWith('/dashboard') ||
     pathname.startsWith('/bloodwork') || pathname.startsWith('/results') ||
-    pathname.startsWith('/plan') || pathname.startsWith('/journal') || pathname.startsWith('/profile');
+    pathname.startsWith('/plan') || pathname.startsWith('/journal') || pathname.startsWith('/profile') ||
+    pathname.startsWith('/lab') || pathname.startsWith('/protocol') ||
+    pathname.startsWith('/wellbeing') || pathname.startsWith('/upgrade');
 
   if (!user && isProtected) {
     return NextResponse.redirect(new URL('/login', request.url));

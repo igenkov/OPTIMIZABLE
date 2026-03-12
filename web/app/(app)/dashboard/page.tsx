@@ -14,12 +14,13 @@ export default async function DashboardPage() {
   const { data: { user } } = await supabase.auth.getUser();
   if (!user) redirect('/login');
 
-  const [profileRes, lifestyleRes, medHistRes, symptomsRes, reportRes] = await Promise.all([
+  const [profileRes, lifestyleRes, medHistRes, symptomsRes, reportRes, userRes] = await Promise.all([
     supabase.from('profiles').select('*').eq('user_id', user.id).single(),
     supabase.from('lifestyle').select('*').eq('user_id', user.id).single(),
     supabase.from('medical_history').select('*').eq('user_id', user.id).single(),
     supabase.from('symptom_assessments').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
     supabase.from('analysis_reports').select('health_score,created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('users').select('subscription_tier').eq('id', user.id).single(),
   ]);
 
   const profile = profileRes.data as unknown as Phase1Data | null;
@@ -29,6 +30,8 @@ export default async function DashboardPage() {
   const medHistory = medHistRes.data as unknown as Phase3Data | null;
   const symptoms = symptomsRes.data as { symptoms_selected: string[] } | null;
   const hasReport = !!reportRes.data;
+  const tier = (userRes.data?.subscription_tier as 'free' | 'premium' | 'expert') ?? 'free';
+  const isPremium = tier === 'premium' || tier === 'expert';
 
   const p1 = profile;
   const p2 = lifestyle ?? {} as Phase2Data;
@@ -264,37 +267,91 @@ export default async function DashboardPage() {
         </>
       )}
 
-      {/* Upgrade CTA */}
-      <div className="border border-[rgba(0,230,118,0.25)] bg-[rgba(0,230,118,0.04)] p-6">
-        <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">
-          Next Step: AI Bloodwork Analysis
+      {/* Premium: quick access links */}
+      {isPremium && (
+        <div className="flex flex-col gap-3">
+          {hasReport ? (
+            <Link href="/lab" className="block w-full py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors">
+              VIEW LAB ANALYSIS →
+            </Link>
+          ) : (
+            <Link href="/lab/upload" className="block w-full py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors">
+              UPLOAD YOUR FIRST BLOODWORK →
+            </Link>
+          )}
+          <div className="flex gap-3">
+            <Link href="/protocol" className="flex-1 py-2.5 border border-[rgba(255,255,255,0.15)] text-white text-xs font-bold tracking-widest uppercase text-center hover:border-[rgba(255,255,255,0.3)] transition-colors">
+              ▦ PROTOCOL
+            </Link>
+            <Link href="/wellbeing" className="flex-1 py-2.5 border border-[rgba(255,255,255,0.15)] text-white text-xs font-bold tracking-widest uppercase text-center hover:border-[rgba(255,255,255,0.3)] transition-colors">
+              ◷ WELLBEING
+            </Link>
+          </div>
         </div>
-        <p className="text-base font-bold text-white mb-2">Turn Your Lab Results Into a Protocol</p>
-        <p className="text-xs text-[#9A9A9A] leading-relaxed mb-5">
-          Upload your bloodwork to get a deep AI analysis of every biomarker, a personalized supplement stack,
-          and a 90-day optimization protocol built around your specific hormonal profile.
-        </p>
-        <div className="flex flex-col gap-2 mb-5">
-          {[
-            'AI analysis of every biomarker against optimal (not just standard) ranges',
-            'Personalized supplement stack with exact doses and timing',
-            '90-day optimization protocol assigned to your profile',
-            'Re-test reminders and progress tracking',
-            'Medical referral flags if levels require physician review',
-          ].map((f, i) => (
-            <div key={i} className="flex items-start gap-2">
-              <span className="text-[#00E676] font-bold text-xs shrink-0 mt-0.5">✓</span>
-              <span className="text-xs text-[#9A9A9A]">{f}</span>
+      )}
+
+      {/* Free: LAB upgrade pitch */}
+      {!isPremium && (
+        <div className="border border-[rgba(0,230,118,0.25)] bg-[rgba(0,230,118,0.04)] p-6">
+          <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">
+            Unlock LAB
+          </div>
+          <p className="text-base font-bold text-white mb-2">Turn Your Lab Results Into a Protocol</p>
+          <p className="text-xs text-[#9A9A9A] leading-relaxed mb-5">
+            Upload your bloodwork to get a deep AI analysis of every biomarker, a personalized supplement stack,
+            and a 90-day malemaxxing protocol built around your specific hormonal profile.
+          </p>
+
+          {/* Blurred preview mockup */}
+          <div className="relative mb-5 select-none pointer-events-none overflow-hidden border border-[rgba(255,255,255,0.07)]">
+            <div className="blur-sm p-4">
+              <div className="text-[9px] text-[#4A4A4A] uppercase tracking-widest mb-2">Testosterone Health Score</div>
+              <div className="text-4xl font-black text-[#00E676] mb-1">74<span className="text-lg text-[#4A4A4A]">/100</span></div>
+              <div className="h-1 bg-[rgba(255,255,255,0.05)] mb-3">
+                <div className="h-full w-3/4 bg-[#00E676]" />
+              </div>
+              <div className="flex flex-col gap-1">
+                {['Total Testosterone', 'Free Testosterone', 'SHBG', 'Estradiol'].map(m => (
+                  <div key={m} className="flex justify-between py-1 border-b border-[rgba(255,255,255,0.05)]">
+                    <span className="text-xs text-[#9A9A9A]">{m}</span>
+                    <div className="flex gap-2">
+                      <span className="text-xs text-[#00E676]">●●●</span>
+                      <span className="text-xs font-bold text-[#4A4A4A]">— ng/dL</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
-          ))}
+            <div className="absolute inset-0 flex items-center justify-center bg-[rgba(14,14,14,0.5)]">
+              <div className="text-center">
+                <div className="text-lg mb-1">🔒</div>
+                <div className="text-xs font-bold text-white tracking-widest uppercase">LAB Access Required</div>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-2 mb-5">
+            {[
+              'Deep AI analysis against optimal (not just standard) ranges',
+              'Personalized supplement stack with exact doses and timing',
+              '90-day Foundation → Calibration → Peak protocol',
+              'Daily wellbeing tracking with trend graphs',
+              'Bloodwork comparison across panels — track actual progress',
+            ].map((f, i) => (
+              <div key={i} className="flex items-start gap-2">
+                <span className="text-[#00E676] font-bold text-xs shrink-0 mt-0.5">✓</span>
+                <span className="text-xs text-[#9A9A9A]">{f}</span>
+              </div>
+            ))}
+          </div>
+          <Link
+            href="/upgrade"
+            className="block w-full py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors"
+          >
+            UNLOCK LAB →
+          </Link>
         </div>
-        <Link
-          href="/bloodwork/upload"
-          className="block w-full py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors"
-        >
-          UPLOAD BLOODWORK →
-        </Link>
-      </div>
+      )}
 
     </div>
   );
