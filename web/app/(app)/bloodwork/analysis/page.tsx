@@ -34,14 +34,14 @@ export default function AnalysisPage() {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push('/login'); return; }
 
-    const panelId = sessionStorage.getItem('pending_panel_id');
-    const panelValues = sessionStorage.getItem('pending_panel_values');
+    const panelId = localStorage.getItem('pending_panel_id');
+    const panelValues = localStorage.getItem('pending_panel_values');
     if (!panelId || !panelValues) { setError('No pending panel found. Please upload bloodwork first.'); setPhase('error'); return; }
 
-    const phase1 = JSON.parse(sessionStorage.getItem('phase1') || '{}');
-    const phase2 = JSON.parse(sessionStorage.getItem('phase2') || '{}');
-    const phase3 = JSON.parse(sessionStorage.getItem('phase3') || '{}');
-    const symptoms = JSON.parse(sessionStorage.getItem('symptoms') || '{}');
+    const phase1 = JSON.parse(localStorage.getItem('phase1') || '{}');
+    const phase2 = JSON.parse(localStorage.getItem('phase2') || '{}');
+    const phase3 = JSON.parse(localStorage.getItem('phase3') || '{}');
+    const symptoms = JSON.parse(localStorage.getItem('symptoms') || '{}');
 
     try {
       const res = await fetch('/api/analyze', {
@@ -62,8 +62,8 @@ export default function AnalysisPage() {
       if (dbErr) throw dbErr;
       setReport(data as AnalysisReport);
       setPhase('done');
-      sessionStorage.removeItem('pending_panel_id');
-      sessionStorage.removeItem('pending_panel_values');
+      localStorage.removeItem('pending_panel_id');
+      localStorage.removeItem('pending_panel_values');
     } catch (e: unknown) {
       setError(e instanceof Error ? e.message : 'Analysis failed');
       setPhase('error');

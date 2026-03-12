@@ -79,8 +79,8 @@ export default function UploadPage() {
 
     if (panelRes.error) { setError(panelRes.error.message); setUploading(false); return; }
 
-    sessionStorage.setItem('pending_panel_id', panelRes.data.id);
-    sessionStorage.setItem('pending_panel_values', JSON.stringify(formattedValues));
+    localStorage.setItem('pending_panel_id', panelRes.data.id);
+    localStorage.setItem('pending_panel_values', JSON.stringify(formattedValues));
     router.push('/bloodwork/analysis');
   }
 
