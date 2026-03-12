@@ -22,7 +22,9 @@ PATIENT PROFILE:
 - Medical conditions: ${phase1?.medical_conditions?.join(', ') || 'none reported'}
 - Sleep: ${phase2?.avg_sleep_hours ?? '?'}h/night, quality ${phase2?.sleep_quality ?? '?'}/5
 - Exercise: ${phase2?.exercise_frequency ?? 'unknown'}
-- Alcohol: ${phase2?.alcohol_frequency ?? 'unknown'}, Smoking: ${phase2?.smoking_status ?? 'unknown'}
+- Beer/cider: ${phase2?.beer_frequency ?? 'unknown'} (note: hops phytoestrogens have greater hormonal impact than other alcohol)
+- Spirits/wine: ${phase2?.spirits_wine_frequency ?? 'unknown'}
+- Smoking: ${phase2?.smoking_status ?? 'unknown'}
 - Steroid history: ${phase3?.steroid_history ?? 'never'}, TRT: ${phase3?.trt_history ?? 'never'}
 - Medications: ${phase3?.medications?.join(', ') || 'none'}
 - Supplements: ${phase3?.supplements?.join(', ') || 'none'}
