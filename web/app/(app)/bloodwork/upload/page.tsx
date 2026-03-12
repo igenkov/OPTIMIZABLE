@@ -7,6 +7,25 @@ import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { BIOMARKERS, CORE_PANEL_IDS, EXTENDED_PANEL_IDS } from '@/constants/biomarkers';
 
+function BiomarkerRow({ id, name, unit, value, onChange }: { id: string; name: string; unit: string; value: string; onChange: (id: string, val: string) => void }) {
+  return (
+    <div className="flex items-center justify-between py-3 border-b border-[rgba(255,255,255,0.05)]">
+      <div>
+        <div className="text-sm text-[#E0E0E0] font-medium">{name}</div>
+        <div className="text-xs text-[#4A4A4A]">{unit}</div>
+      </div>
+      <input
+        type="number"
+        step="any"
+        value={value}
+        onChange={e => onChange(id, e.target.value)}
+        placeholder="—"
+        className="w-24 px-3 py-2 text-right text-sm bg-[#1f1f1f] border border-[rgba(255,255,255,0.07)] text-white placeholder-[#4A4A4A] focus:border-[#00E676] outline-none"
+      />
+    </div>
+  );
+}
+
 export default function UploadPage() {
   const router = useRouter();
   const [values, setValues] = useState<Record<string, string>>({});
@@ -65,23 +84,8 @@ export default function UploadPage() {
     router.push('/bloodwork/analysis');
   }
 
-  function BiomarkerRow({ id, name, unit }: { id: string; name: string; unit: string }) {
-    return (
-      <div className="flex items-center justify-between py-3 border-b border-[rgba(255,255,255,0.05)]">
-        <div>
-          <div className="text-sm text-[#E0E0E0] font-medium">{name}</div>
-          <div className="text-xs text-[#4A4A4A]">{unit}</div>
-        </div>
-        <input
-          type="number"
-          step="any"
-          value={values[id] ?? ''}
-          onChange={e => setValues(prev => ({ ...prev, [id]: e.target.value }))}
-          placeholder="—"
-          className="w-24 px-3 py-2 text-right text-sm bg-[#1f1f1f] border border-[rgba(255,255,255,0.07)] text-white placeholder-[#4A4A4A] focus:border-[#00E676] outline-none"
-        />
-      </div>
-    );
+  function handleBiomarkerChange(id: string, val: string) {
+    setValues(prev => ({ ...prev, [id]: val }));
   }
 
   return (
@@ -103,13 +107,13 @@ export default function UploadPage() {
         <Card>
           <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Core Panel</div>
           <p className="text-xs text-[#4A4A4A] mb-4">Leave blank if not tested.</p>
-          {core.map(b => <BiomarkerRow key={b.id} id={b.id} name={b.name} unit={b.unit_primary} />)}
+          {core.map(b => <BiomarkerRow key={b.id} id={b.id} name={b.name} unit={b.unit_primary} value={values[b.id] ?? ''} onChange={handleBiomarkerChange} />)}
         </Card>
 
         <Card>
           <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Extended Panel</div>
           <p className="text-xs text-[#4A4A4A] mb-4">If you had these tested:</p>
-          {extended.map(b => <BiomarkerRow key={b.id} id={b.id} name={b.name} unit={b.unit_primary} />)}
+          {extended.map(b => <BiomarkerRow key={b.id} id={b.id} name={b.name} unit={b.unit_primary} value={values[b.id] ?? ''} onChange={handleBiomarkerChange} />)}
         </Card>
 
         <Card accent>
