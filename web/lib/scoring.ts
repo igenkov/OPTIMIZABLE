@@ -672,7 +672,7 @@ export function getPersonalizedExtendedTests(
   // DHT: hair loss or 5-alpha reductase inhibitor use
   if (
     symptoms.includes('hair_loss') ||
-    phase3.medications.some(m => m.toLowerCase().includes('finasteride') || m.toLowerCase().includes('dutasteride'))
+    (phase3.medications || []).some(m => m.toLowerCase().includes('finasteride') || m.toLowerCase().includes('dutasteride'))
   ) {
     tests.add('dht');
   }
