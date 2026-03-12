@@ -88,7 +88,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
-            maxOutputTokens: 4096,
+            maxOutputTokens: 8192,
             temperature: 0.1,
             responseMimeType: 'application/json',
           },
