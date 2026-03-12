@@ -15,20 +15,44 @@ export async function POST(req: NextRequest) {
       return `${b.name}: ${val.value} ${val.unit} (standard: ${b.standard_range_low}–${b.standard_range_high}, optimal: ${b.optimal_range_low}–${b.optimal_range_high})`;
     }).filter(Boolean).join('\n');
 
+    const bmi = phase1?.weight_kg && phase1?.height_cm
+      ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1)
+      : 'unknown';
+
     const prompt = `You are an expert men's health and testosterone optimization physician. Analyze this patient's bloodwork and generate a comprehensive report.
 
 PATIENT PROFILE:
-- Age: ${phase1?.age ?? 'unknown'}, BMI: ${phase1?.weight_kg && phase1?.height_cm ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1) : 'unknown'}
+- Age: ${phase1?.age ?? 'unknown'}
+- BMI: ${bmi}${phase1?.body_fat_percent ? `, Body fat: ${phase1.body_fat_percent}%` : ''}${phase1?.high_muscle_override ? ' (high muscle mass — elevated BMI reflects muscle, not fat)' : ''}
 - Medical conditions: ${phase1?.medical_conditions?.join(', ') || 'none reported'}
+
+LIFESTYLE:
 - Sleep: ${phase2?.avg_sleep_hours ?? '?'}h/night, quality ${phase2?.sleep_quality ?? '?'}/5
-- Exercise: ${phase2?.exercise_frequency ?? 'unknown'}
+- Exercise: ${phase2?.exercise_frequency ?? 'unknown'}${phase2?.exercise_types?.length ? ` (${phase2.exercise_types.join(', ')})` : ''}
+- Sedentary hours/day: ${phase2?.sedentary_hours ?? 'unknown'}
+- Stress level: ${phase2?.stress_level ?? 'unknown'}/5
 - Beer/cider: ${phase2?.beer_frequency ?? 'unknown'} (note: hops phytoestrogens have greater hormonal impact than other alcohol)
 - Spirits/wine: ${phase2?.spirits_wine_frequency ?? 'unknown'}
 - Smoking: ${phase2?.smoking_status ?? 'unknown'}
-- Steroid history: ${phase3?.steroid_history ?? 'never'}, TRT: ${phase3?.trt_history ?? 'never'}
+- Coffee/day: ${phase2?.coffee_per_day ?? 'unknown'}
+- Sugar consumption: ${phase2?.sugar_consumption ?? 'unknown'}
+- Keto/low-carb diet: ${phase2?.keto_diet ? 'yes (SHBG elevation risk)' : 'no'}
+
+SEXUAL HEALTH:
+- Morning erections: ${phase2?.morning_erection_frequency ?? 'unknown'}
+- Libido: ${phase2?.libido_rating ?? 'unknown'}/5
+- Erectile function: ${phase2?.erectile_rating ?? 'unknown'}/5
+
+MEDICAL HISTORY:
+- Steroid history: ${phase3?.steroid_history ?? 'never'}${phase3?.steroid_history === 'past' ? ` — stopped ${phase3?.steroid_stopped_ago ?? 'unknown'}, ${phase3?.steroid_cycle_count ?? 'unknown'} cycle(s), PCT: ${phase3?.steroid_pct ? 'yes' : 'no'}` : ''}
+- TRT history: ${phase3?.trt_history ?? 'never'}${phase3?.trt_history !== 'never' && phase3?.trt_type ? ` (${phase3.trt_type})` : ''}
+- Medication categories: ${phase3?.medication_categories?.join(', ') || 'none'}
 - Medications: ${phase3?.medications?.join(', ') || 'none'}
+- Supplement categories: ${phase3?.supplement_categories?.join(', ') || 'none'}
 - Supplements: ${phase3?.supplements?.join(', ') || 'none'}
-- Symptoms: ${symptoms?.symptoms_selected?.join(', ') || 'none reported'}
+
+SYMPTOMS:
+- ${symptoms?.symptoms_selected?.join(', ') || 'none reported'}
 
 BLOODWORK VALUES:
 ${biomarkerContext}
