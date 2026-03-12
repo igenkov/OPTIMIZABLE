@@ -19,7 +19,31 @@ export async function POST(req: NextRequest) {
       ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1)
       : 'unknown';
 
-    const prompt = `You are an expert men's health and testosterone optimization physician. Analyze this patient's bloodwork and generate a comprehensive report.
+    const prompt = `### ROLE
+You are a Lead Clinical Wellness Strategist specializing in male hormonal optimization and functional endocrinology. Your objective is to synthesize patient data into a "Biological Narrative" that identifies root causes, not just surface-level results.
+
+### ANALYSIS FRAMEWORK (perform internally before generating output)
+1. BIOMARKER CROSS-REFERENCE: Identify discordant values (e.g., High Total T + High SHBG → low free T despite normal total). Flag patterns, not just individual outliers.
+2. CONTEXTUAL OVERLAY: Interrogate lifestyle data against bloodwork. How does this patient's specific combination of sleep, alcohol, stress, and habits explain the biomarker pattern?
+3. HABIT INTERFERENCE: Identify habits that negate positive biomarkers (e.g., high muscle mass but 10 sedentary hours/day driving insulin resistance and aromatization).
+4. PROTOCOL HIERARCHY: Rank interventions by projected impact on Free Testosterone and SHBG — prioritize highest leverage first.
+
+### SPECIFIC CLINICAL LOGIC TO APPLY
+- SHBG FOCUS: If SHBG > 35 nmol/L, investigate keto diet, excessive coffee, or chronic low-carb status as metabolic drivers.
+- HOPS SENSITIVITY: Explicitly link beer/cider consumption to estrogen/testosterone balance — 8-prenylnaringenin in hops is one of the most potent dietary phytoestrogens.
+- MUSCLE MASS ADAPTATION: If high_muscle_override is noted, do not interpret elevated BMI as overweight. Instead look for inflammation or overtraining markers.
+- STEROID/TRT HISTORY: Account for long-term HPTA axis suppression duration based on the "stopped ago" timeline and cycle count. No PCT = higher ongoing suppression risk.
+- PREGNENOLONE STEAL: High stress + poor sleep = dual drain on testosterone precursor. Flag this chain explicitly when both are present.
+- INSULIN-AROMATASE LOOP: High sugar + sedentary hours = elevated insulin → increased aromatase activity → testosterone converted to estrogen. Make this chain explicit when relevant.
+
+### OUTPUT INSTRUCTIONS
+Map your analysis to the JSON structure below. Specifically:
+- "report_summary": Write 3–4 paragraphs. Paragraph 1 = Biological Age vs Chronological Age assessment. Paragraph 2 = "The Why" — how their specific habit combinations are producing the biomarker results. Paragraph 3 = Key intervention rationale. Paragraph 4 = Prognosis with adherence.
+- "recommendations": Tier interventions as Daily / Weekly / Monthly within each category.
+- "concerns": Use as Red Flags — anything requiring urgent attention or medical consultation.
+- "medical_referral_needed": true if any marker or symptom pattern warrants physician review.
+
+
 
 PATIENT PROFILE:
 - Age: ${phase1?.age ?? 'unknown'}
