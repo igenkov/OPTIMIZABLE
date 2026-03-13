@@ -1,5 +1,12 @@
 import type { Metadata } from "next";
+import { Oswald } from "next/font/google";
 import "./globals.css";
+
+const oswald = Oswald({
+  subsets: ["latin"],
+  weight: ["400", "700"],
+  variable: "--font-oswald",
+});
 
 export const metadata: Metadata = {
   title: "Optimizable — Malemaxxing, Quantified",
@@ -9,7 +16,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body className={oswald.variable}>{children}</body>
     </html>
   );
 }

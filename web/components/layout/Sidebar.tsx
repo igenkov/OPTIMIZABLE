@@ -39,8 +39,18 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
     <aside className="w-56 shrink-0 border-r border-[rgba(255,255,255,0.07)] bg-[#141414] flex flex-col min-h-screen">
       {/* Logo */}
       <div className="p-6 border-b border-[rgba(255,255,255,0.07)]">
-        <div className="text-[#00E676] font-black text-sm tracking-[3px] uppercase">OPTIMIZABLE</div>
-        <div className="text-[10px] text-[#4A4A4A] tracking-widest mt-0.5">malemaxxing, quantified</div>
+        <div
+          className="text-white font-bold uppercase tracking-[0.14em]"
+          style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: "1.15rem" }}
+        >
+          OPTIMIZABLE
+        </div>
+        <div
+          className="text-[#4A4A4A] uppercase tracking-[0.18em] mt-0.5"
+          style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: "0.58rem" }}
+        >
+          MALEMAXXING QUANTIFIED
+        </div>
       </div>
 
       {/* Phase progress bar — premium only */}
