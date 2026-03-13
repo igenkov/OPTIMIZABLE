@@ -1,8 +1,24 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { createClient } from '@/lib/supabase/server';
 import { BIOMARKERS } from '@/constants/biomarkers';
+
+// Strip control characters and limit length to prevent prompt injection
+function san(val: unknown, maxLen = 150): string {
+  if (val == null) return '';
+  return String(val).replace(/[\u0000-\u001F\u007F-\u009F`]/g, '').trim().slice(0, maxLen);
+}
+function sanArr(arr: unknown[] | null | undefined, maxLen = 80): string {
+  if (!Array.isArray(arr) || !arr.length) return 'none';
+  return arr.map(v => san(v, maxLen)).filter(Boolean).join(', ') || 'none';
+}
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth check — reject unauthenticated requests
+    const supabase = await createClient();
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
     const { panelValues, phase1, phase2, phase3, symptoms } = await req.json();
 
     const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
@@ -48,11 +64,11 @@ Map your analysis to the JSON structure below. Specifically:
 PATIENT PROFILE:
 - Age: ${phase1?.age ?? 'unknown'}
 - BMI: ${bmi}${phase1?.body_fat_percent ? `, Body fat: ${phase1.body_fat_percent}%` : ''}${phase1?.high_muscle_override ? ' (high muscle mass — elevated BMI reflects muscle, not fat)' : ''}
-- Medical conditions: ${phase1?.medical_conditions?.join(', ') || 'none reported'}
+- Medical conditions: ${sanArr(phase1?.medical_conditions)}
 
 LIFESTYLE:
 - Sleep: ${phase2?.avg_sleep_hours ?? '?'}h/night, quality ${phase2?.sleep_quality ?? '?'}/5
-- Exercise: ${phase2?.exercise_frequency ?? 'unknown'}${phase2?.exercise_types?.length ? ` (${phase2.exercise_types.join(', ')})` : ''}
+- Exercise: ${phase2?.exercise_frequency ?? 'unknown'}${phase2?.exercise_types?.length ? ` (${sanArr(phase2.exercise_types)})` : ''}
 - Sedentary hours/day: ${phase2?.sedentary_hours ?? 'unknown'}
 - Stress level: ${phase2?.stress_level ?? 'unknown'}/5
 - Beer/cider: ${phase2?.beer_frequency ?? 'unknown'} (note: hops phytoestrogens have greater hormonal impact than other alcohol)
@@ -70,13 +86,13 @@ SEXUAL HEALTH:
 MEDICAL HISTORY:
 - Steroid history: ${phase3?.steroid_history ?? 'never'}${phase3?.steroid_history === 'past' ? ` — stopped ${phase3?.steroid_stopped_ago ?? 'unknown'}, ${phase3?.steroid_cycle_count ?? 'unknown'} cycle(s), PCT: ${phase3?.steroid_pct ? 'yes' : 'no'}` : ''}
 - TRT history: ${phase3?.trt_history ?? 'never'}${phase3?.trt_history !== 'never' && phase3?.trt_type ? ` (${phase3.trt_type})` : ''}
-- Medication categories: ${phase3?.medication_categories?.join(', ') || 'none'}
-- Medications: ${phase3?.medications?.join(', ') || 'none'}
-- Supplement categories: ${phase3?.supplement_categories?.join(', ') || 'none'}
-- Supplements: ${phase3?.supplements?.join(', ') || 'none'}
+- Medication categories: ${sanArr(phase3?.medication_categories)}
+- Medications: ${sanArr(phase3?.medications)}
+- Supplement categories: ${sanArr(phase3?.supplement_categories)}
+- Supplements: ${sanArr(phase3?.supplements)}
 
 SYMPTOMS:
-- ${symptoms?.symptoms_selected?.join(', ') || 'none reported'}
+- ${sanArr(symptoms?.symptoms_selected)}
 
 BLOODWORK VALUES:
 ${biomarkerContext}

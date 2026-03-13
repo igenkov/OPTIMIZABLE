@@ -41,6 +41,23 @@ export default function LabUploadPage() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (filled.length < 3) { setError('Please enter at least 3 biomarker values.'); return; }
+
+    // Validate collection date
+    const today = new Date().toISOString().split('T')[0];
+    if (collectionDate > today) { setError('Collection date cannot be in the future.'); return; }
+    const fiveYearsAgo = new Date(); fiveYearsAgo.setFullYear(fiveYearsAgo.getFullYear() - 5);
+    if (new Date(collectionDate) < fiveYearsAgo) { setError('Collection date cannot be more than 5 years ago.'); return; }
+
+    // Validate biomarker values
+    for (const [id, v] of filled) {
+      const num = Number(v);
+      if (isNaN(num) || num < 0 || num > 100000) {
+        const name = BIOMARKERS.find(b => b.id === id)?.name ?? id;
+        setError(`Invalid value for ${name}: must be a positive number.`);
+        return;
+      }
+    }
+
     setUploading(true);
     setError('');
 

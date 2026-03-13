@@ -46,15 +46,15 @@ export default function SignupPage() {
         const p2 = p2Raw ? JSON.parse(p2Raw) : null;
         const p3 = p3Raw ? JSON.parse(p3Raw) : null;
         const sym = symRaw ? JSON.parse(symRaw) : null;
-        const results = await Promise.all([
-          p1.age && supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
-          p2?.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
-          p3?.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
-          sym?.symptoms_selected && supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }),
+        const [r1, r2, r3, r4] = await Promise.all([
+          p1.age ? supabase.from('profiles').upsert({ user_id: userId, ...p1 }) : null,
+          p2?.avg_sleep_hours !== undefined ? supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }) : null,
+          p3?.steroid_history ? supabase.from('medical_history').upsert({ user_id: userId, ...p3 }) : null,
+          sym?.symptoms_selected ? supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }) : null,
         ]);
-        const saveError = results.find(r => r && typeof r === 'object' && 'error' in r && r.error);
-        if (saveError && typeof saveError === 'object' && 'error' in saveError) {
-          setError(`Save failed: ${(saveError.error as { message: string }).message}`);
+        const firstError = [r1, r2, r3, r4].find(r => r?.error)?.error;
+        if (firstError) {
+          setError(`Save failed: ${firstError.message}`);
           setLoading(false);
           return;
         }
@@ -81,13 +81,27 @@ export default function SignupPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e] px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-10">
-          <div className="text-[#00E676] font-black text-2xl tracking-[4px] uppercase mb-1">OPTIMIZABLE</div>
-          <div className="text-xs text-[#4A4A4A] tracking-widest">malemaxxing, quantified</div>
+        <div className="flex flex-col items-center mb-10">
+          <svg width="36" height="36" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="mb-3">
+            <defs>
+              <linearGradient id="lg-signup" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#00E676"/>
+                <stop offset="100%" stopColor="#007A3D"/>
+              </linearGradient>
+            </defs>
+            <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg-signup)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+            <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg-signup)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7"/>
+            <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg-signup)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.45"/>
+            <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg-signup)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.25"/>
+            <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round"/>
+            <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          </svg>
+          <div className="text-white font-bold uppercase tracking-[0.14em] text-xl" style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>OPTIMIZABLE</div>
+          <div className="text-[#4A4A4A] uppercase tracking-[0.18em] mt-0.5" style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: "0.58rem" }}>MALEMAXXING QUANTIFIED</div>
         </div>
 
         <div className="border border-[rgba(255,255,255,0.07)] bg-[#1a1a1a] p-8">
-          <h1 className="text-base font-bold tracking-widests uppercase text-white mb-2">Create Account</h1>
+          <h1 className="text-base font-bold tracking-widest uppercase text-white mb-2">Create Account</h1>
           <p className="text-xs text-[#9A9A9A] mb-6">Start your optimization journey</p>
 
           {/* Social login */}

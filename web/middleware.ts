@@ -4,8 +4,8 @@ import { NextResponse, type NextRequest } from 'next/server';
 export async function middleware(request: NextRequest) {
   let supabaseResponse = NextResponse.next({ request });
 
-  // Dev bypass — set NEXT_PUBLIC_DEV_BYPASS_AUTH=true in .env.local to skip auth during testing
-  if (process.env.NEXT_PUBLIC_DEV_BYPASS_AUTH === 'true') {
+  // Dev bypass — set DEV_BYPASS_AUTH=true in .env.local to skip auth during testing (server-only, never exposed to client)
+  if (process.env.DEV_BYPASS_AUTH === 'true') {
     return supabaseResponse;
   }
 

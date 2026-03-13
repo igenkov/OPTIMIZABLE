@@ -71,9 +71,23 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e] px-4">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-10">
-          <div className="text-[#00E676] font-black text-2xl tracking-[4px] uppercase mb-1">OPTIMIZABLE</div>
-          <div className="text-xs text-[#4A4A4A] tracking-widest">malemaxxing, quantified</div>
+        <div className="flex flex-col items-center mb-10">
+          <svg width="36" height="36" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="mb-3">
+            <defs>
+              <linearGradient id="lg-login" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0%" stopColor="#00E676"/>
+                <stop offset="100%" stopColor="#007A3D"/>
+              </linearGradient>
+            </defs>
+            <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg-login)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+            <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg-login)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7"/>
+            <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg-login)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.45"/>
+            <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg-login)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.25"/>
+            <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round"/>
+            <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+          </svg>
+          <div className="text-white font-bold uppercase tracking-[0.14em] text-xl" style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>OPTIMIZABLE</div>
+          <div className="text-[#4A4A4A] uppercase tracking-[0.18em] mt-0.5" style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: "0.58rem" }}>MALEMAXXING QUANTIFIED</div>
         </div>
 
         <div className="border border-[rgba(255,255,255,0.07)] bg-[#1a1a1a] p-8">
