@@ -20,9 +20,10 @@ function ScoreGauge({ score, color, label }: { score: number; color: string; lab
   const dashOffset = +(arcLen * (1 - score / 100)).toFixed(2);
   const d = `M ${sx} ${sy} A ${r} ${r} 0 1 0 ${ex} ${ey}`;
 
+  // paddingBottom = (165/200)*100 = 82.5% — classic responsive SVG trick, immune to flexbox stretch
   return (
-    <div className="w-full max-w-[220px] mx-auto" style={{ aspectRatio: '200 / 165' }}>
-      <svg viewBox="0 0 200 165" width="100%" height="100%">
+    <div style={{ position: 'relative', width: '100%', maxWidth: '220px', margin: '0 auto', paddingBottom: '82.5%', flexShrink: 0 }}>
+      <svg viewBox="0 0 200 165" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
         <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
         <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
           strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
