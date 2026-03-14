@@ -8,22 +8,40 @@ import {
 import { BIOMARKERS, CORE_PANEL_IDS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
-// Gauge using circle + rotation — same pattern as ScoreRing which is known to work.
-// Wrapper div owns the pixel dimensions; SVG fills it; text is HTML overlay (not SVG text).
-function ScoreGauge({ score, color, label }: { score: number; color: string; label: string }) {
-  const size = 190;
-  const r = 80;
-  const sw = 10;
+// ── Reusable glassmorphism card ──────────────────────────────────────────────
+function DashboardCard({
+  children, className = '', topAccent,
+}: {
+  children: React.ReactNode; className?: string; topAccent?: string;
+}) {
+  return (
+    <div
+      className={`relative overflow-hidden p-5 ${className}`}
+      style={{
+        background: 'linear-gradient(165deg, rgba(255,255,255,0.04) 0%, rgba(20,20,20,0) 55%), #141414',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderTopColor: topAccent ?? 'rgba(255,255,255,0.12)',
+      }}
+    >
+      {children}
+    </div>
+  );
+}
+
+// ── Gauge — circle+rotation pattern (mirrors working ScoreRing) ──────────────
+function ScoreGauge({ score, color }: { score: number; color: string }) {
+  const size = 200;
+  const r = 84;
+  const sw = 11;
   const fullCirc = +(2 * Math.PI * r).toFixed(2);
-  const gaugeLen = +((260 / 360) * fullCirc).toFixed(2); // visible 260° arc
-  const gapLen  = +(fullCirc - gaugeLen).toFixed(2);     // hidden 100° gap at bottom
+  const gaugeLen = +((260 / 360) * fullCirc).toFixed(2);
+  const gapLen   = +(fullCirc - gaugeLen).toFixed(2);
   const scoreLen = +((score / 100) * gaugeLen).toFixed(2);
 
   return (
-    // Wrapper div with explicit px size — immune to flex/grid height overrides
-    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0, margin: '0 auto' }}>
-      {/* rotate(140deg) puts arc start at ~8 o'clock (lower-left), end at ~4 o'clock (lower-right) */}
-      <svg width={size} height={size} style={{ transform: 'rotate(140deg)' }}>
+    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0 }}>
+      <svg width={size} height={size}
+        style={{ transform: 'rotate(140deg)', filter: `drop-shadow(0 0 10px ${color}55)` }}>
         <circle cx={size / 2} cy={size / 2} r={r} fill="none"
           stroke="rgba(255,255,255,0.07)" strokeWidth={sw} strokeLinecap="round"
           strokeDasharray={`${gaugeLen} ${gapLen}`} />
@@ -31,17 +49,15 @@ function ScoreGauge({ score, color, label }: { score: number; color: string; lab
           stroke={color} strokeWidth={sw} strokeLinecap="round"
           strokeDasharray={`${scoreLen} ${+(fullCirc - scoreLen).toFixed(2)}`} />
       </svg>
-      {/* HTML text overlay — no SVG font rendering issues */}
       <div style={{
         position: 'absolute', inset: 0,
         display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
-        paddingBottom: '16px',
+        paddingBottom: '18px',
       }}>
-        <span style={{ color: 'white', fontSize: '46px', fontWeight: 900, lineHeight: 1 }}>{score}</span>
-        <span style={{ color, fontSize: '9px', fontWeight: 700, letterSpacing: '3px', marginTop: '6px' }}>
-          {label.toUpperCase()}
+        <span style={{ color: 'white', fontSize: '52px', fontWeight: 900, lineHeight: 1 }}>{score}</span>
+        <span style={{ color: 'rgba(255,255,255,0.25)', fontSize: '11px', marginTop: '4px', letterSpacing: '2px' }}>
+          OUT OF 100
         </span>
-        <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '8px', marginTop: '3px' }}>out of 100</span>
       </div>
     </div>
   );
@@ -122,89 +138,99 @@ export default async function DashboardPage() {
     <div className="min-h-screen bg-[#0e0e0e] px-6 lg:px-8 py-6">
 
       {/* ── Header ── */}
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex items-start justify-between mb-5">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase">Foundation</span>
+            <span className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase">Foundation</span>
             <span className="text-[#2a2a2a]">·</span>
-            <span className="text-[9px] tracking-[2px] text-[#3a3a3a] uppercase">Your onboarding assessment</span>
+            <span className="text-[11px] tracking-[2px] text-[#3a3a3a] uppercase">Onboarding Assessment</span>
           </div>
           <h1 className="text-2xl font-black text-white tracking-tight">Your Health Dashboard</h1>
         </div>
         <div className="text-right">
-          <div className="text-[9px] text-[#3a3a3a] tracking-[2px] uppercase">{dateStr}</div>
+          <div className="text-[11px] text-[#3a3a3a] tracking-[2px] uppercase">{dateStr}</div>
           {hasReport && (
-            <Link href="/results" className="text-[10px] text-[#00E676] hover:underline mt-1 inline-block">
+            <Link href="/results" className="text-[11px] text-[#00E676] hover:underline mt-1 inline-block">
               View bloodwork analysis →
             </Link>
           )}
         </div>
       </div>
 
-      {/* ── Top row: 3 columns ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mb-3">
+      {/* ── Row 1: Hero (8 cols) + Profile (4 cols) ── */}
+      <div className="grid grid-cols-12 gap-3 mb-3">
 
-        {/* Col 1 · Risk Score */}
-        <div className="border border-[rgba(255,255,255,0.07)] bg-[#141414] p-5 flex flex-col">
-          <div className="text-[9px] font-bold tracking-[3px] text-[#9A9A9A] uppercase mb-4">
+        {/* Hero · Risk Score (8 cols) */}
+        <DashboardCard
+          className="col-span-12 md:col-span-8"
+          topAccent={color + '60'}
+        >
+          <div className="text-[11px] font-bold tracking-[3px] text-[#9A9A9A] uppercase mb-5">
             Hormonal Risk Score
           </div>
+
           {excluded ? (
-            <div className="flex-1 flex flex-col items-center justify-center py-6 text-center">
-              <div className="text-[10px] font-bold text-[#FFB300] uppercase tracking-widest mb-2">Assessment Paused</div>
-              <p className="text-[11px] text-[#9A9A9A] leading-relaxed">
-                {p3.trt_history === 'current' && p3.steroid_history === 'current'
-                  ? 'Active TRT + Steroid Use'
-                  : p3.trt_history === 'current' ? 'Currently on TRT' : 'Active Steroid Use'}
-              </p>
-              <p className="text-[10px] text-[#4A4A4A] mt-2">Monitoring panel is shown below.</p>
+            <div className="flex items-center gap-6 py-4">
+              <div className="text-center">
+                <div className="text-[11px] font-bold text-[#FFB300] uppercase tracking-widest mb-2">Assessment Paused</div>
+                <p className="text-[11px] text-[#9A9A9A] leading-relaxed">
+                  {p3.trt_history === 'current' && p3.steroid_history === 'current'
+                    ? 'Active TRT + Steroid Use' : p3.trt_history === 'current'
+                    ? 'Currently on TRT' : 'Active Steroid Use'}
+                </p>
+                <p className="text-[11px] text-[#4A4A4A] mt-2">Monitoring panel is shown below.</p>
+              </div>
             </div>
           ) : (
-            <>
-              <ScoreGauge score={riskScore!} color={color} label={label} />
-              <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.05)] text-center">
-                <p className="text-[10px] font-semibold text-[#FFB300]">{action}</p>
-              </div>
-            </>
-          )}
-        </div>
+            <div className="flex items-center gap-8">
+              {/* Gauge */}
+              <ScoreGauge score={riskScore!} color={color} />
 
-        {/* Col 2 · Contributing Risk Factors */}
-        <div className="border border-[rgba(255,255,255,0.07)] bg-[#141414] p-5">
-          <div className="text-[9px] font-bold tracking-[3px] uppercase mb-4" style={{ color: excluded ? '#FFB300' : color }}>
-            Contributing {excluded ? 'History' : 'Lifestyle Risks'}
-          </div>
-          {keyFactors.length === 0 ? (
-            <div className="flex items-center gap-2.5 mt-2">
-              <div className="w-7 h-7 rounded-full bg-[rgba(0,230,118,0.1)] border border-[rgba(0,230,118,0.25)] flex items-center justify-center shrink-0">
-                <div className="w-2 h-2 rounded-full bg-[#00E676]" />
-              </div>
-              <span className="text-sm text-[#9A9A9A]">No major risk factors identified</span>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-4">
-              {keyFactors.slice(0, 4).map((f, i) => (
-                <div key={i} className="flex gap-3">
-                  <div
-                    className="w-8 h-8 shrink-0 rounded-full flex items-center justify-center mt-0.5"
-                    style={{ background: `${color}15`, border: `1px solid ${color}35` }}
+              {/* Score details + CTA — anchored to gauge */}
+              <div className="flex-1 min-w-0">
+                <div className="text-5xl font-black mb-1" style={{ color }}>{riskScore}</div>
+                <div className="text-[11px] font-bold tracking-[3px] uppercase mb-1" style={{ color }}>{label}</div>
+                <div className="text-[11px] text-[#4A4A4A] mb-4">Hormonal risk score</div>
+
+                <p className="text-[11px] text-[#FFB300] font-semibold mb-5 leading-relaxed">{action}</p>
+
+                {/* CTA anchored here — reduces time-to-action */}
+                {isPremium ? (
+                  <div className="flex flex-col gap-2">
+                    <Link
+                      href={hasReport ? '/lab' : '/lab/upload'}
+                      className="inline-block px-5 py-2.5 bg-[#00E676] text-black font-black text-[11px] tracking-[3px] uppercase hover:bg-[#00c864] transition-colors text-center"
+                    >
+                      {hasReport ? 'VIEW LAB ANALYSIS →' : 'UPLOAD YOUR BLOODWORK →'}
+                    </Link>
+                    <div className="flex gap-2">
+                      <Link href="/protocol"
+                        className="flex-1 py-2 border border-[rgba(255,255,255,0.1)] text-white text-[11px] font-bold tracking-[2px] uppercase text-center hover:border-[rgba(255,255,255,0.25)] transition-all">
+                        ▦ PROTOCOL
+                      </Link>
+                      <Link href="/wellbeing"
+                        className="flex-1 py-2 border border-[rgba(255,255,255,0.1)] text-white text-[11px] font-bold tracking-[2px] uppercase text-center hover:border-[rgba(255,255,255,0.25)] transition-all">
+                        ◷ WELLBEING
+                      </Link>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    href="/upgrade"
+                    className="inline-block px-5 py-2.5 border border-[rgba(0,230,118,0.4)] text-[#00E676] font-black text-[11px] tracking-[3px] uppercase hover:bg-[rgba(0,230,118,0.08)] transition-colors"
                   >
-                    <div className="w-2 h-2 rounded-full" style={{ background: color }} />
-                  </div>
-                  <div className="min-w-0">
-                    <div className="text-sm font-semibold text-white leading-tight mb-0.5">{f.title}</div>
-                    <div className="text-[11px] text-[#7A7A7A] leading-relaxed">{f.explanation}</div>
-                  </div>
-                </div>
-              ))}
+                    UNLOCK FULL ANALYSIS →
+                  </Link>
+                )}
+              </div>
             </div>
           )}
-        </div>
+        </DashboardCard>
 
-        {/* Col 3 · Physical Profile */}
-        <div className="border border-[rgba(255,255,255,0.07)] bg-[#141414] p-5">
-          <div className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">
-            Physical Profile &amp; Symptoms
+        {/* Physical Profile (4 cols) */}
+        <DashboardCard className="col-span-12 md:col-span-4" topAccent="rgba(0,230,118,0.4)">
+          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">
+            Physical Profile
           </div>
           <div className="grid grid-cols-3 gap-2 mb-4">
             {([
@@ -216,7 +242,7 @@ export default async function DashboardPage() {
               { label: 'Stress', value: lifestyle ? `${lifestyle.stress_level}/5` : '—', unit: '', warn: !!(lifestyle && lifestyle.stress_level >= 4), crit: !!(lifestyle && lifestyle.stress_level >= 5) },
             ] as { label: string; value: string; unit: string; warn: boolean; crit: boolean }[]).map((stat, i) => (
               <div key={i} className="border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.02)] p-2 text-center">
-                <div className="text-[8px] text-[#4A4A4A] uppercase tracking-widest mb-1">{stat.label}</div>
+                <div className="text-[11px] text-[#4A4A4A] uppercase tracking-widest mb-1">{stat.label}</div>
                 <div className="text-sm font-bold leading-tight"
                   style={{ color: stat.crit ? '#FF5252' : stat.warn ? '#FFB300' : '#D0D0D0' }}>
                   {stat.value}{stat.unit}
@@ -225,154 +251,114 @@ export default async function DashboardPage() {
             ))}
           </div>
 
-          {/* Health flags */}
           {flags.length > 0 && (
             <div className="border-t border-[rgba(255,255,255,0.05)] pt-3 mb-3">
-              <div className="text-[9px] font-bold tracking-[2px] text-[#FFB300] uppercase mb-2">Health Flags</div>
+              <div className="text-[11px] font-bold tracking-[2px] text-[#FFB300] uppercase mb-2">Health Flags</div>
               <div className="flex flex-col gap-1.5">
-                {flags.slice(0, 3).map((f, i) => (
+                {flags.slice(0, 4).map((f, i) => (
                   <div key={i} className="flex items-start gap-2">
-                    <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-1.5"
+                    <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-[5px]"
                       style={{ background: f.severity === 'critical' ? '#FF5252' : '#FFB300' }} />
                     <span className="text-[11px] text-[#7A7A7A] leading-snug">{f.text}</span>
                   </div>
                 ))}
-                {flags.length > 3 && (
-                  <div className="text-[10px] text-[#4A4A4A] pl-3.5">+{flags.length - 3} more</div>
+                {flags.length > 4 && (
+                  <div className="text-[11px] text-[#4A4A4A] pl-3.5">+{flags.length - 4} more</div>
                 )}
               </div>
             </div>
           )}
 
-          {/* Reported symptoms */}
           {activeSymptoms.length > 0 && (
-            <div className={flags.length > 0 ? '' : 'pt-0'}>
-              <div className="text-[9px] font-bold tracking-[2px] text-[#9A9A9A] uppercase mb-2">
-                Reported Symptoms ({activeSymptoms.length})
+            <div className={flags.length > 0 ? 'border-t border-[rgba(255,255,255,0.05)] pt-3' : ''}>
+              <div className="text-[11px] font-bold tracking-[2px] text-[#9A9A9A] uppercase mb-2">
+                Symptoms ({activeSymptoms.length})
               </div>
               <div className="flex flex-wrap gap-1">
                 {activeSymptoms.map(s => (
-                  <span key={s} className="px-2 py-0.5 text-[9px] border border-[rgba(255,255,255,0.08)] text-[#7A7A7A] bg-[rgba(255,255,255,0.02)]">
+                  <span key={s} className="px-2 py-0.5 text-[11px] border border-[rgba(255,255,255,0.08)] text-[#7A7A7A] bg-[rgba(255,255,255,0.02)]">
                     {s.replace(/_/g, ' ')}
                   </span>
                 ))}
               </div>
             </div>
           )}
-        </div>
+        </DashboardCard>
       </div>
 
-      {/* ── Bottom row: 3 columns ── */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+      {/* ── Row 2: 3 equal columns (4 cols each) ── */}
+      <div className="grid grid-cols-12 gap-3">
 
-        {/* Col 1 · Prior History + free upsell OR premium quick links */}
-        <div className="flex flex-col gap-3">
-          {/* Prior history card */}
-          {(p3.steroid_history !== 'never' || p3.trt_history !== 'never') && (
-            <div className="border border-[rgba(255,179,0,0.2)] bg-[rgba(255,179,0,0.04)] p-5">
-              <div className="h-0.5 -mt-5 -mx-5 mb-4 bg-[#FFB300]" />
-              <div className="text-[9px] font-bold tracking-[3px] text-[#FFB300] uppercase mb-3">Prior History</div>
-              <div className="flex flex-col gap-2.5">
-                {p3.steroid_history !== 'never' && (
-                  <div className="flex gap-3">
-                    <div className="w-7 h-7 shrink-0 rounded-full bg-[rgba(255,179,0,0.1)] border border-[rgba(255,179,0,0.3)] flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#FFB300]" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold text-white">
-                        {p3.steroid_history === 'current' ? 'Active Steroid Use' : 'Prior Steroid Use'}
-                      </div>
-                      <div className="text-[10px] text-[#7A7A7A]">
-                        {p3.steroid_history === 'current' ? 'Currently active' : 'Stopped in the past'}
-                      </div>
-                    </div>
-                  </div>
-                )}
-                {p3.trt_history !== 'never' && (
-                  <div className="flex gap-3">
-                    <div className="w-7 h-7 shrink-0 rounded-full bg-[rgba(255,179,0,0.1)] border border-[rgba(255,179,0,0.3)] flex items-center justify-center">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#FFB300]" />
-                    </div>
-                    <div>
-                      <div className="text-xs font-semibold text-white">
-                        {p3.trt_history === 'current' ? 'Currently on TRT' : 'Prior TRT Use'}
-                      </div>
-                      <div className="text-[10px] text-[#7A7A7A]">
-                        Previous use suppresses HPT axis. Natural production may be in recovery.
-                      </div>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
+        {/* Contributing Risk Factors */}
+        <DashboardCard
+          className="col-span-12 md:col-span-4"
+          topAccent={excluded ? 'rgba(255,179,0,0.4)' : color + '60'}
+        >
+          <div className="text-[11px] font-bold tracking-[3px] uppercase mb-4"
+            style={{ color: excluded ? '#FFB300' : color }}>
+            Contributing {excluded ? 'History' : 'Lifestyle Risks'}
+          </div>
 
-          {/* Premium: quick action buttons */}
-          {isPremium ? (
-            <div className="flex flex-col gap-2">
-              {hasReport ? (
-                <Link href="/lab" className="block w-full py-3 bg-[#00E676] text-black font-black text-[10px] tracking-[3px] uppercase text-center hover:bg-[#00c864] transition-colors">
-                  VIEW LAB ANALYSIS →
-                </Link>
-              ) : (
-                <Link href="/lab/upload" className="block w-full py-3 bg-[#00E676] text-black font-black text-[10px] tracking-[3px] uppercase text-center hover:bg-[#00c864] transition-colors">
-                  UPLOAD YOUR BLOODWORK →
-                </Link>
-              )}
-              <div className="flex gap-2">
-                <Link href="/protocol"
-                  className="flex-1 py-2.5 border border-[rgba(255,255,255,0.12)] bg-[#141414] text-white text-[10px] font-bold tracking-[2px] uppercase text-center hover:border-[rgba(255,255,255,0.3)] transition-all">
-                  ▦ PROTOCOL
-                </Link>
-                <Link href="/wellbeing"
-                  className="flex-1 py-2.5 border border-[rgba(255,255,255,0.12)] bg-[#141414] text-white text-[10px] font-bold tracking-[2px] uppercase text-center hover:border-[rgba(255,255,255,0.3)] transition-all">
-                  ◷ WELLBEING
-                </Link>
+          {keyFactors.length === 0 ? (
+            <div className="flex items-center gap-2.5">
+              <div className="w-7 h-7 rounded-full bg-[rgba(0,230,118,0.1)] border border-[rgba(0,230,118,0.25)] flex items-center justify-center shrink-0">
+                <div className="w-2 h-2 rounded-full bg-[#00E676]" />
               </div>
+              <span className="text-[11px] text-[#9A9A9A]">No major risk factors identified</span>
             </div>
           ) : (
-            /* Free: compact upsell */
-            <div className="border border-[rgba(0,230,118,0.2)] bg-[rgba(0,230,118,0.04)] p-5 flex-1">
-              <div className="h-0.5 -mt-5 -mx-5 mb-4 bg-[#00E676]" />
-              <div className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">Unlock LAB</div>
-              <p className="text-sm font-bold text-white mb-2">Turn Results Into a Protocol</p>
-              <p className="text-[11px] text-[#7A7A7A] leading-relaxed mb-4">
-                Upload bloodwork → AI analysis → personalized 90-day protocol.
-              </p>
-              <div className="flex flex-col gap-1.5 mb-4">
-                {[
-                  'Deep AI analysis vs optimal ranges',
-                  'Personalized supplement stack',
-                  '90-day Foundation → Peak protocol',
-                  'Daily wellbeing tracking',
-                ].map((f, i) => (
-                  <div key={i} className="flex gap-2 items-start">
-                    <span className="text-[#00E676] font-bold text-xs shrink-0">✓</span>
-                    <span className="text-[11px] text-[#7A7A7A]">{f}</span>
+            <div className="flex flex-col gap-4">
+              {keyFactors.slice(0, 4).map((f, i) => (
+                <div key={i} className="flex gap-3">
+                  <div className="w-7 h-7 shrink-0 rounded-full flex items-center justify-center mt-0.5"
+                    style={{ background: `${color}15`, border: `1px solid ${color}35` }}>
+                    <div className="w-2 h-2 rounded-full" style={{ background: color }} />
                   </div>
-                ))}
-              </div>
-              <Link href="/upgrade"
-                className="block w-full py-2.5 bg-[#00E676] text-black font-black text-[10px] tracking-[3px] uppercase text-center hover:bg-[#00c864] transition-colors">
-                UNLOCK LAB →
-              </Link>
+                  <div className="min-w-0">
+                    <div className="text-sm font-semibold text-white leading-tight mb-0.5">{f.title}</div>
+                    <div className="text-[11px] text-[#7A7A7A] leading-relaxed">{f.explanation}</div>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
-        </div>
 
-        {/* Col 2 · Recommended Panel */}
-        <div className="border border-[rgba(255,255,255,0.07)] bg-[#141414] p-5">
-          <div className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">
+          {/* Prior history section (if relevant) */}
+          {(p3.steroid_history !== 'never' || p3.trt_history !== 'never') && (
+            <div className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)]">
+              <div className="text-[11px] font-bold tracking-[2px] text-[#FFB300] uppercase mb-2">Prior History</div>
+              {p3.steroid_history !== 'never' && (
+                <div className="flex items-start gap-2 mb-1.5">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#FFB300] shrink-0 mt-[5px]" />
+                  <span className="text-[11px] text-[#7A7A7A]">
+                    {p3.steroid_history === 'current' ? 'Active steroid use' : 'Prior steroid use'}
+                  </span>
+                </div>
+              )}
+              {p3.trt_history !== 'never' && (
+                <div className="flex items-start gap-2">
+                  <div className="w-1.5 h-1.5 rounded-full bg-[#FFB300] shrink-0 mt-[5px]" />
+                  <span className="text-[11px] text-[#7A7A7A]">
+                    {p3.trt_history === 'current' ? 'Currently on TRT' : 'Prior TRT use — HPT axis may be recovering'}
+                  </span>
+                </div>
+              )}
+            </div>
+          )}
+        </DashboardCard>
+
+        {/* Recommended Panel */}
+        <DashboardCard className="col-span-12 md:col-span-4" topAccent="rgba(0,230,118,0.4)">
+          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">
             {excluded ? 'Monitoring Panel' : 'Recommended Core Panel'}
           </div>
-          <p className="text-[10px] text-[#4A4A4A] mb-4">
+          <p className="text-[11px] text-[#4A4A4A] mb-4">
             {excluded ? 'Test every 3–6 months while on exogenous androgens' : 'Essential tests for a complete hormonal picture'}
           </p>
 
-          {/* Two columns inside the card */}
-          <div className="grid grid-cols-2 gap-x-4">
+          <div className="grid grid-cols-2 gap-x-4 mb-3">
             <div>
-              <div className="text-[9px] text-[#4A4A4A] uppercase tracking-[2px] mb-2 pb-1 border-b border-[rgba(255,255,255,0.05)]">
+              <div className="text-[11px] text-[#4A4A4A] uppercase tracking-[2px] mb-2 pb-1 border-b border-[rgba(255,255,255,0.05)]">
                 Hormones
               </div>
               {panel.filter((_, i) => i < Math.ceil(panel.length / 2)).map(b => (
@@ -383,7 +369,7 @@ export default async function DashboardPage() {
               ))}
             </div>
             <div>
-              <div className="text-[9px] text-[#4A4A4A] uppercase tracking-[2px] mb-2 pb-1 border-b border-[rgba(255,255,255,0.05)]">
+              <div className="text-[11px] text-[#4A4A4A] uppercase tracking-[2px] mb-2 pb-1 border-b border-[rgba(255,255,255,0.05)]">
                 Metabolic &amp; Other
               </div>
               {panel.filter((_, i) => i >= Math.ceil(panel.length / 2)).map(b => (
@@ -396,8 +382,8 @@ export default async function DashboardPage() {
           </div>
 
           {extendedTests.length > 0 && (
-            <div className="mt-3 pt-3 border-t border-[rgba(255,255,255,0.05)]">
-              <div className="text-[9px] text-[#FFB300] uppercase tracking-[2px] mb-2">+ Recommended For You</div>
+            <div className="pt-3 border-t border-[rgba(255,255,255,0.05)]">
+              <div className="text-[11px] text-[#FFB300] uppercase tracking-[2px] mb-2">+ Recommended For You</div>
               <div className="grid grid-cols-2 gap-x-4">
                 {extendedTests.map(b => (
                   <div key={b.id} className="flex items-center gap-2 py-1">
@@ -409,38 +395,37 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          {isPremium && (
-            <Link href={hasReport ? '/lab' : '/lab/upload'}
-              className="mt-4 block w-full py-2.5 bg-[#00E676] text-black font-black text-[10px] tracking-[3px] uppercase text-center hover:bg-[#00c864] transition-colors">
-              {hasReport ? 'VIEW LAB ANALYSIS →' : 'SCHEDULE YOUR LAB PANEL →'}
+          {!isPremium && (
+            <Link href="/upgrade"
+              className="mt-4 block w-full py-2.5 border border-[rgba(0,230,118,0.35)] text-[#00E676] font-bold text-[11px] tracking-[2px] uppercase text-center hover:bg-[rgba(0,230,118,0.07)] transition-colors">
+              UNLOCK LAB ACCESS →
             </Link>
           )}
-        </div>
+        </DashboardCard>
 
-        {/* Col 3 · Before Blood Draw */}
-        <div className="border border-[rgba(0,230,118,0.2)] bg-[rgba(0,230,118,0.03)] p-5">
-          <div className="h-0.5 -mt-5 -mx-5 mb-4 bg-[#00E676]" />
-          <div className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">
+        {/* Before Blood Draw */}
+        <DashboardCard className="col-span-12 md:col-span-4" topAccent="rgba(0,230,118,0.4)">
+          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">
             Before Your Blood Draw
           </div>
           {[
-            { title: 'Morning Window (7–10AM)', sub: 'T peaks in early morning' },
+            { title: 'Morning Window (7–10AM)', sub: 'Testosterone peaks in early morning' },
             { title: 'Fasting (10–12h)', sub: 'Water is okay' },
             { title: 'Avoid Heavy Exercise', sub: '24 hours prior' },
             { title: 'No Alcohol', sub: '48 hours before the test' },
             { title: 'Normal Sleep', sub: 'The night before' },
           ].map(({ title, sub }, i) => (
             <div key={i} className="flex gap-3 mb-3 last:mb-0">
-              <div className="w-7 h-7 shrink-0 rounded-full bg-[rgba(0,230,118,0.1)] border border-[rgba(0,230,118,0.25)] flex items-center justify-center">
-                <span className="text-[10px] font-bold text-[#00E676]">{i + 1}</span>
+              <div className="w-7 h-7 shrink-0 rounded-full bg-[rgba(0,230,118,0.08)] border border-[rgba(0,230,118,0.2)] flex items-center justify-center">
+                <span className="text-[11px] font-bold text-[#00E676]">{i + 1}</span>
               </div>
               <div className="pt-0.5">
-                <div className="text-xs font-semibold text-white leading-tight">{title}</div>
-                <div className="text-[10px] text-[#5A5A5A] mt-0.5">{sub}</div>
+                <div className="text-sm font-semibold text-white leading-tight">{title}</div>
+                <div className="text-[11px] text-[#5A5A5A] mt-0.5">{sub}</div>
               </div>
             </div>
           ))}
-        </div>
+        </DashboardCard>
       </div>
 
     </div>
