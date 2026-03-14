@@ -8,31 +8,42 @@ import {
 import { BIOMARKERS, CORE_PANEL_IDS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
-// Server-safe SVG speedometer gauge (260° arc)
+// Gauge using circle + rotation — same pattern as ScoreRing which is known to work.
+// Wrapper div owns the pixel dimensions; SVG fills it; text is HTML overlay (not SVG text).
 function ScoreGauge({ score, color, label }: { score: number; color: string; label: string }) {
-  const cx = 100, cy = 100, r = 78;
-  const toRad = (deg: number) => (deg * Math.PI) / 180;
-  const sx = +(cx + r * Math.cos(toRad(220))).toFixed(2);
-  const sy = +(cy - r * Math.sin(toRad(220))).toFixed(2);
-  const ex = +(cx + r * Math.cos(toRad(320))).toFixed(2);
-  const ey = +(cy - r * Math.sin(toRad(320))).toFixed(2);
-  const arcLen = +((260 / 360) * 2 * Math.PI * r).toFixed(2);
-  const dashOffset = +(arcLen * (1 - score / 100)).toFixed(2);
-  const d = `M ${sx} ${sy} A ${r} ${r} 0 1 0 ${ex} ${ey}`;
+  const size = 190;
+  const r = 80;
+  const sw = 10;
+  const fullCirc = +(2 * Math.PI * r).toFixed(2);
+  const gaugeLen = +((260 / 360) * fullCirc).toFixed(2); // visible 260° arc
+  const gapLen  = +(fullCirc - gaugeLen).toFixed(2);     // hidden 100° gap at bottom
+  const scoreLen = +((score / 100) * gaugeLen).toFixed(2);
 
   return (
-    <svg viewBox="0 0 200 165"
-      style={{ display: 'block', margin: '0 auto', flexShrink: 0, width: '200px', height: '165px' }}>
-      <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
-      <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
-        strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
-      <text x="100" y="108" textAnchor="middle" fill="white" fontSize="44" fontWeight="900"
-        fontFamily="system-ui, -apple-system, sans-serif">{score}</text>
-      <text x="100" y="134" textAnchor="middle" fill={color} fontSize="9" fontWeight="700"
-        letterSpacing="3" fontFamily="system-ui, -apple-system, sans-serif">{label.toUpperCase()}</text>
-      <text x="100" y="150" textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8.5"
-        fontFamily="system-ui, -apple-system, sans-serif">out of 100</text>
-    </svg>
+    // Wrapper div with explicit px size — immune to flex/grid height overrides
+    <div style={{ position: 'relative', width: size, height: size, flexShrink: 0, margin: '0 auto' }}>
+      {/* rotate(140deg) puts arc start at ~8 o'clock (lower-left), end at ~4 o'clock (lower-right) */}
+      <svg width={size} height={size} style={{ transform: 'rotate(140deg)' }}>
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none"
+          stroke="rgba(255,255,255,0.07)" strokeWidth={sw} strokeLinecap="round"
+          strokeDasharray={`${gaugeLen} ${gapLen}`} />
+        <circle cx={size / 2} cy={size / 2} r={r} fill="none"
+          stroke={color} strokeWidth={sw} strokeLinecap="round"
+          strokeDasharray={`${scoreLen} ${+(fullCirc - scoreLen).toFixed(2)}`} />
+      </svg>
+      {/* HTML text overlay — no SVG font rendering issues */}
+      <div style={{
+        position: 'absolute', inset: 0,
+        display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center',
+        paddingBottom: '16px',
+      }}>
+        <span style={{ color: 'white', fontSize: '46px', fontWeight: 900, lineHeight: 1 }}>{score}</span>
+        <span style={{ color, fontSize: '9px', fontWeight: 700, letterSpacing: '3px', marginTop: '6px' }}>
+          {label.toUpperCase()}
+        </span>
+        <span style={{ color: 'rgba(255,255,255,0.2)', fontSize: '8px', marginTop: '3px' }}>out of 100</span>
+      </div>
+    </div>
   );
 }
 
