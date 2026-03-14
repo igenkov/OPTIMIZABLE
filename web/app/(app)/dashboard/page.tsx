@@ -21,7 +21,7 @@ function ScoreGauge({ score, color, label }: { score: number; color: string; lab
   const d = `M ${sx} ${sy} A ${r} ${r} 0 1 0 ${ex} ${ey}`;
 
   return (
-    <svg viewBox="0 0 200 165" className="w-full max-w-[200px] mx-auto block">
+    <svg viewBox="0 0 200 165" width="200" height="165" className="w-full max-w-[200px] mx-auto block" style={{ height: 'auto' }}>
       <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
       <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
         strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
