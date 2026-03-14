@@ -20,21 +20,19 @@ function ScoreGauge({ score, color, label }: { score: number; color: string; lab
   const dashOffset = +(arcLen * (1 - score / 100)).toFixed(2);
   const d = `M ${sx} ${sy} A ${r} ${r} 0 1 0 ${ex} ${ey}`;
 
-  // paddingBottom = (165/200)*100 = 82.5% — classic responsive SVG trick, immune to flexbox stretch
   return (
-    <div style={{ position: 'relative', width: '100%', maxWidth: '220px', margin: '0 auto', paddingBottom: '82.5%', flexShrink: 0 }}>
-      <svg viewBox="0 0 200 165" style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%' }}>
-        <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
-        <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
-          strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
-        <text x="100" y="108" textAnchor="middle" fill="white" fontSize="44" fontWeight="900"
-          fontFamily="system-ui, -apple-system, sans-serif">{score}</text>
-        <text x="100" y="134" textAnchor="middle" fill={color} fontSize="9" fontWeight="700"
-          letterSpacing="3" fontFamily="system-ui, -apple-system, sans-serif">{label.toUpperCase()}</text>
-        <text x="100" y="150" textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8.5"
-          fontFamily="system-ui, -apple-system, sans-serif">out of 100</text>
-      </svg>
-    </div>
+    <svg viewBox="0 0 200 165" width="200" height="165"
+      style={{ display: 'block', margin: '0 auto', flexShrink: 0, overflow: 'visible' }}>
+      <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
+      <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
+        strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
+      <text x="100" y="108" textAnchor="middle" fill="white" fontSize="44" fontWeight="900"
+        fontFamily="system-ui, -apple-system, sans-serif">{score}</text>
+      <text x="100" y="134" textAnchor="middle" fill={color} fontSize="9" fontWeight="700"
+        letterSpacing="3" fontFamily="system-ui, -apple-system, sans-serif">{label.toUpperCase()}</text>
+      <text x="100" y="150" textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8.5"
+        fontFamily="system-ui, -apple-system, sans-serif">out of 100</text>
+    </svg>
   );
 }
 
