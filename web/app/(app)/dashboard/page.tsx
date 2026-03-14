@@ -21,17 +21,19 @@ function ScoreGauge({ score, color, label }: { score: number; color: string; lab
   const d = `M ${sx} ${sy} A ${r} ${r} 0 1 0 ${ex} ${ey}`;
 
   return (
-    <svg viewBox="0 0 200 165" width="200" height="165" className="w-full max-w-[200px] mx-auto block" style={{ height: 'auto' }}>
-      <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
-      <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
-        strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
-      <text x="100" y="108" textAnchor="middle" fill="white" fontSize="44" fontWeight="900"
-        fontFamily="system-ui, -apple-system, sans-serif">{score}</text>
-      <text x="100" y="134" textAnchor="middle" fill={color} fontSize="9" fontWeight="700"
-        letterSpacing="3" fontFamily="system-ui, -apple-system, sans-serif">{label.toUpperCase()}</text>
-      <text x="100" y="150" textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8.5"
-        fontFamily="system-ui, -apple-system, sans-serif">out of 100</text>
-    </svg>
+    <div className="w-full max-w-[220px] mx-auto" style={{ aspectRatio: '200 / 165' }}>
+      <svg viewBox="0 0 200 165" width="100%" height="100%">
+        <path d={d} fill="none" stroke="rgba(255,255,255,0.07)" strokeWidth="10" strokeLinecap="round" />
+        <path d={d} fill="none" stroke={color} strokeWidth="10" strokeLinecap="round"
+          strokeDasharray={arcLen} strokeDashoffset={dashOffset} />
+        <text x="100" y="108" textAnchor="middle" fill="white" fontSize="44" fontWeight="900"
+          fontFamily="system-ui, -apple-system, sans-serif">{score}</text>
+        <text x="100" y="134" textAnchor="middle" fill={color} fontSize="9" fontWeight="700"
+          letterSpacing="3" fontFamily="system-ui, -apple-system, sans-serif">{label.toUpperCase()}</text>
+        <text x="100" y="150" textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8.5"
+          fontFamily="system-ui, -apple-system, sans-serif">out of 100</text>
+      </svg>
+    </div>
   );
 }
 
