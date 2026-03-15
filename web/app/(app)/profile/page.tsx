@@ -11,8 +11,11 @@ export default async function ProfilePage() {
   const tier = userData?.subscription_tier ?? 'free';
 
   return (
-    <div className="p-8 max-w-2xl">
-      <h1 className="text-lg font-bold tracking-[3px] uppercase text-white mb-8">Profile</h1>
+    <div className="px-6 lg:px-8 py-6">
+      <div className="mb-6">
+        <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Account</div>
+        <h1 className="text-xl font-black tracking-[2px] uppercase text-white">Profile</h1>
+      </div>
 
       {/* Account card */}
       <Card className="mb-5 text-center py-10">
@@ -54,7 +57,7 @@ export default async function ProfilePage() {
       ))}
 
       <div className="border border-[rgba(255,255,255,0.07)] border-l-2 border-l-[#00E676] p-4 mb-6">
-        <p className="text-xs text-[#4A4A4A] leading-relaxed">
+        <p className="text-[11px] text-[#4A4A4A] leading-relaxed">
           ⚕️ Optimizable is a wellness tool for informational purposes only. It does not provide medical advice, diagnosis, or treatment. Always consult a qualified healthcare professional.
         </p>
       </div>

@@ -238,17 +238,18 @@ export default function WellbeingPage() {
 
   if (loading) {
     return (
-      <div className="p-8 flex items-center justify-center min-h-[50vh]">
+      <div className="px-6 lg:px-8 py-6 flex items-center justify-center min-h-[50vh]">
         <div className="w-8 h-8 border-2 border-[#00E676] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="px-6 lg:px-8 py-6">
       <div className="mb-6">
-        <h1 className="text-lg font-bold tracking-[3px] uppercase text-white mb-1">Wellbeing</h1>
-        <p className="text-xs text-[#4A4A4A]">
+        <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Daily Check-in</div>
+        <h1 className="text-xl font-black tracking-[2px] uppercase text-white mb-1">Wellbeing</h1>
+        <p className="text-[11px] text-[#4A4A4A]">
           {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
         </p>
       </div>
@@ -280,11 +281,11 @@ export default function WellbeingPage() {
             ].map(m => (
               <div key={m.label}>
                 <div className="text-[10px] text-[#4A4A4A] uppercase tracking-widest mb-0.5">{m.label}</div>
-                <div className="text-lg font-bold" style={{ color: m.color }}>{m.value}<span className="text-xs text-[#4A4A4A]">/10</span></div>
+                <div className="text-lg font-bold" style={{ color: m.color }}>{m.value}<span className="text-[10px] text-[#4A4A4A]">/10</span></div>
               </div>
             ))}
           </div>
-          <div className="flex gap-6 text-xs text-[#9A9A9A] pt-3 border-t border-[rgba(255,255,255,0.05)]">
+          <div className="flex gap-6 text-[11px] text-[#9A9A9A] pt-3 border-t border-[rgba(255,255,255,0.05)]">
             <span>Sleep: {todayData.sleep_hours}h</span>
             <span>Exercise: {todayData.exercised ? '✓ Yes' : '✗ No'}</span>
             {todayData.morning_erection !== null && (
@@ -300,14 +301,14 @@ export default function WellbeingPage() {
 
             {/* Morning erection — top priority indicator */}
             <div className="mb-5 pb-5 border-b border-[rgba(255,255,255,0.05)]">
-              <div className="text-xs font-semibold text-[#E0E0E0] mb-3">Morning Erection</div>
+              <div className="text-[11px] font-semibold text-[#E0E0E0] mb-3">Morning Erection</div>
               <div className="flex gap-3">
                 {[{ val: true, label: 'YES' }, { val: false, label: 'NO' }].map(opt => (
                   <button
                     key={String(opt.val)}
                     type="button"
                     onClick={() => set('morning_erection', opt.val)}
-                    className={`flex-1 py-2 text-xs font-bold border transition-colors ${
+                    className={`flex-1 py-2 text-[11px] font-bold border transition-colors ${
                       form.morning_erection === opt.val
                         ? opt.val
                           ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]'
@@ -332,8 +333,8 @@ export default function WellbeingPage() {
             ]).map(m => (
               <div key={m.key} className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
                 <div className="flex items-center justify-between mb-2">
-                  <div className="text-xs font-semibold text-[#E0E0E0]">{m.label}</div>
-                  <div className="text-sm font-bold" style={{ color: m.color }}>{form[m.key]}<span className="text-xs text-[#4A4A4A]">/10</span></div>
+                  <div className="text-[11px] font-semibold text-[#E0E0E0]">{m.label}</div>
+                  <div className="text-sm font-bold" style={{ color: m.color }}>{form[m.key]}<span className="text-[10px] text-[#4A4A4A]">/10</span></div>
                 </div>
                 <RatingDots value={form[m.key]} onChange={v => set(m.key, v)} color={m.color} />
               </div>
@@ -342,7 +343,7 @@ export default function WellbeingPage() {
             {/* Sleep hours */}
             <div className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
               <div className="flex items-center justify-between mb-2">
-                <div className="text-xs font-semibold text-[#E0E0E0]">Sleep Hours</div>
+                <div className="text-[11px] font-semibold text-[#E0E0E0]">Sleep Hours</div>
                 <div className="text-sm font-bold text-white">{form.sleep_hours}h</div>
               </div>
               <input
@@ -361,14 +362,14 @@ export default function WellbeingPage() {
 
             {/* Exercised */}
             <div className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
-              <div className="text-xs font-semibold text-[#E0E0E0] mb-3">Exercised Today</div>
+              <div className="text-[11px] font-semibold text-[#E0E0E0] mb-3">Exercised Today</div>
               <div className="flex gap-3">
                 {[{ val: true, label: 'YES' }, { val: false, label: 'NO' }].map(opt => (
                   <button
                     key={String(opt.val)}
                     type="button"
                     onClick={() => set('exercised', opt.val)}
-                    className={`flex-1 py-2 text-xs font-bold border transition-colors ${
+                    className={`flex-1 py-2 text-[11px] font-bold border transition-colors ${
                       form.exercised === opt.val
                         ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]'
                         : 'border-[rgba(255,255,255,0.07)] text-[#9A9A9A]'
@@ -382,7 +383,7 @@ export default function WellbeingPage() {
 
             {/* Plan adherence */}
             <div className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
-              <div className="text-xs font-semibold text-[#E0E0E0] mb-3">Protocol Adherence</div>
+              <div className="text-[11px] font-semibold text-[#E0E0E0] mb-3">Protocol Adherence</div>
               <div className="flex gap-2 flex-wrap">
                 {([
                   { val: 'fully', label: 'Fully' },
@@ -394,7 +395,7 @@ export default function WellbeingPage() {
                     key={opt.val}
                     type="button"
                     onClick={() => set('plan_adherence', opt.val)}
-                    className={`px-3 py-1.5 text-xs border transition-colors ${
+                    className={`px-3 py-1.5 text-[11px] border transition-colors ${
                       form.plan_adherence === opt.val
                         ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]'
                         : 'border-[rgba(255,255,255,0.07)] text-[#9A9A9A]'
@@ -408,7 +409,7 @@ export default function WellbeingPage() {
 
             {/* Notes */}
             <div>
-              <div className="text-xs font-semibold text-[#E0E0E0] mb-2">Notes (optional)</div>
+              <div className="text-[11px] font-semibold text-[#E0E0E0] mb-2">Notes (optional)</div>
               <textarea
                 value={form.notes}
                 onChange={e => set('notes', e.target.value)}
@@ -419,7 +420,7 @@ export default function WellbeingPage() {
             </div>
           </Card>
 
-          {error && <p className="text-xs text-[#FF5252]">{error}</p>}
+          {error && <p className="text-[11px] text-[#FF5252]">{error}</p>}
           <Button type="submit" loading={saving} fullWidth>
             SAVE CHECK-IN
           </Button>
@@ -442,7 +443,7 @@ export default function WellbeingPage() {
             return (
               <div key={m.key} className="py-2 border-b border-[rgba(255,255,255,0.05)]">
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-[#9A9A9A]">{m.label}</span>
+                  <span className="text-[11px] text-[#9A9A9A]">{m.label}</span>
                   {latest && (
                     <span className="text-sm font-bold" style={{ color: m.color }}>
                       {latest}<span className="text-[10px] text-[#4A4A4A]">/10</span>

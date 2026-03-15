@@ -29,17 +29,17 @@ function RecommendationSection({ title, items }: { title: string; items: string[
 
 function LockedPhase({ phase, reason }: { phase: typeof PHASES[number]; reason: string }) {
   return (
-    <div className="border border-[rgba(255,255,255,0.07)] p-8 text-center">
+    <Card className="text-center py-10">
       <div className="text-2xl mb-3">🔒</div>
       <div className="text-sm font-bold text-white mb-2">Phase {phase.num}: {phase.label}</div>
-      <p className="text-xs text-[#9A9A9A] leading-relaxed mb-6 max-w-xs mx-auto">{reason}</p>
+      <p className="text-[11px] text-[#9A9A9A] leading-relaxed mb-6 max-w-xs mx-auto">{reason}</p>
       <Link
         href="/lab/upload"
         className="inline-block px-6 py-2 border border-[#00E676] text-[#00E676] font-bold text-xs tracking-widest uppercase hover:bg-[rgba(0,230,118,0.08)] transition-colors"
       >
         UPLOAD BLOODWORK TO UNLOCK →
       </Link>
-    </div>
+    </Card>
   );
 }
 
@@ -86,24 +86,26 @@ export default async function ProtocolPage() {
   // No bloodwork yet
   if (typedReports.length === 0) {
     return (
-      <div className="p-8 max-w-2xl">
-        <div className="mb-8">
-          <h1 className="text-lg font-bold tracking-[3px] uppercase text-white mb-1">90-Day Protocol</h1>
-          <p className="text-xs text-[#4A4A4A]">Your personalized optimization roadmap</p>
+      <div className="px-6 lg:px-8 py-6">
+        <div className="mb-6">
+          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Optimization Roadmap</div>
+          <h1 className="text-xl font-black tracking-[2px] uppercase text-white">90-Day Protocol</h1>
         </div>
-        <div className="border border-[rgba(255,255,255,0.07)] p-12 text-center">
-          <div className="text-4xl mb-4">▦</div>
-          <div className="text-white font-bold mb-2">Protocol Not Yet Generated</div>
-          <p className="text-sm text-[#9A9A9A] leading-relaxed mb-8 max-w-sm mx-auto">
-            Your personalized 90-day protocol is generated from your bloodwork analysis.
-            Upload your initial bloodwork in the LAB to get started.
-          </p>
-          <Link
-            href="/lab/upload"
-            className="inline-block px-8 py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase hover:bg-[#00c864] transition-colors"
-          >
-            GO TO LAB →
-          </Link>
+        <div className="max-w-2xl">
+          <Card className="text-center py-10">
+            <div className="text-4xl mb-4">▦</div>
+            <div className="text-white font-bold mb-2">Protocol Not Yet Generated</div>
+            <p className="text-sm text-[#9A9A9A] leading-relaxed mb-8 max-w-sm mx-auto">
+              Your personalized 90-day protocol is generated from your bloodwork analysis.
+              Upload your initial bloodwork in the LAB to get started.
+            </p>
+            <Link
+              href="/lab/upload"
+              className="inline-block px-8 py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase hover:bg-[#00c864] transition-colors"
+            >
+              GO TO LAB →
+            </Link>
+          </Card>
         </div>
       </div>
     );
@@ -113,35 +115,37 @@ export default async function ProtocolPage() {
   const phaseProgress = Math.round(((phaseDay - 1) / 30) * 100);
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="px-6 lg:px-8 py-6">
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-lg font-bold tracking-[3px] uppercase text-white mb-1">90-Day Protocol</h1>
-        <p className="text-xs text-[#4A4A4A]">Your personalized malemaxxing optimization roadmap</p>
+        <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Personalized Optimization Roadmap</div>
+        <h1 className="text-xl font-black tracking-[2px] uppercase text-white">90-Day Protocol</h1>
       </div>
 
       {/* Phase timeline */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-4">
         {PHASES.map(p => {
           const isActive = p.num === currentPhase;
           const isUnlocked = typedReports.length >= p.num;
           return (
             <div
               key={p.num}
-              className={`flex-1 px-4 py-3 border transition-colors ${
-                isActive
-                  ? 'border-[#00E676] bg-[rgba(0,230,118,0.08)]'
-                  : isUnlocked
-                  ? 'border-[rgba(255,255,255,0.15)]'
-                  : 'border-[rgba(255,255,255,0.05)] opacity-40'
-              }`}
+              className="flex-1 px-4 py-3 transition-colors"
+              style={{
+                background: isActive
+                  ? 'linear-gradient(165deg, rgba(0,230,118,0.08) 0%, rgba(20,20,20,0) 55%), #141414'
+                  : 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414',
+                border: `1px solid ${isActive ? '#00E676' : isUnlocked ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.05)'}`,
+                borderTopColor: isActive ? 'rgba(0,230,118,0.6)' : 'rgba(255,255,255,0.12)',
+                opacity: !isUnlocked ? 0.4 : 1,
+              }}
             >
               <div className={`text-[10px] font-bold tracking-widest uppercase mb-0.5 ${isActive ? 'text-[#00E676]' : 'text-[#4A4A4A]'}`}>
                 Phase {p.num}
               </div>
               <div className={`text-xs font-semibold ${isActive ? 'text-white' : 'text-[#9A9A9A]'}`}>{p.label}</div>
-              <div className="text-[9px] text-[#4A4A4A] mt-0.5">Days {p.days}</div>
-              {!isUnlocked && <div className="text-[9px] text-[#4A4A4A] mt-1">🔒 Locked</div>}
+              <div className="text-[10px] text-[#4A4A4A] mt-0.5">Days {p.days}</div>
+              {!isUnlocked && <div className="text-[10px] text-[#4A4A4A] mt-1">🔒 Locked</div>}
             </div>
           );
         })}
@@ -149,22 +153,22 @@ export default async function ProtocolPage() {
 
       {/* Current phase progress */}
       {currentDay > 0 && (
-        <div className="mb-6 p-4 border border-[rgba(255,255,255,0.07)]">
+        <Card className="mb-4">
           <div className="flex items-center justify-between mb-2">
             <div className="text-xs font-bold text-white">
               Phase {currentPhase}: {PHASES[currentPhase - 1].label} — Day {phaseDay} of 30
             </div>
-            <div className="text-xs text-[#4A4A4A]">{30 - phaseDay} days remaining</div>
+            <div className="text-[11px] text-[#4A4A4A]">{30 - phaseDay} days remaining</div>
           </div>
           <div className="h-1 bg-[rgba(255,255,255,0.05)]">
             <div className="h-full bg-[#00E676] transition-all" style={{ width: `${phaseProgress}%` }} />
           </div>
           {currentPhase < 3 && (
-            <div className="text-[10px] text-[#4A4A4A] mt-2">
+            <div className="text-[11px] text-[#4A4A4A] mt-2">
               At day {currentPhase * 30}: submit your bloodwork to unlock Phase {currentPhase + 1}
             </div>
           )}
-        </div>
+        </Card>
       )}
 
       {/* Phase content */}
@@ -192,29 +196,29 @@ export default async function ProtocolPage() {
 
         return (
           <div key={p.num}>
-            <div className="mb-5">
+            <div className="mb-4">
               <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">
                 Phase {p.num}: {p.label}
               </div>
-              <p className="text-xs text-[#9A9A9A]">{p.desc}</p>
+              <p className="text-[11px] text-[#9A9A9A]">{p.desc}</p>
             </div>
 
             {/* Supplements */}
             {recs?.supplements?.length > 0 && (
-              <Card accent className="mb-5">
+              <Card accent className="mb-4">
                 <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-4">Supplement Stack</div>
                 {recs.supplements.map(s => (
                   <div key={s.name} className="py-2.5 border-b border-[rgba(255,255,255,0.05)]">
                     <div className="text-sm font-semibold text-white">
                       {s.name} <span className="text-[#00E676]">{s.dose}</span>
                     </div>
-                    <div className="text-xs text-[#4A4A4A] mt-0.5">{s.timing} · {s.reason}</div>
+                    <div className="text-[11px] text-[#4A4A4A] mt-0.5">{s.timing} · {s.reason}</div>
                   </div>
                 ))}
               </Card>
             )}
 
-            <Card className="mb-5">
+            <Card className="mb-4">
               <RecommendationSection title="Nutrition" items={recs?.eating} />
               <RecommendationSection title="Training" items={recs?.exercise} />
               <RecommendationSection title="Sleep" items={recs?.sleep} />
@@ -232,14 +236,15 @@ export default async function ProtocolPage() {
           // Past completed phase — show compact summary
           const phaseReport = typedReports[p.num - 1];
           return (
-            <div key={p.num} className="mb-4 border border-[rgba(255,255,255,0.07)] px-5 py-4 opacity-50">
+            <div key={p.num} className="mb-3 border border-[rgba(255,255,255,0.07)] px-5 py-4 opacity-50"
+              style={{ background: 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
               <div className="flex items-center justify-between">
                 <div>
                   <div className="text-xs font-bold text-[#9A9A9A] tracking-widest uppercase">
                     Phase {p.num}: {p.label} — Completed
                   </div>
                 </div>
-                <div className="text-xs text-[#4A4A4A]">
+                <div className="text-[11px] text-[#4A4A4A]">
                   Score: {phaseReport.health_score}/100
                 </div>
               </div>
@@ -248,12 +253,13 @@ export default async function ProtocolPage() {
         }
         if (!isUnlocked) {
           return (
-            <div key={p.num} className="mb-4 border border-[rgba(255,255,255,0.05)] px-5 py-4 opacity-40">
+            <div key={p.num} className="mb-3 border border-[rgba(255,255,255,0.05)] px-5 py-4 opacity-40"
+              style={{ background: 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
               <div className="flex items-center justify-between">
                 <div className="text-xs font-bold text-[#4A4A4A] tracking-widest uppercase">
                   Phase {p.num}: {p.label} — Days {p.days}
                 </div>
-                <div className="text-[10px] text-[#4A4A4A]">🔒 Submit {p.num === 2 ? '30-day' : '60-day'} bloodwork to unlock</div>
+                <div className="text-[11px] text-[#4A4A4A]">🔒 Submit {p.num === 2 ? '30-day' : '60-day'} bloodwork to unlock</div>
               </div>
             </div>
           );

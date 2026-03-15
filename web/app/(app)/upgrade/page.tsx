@@ -11,10 +11,10 @@ const FEATURES = [
 
 export default function UpgradePage() {
   return (
-    <div className="p-8 max-w-2xl">
-      <div className="mb-8">
-        <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">Unlock Full Access</div>
-        <h1 className="text-2xl font-black text-white tracking-wide mb-2">OPTIMIZABLE LAB</h1>
+    <div className="px-6 lg:px-8 py-6">
+      <div className="mb-6">
+        <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Unlock Full Access</div>
+        <h1 className="text-xl font-black tracking-[2px] uppercase text-white mb-2">Optimizable Lab</h1>
         <p className="text-sm text-[#9A9A9A] leading-relaxed">
           The complete hormonal optimization system. Upload your bloodwork, get your protocol, track your progress.
         </p>
@@ -27,7 +27,7 @@ export default function UpgradePage() {
               <div className="text-xl w-8 shrink-0 text-[#00E676]">{f.icon}</div>
               <div>
                 <div className="text-sm font-bold text-white mb-1">{f.title}</div>
-                <div className="text-xs text-[#9A9A9A] leading-relaxed">{f.desc}</div>
+                <div className="text-[11px] text-[#9A9A9A] leading-relaxed">{f.desc}</div>
               </div>
             </div>
           </Card>
@@ -35,7 +35,7 @@ export default function UpgradePage() {
       </div>
 
       {/* Pricing */}
-      <div className="border border-[rgba(0,230,118,0.25)] bg-[rgba(0,230,118,0.04)] p-6 mb-5">
+      <Card accent className="mb-4">
         <div className="flex items-start justify-between mb-4">
           <div>
             <div className="text-[10px] text-[#9A9A9A] tracking-widest uppercase mb-1">Monthly</div>
@@ -47,7 +47,7 @@ export default function UpgradePage() {
             <div className="text-[10px] text-[#00E676]">save 14%</div>
           </div>
         </div>
-        <div className="text-xs text-[#4A4A4A] mb-5 border-t border-[rgba(255,255,255,0.05)] pt-4">
+        <div className="text-[11px] text-[#4A4A4A] mb-5 border-t border-[rgba(255,255,255,0.05)] pt-4">
           Payment processing coming soon. Contact us to get early access.
         </div>
         <a
@@ -56,9 +56,9 @@ export default function UpgradePage() {
         >
           GET EARLY ACCESS →
         </a>
-      </div>
+      </Card>
 
-      <Link href="/dashboard" className="block text-center text-xs text-[#4A4A4A] hover:text-[#9A9A9A] transition-colors">
+      <Link href="/dashboard" className="block text-center text-[11px] text-[#4A4A4A] hover:text-[#9A9A9A] transition-colors">
         ← Back to Dashboard
       </Link>
     </div>

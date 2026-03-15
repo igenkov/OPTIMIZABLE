@@ -12,7 +12,7 @@ function BiomarkerRow({ id, name, unit, value, onChange }: { id: string; name: s
     <div className="flex items-center justify-between py-3 border-b border-[rgba(255,255,255,0.05)]">
       <div>
         <div className="text-sm text-[#E0E0E0] font-medium">{name}</div>
-        <div className="text-xs text-[#4A4A4A]">{unit}</div>
+        <div className="text-[11px] text-[#4A4A4A]">{unit}</div>
       </div>
       <input
         type="number"
@@ -106,12 +106,12 @@ export default function LabUploadPage() {
   }
 
   return (
-    <div className="p-8 max-w-3xl">
-      <div className="mb-8">
-        <div className="text-xs text-[#4A4A4A] tracking-widest uppercase mb-2">
+    <div className="px-6 lg:px-8 py-6">
+      <div className="mb-6">
+        <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">
           LAB → Upload Panel
         </div>
-        <h1 className="text-lg font-bold tracking-[3px] uppercase text-white mb-2">Enter Bloodwork Values</h1>
+        <h1 className="text-xl font-black tracking-[2px] uppercase text-white mb-2">Enter Bloodwork Values</h1>
         <p className="text-sm text-[#9A9A9A]">
           Enter the values from your lab report. The AI will analyze every biomarker against optimal ranges and generate your personalized protocol.
         </p>
@@ -128,13 +128,13 @@ export default function LabUploadPage() {
 
         <Card>
           <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Core Panel</div>
-          <p className="text-xs text-[#4A4A4A] mb-4">Leave blank if not tested.</p>
+          <p className="text-[11px] text-[#4A4A4A] mb-4">Leave blank if not tested.</p>
           {core.map(b => <BiomarkerRow key={b.id} id={b.id} name={b.name} unit={b.unit_primary} value={values[b.id] ?? ''} onChange={handleBiomarkerChange} />)}
         </Card>
 
         <Card>
           <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Extended Panel</div>
-          <p className="text-xs text-[#4A4A4A] mb-4">Enter any additional markers you had tested:</p>
+          <p className="text-[11px] text-[#4A4A4A] mb-4">Enter any additional markers you had tested:</p>
           {extended.map(b => <BiomarkerRow key={b.id} id={b.id} name={b.name} unit={b.unit_primary} value={values[b.id] ?? ''} onChange={handleBiomarkerChange} />)}
         </Card>
 
@@ -145,16 +145,16 @@ export default function LabUploadPage() {
             'No heavy exercise for 24 hours prior'].map((t, i) => (
             <div key={i} className="flex gap-3 mb-2">
               <span className="text-[#00E676] font-bold shrink-0">→</span>
-              <span className="text-xs text-[#9A9A9A]">{t}</span>
+              <span className="text-[11px] text-[#9A9A9A]">{t}</span>
             </div>
           ))}
         </Card>
 
-        <div className="text-xs text-[#9A9A9A] mb-2">
+        <div className="text-[11px] text-[#9A9A9A] mb-2">
           {filled.length} value{filled.length !== 1 ? 's' : ''} entered (minimum 3 required)
         </div>
 
-        {error && <p className="text-xs text-[#FF5252]">{error}</p>}
+        {error && <p className="text-[11px] text-[#FF5252]">{error}</p>}
         <Button type="submit" loading={uploading} fullWidth disabled={filled.length < 3}>
           {uploading ? 'Saving...' : 'ANALYZE →'}
         </Button>

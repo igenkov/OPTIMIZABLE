@@ -3,23 +3,27 @@ import { HTMLAttributes } from 'react';
 interface CardProps extends HTMLAttributes<HTMLDivElement> {
   accent?: boolean;
   gold?: boolean;
+  topAccent?: string;
 }
 
-export function Card({ accent, gold, children, className = '', ...props }: CardProps) {
-  const border = accent
-    ? 'border border-[rgba(0,230,118,0.25)] bg-[rgba(0,230,118,0.05)]'
+export function Card({ accent, gold, topAccent, children, className = '', style, ...props }: CardProps) {
+  const topBorderColor = accent
+    ? 'rgba(0,230,118,0.6)'
     : gold
-    ? 'border border-[rgba(255,179,0,0.25)] bg-[rgba(255,179,0,0.05)]'
-    : 'border border-[rgba(255,255,255,0.07)] bg-[#1a1a1a]';
+    ? 'rgba(255,179,0,0.6)'
+    : topAccent ?? 'rgba(255,255,255,0.12)';
 
   return (
-    <div className={`p-5 ${border} ${className}`} {...props}>
-      {(accent || gold) && (
-        <div
-          className="h-0.5 -mt-5 -mx-5 mb-4"
-          style={{ background: accent ? '#00E676' : '#FFB300' }}
-        />
-      )}
+    <div
+      className={`relative overflow-hidden p-5 ${className}`}
+      style={{
+        background: 'linear-gradient(165deg, rgba(255,255,255,0.04) 0%, rgba(20,20,20,0) 55%), #141414',
+        border: '1px solid rgba(255,255,255,0.07)',
+        borderTopColor: topBorderColor,
+        ...style,
+      }}
+      {...props}
+    >
       {children}
     </div>
   );
