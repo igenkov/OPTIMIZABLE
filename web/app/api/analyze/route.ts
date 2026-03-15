@@ -54,7 +54,7 @@ You are a Lead Clinical Wellness Strategist specializing in male hormonal optimi
 
 ### OUTPUT INSTRUCTIONS
 Map your analysis to the JSON structure below. Specifically:
-- "report_summary": Write 3–4 paragraphs. Paragraph 1 = Biological Age vs Chronological Age assessment. Paragraph 2 = "The Why" — how their specific habit combinations are producing the biomarker results. Paragraph 3 = Key intervention rationale. Paragraph 4 = Prognosis with adherence.
+- "report_summary": Return as a JSON object with exactly 3 fields: "bottom_line" (1–2 sentences: overall hormonal status verdict — biological age vs chronological age), "primary_driver" (1–2 sentences: the dominant root-cause explaining the biomarker pattern — how their specific habit/health combination produces these results), "next_action" (1 sentence: the single highest-leverage intervention ranked by projected impact on Free T and SHBG).
 - "recommendations": Tier interventions as Daily / Weekly / Monthly within each category.
 - "concerns": Use as Red Flags — anything requiring urgent attention or medical consultation.
 - "medical_referral_needed": true if any marker or symptom pattern warrants physician review.
@@ -119,7 +119,11 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
       "status": "<optimal|suboptimal|attention>"
     }
   ],
-  "report_summary": "<3-4 paragraph comprehensive analysis>",
+  "report_summary": {
+    "bottom_line": "<1-2 sentence overall verdict>",
+    "primary_driver": "<1-2 sentences dominant root cause>",
+    "next_action": "<1 sentence highest-leverage intervention>"
+  },
   "concerns": [
     {
       "marker": "<marker_id>",

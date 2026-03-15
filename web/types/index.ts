@@ -97,6 +97,12 @@ export interface KeyRatio {
   status: MarkerStatus;
 }
 
+export interface ReportSummaryStructured {
+  bottom_line: string;
+  primary_driver: string;
+  next_action: string;
+}
+
 export interface AnalysisReport {
   id: string;
   user_id: string;
@@ -104,7 +110,7 @@ export interface AnalysisReport {
   health_score: number;
   marker_analysis: MarkerAnalysis[];
   key_ratios: KeyRatio[];
-  report_summary: string;
+  report_summary: string | ReportSummaryStructured;
   concerns: { marker: string; severity: 'low' | 'medium' | 'high'; explanation: string }[];
   recommendations: OptimizationPlan;
   medical_referral_needed: boolean;
