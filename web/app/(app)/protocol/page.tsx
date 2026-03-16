@@ -233,7 +233,7 @@ export default async function ProtocolPage() {
               {/* Lifestyle directives — 2-col expandable grid */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 {(Object.entries(DIRECTIVE_META) as [keyof typeof DIRECTIVE_META, typeof DIRECTIVE_META[keyof typeof DIRECTIVE_META]][]).map(([key, meta]) => {
-                  const items: string[] = (recs as Record<string, string[]>)[key] ?? [];
+                  const items: string[] = (recs as unknown as Record<string, string[]>)[key] ?? [];
                   if (!items.length) return null;
                   const { Icon } = meta;
                   return (
