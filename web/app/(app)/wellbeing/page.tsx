@@ -26,8 +26,8 @@ interface CheckIn {
 }
 
 const BLANK: Omit<CheckIn, 'date'> = {
-  sleep_hours: 7, sleep_quality: 3, mood: 3, energy: 3,
-  libido: 3, stress: 3, mental_clarity: 3,
+  sleep_hours: 7, sleep_quality: 7, mood: 7, energy: 7,
+  libido: 6, stress: 5, mental_clarity: 7,
   morning_erection: null, exercised: false,
   plan_adherence: 'fully', notes: '',
 };
@@ -146,7 +146,7 @@ function MetricCard({ metric, checkins }: { metric: typeof METRICS[number]; chec
       style={{ background: 'linear-gradient(165deg, rgba(255,255,255,0.03) 0%, rgba(20,20,20,0) 60%), #141414' }}>
       <div className="text-[9px] text-[#4A4A4A] uppercase tracking-[3px] mb-1">{metric.label}</div>
       <div className="text-2xl font-black leading-none mb-1" style={{ color: metric.color }}>
-        {latest ?? '—'}<span className="text-[10px] text-[#4A4A4A] font-normal">/5</span>
+        {latest ?? '—'}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
       </div>
       {delta && (
         <div className="text-[10px] mb-2" style={{ color: delta.delta > 0 ? '#00E676' : delta.delta < 0 ? '#FF5252' : '#4A4A4A' }}>
@@ -300,7 +300,7 @@ export default function WellbeingPage() {
                   <div key={m.label} className="text-center p-2 border border-[rgba(255,255,255,0.05)]">
                     <div className="text-[9px] text-[#4A4A4A] uppercase tracking-widest mb-0.5">{m.label}</div>
                     <div className="text-lg font-black" style={{ color: m.color }}>
-                      {m.value}<span className="text-[9px] text-[#4A4A4A] font-normal">/5</span>
+                      {m.value}<span className="text-[9px] text-[#4A4A4A] font-normal">/10</span>
                     </div>
                   </div>
                 ))}
@@ -369,11 +369,11 @@ export default function WellbeingPage() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="text-[11px] font-semibold text-[#E0E0E0]">{m.label}</div>
                       <div className="text-sm font-black tabular-nums" style={{ color: m.color }}>
-                        {form[m.key]}<span className="text-[10px] text-[#4A4A4A] font-normal">/5</span>
+                        {form[m.key]}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
                       </div>
                     </div>
-                    <ColorSlider value={form[m.key]} onChange={v => set(m.key, v)} color={m.color} max={5} />
-                    <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>5</span></div>
+                    <ColorSlider value={form[m.key]} onChange={v => set(m.key, v)} color={m.color} />
+                    <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>10</span></div>
                   </div>
                 ))}
 
@@ -392,11 +392,11 @@ export default function WellbeingPage() {
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-[11px] font-semibold text-[#E0E0E0]">Sleep Quality</div>
                     <div className="text-sm font-black tabular-nums" style={{ color: '#FFB300' }}>
-                      {form.sleep_quality}<span className="text-[10px] text-[#4A4A4A] font-normal">/5</span>
+                      {form.sleep_quality}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
                     </div>
                   </div>
-                  <ColorSlider value={form.sleep_quality} onChange={v => set('sleep_quality', v)} color="#FFB300" max={5} />
-                  <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>5</span></div>
+                  <ColorSlider value={form.sleep_quality} onChange={v => set('sleep_quality', v)} color="#FFB300" />
+                  <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>10</span></div>
                 </div>
 
                 {/* Exercised */}
@@ -429,11 +429,11 @@ export default function WellbeingPage() {
                     <div className="flex items-center justify-between mb-2">
                       <div className="text-[11px] font-semibold text-[#E0E0E0]">{m.label}</div>
                       <div className="text-sm font-black tabular-nums" style={{ color: m.color }}>
-                        {form[m.key]}<span className="text-[10px] text-[#4A4A4A] font-normal">/5</span>
+                        {form[m.key]}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
                       </div>
                     </div>
-                    <ColorSlider value={form[m.key]} onChange={v => set(m.key, v)} color={m.color} max={5} />
-                    <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>5</span></div>
+                    <ColorSlider value={form[m.key]} onChange={v => set(m.key, v)} color={m.color} />
+                    <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>10</span></div>
                   </div>
                 ))}
               </Card>
@@ -514,7 +514,7 @@ export default function WellbeingPage() {
                   </defs>
                   <CartesianGrid horizontal vertical={false} stroke="rgba(255,255,255,0.04)" />
                   <XAxis dataKey="date" tick={{ fill: '#3A3A3A', fontSize: 8 }} tickLine={false} axisLine={false} />
-                  <YAxis domain={[0, 5]} tick={{ fill: '#3A3A3A', fontSize: 8 }} tickLine={false} axisLine={false} />
+                  <YAxis domain={[0, 10]} tick={{ fill: '#3A3A3A', fontSize: 8 }} tickLine={false} axisLine={false} />
                   <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
                   {METRICS.map(m => (
                     <Line
