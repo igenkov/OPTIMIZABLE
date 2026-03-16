@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
-  CartesianGrid, Tooltip, Legend,
+  CartesianGrid, Tooltip,
 } from 'recharts';
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -117,21 +117,41 @@ function CustomTooltip({ active, payload, label }: { active?: boolean; payload?:
   );
 }
 
-// ── Color-fill range slider ───────────────────────────────────────────────────
+// ── Bio slider ───────────────────────────────────────────────────────────────
 function ColorSlider({ value, onChange, color, min = 1, max = 10 }: {
   value: number; onChange: (v: number) => void; color: string; min?: number; max?: number;
 }) {
   const pct = ((value - min) / (max - min)) * 100;
   return (
-    <input
-      type="range" min={min} max={max} step="1" value={value}
-      onChange={e => onChange(Number(e.target.value))}
-      className="w-full h-2 appearance-none cursor-pointer outline-none"
-      style={{
-        background: `linear-gradient(to right, ${color} ${pct}%, rgba(255,255,255,0.08) ${pct}%)`,
-        borderRadius: 0,
-      }}
-    />
+    <div className="relative flex items-center h-4">
+      {/* Background track */}
+      <div className="absolute w-full h-[2px] bg-white/5 rounded-full" />
+      {/* Progress fill */}
+      <div className="absolute h-[2px] rounded-full transition-all duration-150 ease-out"
+        style={{ width: `${pct}%`, backgroundColor: color, boxShadow: `0 0 8px ${color}50` }} />
+      <input
+        type="range" min={min} max={max} step="1" value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="absolute w-full appearance-none bg-transparent cursor-pointer z-10 outline-none
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:w-3
+          [&::-webkit-slider-thumb]:h-3
+          [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:bg-white
+          [&::-webkit-slider-thumb]:border-[3px]
+          [&::-webkit-slider-thumb]:border-black
+          [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(255,255,255,0.4)]
+          [&::-webkit-slider-thumb]:transition-transform
+          [&::-webkit-slider-thumb]:hover:scale-125
+          [&::-moz-range-thumb]:w-3
+          [&::-moz-range-thumb]:h-3
+          [&::-moz-range-thumb]:rounded-full
+          [&::-moz-range-thumb]:bg-white
+          [&::-moz-range-thumb]:border-[3px]
+          [&::-moz-range-thumb]:border-black
+          [&::-moz-range-thumb]:cursor-pointer"
+      />
+    </div>
   );
 }
 
@@ -205,7 +225,7 @@ export default function WellbeingPage() {
   ].filter(Boolean).length;
   const formProgress = Math.round((answered / 5) * 100);
 
-  async function handleSubmit(e: React.FormEvent) {
+  async function handleSubmit(e: React.SyntheticEvent) {
     e.preventDefault();
     setSaving(true); setError('');
     const supabase = createClient();
@@ -279,13 +299,23 @@ export default function WellbeingPage() {
         <div className="col-span-12 lg:col-span-5">
 
           {todayDone && todayData ? (
-            /* Completed state */
-            <Card topAccent="rgba(0,230,118,0.5)">
-              <div className="flex items-center gap-3 mb-5">
-                <div className="w-10 h-10 rounded-full bg-[rgba(0,230,118,0.15)] border border-[rgba(0,230,118,0.35)] flex items-center justify-center text-lg">✓</div>
+            /* Completed state — Digital Receipt */
+            <Card topAccent="rgba(0,230,118,0.5)" className="relative overflow-hidden">
+              {/* Stamp watermark */}
+              <div className="absolute -top-4 -right-4 w-24 h-24 border-4 border-[rgba(0,230,118,0.08)] rounded-full flex items-center justify-center -rotate-12 pointer-events-none">
+                <span className="text-[rgba(0,230,118,0.08)] font-black text-[9px] tracking-[4px] uppercase">Logged</span>
+              </div>
+
+              <div className="flex items-center gap-4 mb-6">
+                <div className="w-11 h-11 rounded-full border border-[rgba(0,230,118,0.4)] bg-[rgba(0,230,118,0.1)] flex items-center justify-center shrink-0"
+                  style={{ boxShadow: '0 0 15px rgba(0,230,118,0.15)' }}>
+                  <svg className="w-5 h-5 text-[#00E676]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                  </svg>
+                </div>
                 <div>
-                  <div className="text-[11px] font-bold text-[#00E676] uppercase tracking-widest">Check-in Complete</div>
-                  <div className="text-[10px] text-[#4A4A4A]">{dateStr}</div>
+                  <div className="text-sm font-black text-white uppercase tracking-wider">Mission Accomplished</div>
+                  <div className="text-[10px] font-mono text-[#4A4A4A]">BIO_DATA_SECURED // {today}</div>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3 mb-4">
@@ -522,11 +552,12 @@ export default function WellbeingPage() {
                       type="monotone"
                       dataKey={m.label}
                       stroke={m.color}
-                      strokeWidth={2}
+                      strokeWidth={2.5}
                       dot={false}
-                      hide={hiddenLines.has(m.label)}
-                      strokeOpacity={0.9}
-                      filter={`url(#line-glow-${m.key})`}
+                      strokeOpacity={hiddenLines.has(m.label) ? 0.05 : 0.9}
+                      activeDot={{ r: 4, strokeWidth: 0, fill: m.color }}
+                      filter={hiddenLines.has(m.label) ? 'none' : `url(#line-glow-${m.key})`}
+                      animationDuration={1000}
                     />
                   ))}
                 </LineChart>
