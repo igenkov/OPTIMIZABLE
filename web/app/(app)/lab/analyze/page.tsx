@@ -1,31 +1,62 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
+import { Card } from '@/components/ui/Card';
+import { Cpu, Dna, ShieldCheck, Zap, Loader2, Check } from 'lucide-react';
 
-const MESSAGES = [
-  'Interpreting your biomarkers...',
-  'Calculating hormone ratios...',
-  'Analyzing against optimal ranges...',
-  'Cross-referencing your lifestyle profile...',
-  'Generating your personalized protocol...',
-  'Almost done...',
+const LOG_MESSAGES = [
+  'Initializing neural biomarker engine...',
+  'Establishing secure clinical handshake...',
+  'Mapping values to optimal physiological ranges...',
+  'Calculating Free Testosterone Index...',
+  'Analyzing LH/FSH signaling efficiency...',
+  'Running hormonal homeostasis simulation...',
+  'Identifying micronutrient deficiencies...',
+  'Cross-referencing metabolic health markers...',
+  'Generating 90-day optimization protocol...',
+  'Finalizing diagnostic report...',
 ];
 
 export default function LabAnalyzePage() {
   const router = useRouter();
   const [phase, setPhase] = useState<'loading' | 'error'>('loading');
-  const [msgIdx, setMsgIdx] = useState(0);
   const [error, setError] = useState('');
+  const [progress, setProgress] = useState(0);
+  const [currentLog, setCurrentLog] = useState(0);
+  const [completedLogs, setCompletedLogs] = useState<string[]>([]);
+  const doneRef = useRef(false);
 
   useEffect(() => {
-    const interval = setInterval(() => setMsgIdx(i => Math.min(i + 1, MESSAGES.length - 1)), 3000);
-    runAnalysis();
-    return () => clearInterval(interval);
+    // Progress bar: animate to 90, then hold until analysis completes
+    const progressTimer = setInterval(() => {
+      setProgress(prev => {
+        if (doneRef.current) return Math.min(prev + 5, 100);
+        return Math.min(prev + 1, 90);
+      });
+    }, 60);
+
+    // Terminal log cycling
+    const logTimer = setInterval(() => {
+      setCurrentLog(prev => {
+        if (prev < LOG_MESSAGES.length - 1) {
+          setCompletedLogs(logs => [...logs, LOG_MESSAGES[prev]]);
+          return prev + 1;
+        }
+        return prev;
+      });
+    }, 600);
+
+    runAnalysis(progressTimer);
+
+    return () => {
+      clearInterval(progressTimer);
+      clearInterval(logTimer);
+    };
   }, []);
 
-  async function runAnalysis() {
+  async function runAnalysis(progressTimer?: ReturnType<typeof setInterval>) {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push('/login'); return; }
@@ -64,32 +95,106 @@ export default function LabAnalyzePage() {
       localStorage.removeItem('pending_panel_id');
       localStorage.removeItem('pending_panel_values');
 
-      router.push('/lab');
+      // Signal progress bar to complete, then redirect
+      doneRef.current = true;
+      setTimeout(() => router.push('/lab'), 800);
     } catch (e: unknown) {
+      if (progressTimer) clearInterval(progressTimer);
       setError(e instanceof Error ? e.message : 'Analysis failed');
       setPhase('error');
     }
   }
 
-  if (phase === 'loading') {
+  if (phase === 'error') {
     return (
       <div className="flex-1 flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <div className="w-16 h-16 border-2 border-[#00E676] border-t-transparent rounded-full animate-spin mx-auto mb-6" />
-          <div className="text-[#00E676] font-bold tracking-widest uppercase text-sm mb-2">Analyzing</div>
-          <div className="text-[#9A9A9A] text-sm">{MESSAGES[msgIdx]}</div>
+        <div className="text-center max-w-sm">
+          <div className="text-4xl mb-4">⚠</div>
+          <div className="text-white font-bold mb-2">Analysis Failed</div>
+          <div className="text-sm text-[#9A9A9A] mb-6">{error}</div>
+          <Button onClick={() => { setPhase('loading'); setProgress(0); setCurrentLog(0); setCompletedLogs([]); doneRef.current = false; runAnalysis(); }}>
+            Retry
+          </Button>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex items-center justify-center min-h-screen">
-      <div className="text-center max-w-sm">
-        <div className="text-4xl mb-4">⚠</div>
-        <div className="text-white font-bold mb-2">Analysis Failed</div>
-        <div className="text-sm text-[#9A9A9A] mb-6">{error}</div>
-        <Button onClick={() => { setPhase('loading'); setMsgIdx(0); runAnalysis(); }}>Retry</Button>
+    <div className="min-h-[80vh] flex flex-col items-center justify-center px-6">
+      <div className="relative w-full max-w-2xl">
+
+        {/* TOP STATUS BAR */}
+        <div className="flex justify-between items-center mb-8">
+          <div className="flex items-center gap-3">
+            <div className="w-2 h-2 bg-[#00E676] rounded-full animate-ping" />
+            <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Processing_Sequence</span>
+          </div>
+          <span className="text-[12px] font-mono text-[#00E676]">{progress}%</span>
+        </div>
+
+        {/* MAIN SCANNING CARD */}
+        <Card className="relative p-10">
+          {/* Background grid */}
+          <div className="absolute inset-0 opacity-[0.03] pointer-events-none"
+            style={{ backgroundImage: 'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+
+          <div className="relative z-10 flex flex-col items-center">
+            {/* Animated icon */}
+            <div className="relative mb-10">
+              <div className="absolute inset-0 bg-[#00E676]/20 blur-[40px] rounded-full animate-pulse" />
+              <div className="relative w-24 h-24 rounded-xl border border-[#00E676]/30 flex items-center justify-center bg-black">
+                <Dna className="text-[#00E676] animate-bounce" size={40} />
+                <div className="absolute -inset-2 border border-[#00E676]/10 rounded-xl rotate-45 animate-[spin_10s_linear_infinite]" />
+                <div className="absolute -inset-4 border border-[#00E676]/5 rounded-xl -rotate-12 animate-[spin_15s_linear_infinite]" />
+              </div>
+            </div>
+
+            <h2 className="text-xl font-black text-white uppercase tracking-[2px] mb-2 text-center">
+              Analyzing Biological Markers
+            </h2>
+            <p className="text-[11px] text-white/40 uppercase tracking-widest mb-8 text-center">
+              AI Engine: Neural-V4-Clinical
+            </p>
+
+            {/* PROGRESS BAR */}
+            <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-12">
+              <div
+                className="h-full bg-[#00E676] transition-all duration-300 ease-out shadow-[0_0_15px_rgba(0,230,118,0.5)]"
+                style={{ width: `${progress}%` }}
+              />
+            </div>
+
+            {/* TERMINAL LOGS */}
+            <div className="w-full font-mono text-[10px] space-y-2 h-32 overflow-hidden">
+              {completedLogs.slice(-4).map((log, i) => (
+                <div key={i} className="flex items-center gap-3 text-white/40">
+                  <Check size={10} className="text-[#00E676]" />
+                  <span className="uppercase tracking-tighter">{log}</span>
+                </div>
+              ))}
+              <div className="flex items-center gap-3 text-[#00E676] animate-pulse">
+                <Loader2 size={10} className="animate-spin" />
+                <span className="uppercase tracking-tighter">{LOG_MESSAGES[currentLog]}</span>
+              </div>
+            </div>
+          </div>
+        </Card>
+
+        {/* BOTTOM METRICS */}
+        <div className="grid grid-cols-3 gap-4 mt-8">
+          {[
+            { label: 'Data Integrity', val: '99.9%', Icon: ShieldCheck },
+            { label: 'Neural Load', val: '42.4 TFLOPS', Icon: Cpu },
+            { label: 'Bio-Sync', val: 'ACTIVE', Icon: Zap },
+          ].map(({ label, val, Icon }, i) => (
+            <div key={i} className="flex flex-col items-center p-4 bg-white/[0.02] border border-white/5">
+              <Icon size={14} className="text-white/20 mb-2" />
+              <span className="text-[8px] font-black text-white/20 uppercase tracking-widest">{label}</span>
+              <span className="text-[11px] font-mono text-white mt-1">{val}</span>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
