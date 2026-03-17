@@ -218,6 +218,7 @@ export default async function DashboardPage() {
               { t: '7AM–10AM Window', d: 'T-levels peak in early morning.' },
               { t: '12H Fasting', d: 'Water only. Prevents glucose spikes.' },
               { t: 'Rest Recovery', d: 'No heavy lifting 24h prior.' },
+              { t: 'Sexual Abstinence', d: 'No ejaculation 24h prior. Preserves baseline LH and testosterone levels.' },
             ].map((step, i) => (
               <div key={i} className="flex gap-4">
                 <div className="text-[10px] font-black text-white/20 tabular-nums">0{i + 1}</div>
