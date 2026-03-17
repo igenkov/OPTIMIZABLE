@@ -117,9 +117,6 @@ export default async function ProtocolPage() {
           </div>
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter">90-Day Cycle</h1>
         </div>
-        <div className="text-right font-mono text-[10px] text-[#3A3A3A] uppercase tracking-widest hidden lg:block">
-          Auth_Secure // User_{user.id.slice(0, 8)}
-        </div>
       </div>
 
       {/* ── Phase stepper ── */}
