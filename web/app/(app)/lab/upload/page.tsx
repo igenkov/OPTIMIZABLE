@@ -11,19 +11,44 @@ import {
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { BIOMARKERS, CORE_PANEL_IDS, EXTENDED_PANEL_IDS } from '@/constants/biomarkers';
+import type { UnitAlternative } from '@/constants/biomarkers';
 
 function BiomarkerRow({
-  id, name, unit, value, placeholder, onChange
+  id, name, unitPrimary, unitAlternatives, selectedUnit, value,
+  rangeLow, rangeHigh, onChange, onUnitChange,
 }: {
-  id: string; name: string; unit: string; value: string; placeholder: string; onChange: (id: string, val: string) => void
+  id: string; name: string; unitPrimary: string;
+  unitAlternatives: UnitAlternative[]; selectedUnit: string;
+  value: string; rangeLow: number; rangeHigh: number;
+  onChange: (id: string, val: string) => void;
+  onUnitChange: (id: string, unit: string) => void;
 }) {
+  const activeAlt = unitAlternatives.find(a => a.unit === selectedUnit);
+  const factor = activeAlt ? activeAlt.toCanonical : 1;
+  const displayLow = +(rangeLow / factor).toPrecision(4);
+  const displayHigh = +(rangeHigh / factor).toPrecision(4);
+  const hasAlts = unitAlternatives.length > 0;
+
   return (
     <div className="group flex items-center justify-between py-4 px-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-all">
       <div className="flex flex-col">
         <span className="text-[11px] font-black text-white uppercase tracking-tight group-hover:text-[#00E676] transition-colors">
           {name}
         </span>
-        <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">{unit}</span>
+        {hasAlts ? (
+          <select
+            value={selectedUnit}
+            onChange={e => onUnitChange(id, e.target.value)}
+            className="mt-0.5 bg-transparent border-0 text-[9px] font-mono text-white/40 uppercase tracking-widest outline-none cursor-pointer hover:text-[#00E676] transition-colors pr-1"
+          >
+            <option value={unitPrimary}>{unitPrimary}</option>
+            {unitAlternatives.map(a => (
+              <option key={a.unit} value={a.unit}>{a.unit}</option>
+            ))}
+          </select>
+        ) : (
+          <span className="text-[9px] font-mono text-white/30 uppercase tracking-widest">{unitPrimary}</span>
+        )}
       </div>
       <div className="relative">
         <input
@@ -31,7 +56,7 @@ function BiomarkerRow({
           step="any"
           value={value}
           onChange={e => onChange(id, e.target.value)}
-          placeholder={placeholder}
+          placeholder={`${displayLow}–${displayHigh}`}
           className="w-32 px-4 py-2.5 text-right text-sm font-mono bg-black border border-white/10 text-[#00E676] placeholder-white/10 focus:border-[#00E676] focus:ring-1 focus:ring-[#00E676]/20 outline-none transition-all"
         />
         {value && <div className="absolute inset-0 bg-[#00E676]/5 pointer-events-none animate-pulse" />}
@@ -43,6 +68,7 @@ function BiomarkerRow({
 export default function LabUploadPage() {
   const router = useRouter();
   const [values, setValues] = useState<Record<string, string>>({});
+  const [selectedUnits, setSelectedUnits] = useState<Record<string, string>>({});
   const [labName, setLabName] = useState('');
   const [collectionDate, setCollectionDate] = useState(new Date().toISOString().split('T')[0]);
   const [uploading, setUploading] = useState(false);
@@ -80,7 +106,10 @@ export default function LabUploadPage() {
     const formattedValues: Record<string, { marker: string; value: number; unit: string }> = {};
     for (const [id, v] of filled) {
       const b = BIOMARKERS.find(b => b.id === id);
-      formattedValues[id] = { marker: id, value: Number(v), unit: b?.unit_primary ?? '' };
+      const selectedUnit = selectedUnits[id] ?? b?.unit_primary ?? '';
+      const alt = b?.unit_alternatives?.find(a => a.unit === selectedUnit);
+      const canonicalValue = alt ? Number(v) * alt.toCanonical : Number(v);
+      formattedValues[id] = { marker: id, value: canonicalValue, unit: b?.unit_primary ?? '' };
     }
 
     const countRes = await supabase.from('bloodwork_panels').select('id').eq('user_id', user.id);
@@ -152,10 +181,14 @@ export default function LabUploadPage() {
                     key={b.id}
                     id={b.id}
                     name={b.name}
-                    unit={b.unit_primary}
+                    unitPrimary={b.unit_primary}
+                    unitAlternatives={b.unit_alternatives ?? []}
+                    selectedUnit={selectedUnits[b.id] ?? b.unit_primary}
                     value={values[b.id] ?? ''}
-                    placeholder={`${b.standard_range_low}–${b.standard_range_high}`}
+                    rangeLow={b.standard_range_low}
+                    rangeHigh={b.standard_range_high}
                     onChange={(id, val) => setValues(prev => ({ ...prev, [id]: val }))}
+                    onUnitChange={(id, unit) => setSelectedUnits(prev => ({ ...prev, [id]: unit }))}
                   />
                 ))}
               </div>
@@ -175,10 +208,14 @@ export default function LabUploadPage() {
                     key={b.id}
                     id={b.id}
                     name={b.name}
-                    unit={b.unit_primary}
+                    unitPrimary={b.unit_primary}
+                    unitAlternatives={b.unit_alternatives ?? []}
+                    selectedUnit={selectedUnits[b.id] ?? b.unit_primary}
                     value={values[b.id] ?? ''}
-                    placeholder={`${b.standard_range_low}–${b.standard_range_high}`}
+                    rangeLow={b.standard_range_low}
+                    rangeHigh={b.standard_range_high}
                     onChange={(id, val) => setValues(prev => ({ ...prev, [id]: val }))}
+                    onUnitChange={(id, unit) => setSelectedUnits(prev => ({ ...prev, [id]: unit }))}
                   />
                 ))}
               </div>
