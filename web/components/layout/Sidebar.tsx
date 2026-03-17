@@ -2,22 +2,24 @@
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
+import { LayoutDashboard, FlaskConical, ClipboardList, HeartPulse, UserCircle, LogOut } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 type CycleInfo = { day: number; phase: 1 | 2 | 3 } | null;
 
 const PHASE_LABELS = { 1: 'Foundation', 2: 'Calibration', 3: 'Peak' };
 
-const FREE_NAV = [
-  { href: '/dashboard', label: 'Dashboard', icon: '◈' },
-  { href: '/profile', label: 'Profile', icon: '◉' },
+const FREE_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
+  { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+  { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
-const PREMIUM_NAV = [
-  { href: '/dashboard', label: 'Dashboard', icon: '◈' },
-  { href: '/lab', label: 'LAB', icon: '⚗' },
-  { href: '/protocol', label: 'Protocol', icon: '▦' },
-  { href: '/wellbeing', label: 'Wellbeing', icon: '◷' },
-  { href: '/profile', label: 'Profile', icon: '◉' },
+const PREMIUM_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
+  { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+  { href: '/lab', label: 'LAB', Icon: FlaskConical },
+  { href: '/protocol', label: 'Protocol', Icon: ClipboardList },
+  { href: '/wellbeing', label: 'Wellbeing', Icon: HeartPulse },
+  { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
 export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'expert'; cycleInfo: CycleInfo }) {
@@ -108,7 +110,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
                   : 'text-[#9A9A9A] hover:text-white hover:bg-[rgba(255,255,255,0.03)]'
                 }`}
             >
-              <span className="text-base w-5 text-center">{item.icon}</span>
+              <item.Icon size={16} className="shrink-0" />
               <span className="font-medium">{item.label}</span>
             </Link>
           );
@@ -137,8 +139,9 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
       <div className="p-4 border-t border-[rgba(255,255,255,0.07)]">
         <button
           onClick={handleSignOut}
-          className="w-full text-left px-3 py-2 text-xs text-[#4A4A4A] hover:text-[#FF5252] transition-colors tracking-widest uppercase"
+          className="w-full flex items-center gap-3 px-3 py-2 text-xs text-[#4A4A4A] hover:text-[#FF5252] transition-colors tracking-widest uppercase"
         >
+          <LogOut size={14} className="shrink-0" />
           Sign Out
         </button>
       </div>
