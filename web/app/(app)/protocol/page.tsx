@@ -192,7 +192,6 @@ export default async function ProtocolPage() {
                       <Flame size={15} className="text-[#FF5252]" />
                       <span className="text-xs font-black text-white uppercase tracking-[2px]">Chemical Foundation</span>
                     </div>
-                    <span className="text-[10px] font-mono text-[#3A3A3A] uppercase tracking-widest">Phase_{currentPhase}_Stack</span>
                   </div>
                   <div className="divide-y divide-[rgba(255,255,255,0.03)]">
                     {recs.supplements.map((s, i) => {
