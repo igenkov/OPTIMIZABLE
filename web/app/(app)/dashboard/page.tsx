@@ -128,14 +128,9 @@ export default async function DashboardPage() {
 
         {/* Biometrics */}
         <Card className="col-span-12 lg:col-span-5 p-8" style={{ background: 'rgba(255,255,255,0.01)' }}>
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-2">
-              <User size={16} className="text-[#00E676]" />
-              <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Biometrics</span>
-            </div>
-            <span className="text-[10px] font-bold text-white/20 uppercase tabular-nums">
-              ID: {user.id.slice(0, 8)}
-            </span>
+          <div className="flex items-center gap-2 mb-8">
+            <User size={16} className="text-[#00E676]" />
+            <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Biometrics</span>
           </div>
 
           <div className="grid grid-cols-3 gap-4">
