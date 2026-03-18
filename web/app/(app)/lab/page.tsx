@@ -120,7 +120,7 @@ export default async function LabPage() {
   const s = isStructured ? summary as ReportSummaryStructured : null;
 
   return (
-    <div className="px-6 lg:px-8 py-6 space-y-6">
+    <div className="px-4 lg:px-8 py-5 lg:py-6 space-y-5 lg:space-y-6">
 
       {/* ── Header ── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[rgba(255,255,255,0.05)]">
@@ -376,16 +376,16 @@ export default async function LabPage() {
               const phaseLabel = num === 1 ? 'Initial' : num === 2 ? '30-Day' : num === 3 ? '60-Day' : `Panel ${num}`;
               return (
                 <div key={r.id}
-                  className={`flex items-center justify-between px-4 py-3 border transition-all ${isLatest ? 'border-[#00E676]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}
+                  className={`flex items-center justify-between gap-3 px-4 py-3 border transition-all ${isLatest ? 'border-[#00E676]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}
                   style={{ background: isLatest ? 'rgba(0,230,118,0.04)' : 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
-                  <div>
+                  <div className="min-w-0">
                     <span className="text-xs font-bold text-white">Panel {num}</span>
                     <span className="text-[11px] text-[#4A4A4A] ml-2">· {phaseLabel}</span>
-                    <span className="text-[11px] text-[#4A4A4A] ml-2">
+                    <span className="text-[11px] text-[#4A4A4A] ml-1 hidden sm:inline">
                       · {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
                     </span>
                   </div>
-                  <div className="flex items-center gap-3">
+                  <div className="flex items-center gap-2 shrink-0">
                     <span className="font-mono text-sm font-black text-white">
                       {r.health_score}<span className="text-[10px] text-[#4A4A4A]">/100</span>
                     </span>

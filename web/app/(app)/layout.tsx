@@ -1,5 +1,6 @@
 import { createClient } from '@/lib/supabase/server';
 import { Sidebar } from '@/components/layout/Sidebar';
+import { MobileNav } from '@/components/layout/MobileNav';
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
   const supabase = await createClient();
@@ -28,9 +29,10 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar tier={tier} cycleInfo={cycleInfo} />
-      <main className="flex-1 overflow-y-auto">
+      <main className="flex-1 overflow-y-auto pb-16 lg:pb-0">
         {children}
       </main>
+      <MobileNav tier={tier} />
     </div>
   );
 }

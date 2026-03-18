@@ -38,7 +38,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
   const phaseProgress = Math.round((phaseDay / 30) * 100);
 
   return (
-    <aside className="w-56 shrink-0 border-r border-[rgba(255,255,255,0.07)] bg-[#141414] flex flex-col h-screen">
+    <aside className="hidden lg:flex w-56 shrink-0 border-r border-[rgba(255,255,255,0.07)] bg-[#141414] flex-col h-screen">
       {/* Logo */}
       <div className="p-6 border-b border-[rgba(255,255,255,0.07)]">
         <div className="flex items-center gap-3">

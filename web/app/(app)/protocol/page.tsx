@@ -106,7 +106,7 @@ export default async function ProtocolPage() {
   const isLocked = !currentReport;
 
   return (
-    <div className="px-6 lg:px-8 py-6">
+    <div className="px-4 lg:px-8 py-5 lg:py-6">
 
       {/* ── Header ── */}
       <div className="flex items-end justify-between mb-8 pb-6 border-b border-[rgba(255,255,255,0.05)]">

@@ -72,7 +72,7 @@ export default async function ProfilePage() {
   ];
 
   return (
-    <div className="px-6 lg:px-8 py-6">
+    <div className="px-4 lg:px-8 py-5 lg:py-6">
 
       {/* Header */}
       <div className="mb-6">

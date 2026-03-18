@@ -275,7 +275,7 @@ export default function WellbeingPage() {
   const dateStr = new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' });
 
   return (
-    <div className="px-6 lg:px-8 py-6">
+    <div className="px-4 lg:px-8 py-5 lg:py-6">
 
       {/* Header */}
       <div className="flex items-start justify-between mb-5">

@@ -61,7 +61,7 @@ export default async function DashboardPage() {
     : null;
 
   return (
-    <div className="px-6 lg:px-10 py-8 max-w-[1600px] mx-auto space-y-8">
+    <div className="px-4 lg:px-10 py-6 lg:py-8 max-w-[1600px] mx-auto space-y-6 lg:space-y-8">
 
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-8">
@@ -85,38 +85,38 @@ export default async function DashboardPage() {
       </div>
 
       {/* ROW 1: Risk Score (7) + Biometrics (5) */}
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-12 gap-4 lg:gap-6">
 
         {/* Risk Score Hero */}
         <Card
           className="col-span-12 lg:col-span-7 p-8 relative overflow-hidden group"
           style={{ borderLeftColor: color, borderLeftWidth: '4px' }}
         >
-          <div className="flex items-center gap-8 relative z-10">
-            <ScoreRing score={riskScore ?? 0} size={150} strokeWidth={12} color={color} />
+          <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 relative z-10">
+            <ScoreRing score={riskScore ?? 0} size={130} strokeWidth={12} color={color} />
 
-            <div className="flex-1">
-              <div className="flex items-center gap-2 mb-1">
+            <div className="flex-1 text-center sm:text-left">
+              <div className="flex items-center justify-center sm:justify-start gap-2 mb-1">
                 <span className="text-[10px] font-black uppercase tracking-[4px]" style={{ color }}>{label}</span>
                 <span className="px-2 py-0.5 bg-white/5 text-[9px] font-bold text-white/40 uppercase">Hormonal Profile</span>
               </div>
-              <h2 className="text-2xl font-black text-white uppercase tracking-tight mb-3">Primary Assessment</h2>
+              <h2 className="text-xl lg:text-2xl font-black text-white uppercase tracking-tight mb-3">Primary Assessment</h2>
               <p className="text-sm text-white/60 leading-relaxed max-w-md mb-6 font-mono italic">
                 {excluded
                   ? 'Your assessment is optimized for active TRT/Anabolic monitoring.'
                   : getRiskAction(level)}
               </p>
 
-              <div className="flex gap-3">
+              <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <Link
                   href={hasReport ? '/lab' : '/lab/upload'}
-                  className="px-6 py-3 bg-[#00E676] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#00c864] transition-all"
+                  className="px-5 py-3 bg-[#00E676] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#00c864] transition-all text-center"
                 >
                   {hasReport ? 'Open Lab Results' : 'Upload Bloodwork'}
                 </Link>
                 <Link
                   href="/protocol"
-                  className="px-6 py-3 border border-white/10 text-white font-black text-[10px] tracking-widest uppercase hover:bg-white/5 transition-all"
+                  className="px-5 py-3 border border-white/10 text-white font-black text-[10px] tracking-widest uppercase hover:bg-white/5 transition-all text-center"
                 >
                   Full Sequence
                 </Link>
@@ -133,7 +133,7 @@ export default async function DashboardPage() {
             <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Biometrics</span>
           </div>
 
-          <div className="grid grid-cols-3 gap-4">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
             {([
               { label: 'Age', val: p1.age, unit: 'yrs', Icon: Calendar },
               { label: 'BMI', val: bmi ?? '—', unit: '', Icon: Activity },
@@ -155,7 +155,7 @@ export default async function DashboardPage() {
       </div>
 
       {/* ROW 2: Factors (4) + Panel (4) + Lab Prep (4) */}
-      <div className="grid grid-cols-12 gap-6">
+      <div className="grid grid-cols-12 gap-4 lg:gap-6">
 
         {/* Contributing Factors */}
         <Card className="col-span-12 lg:col-span-4 p-8" topAccent="rgba(255,179,0,0.4)">

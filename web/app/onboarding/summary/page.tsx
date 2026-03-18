@@ -132,7 +132,7 @@ export default function SummaryPage() {
             <div className="text-[10px] tracking-[4px] text-white/40 uppercase mb-6 font-black">Hormonal Risk Coefficient</div>
 
             <div className="flex items-center justify-center mb-4">
-              <div className="text-9xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
+              <div className="text-7xl md:text-9xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
               <div className="text-left ml-4">
                 <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">Scale</div>
                 <div className="text-xs font-mono text-white/40">0—100</div>
