@@ -7,6 +7,45 @@ import { Card } from '@/components/ui/Card';
 import { Moon, Wine, Dumbbell, Heart, ChevronRight, Info, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
+function SliderInput({ value, min, max, step, onChange, color = '#00E676' }: {
+  value: number; min: number; max: number; step: number;
+  onChange: (v: number) => void; color?: string;
+}) {
+  const pct = ((value - min) / (max - min)) * 100;
+  return (
+    <div className="relative flex items-center h-5">
+      {/* Track */}
+      <div className="absolute w-full h-[3px] bg-white/10 rounded-full" />
+      {/* Fill */}
+      <div className="absolute h-[3px] rounded-full transition-all duration-150"
+        style={{ width: `${pct}%`, backgroundColor: color, boxShadow: `0 0 8px ${color}60` }} />
+      {/* Input */}
+      <input
+        type="range" min={min} max={max} step={step} value={value}
+        onChange={e => onChange(Number(e.target.value))}
+        className="absolute w-full appearance-none bg-transparent cursor-pointer z-10 outline-none
+          [&::-webkit-slider-thumb]:appearance-none
+          [&::-webkit-slider-thumb]:w-4
+          [&::-webkit-slider-thumb]:h-4
+          [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:bg-white
+          [&::-webkit-slider-thumb]:border-[3px]
+          [&::-webkit-slider-thumb]:border-black
+          [&::-webkit-slider-thumb]:shadow-[0_0_8px_rgba(255,255,255,0.3)]
+          [&::-webkit-slider-thumb]:transition-transform
+          [&::-webkit-slider-thumb]:hover:scale-125
+          [&::-moz-range-thumb]:w-4
+          [&::-moz-range-thumb]:h-4
+          [&::-moz-range-thumb]:rounded-full
+          [&::-moz-range-thumb]:bg-white
+          [&::-moz-range-thumb]:border-[3px]
+          [&::-moz-range-thumb]:border-black
+          [&::-moz-range-thumb]:outline-none"
+      />
+    </div>
+  );
+}
+
 function RatingGrid({ label, value, onChange, max = 5 }: { label: string; value: number; onChange: (v: number) => void; max?: number }) {
   return (
     <div className="flex flex-col gap-3 py-4 border-b border-white/5 last:border-0">
@@ -129,10 +168,7 @@ export default function Phase2Page() {
                 <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Duration (Avg/Night)</span>
                 <span className="text-xl font-mono font-black text-[#00E676]">{form.avg_sleep_hours}h</span>
               </div>
-              <input type="range" min="4" max="10" step="0.5"
-                value={form.avg_sleep_hours}
-                onChange={e => set('avg_sleep_hours', Number(e.target.value))}
-                className="w-full accent-[#00E676] h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer" />
+              <SliderInput min={4} max={10} step={0.5} value={form.avg_sleep_hours} onChange={v => set('avg_sleep_hours', v)} />
             </div>
             <RatingGrid label="Sleep Quality (Restfulness)" value={form.sleep_quality} onChange={v => set('sleep_quality', v)} />
           </div>
@@ -208,10 +244,8 @@ export default function Phase2Page() {
                 form.sedentary_hours >= 10 ? 'text-[#FF5252]' : form.sedentary_hours >= 7 ? 'text-[#FFB300]' : 'text-[#00E676]'
               )}>{form.sedentary_hours}h</span>
             </div>
-            <input type="range" min="0" max="16" step="1"
-              value={form.sedentary_hours}
-              onChange={e => set('sedentary_hours', Number(e.target.value))}
-              className="w-full accent-[#00E676] h-1.5 bg-white/5 rounded-full appearance-none cursor-pointer" />
+            <SliderInput min={0} max={16} step={1} value={form.sedentary_hours} onChange={v => set('sedentary_hours', v)}
+              color={form.sedentary_hours >= 10 ? '#FF5252' : form.sedentary_hours >= 7 ? '#FFB300' : '#00E676'} />
           </div>
 
           <RatingGrid label="Subjective Stress (Work/Life)" value={form.stress_level} onChange={v => set('stress_level', v)} />
