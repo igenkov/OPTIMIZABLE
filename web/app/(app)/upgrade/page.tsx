@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import {
@@ -12,8 +13,10 @@ import {
   Zap,
   ArrowLeft,
   Lock,
-  Cpu
+  Cpu,
+  Check
 } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const FEATURES = [
   {
@@ -48,7 +51,30 @@ const FEATURES = [
   },
 ];
 
+const PLANS = [
+  {
+    id: 'monthly',
+    label: 'Standard Access',
+    price: '$19',
+    period: '/ Month',
+    tag: null,
+    saving: null,
+    features: ['Full Lab Analysis', 'Rolling Protocol Updates'],
+  },
+  {
+    id: '90day',
+    label: 'Optimal Cycle',
+    price: '$49',
+    period: '/ 90 Days',
+    tag: 'Priority',
+    saving: 'Save 14% on full cycle',
+    features: ['Full Lab Analysis', 'Rolling Protocol Updates', 'Priority Support', 'Baseline Comparison'],
+  },
+];
+
 export default function UpgradePage() {
+  const [selectedPlan, setSelectedPlan] = useState<'monthly' | '90day'>('90day');
+
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white">
 
@@ -64,11 +90,40 @@ export default function UpgradePage() {
             <ArrowLeft size={14} /> Back to Command Center
           </Link>
 
+          {/* Logo */}
+          <div className="flex items-center gap-3 mb-8">
+            <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
+              <defs>
+                <linearGradient id="lg-upgrade" x1="0" y1="0" x2="1" y2="1">
+                  <stop offset="0%" stopColor="#00E676"/>
+                  <stop offset="100%" stopColor="#007A3D"/>
+                </linearGradient>
+              </defs>
+              <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
+              <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7"/>
+              <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.45"/>
+              <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.25"/>
+              <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round"/>
+              <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            </svg>
+            <div>
+              <div className="text-white font-bold uppercase tracking-[0.14em]"
+                style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: '1.15rem' }}>
+                OPTIMIZABLE
+              </div>
+              <div className="text-[#4A4A4A] uppercase tracking-[0.18em]"
+                style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: '0.58rem' }}>
+                MALEMAXXING QUANTIFIED
+              </div>
+            </div>
+          </div>
+
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
             <div>
               <div className="text-[11px] font-black tracking-[4px] text-[#00E676] uppercase mb-2">Protocol Unlock Sequence</div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none">
-                Optimizable <span className="text-white/20 italic font-light">Pro</span>
+              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none"
+                style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
+                Optimizable <span className="text-white/20 font-light">Pro</span>
               </h1>
             </div>
             <p className="max-w-xs text-xs text-white/40 leading-relaxed uppercase font-medium tracking-wide">
@@ -87,7 +142,6 @@ export default function UpgradePage() {
               <div className="absolute top-0 right-0 p-3 opacity-10 group-hover:opacity-30 transition-opacity">
                 <f.icon size={40} strokeWidth={1} />
               </div>
-
               <div className="relative z-10">
                 <div className="text-[9px] font-black text-[#00E676] uppercase tracking-[3px] mb-3">{f.label}</div>
                 <h3 className="text-sm font-black uppercase tracking-tight mb-2">{f.title}</h3>
@@ -95,12 +149,10 @@ export default function UpgradePage() {
                   {f.desc}
                 </p>
               </div>
-
               <div className="absolute bottom-0 left-0 w-0 h-[1px] bg-[#00E676] group-hover:w-full transition-all duration-500" />
             </div>
           ))}
 
-          {/* Integration Placeholder */}
           <div className="border border-dashed border-white/10 flex items-center justify-center p-6 bg-black/20">
             <div className="text-center">
               <Cpu size={24} className="mx-auto mb-2 text-white/10" />
@@ -127,28 +179,57 @@ export default function UpgradePage() {
               </div>
             </header>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-10">
-              <div className="space-y-2">
-                <div className="text-[9px] font-black text-white/20 uppercase tracking-[3px]">Standard Access</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-black tracking-tighter">$19</span>
-                  <span className="text-xs text-white/40 font-bold uppercase tracking-widest">/ Month</span>
-                </div>
-                <ul className="text-[10px] space-y-2 pt-4">
-                  <li className="flex items-center gap-2 text-white/60"><ShieldCheck size={12} className="text-[#00E676]" /> Full Lab Analysis</li>
-                  <li className="flex items-center gap-2 text-white/60"><ShieldCheck size={12} className="text-[#00E676]" /> Rolling Protocol Updates</li>
-                </ul>
-              </div>
+            {/* Plan Selector */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-10">
+              {PLANS.map((plan) => {
+                const active = selectedPlan === plan.id;
+                return (
+                  <button
+                    key={plan.id}
+                    type="button"
+                    onClick={() => setSelectedPlan(plan.id as 'monthly' | '90day')}
+                    className={cn(
+                      'relative text-left p-5 border transition-all duration-200',
+                      active
+                        ? 'border-[#00E676]/50 bg-[#00E676]/5 shadow-[0_0_20px_rgba(0,230,118,0.08)]'
+                        : 'border-white/5 bg-white/[0.02] hover:border-white/10'
+                    )}
+                  >
+                    {plan.tag && (
+                      <div className="absolute -top-2 right-4 px-2 py-0.5 bg-[#00E676] text-black text-[8px] font-black uppercase tracking-widest">
+                        {plan.tag}
+                      </div>
+                    )}
 
-              <div className="relative space-y-2 p-4 bg-white/[0.03] border border-white/5">
-                <div className="absolute -top-2 right-4 px-2 py-0.5 bg-[#00E676] text-black text-[8px] font-black uppercase tracking-widest">Priority</div>
-                <div className="text-[9px] font-black text-[#00E676] uppercase tracking-[3px]">Optimal Cycle</div>
-                <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-black tracking-tighter">$49</span>
-                  <span className="text-xs text-white/40 font-bold uppercase tracking-widest">/ 90 Days</span>
-                </div>
-                <div className="text-[9px] text-[#00E676] font-black uppercase tracking-widest">Save 14% on full cycle</div>
-              </div>
+                    {/* Selected indicator */}
+                    <div className={cn(
+                      'absolute top-4 right-4 w-4 h-4 border flex items-center justify-center transition-all',
+                      active ? 'bg-[#00E676] border-[#00E676]' : 'border-white/20 bg-transparent'
+                    )}>
+                      {active && <Check size={10} className="text-black stroke-[4px]" />}
+                    </div>
+
+                    <div className="text-[9px] font-black uppercase tracking-[3px] mb-2"
+                      style={{ color: active ? '#00E676' : 'rgba(255,255,255,0.2)' }}>
+                      {plan.label}
+                    </div>
+                    <div className="flex items-baseline gap-1 mb-1">
+                      <span className="text-3xl font-black tracking-tighter text-white">{plan.price}</span>
+                      <span className="text-[10px] text-white/40 font-bold uppercase tracking-widest">{plan.period}</span>
+                    </div>
+                    {plan.saving && (
+                      <div className="text-[9px] text-[#00E676] font-black uppercase tracking-widest mb-3">{plan.saving}</div>
+                    )}
+                    <ul className="space-y-1.5 mt-3 pt-3 border-t border-white/5">
+                      {plan.features.map(feat => (
+                        <li key={feat} className="flex items-center gap-2 text-[10px] text-white/50">
+                          <ShieldCheck size={10} className="text-[#00E676] shrink-0" /> {feat}
+                        </li>
+                      ))}
+                    </ul>
+                  </button>
+                );
+              })}
             </div>
 
             <div className="space-y-4">
@@ -161,10 +242,10 @@ export default function UpgradePage() {
               </div>
 
               <a
-                href="mailto:support@optimizable.app?subject=LAB Access Request"
+                href={`mailto:support@optimizable.app?subject=LAB Access Request — ${selectedPlan === '90day' ? '90-Day ($49)' : 'Monthly ($19)'}`}
                 className="group flex items-center justify-center gap-3 w-full py-6 bg-[#00E676] text-black font-black text-xs tracking-[4px] uppercase hover:bg-white transition-all duration-300 shadow-[0_10px_30px_rgba(0,230,118,0.2)]"
               >
-                Request Initialization <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
+                Request {selectedPlan === '90day' ? '90-Day' : 'Monthly'} Access <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
               </a>
             </div>
           </Card>
