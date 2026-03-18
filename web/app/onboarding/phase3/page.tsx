@@ -5,69 +5,23 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
+import { Pill, Database, ShieldAlert, ChevronRight, Check } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 const SUPP_CATEGORIES = [
-  {
-    id: 't_support_basics',
-    label: 'Foundational T support',
-    sublabel: 'Zinc, Magnesium, Vitamin D, Boron...',
-  },
-  {
-    id: 't_boosters',
-    label: 'Testosterone boosters / Adaptogens',
-    sublabel: 'Tongkat Ali, Fadogia Agrestis, Ashwagandha, DHEA...',
-  },
-  {
-    id: 'estrogen_modulators',
-    label: 'Estrogen modulators',
-    sublabel: 'DIM, Calcium D-Glucarate, Chrysin...',
-  },
-  {
-    id: 'dht_reducers',
-    label: 'DHT reducers',
-    sublabel: 'Saw Palmetto, Beta-sitosterol...',
-  },
+  { id: 't_support_basics', label: 'Foundational Support', sublabel: 'Zinc, Mg, Vit D, Boron' },
+  { id: 't_boosters', label: 'Adaptogens', sublabel: 'Tongkat Ali, Ashwagandha, DHEA' },
+  { id: 'estrogen_modulators', label: 'Estrogen Control', sublabel: 'DIM, Calcium D-Glucarate' },
+  { id: 'dht_reducers', label: 'DHT Reducers', sublabel: 'Saw Palmetto, Beta-sitosterol' },
 ];
 
 const MED_CATEGORIES = [
-  {
-    id: 'ssri_snri',
-    label: 'Antidepressants',
-    sublabel: 'SSRIs / SNRIs (Sertraline, Escitalopram, Venlafaxine...)',
-  },
-  {
-    id: 'statins',
-    label: 'Statins',
-    sublabel: 'Cholesterol meds (Atorvastatin, Rosuvastatin, Simvastatin...)',
-  },
-  {
-    id: 'opioids',
-    label: 'Opioids / Strong painkillers',
-    sublabel: 'Oxycodone, Tramadol, Morphine, Buprenorphine...',
-  },
-  {
-    id: 'corticosteroids',
-    label: 'Corticosteroids',
-    sublabel: 'Prednisone, Dexamethasone, Hydrocortisone...',
-  },
-  {
-    id: 'androgen_blockers',
-    label: 'Androgen blockers / 5-ARIs',
-    sublabel: 'Finasteride, Dutasteride, Spironolactone...',
-  },
+  { id: 'ssri_snri', label: 'Antidepressants', sublabel: 'SSRIs / SNRIs' },
+  { id: 'statins', label: 'Statins', sublabel: 'Cholesterol Management' },
+  { id: 'opioids', label: 'Analgesics', sublabel: 'Opioids / Pain Management' },
+  { id: 'corticosteroids', label: 'Corticosteroids', sublabel: 'Anti-inflammatories' },
+  { id: 'androgen_blockers', label: '5-ARIs', sublabel: 'Hair loss / Prostate meds' },
 ];
-
-function Toggle({ label, value, onChange }: { label: string; value: boolean; onChange: (v: boolean) => void }) {
-  return (
-    <div className="flex items-center justify-between py-3 border-b border-[rgba(255,255,255,0.05)]">
-      <span className="text-sm text-[#E0E0E0]">{label}</span>
-      <button type="button" onClick={() => onChange(!value)}
-        className={`w-12 h-6 rounded-full transition-colors relative ${value ? 'bg-[#00E676]' : 'bg-[#1f1f1f] border border-[rgba(255,255,255,0.1)]'}`}>
-        <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${value ? 'translate-x-6' : 'translate-x-0.5'}`} />
-      </button>
-    </div>
-  );
-}
 
 export default function Phase3Page() {
   const router = useRouter();
@@ -91,21 +45,12 @@ export default function Phase3Page() {
     setForm(prev => ({ ...prev, [key]: val }));
   }
 
-  function toggleSuppCategory(cat: string) {
-    setForm(prev => ({
-      ...prev,
-      supplement_categories: prev.supplement_categories.includes(cat)
-        ? prev.supplement_categories.filter(c => c !== cat)
-        : [...prev.supplement_categories, cat],
-    }));
-  }
-
-  function toggleMedCategory(cat: string) {
-    setForm(prev => ({
-      ...prev,
-      medication_categories: prev.medication_categories.includes(cat)
-        ? prev.medication_categories.filter(c => c !== cat)
-        : [...prev.medication_categories, cat],
+  function toggleCategory(listKey: 'medication_categories' | 'supplement_categories', id: string) {
+    setForm(p => ({
+      ...p,
+      [listKey]: p[listKey].includes(id)
+        ? p[listKey].filter(x => x !== id)
+        : [...p[listKey], id],
     }));
   }
 
@@ -136,158 +81,220 @@ export default function Phase3Page() {
   }
 
   return (
-    <div>
-      <div className="mb-8">
-        <div className="flex gap-1 mb-4">
-          {[1,2,3,4,5].map(i => (
-            <div key={i} className={`h-1 flex-1 ${i <= 3 ? 'bg-[#00E676]' : 'bg-[rgba(255,255,255,0.07)]'}`} />
+    <div className="max-w-2xl mx-auto pb-20">
+
+      {/* HEADER & PROGRESS */}
+      <header className="mb-12">
+        <div className="flex gap-1.5 mb-6">
+          {[1, 2, 3, 4, 5].map(i => (
+            <div key={i} className={cn(
+              'h-1 flex-1 rounded-full transition-all duration-500',
+              i <= 3 ? 'bg-[#00E676]' : 'bg-white/5',
+              i === 3 && 'shadow-[0_0_8px_rgba(0,230,118,0.4)]'
+            )} />
           ))}
         </div>
-        <div className="text-xs text-[#9A9A9A] tracking-widest uppercase mb-2">Step 3 of 5</div>
-        <h1 className="text-xl font-bold text-white tracking-wide mb-1">Medical History</h1>
-        <p className="text-sm text-[#9A9A9A]">Medications and hormone history significantly affect your results.</p>
-      </div>
+        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-white/40 mb-4">
+          Phase 03 / Clinical Baseline
+        </div>
+        <h1 className="text-3xl font-black text-white tracking-tight mb-2">Medical History</h1>
+        <p className="text-sm text-white/40">Pharmacological interventions and exogenous hormones significantly alter HPTA function.</p>
+      </header>
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-        <Card>
-          <div className="text-xs font-bold tracking-widests text-[#00E676] uppercase mb-1">Medications & Supplements</div>
-          <p className="text-xs text-[#4A4A4A] mb-4">
-            These are the medication groups with documented hormonal impact — not every drug affects testosterone, but these specific classes do, and significantly. If you take any, select the category.
-          </p>
-          <Toggle label="Currently taking medications" value={form.taking_medications} onChange={v => set('taking_medications', v)} />
-          {form.taking_medications && (
-            <div className="mt-4">
-              <div className="text-xs font-semibold text-[#9A9A9A] uppercase tracking-widest mb-3">Select all that apply</div>
-              <div className="flex flex-col gap-2 mb-4">
-                {MED_CATEGORIES.map(cat => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => toggleMedCategory(cat.id)}
-                    className={`w-full text-left px-3 py-2.5 border transition-colors ${
-                      form.medication_categories.includes(cat.id)
-                        ? 'border-[#00E676] bg-[rgba(0,230,118,0.08)]'
-                        : 'border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.2)]'
-                    }`}
-                  >
-                    <div className={`text-xs font-semibold ${form.medication_categories.includes(cat.id) ? 'text-[#00E676]' : 'text-[#E0E0E0]'}`}>
-                      {cat.label}
-                    </div>
-                    <div className="text-xs text-[#4A4A4A] mt-0.5">{cat.sublabel}</div>
-                  </button>
-                ))}
-              </div>
-              <Input
-                label="Specific medication names (optional — for your reference)"
-                value={form.medications}
-                onChange={e => set('medications', e.target.value)}
-                placeholder="e.g. Sertraline 50mg, Atorvastatin 20mg"
-              />
-            </div>
-          )}
-          <Toggle label="Currently taking supplements" value={form.taking_supplements} onChange={v => set('taking_supplements', v)} />
-          {form.taking_supplements && (
-            <div className="mt-4">
-              <div className="text-xs font-semibold text-[#9A9A9A] uppercase tracking-widest mb-3">Select all that apply</div>
-              <div className="flex flex-col gap-2 mb-4">
-                {SUPP_CATEGORIES.map(cat => (
-                  <button
-                    key={cat.id}
-                    type="button"
-                    onClick={() => toggleSuppCategory(cat.id)}
-                    className={`w-full text-left px-3 py-2.5 border transition-colors ${
-                      form.supplement_categories.includes(cat.id)
-                        ? 'border-[#00E676] bg-[rgba(0,230,118,0.08)]'
-                        : 'border-[rgba(255,255,255,0.07)] hover:border-[rgba(255,255,255,0.2)]'
-                    }`}
-                  >
-                    <div className={`text-xs font-semibold ${form.supplement_categories.includes(cat.id) ? 'text-[#00E676]' : 'text-[#E0E0E0]'}`}>
-                      {cat.label}
-                    </div>
-                    <div className="text-xs text-[#4A4A4A] mt-0.5">{cat.sublabel}</div>
-                  </button>
-                ))}
-              </div>
-              <Input
-                label="Specific supplement names (optional)"
-                value={form.supplements}
-                onChange={e => set('supplements', e.target.value)}
-                placeholder="e.g. Zinc Picolinate 30mg, Vitamin D3 5000 IU"
-              />
-            </div>
-          )}
-        </Card>
+      <form onSubmit={handleSubmit} className="space-y-8">
 
-        <Card>
-          <div className="text-xs font-bold tracking-widest text-[#00E676] uppercase mb-4">Steroid History</div>
-          <div className="flex gap-2 mb-3">
-            {(['never','past','current'] as const).map(v => (
-              <button key={v} type="button" onClick={() => set('steroid_history', v)}
-                className={`flex-1 py-2 text-xs border transition-colors capitalize
-                  ${form.steroid_history === v ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]' : 'border-[rgba(255,255,255,0.07)] text-[#9A9A9A]'}`}>
-                {v}
-              </button>
-            ))}
+        {/* PHARMACOLOGY */}
+        <Card className="p-6 space-y-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="flex items-center gap-2 text-[#00E676]">
+            <Pill size={16} />
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pharmacology</h2>
           </div>
-          {form.steroid_history === 'past' && (
-            <div className="flex flex-col gap-3 mt-3">
-              <div>
-                <div className="text-xs font-semibold text-[#9A9A9A] uppercase tracking-widest mb-2">How long ago did you stop?</div>
-                <div className="flex flex-wrap gap-2">
-                  {([
-                    { value: 'lt_6mo', label: '< 6 months' },
-                    { value: '6_12mo', label: '6–12 months' },
-                    { value: '1_3yr', label: '1–3 years' },
-                    { value: '3_5yr', label: '3–5 years' },
-                    { value: '5plus_yr', label: '5+ years' },
-                  ] as const).map(opt => (
-                    <button key={opt.value} type="button" onClick={() => set('steroid_stopped_ago', opt.value)}
-                      className={`px-3 py-1.5 text-xs border transition-colors
-                        ${form.steroid_stopped_ago === opt.value ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]' : 'border-[rgba(255,255,255,0.07)] text-[#9A9A9A] hover:border-[rgba(255,255,255,0.2)]'}`}>
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <div>
-                <div className="text-xs font-semibold text-[#9A9A9A] uppercase tracking-widest mb-2">How many cycles total?</div>
-                <div className="flex flex-wrap gap-2">
-                  {([
-                    { value: '1', label: '1 cycle' },
-                    { value: '2_3', label: '2–3 cycles' },
-                    { value: '4_10', label: '4–10 cycles' },
-                    { value: '10plus', label: '10+ cycles' },
-                  ] as const).map(opt => (
-                    <button key={opt.value} type="button" onClick={() => set('steroid_cycle_count', opt.value)}
-                      className={`px-3 py-1.5 text-xs border transition-colors
-                        ${form.steroid_cycle_count === opt.value ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]' : 'border-[rgba(255,255,255,0.07)] text-[#9A9A9A] hover:border-[rgba(255,255,255,0.2)]'}`}>
-                      {opt.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-              <Toggle label="Did you do PCT (post-cycle therapy)?" value={form.steroid_pct} onChange={v => set('steroid_pct', v)} />
-            </div>
-          )}
-        </Card>
 
-        <Card>
-          <div className="text-xs font-bold tracking-widest text-[#00E676] uppercase mb-4">TRT History</div>
-          <div className="flex gap-2 mb-3">
-            {(['never','past','current'] as const).map(v => (
-              <button key={v} type="button" onClick={() => set('trt_history', v)}
-                className={`flex-1 py-2 text-xs border transition-colors capitalize
-                  ${form.trt_history === v ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]' : 'border-[rgba(255,255,255,0.07)] text-[#9A9A9A]'}`}>
-                {v}
-              </button>
-            ))}
+          {/* Medications */}
+          <div className="space-y-4">
+            <button type="button"
+              onClick={() => set('taking_medications', !form.taking_medications)}
+              className={cn(
+                'w-full flex items-center justify-between p-4 border transition-all',
+                form.taking_medications ? 'bg-[#00E676]/5 border-[#00E676]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
+              )}>
+              <span className="text-xs font-black uppercase tracking-widest">Currently taking medications</span>
+              <div className={cn('w-2 h-2 rounded-full', form.taking_medications ? 'bg-[#00E676]' : 'bg-white/10')} />
+            </button>
+
+            {form.taking_medications && (
+              <div className="grid grid-cols-1 gap-2">
+                {MED_CATEGORIES.map(cat => {
+                  const active = form.medication_categories.includes(cat.id);
+                  return (
+                    <button key={cat.id} type="button"
+                      onClick={() => toggleCategory('medication_categories', cat.id)}
+                      className={cn(
+                        'text-left p-3 border transition-all flex justify-between items-center',
+                        active ? 'bg-white/10 border-white/20' : 'bg-transparent border-white/5'
+                      )}>
+                      <div>
+                        <div className={cn('text-[10px] font-black uppercase tracking-widest', active ? 'text-white' : 'text-white/40')}>{cat.label}</div>
+                        <div className="text-[10px] text-white/20 font-bold uppercase tracking-tighter">{cat.sublabel}</div>
+                      </div>
+                      {active && <Check size={14} className="text-[#00E676] shrink-0" />}
+                    </button>
+                  );
+                })}
+                <Input className="mt-2" placeholder="Specific medication names (optional)" value={form.medications}
+                  onChange={e => set('medications', e.target.value)} />
+              </div>
+            )}
           </div>
-          {form.trt_history !== 'never' && (
-            <Input label="TRT type" value={form.trt_type} onChange={e => set('trt_type', e.target.value)} placeholder="e.g. Testosterone Cypionate injections" />
-          )}
+
+          {/* Supplements */}
+          <div className="space-y-4 pt-4 border-t border-white/5">
+            <button type="button"
+              onClick={() => set('taking_supplements', !form.taking_supplements)}
+              className={cn(
+                'w-full flex items-center justify-between p-4 border transition-all',
+                form.taking_supplements ? 'bg-[#00E676]/5 border-[#00E676]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
+              )}>
+              <span className="text-xs font-black uppercase tracking-widest">Currently taking supplements</span>
+              <div className={cn('w-2 h-2 rounded-full', form.taking_supplements ? 'bg-[#00E676]' : 'bg-white/10')} />
+            </button>
+
+            {form.taking_supplements && (
+              <div className="grid grid-cols-1 gap-2">
+                {SUPP_CATEGORIES.map(cat => {
+                  const active = form.supplement_categories.includes(cat.id);
+                  return (
+                    <button key={cat.id} type="button"
+                      onClick={() => toggleCategory('supplement_categories', cat.id)}
+                      className={cn(
+                        'text-left p-3 border transition-all flex justify-between items-center',
+                        active ? 'bg-white/10 border-white/20' : 'bg-transparent border-white/5'
+                      )}>
+                      <div>
+                        <div className={cn('text-[10px] font-black uppercase tracking-widest', active ? 'text-white' : 'text-white/40')}>{cat.label}</div>
+                        <div className="text-[10px] text-white/20 font-bold uppercase tracking-tighter">{cat.sublabel}</div>
+                      </div>
+                      {active && <Check size={14} className="text-[#00E676] shrink-0" />}
+                    </button>
+                  );
+                })}
+                <Input className="mt-2" placeholder="Specific supplement names (optional)" value={form.supplements}
+                  onChange={e => set('supplements', e.target.value)} />
+              </div>
+            )}
+          </div>
         </Card>
 
-        <Button type="submit" loading={loading} fullWidth>Continue →</Button>
+        {/* ANABOLIC EXPOSURE */}
+        <Card className="p-6 space-y-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
+          <div className="flex items-center gap-2 text-[#00E676]">
+            <Database size={16} />
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Anabolic Exposure</h2>
+          </div>
+
+          {/* Steroid History */}
+          <div className="space-y-4">
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Anabolic Steroid History</span>
+            <div className="grid grid-cols-3 gap-2">
+              {(['never', 'past', 'current'] as const).map(v => (
+                <button key={v} type="button" onClick={() => set('steroid_history', v)}
+                  className={cn(
+                    'py-2.5 border text-[10px] font-black uppercase tracking-widest transition-all capitalize',
+                    form.steroid_history === v ? 'bg-white/10 border-white/20 text-white' : 'bg-transparent border-white/5 text-white/20'
+                  )}>
+                  {v}
+                </button>
+              ))}
+            </div>
+
+            {form.steroid_history === 'past' && (
+              <div className="space-y-6 pt-4 border-t border-white/5">
+                <div className="space-y-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Cessation Timeline</span>
+                  <div className="flex flex-wrap gap-2">
+                    {([
+                      { value: 'lt_6mo', label: '< 6 mo' },
+                      { value: '6_12mo', label: '6–12 mo' },
+                      { value: '1_3yr', label: '1–3 yr' },
+                      { value: '3_5yr', label: '3–5 yr' },
+                      { value: '5plus_yr', label: '5+ yr' },
+                    ] as const).map(opt => (
+                      <button key={opt.value} type="button" onClick={() => set('steroid_stopped_ago', opt.value)}
+                        className={cn(
+                          'px-3 py-1.5 border text-[9px] font-black uppercase transition-all',
+                          form.steroid_stopped_ago === opt.value ? 'bg-[#00E676] border-[#00E676] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
+                        )}>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="space-y-3">
+                  <span className="text-[10px] font-bold uppercase tracking-widest text-white/40">Accumulated Exposure</span>
+                  <div className="flex flex-wrap gap-2">
+                    {([
+                      { value: '1', label: '1 Cycle' },
+                      { value: '2_3', label: '2–3 Cycles' },
+                      { value: '4_10', label: '4–10 Cycles' },
+                      { value: '10plus', label: '10+ Cycles' },
+                    ] as const).map(opt => (
+                      <button key={opt.value} type="button" onClick={() => set('steroid_cycle_count', opt.value)}
+                        className={cn(
+                          'px-3 py-1.5 border text-[9px] font-black uppercase transition-all',
+                          form.steroid_cycle_count === opt.value ? 'bg-[#00E676] border-[#00E676] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
+                        )}>
+                        {opt.label}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <button type="button" onClick={() => set('steroid_pct', !form.steroid_pct)}
+                  className={cn(
+                    'w-full flex items-center justify-between p-3 border text-[10px] font-black uppercase tracking-widest transition-all',
+                    form.steroid_pct ? 'bg-[#00E676]/10 border-[#00E676]/30 text-[#00E676]' : 'bg-transparent border-white/5 text-white/20'
+                  )}>
+                  Post-Cycle Therapy (PCT) Completed
+                  <Check size={14} className={cn('transition-opacity', form.steroid_pct ? 'opacity-100' : 'opacity-0')} />
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* TRT History */}
+          <div className="space-y-4 pt-4 border-t border-white/5">
+            <span className="text-[10px] font-black uppercase tracking-widest text-white/40">TRT / Hormone Replacement</span>
+            <div className="grid grid-cols-3 gap-2">
+              {(['never', 'past', 'current'] as const).map(v => (
+                <button key={v} type="button" onClick={() => set('trt_history', v)}
+                  className={cn(
+                    'py-2.5 border text-[10px] font-black uppercase tracking-widest transition-all capitalize',
+                    form.trt_history === v ? 'bg-white/10 border-white/20 text-white' : 'bg-transparent border-white/5 text-white/20'
+                  )}>
+                  {v}
+                </button>
+              ))}
+            </div>
+            {form.trt_history !== 'never' && (
+              <Input placeholder="TRT Protocol (e.g. 100mg Test C / week)" value={form.trt_type}
+                onChange={e => set('trt_type', e.target.value)} />
+            )}
+          </div>
+        </Card>
+
+        {/* ACTIONS */}
+        <div className="pt-4 space-y-4">
+          <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
+            <ShieldAlert size={18} className="text-[#FFB300] shrink-0" />
+            <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
+              Clinical accuracy: pharmacological data is essential for interpreting total vs. free testosterone and SHBG levels.
+            </p>
+          </div>
+          <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
+            {!loading && <>Execute Symptom Log <ChevronRight size={16} /></>}
+          </Button>
+        </div>
       </form>
     </div>
   );
