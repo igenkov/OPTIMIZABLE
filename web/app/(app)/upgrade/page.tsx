@@ -79,49 +79,21 @@ export default function UpgradePage() {
     <div className="min-h-screen bg-[#0e0e0e] text-white">
 
       {/* HEADER */}
-      <div className="relative border-b border-white/5 bg-white/[0.01] px-6 py-12 lg:px-12">
+      <div className="relative border-b border-white/5 bg-white/[0.01] px-6 py-6 lg:px-12">
         <div className="absolute top-4 right-6 flex items-center gap-2 opacity-20">
           <span className="text-[8px] font-black uppercase tracking-[3px]">Status: Restricted</span>
           <div className="h-1.5 w-1.5 rounded-full bg-red-500 animate-pulse" />
         </div>
 
         <div className="max-w-4xl mx-auto">
-          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[2px] text-white/40 hover:text-[#00E676] transition-colors mb-8">
+          <Link href="/dashboard" className="inline-flex items-center gap-2 text-[10px] font-black uppercase tracking-[2px] text-white/40 hover:text-[#00E676] transition-colors mb-5">
             <ArrowLeft size={14} /> Back to Command Center
           </Link>
 
-          {/* Logo */}
-          <div className="flex items-center gap-3 mb-8">
-            <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-              <defs>
-                <linearGradient id="lg-upgrade" x1="0" y1="0" x2="1" y2="1">
-                  <stop offset="0%" stopColor="#00E676"/>
-                  <stop offset="100%" stopColor="#007A3D"/>
-                </linearGradient>
-              </defs>
-              <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
-              <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7"/>
-              <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.45"/>
-              <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg-upgrade)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.25"/>
-              <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round"/>
-              <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-            </svg>
+          <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
             <div>
-              <div className="text-white font-bold uppercase tracking-[0.14em]"
-                style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: '1.15rem' }}>
-                OPTIMIZABLE
-              </div>
-              <div className="text-[#4A4A4A] uppercase tracking-[0.18em]"
-                style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: '0.58rem' }}>
-                MALEMAXXING QUANTIFIED
-              </div>
-            </div>
-          </div>
-
-          <div className="flex flex-col md:flex-row md:items-end justify-between gap-6">
-            <div>
-              <div className="text-[11px] font-black tracking-[4px] text-[#00E676] uppercase mb-2">Protocol Unlock Sequence</div>
-              <h1 className="text-4xl md:text-5xl font-black tracking-tighter uppercase leading-none"
+              <div className="text-[11px] font-black tracking-[4px] text-[#00E676] uppercase mb-1">Protocol Unlock Sequence</div>
+              <h1 className="text-3xl md:text-4xl font-black tracking-tighter uppercase leading-none"
                 style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
                 Optimizable <span className="text-white/20 font-light">Pro</span>
               </h1>
