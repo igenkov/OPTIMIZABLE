@@ -13,20 +13,18 @@ const PREVIEW = 2;
 
 function CharacterImage() {
   return (
-    <div className="absolute bottom-0 right-0 w-[240px] h-[300px] pointer-events-none select-none hidden md:block">
+    <div className="absolute bottom-0 right-0 w-[336px] h-[420px] pointer-events-none select-none hidden md:block">
       <Image
         src="/lab_character.png"
         alt=""
         fill
-        className="object-contain object-bottom"
+        className="object-contain object-right-bottom"
       />
-      {/* gradient overlays to fade white bg into card */}
+      {/* fade left edge into card only — right/top stay crisp */}
       <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.5) 25%, transparent 55%)' }} />
+        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.7) 18%, transparent 45%)' }} />
       <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to top, #141414 0%, transparent 15%)' }} />
-      <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to bottom, #141414 0%, transparent 12%)' }} />
+        style={{ background: 'linear-gradient(to top, #141414 0%, transparent 10%)' }} />
     </div>
   );
 }
@@ -59,7 +57,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
         </div>
         {/* pr-[140px] on sm+ to leave room for character */}
-        <div className="space-y-5 md:pr-[220px]">
+        <div className="space-y-5 md:pr-[280px]">
           <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
             <span className="text-[9px] font-black text-[#4A4A4A] uppercase tracking-widest block mb-2">Bottom Line</span>
             <div className="space-y-2">
@@ -107,7 +105,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
         <Zap size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
       </div>
-      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[220px]">
+      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[280px]">
         <p className="text-sm font-bold text-[#E0E0E0] leading-relaxed mb-3">{lead}</p>
         {visibleRest.length > 0 && (
           <ul className="space-y-2">
