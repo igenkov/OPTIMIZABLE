@@ -158,16 +158,16 @@ export default async function DashboardPage() {
       <div className="grid grid-cols-12 gap-4 lg:gap-6">
 
         {/* Contributing Factors */}
-        <Card className="col-span-12 lg:col-span-4 p-8" topAccent="rgba(255,179,0,0.4)">
+        <Card className="col-span-12 lg:col-span-4 p-8" topAccent="rgba(232,196,112,0.4)">
           <div className="flex items-center gap-2 mb-6">
-            <ShieldAlert size={16} className="text-[#FFB300]" />
+            <ShieldAlert size={16} className="text-[#E8C470]" />
             <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Critical Factors</span>
           </div>
 
           <div className="space-y-6">
             {keyFactors.length > 0 ? keyFactors.slice(0, 4).map((f, i) => (
               <div key={i} className="border-l border-white/10 pl-4 group">
-                <h4 className="text-[11px] font-black text-white uppercase tracking-tight mb-1 group-hover:text-[#FFB300] transition-colors">{f.title}</h4>
+                <h4 className="text-[11px] font-black text-white uppercase tracking-tight mb-1 group-hover:text-[#E8C470] transition-colors">{f.title}</h4>
                 <p className="text-[11px] text-white/40 leading-relaxed">{f.explanation}</p>
               </div>
             )) : (

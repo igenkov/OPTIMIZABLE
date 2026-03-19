@@ -17,7 +17,7 @@ const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.
   hormones:  { label: 'Hormonal Axis',    color: '#C8A2C8', Icon: Activity  },
   thyroid:   { label: 'Thyroid Function', color: '#CE93D8', Icon: TestTube2 },
   metabolic: { label: 'Metabolic Health', color: '#64B5F6', Icon: Zap       },
-  lipids:    { label: 'Lipid Panel',      color: '#FFB300', Icon: Droplets  },
+  lipids:    { label: 'Lipid Panel',      color: '#E8C470', Icon: Droplets  },
 };
 const CATEGORY_ORDER = ['hormones', 'thyroid', 'metabolic', 'lipids'];
 const BIOMARKER_CATEGORY = new Map(BIOMARKERS.map(b => [b.id, b.category]));
@@ -141,9 +141,9 @@ export default async function LabPage() {
 
       {/* Medical referral alert */}
       {latest.medical_referral_needed && (
-        <div className="border border-[#FF5252] bg-[rgba(255,82,82,0.06)] px-5 py-4">
-          <div className="text-sm font-bold text-[#FF5252] mb-1">⚠ Medical Consultation Recommended</div>
-          <div className="text-[11px] text-[#FF5252] opacity-80">{latest.medical_referral_reason}</div>
+        <div className="border border-[#E88080] bg-[rgba(232,128,128,0.06)] px-5 py-4">
+          <div className="text-sm font-bold text-[#E88080] mb-1">⚠ Medical Consultation Recommended</div>
+          <div className="text-[11px] text-[#E88080] opacity-80">{latest.medical_referral_reason}</div>
         </div>
       )}
 
@@ -167,7 +167,7 @@ export default async function LabPage() {
                 'text-[11px] font-bold px-3 py-1 inline-block',
                 latest.health_score >= previous.health_score
                   ? 'bg-[rgba(200,162,200,0.1)] text-[#C8A2C8]'
-                  : 'bg-[rgba(255,82,82,0.1)] text-[#FF5252]',
+                  : 'bg-[rgba(232,128,128,0.1)] text-[#E88080]',
               )}>
                 {latest.health_score >= previous.health_score ? '↑' : '↓'} {Math.abs(latest.health_score - previous.health_score)} pts vs last
               </span>
@@ -189,8 +189,8 @@ export default async function LabPage() {
                 <p className="text-sm text-[#E0E0E0] leading-relaxed">{s.bottom_line}</p>
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="border-l border-[rgba(255,179,0,0.4)] pl-4">
-                  <span className="text-[9px] font-black text-[#FFB300] uppercase tracking-widest block mb-1">Primary Driver</span>
+                <div className="border-l border-[rgba(232,196,112,0.4)] pl-4">
+                  <span className="text-[9px] font-black text-[#E8C470] uppercase tracking-widest block mb-1">Primary Driver</span>
                   <p className="text-xs text-[#9A9A9A] font-mono leading-relaxed">{s.primary_driver}</p>
                 </div>
                 <div className="border-l border-[rgba(200,162,200,0.4)] pl-4">
@@ -227,11 +227,11 @@ export default async function LabPage() {
       {/* ── Areas of Concern ── */}
       {latest.concerns?.length > 0 && (
         <Card>
-          <div className="text-[10px] font-bold tracking-[3px] text-[#FF5252] uppercase mb-3">Areas of Concern</div>
+          <div className="text-[10px] font-bold tracking-[3px] text-[#E88080] uppercase mb-3">Areas of Concern</div>
           {latest.concerns.map((c, i) => (
             <div key={i} className="flex items-start gap-3 py-2.5 border-b border-[rgba(255,255,255,0.04)] last:border-0">
               <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-[5px]"
-                style={{ background: c.severity === 'high' ? '#FF5252' : c.severity === 'medium' ? '#FFB300' : '#C8A2C8' }} />
+                style={{ background: c.severity === 'high' ? '#E88080' : c.severity === 'medium' ? '#E8C470' : '#C8A2C8' }} />
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] font-bold text-white tracking-widest uppercase mb-0.5">
                   {c.marker.replace(/_/g, ' ')}
@@ -240,8 +240,8 @@ export default async function LabPage() {
               </div>
               <span className="text-[10px] font-bold uppercase px-2 py-0.5 shrink-0"
                 style={{
-                  color: c.severity === 'high' ? '#FF5252' : c.severity === 'medium' ? '#FFB300' : '#C8A2C8',
-                  background: c.severity === 'high' ? 'rgba(255,82,82,0.1)' : c.severity === 'medium' ? 'rgba(255,179,0,0.1)' : 'rgba(200,162,200,0.1)',
+                  color: c.severity === 'high' ? '#E88080' : c.severity === 'medium' ? '#E8C470' : '#C8A2C8',
+                  background: c.severity === 'high' ? 'rgba(232,128,128,0.1)' : c.severity === 'medium' ? 'rgba(232,196,112,0.1)' : 'rgba(200,162,200,0.1)',
                 }}>
                 {c.severity}
               </span>
@@ -278,7 +278,7 @@ export default async function LabPage() {
                     </div>
                   </div>
                   {needsAttention > 0 && (
-                    <span className="text-[9px] font-black text-[#FFB300] bg-[rgba(255,179,0,0.1)] px-2 py-1 border border-[rgba(255,179,0,0.2)] uppercase">
+                    <span className="text-[9px] font-black text-[#E8C470] bg-[rgba(232,196,112,0.1)] px-2 py-1 border border-[rgba(232,196,112,0.2)] uppercase">
                       {needsAttention} action required
                     </span>
                   )}
@@ -315,7 +315,7 @@ export default async function LabPage() {
                                 <span className="text-lg font-black text-white tabular-nums font-mono">{m.value}</span>
                                 <span className="text-[10px] font-bold text-[#4A4A4A] uppercase tracking-tight">{m.unit}</span>
                                 {diff !== null && diff !== 0 && (
-                                  <span className={cn('text-[10px] font-mono font-bold', diff > 0 ? 'text-[#C8A2C8]' : 'text-[#FF5252]')}>
+                                  <span className={cn('text-[10px] font-mono font-bold', diff > 0 ? 'text-[#C8A2C8]' : 'text-[#E88080]')}>
                                     {diff > 0 ? '↑' : '↓'}{Math.abs(diff).toFixed(1)}
                                   </span>
                                 )}

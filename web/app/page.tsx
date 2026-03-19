@@ -123,7 +123,7 @@ export default async function Home() {
                     ].map((m, i) => (
                       <div key={i} className="flex items-center justify-between py-1.5 border-b border-[rgba(255,255,255,0.04)] last:border-0">
                         <span className="text-[10px] text-[#7A7A7A]">{m.label}</span>
-                        <span className={cn('text-[10px] font-black', m.good ? 'text-[#C8A2C8]' : 'text-[#FF5252]')}>{m.val}</span>
+                        <span className={cn('text-[10px] font-black', m.good ? 'text-[#C8A2C8]' : 'text-[#E88080]')}>{m.val}</span>
                       </div>
                     ))}
                   </div>

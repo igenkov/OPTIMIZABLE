@@ -286,7 +286,7 @@ export default function Phase3Page() {
         {/* ACTIONS */}
         <div className="pt-4 space-y-4">
           <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
-            <ShieldAlert size={18} className="text-[#FFB300] shrink-0" />
+            <ShieldAlert size={18} className="text-[#E8C470] shrink-0" />
             <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
               Clinical accuracy: pharmacological data is essential for interpreting total vs. free testosterone and SHBG levels.
             </p>

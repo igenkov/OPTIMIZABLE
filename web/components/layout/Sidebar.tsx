@@ -139,7 +139,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
       <div className="p-4 border-t border-[rgba(255,255,255,0.07)]">
         <button
           onClick={handleSignOut}
-          className="w-full flex items-center gap-3 px-3 py-2 text-xs text-[#4A4A4A] hover:text-[#FF5252] transition-colors tracking-widest uppercase"
+          className="w-full flex items-center gap-3 px-3 py-2 text-xs text-[#4A4A4A] hover:text-[#E88080] transition-colors tracking-widest uppercase"
         >
           <LogOut size={14} className="shrink-0" />
           Sign Out

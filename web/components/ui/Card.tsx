@@ -10,7 +10,7 @@ export function Card({ accent, gold, topAccent, children, className = '', style,
   const topBorderColor = accent
     ? 'rgba(200,162,200,0.6)'
     : gold
-    ? 'rgba(255,179,0,0.6)'
+    ? 'rgba(232,196,112,0.6)'
     : topAccent ?? 'rgba(255,255,255,0.12)';
 
   return (

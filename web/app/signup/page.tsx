@@ -246,7 +246,7 @@ export default function SignupPage() {
 
           <div className="p-4 bg-white/[0.02] border border-white/5">
             <div className="flex gap-3 items-start">
-              <Zap size={14} className="text-[#FFB300] shrink-0 mt-0.5" />
+              <Zap size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
               <p className="text-[9px] text-white/30 leading-relaxed uppercase font-bold tracking-tight">
                 By initializing, you confirm this is a personal health dashboard. Data is encrypted and used only for your 90-day optimization protocol.
               </p>

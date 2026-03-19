@@ -36,8 +36,8 @@ const BLANK: Omit<CheckIn, 'date'> = {
 const METRICS = [
   { key: 'energy'         as const, label: 'Energy',        color: '#C8A2C8' },
   { key: 'mood'           as const, label: 'Mood',          color: '#64B5F6' },
-  { key: 'libido'         as const, label: 'Libido',        color: '#FF5252' },
-  { key: 'sleep_quality'  as const, label: 'Sleep',         color: '#FFB300' },
+  { key: 'libido'         as const, label: 'Libido',        color: '#E88080' },
+  { key: 'sleep_quality'  as const, label: 'Sleep',         color: '#E8C470' },
   { key: 'mental_clarity' as const, label: 'Clarity',       color: '#CE93D8' },
 ] as const;
 
@@ -169,7 +169,7 @@ function MetricCard({ metric, checkins }: { metric: typeof METRICS[number]; chec
         {latest ?? '—'}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
       </div>
       {delta && (
-        <div className="text-[10px] mb-2" style={{ color: delta.delta > 0 ? '#C8A2C8' : delta.delta < 0 ? '#FF5252' : '#4A4A4A' }}>
+        <div className="text-[10px] mb-2" style={{ color: delta.delta > 0 ? '#C8A2C8' : delta.delta < 0 ? '#E88080' : '#4A4A4A' }}>
           {delta.delta > 0 ? '+' : ''}{delta.delta} <span className="text-[#4A4A4A]">7d avg</span>
         </div>
       )}
@@ -322,8 +322,8 @@ export default function WellbeingPage() {
                 {[
                   { label: 'Energy',    value: todayData.energy,        color: '#C8A2C8' },
                   { label: 'Mood',      value: todayData.mood,          color: '#64B5F6' },
-                  { label: 'Libido',    value: todayData.libido,        color: '#FF5252' },
-                  { label: 'Sleep',     value: todayData.sleep_quality, color: '#FFB300' },
+                  { label: 'Libido',    value: todayData.libido,        color: '#E88080' },
+                  { label: 'Sleep',     value: todayData.sleep_quality, color: '#E8C470' },
                   { label: 'Clarity',   value: todayData.mental_clarity,color: '#CE93D8' },
                   { label: 'Stress',    value: todayData.stress,        color: '#9A9A9A' },
                 ].map(m => (
@@ -344,7 +344,7 @@ export default function WellbeingPage() {
               </div>
               {streak >= 3 && (
                 <div className="mt-4 pt-3 border-t border-[rgba(255,255,255,0.05)] text-center">
-                  <div className="text-[11px] font-bold text-[#FFB300]">🔥 {streak}-day streak</div>
+                  <div className="text-[11px] font-bold text-[#E8C470]">🔥 {streak}-day streak</div>
                   <div className="text-[10px] text-[#4A4A4A]">Keep it going tomorrow</div>
                 </div>
               )}
@@ -381,7 +381,7 @@ export default function WellbeingPage() {
                           form.morning_erection === opt.val
                             ? opt.val
                               ? 'border-[#C8A2C8] text-[#C8A2C8] bg-[rgba(200,162,200,0.1)]'
-                              : 'border-[#FF5252] text-[#FF5252] bg-[rgba(255,82,82,0.08)]'
+                              : 'border-[#E88080] text-[#E88080] bg-[rgba(232,128,128,0.08)]'
                             : 'border-[rgba(255,255,255,0.07)] text-[#4A4A4A] hover:border-[rgba(255,255,255,0.15)]'
                         }`}>
                         {opt.label}
@@ -393,7 +393,7 @@ export default function WellbeingPage() {
                 {/* Energy + Libido */}
                 {[
                   { key: 'energy' as const, label: 'Energy', color: '#C8A2C8' },
-                  { key: 'libido' as const, label: 'Libido', color: '#FF5252' },
+                  { key: 'libido' as const, label: 'Libido', color: '#E88080' },
                 ].map(m => (
                   <div key={m.key} className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
                     <div className="flex items-center justify-between mb-2">
@@ -413,7 +413,7 @@ export default function WellbeingPage() {
                     <div className="text-[11px] font-semibold text-[#E0E0E0]">Sleep Hours</div>
                     <div className="text-sm font-black text-white">{form.sleep_hours}h</div>
                   </div>
-                  <ColorSlider value={form.sleep_hours} onChange={v => set('sleep_hours', v)} color="#FFB300" min={3} max={12} />
+                  <ColorSlider value={form.sleep_hours} onChange={v => set('sleep_hours', v)} color="#E8C470" min={3} max={12} />
                   <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>3h</span><span>12h</span></div>
                 </div>
 
@@ -421,11 +421,11 @@ export default function WellbeingPage() {
                 <div className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
                   <div className="flex items-center justify-between mb-2">
                     <div className="text-[11px] font-semibold text-[#E0E0E0]">Sleep Quality</div>
-                    <div className="text-sm font-black tabular-nums" style={{ color: '#FFB300' }}>
+                    <div className="text-sm font-black tabular-nums" style={{ color: '#E8C470' }}>
                       {form.sleep_quality}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
                     </div>
                   </div>
-                  <ColorSlider value={form.sleep_quality} onChange={v => set('sleep_quality', v)} color="#FFB300" />
+                  <ColorSlider value={form.sleep_quality} onChange={v => set('sleep_quality', v)} color="#E8C470" />
                   <div className="flex justify-between text-[9px] text-[#3A3A3A] mt-1"><span>1</span><span>10</span></div>
                 </div>
 
@@ -499,7 +499,7 @@ export default function WellbeingPage() {
                 </div>
               </Card>
 
-              {error && <p className="text-[11px] text-[#FF5252]">{error}</p>}
+              {error && <p className="text-[11px] text-[#E88080]">{error}</p>}
               <Button type="submit" loading={saving} fullWidth>SAVE CHECK-IN</Button>
             </form>
           )}
@@ -571,7 +571,7 @@ export default function WellbeingPage() {
                     {checkins.map((c, i) => (
                       <div key={i} className="flex-1 h-2"
                         style={{
-                          background: c.morning_erection === null ? 'rgba(255,255,255,0.04)' : c.morning_erection ? '#C8A2C8' : 'rgba(255,82,82,0.3)',
+                          background: c.morning_erection === null ? 'rgba(255,255,255,0.04)' : c.morning_erection ? '#C8A2C8' : 'rgba(232,128,128,0.3)',
                         }}
                         title={c.morning_erection === null ? 'No data' : c.morning_erection ? 'Yes' : 'No'} />
                     ))}

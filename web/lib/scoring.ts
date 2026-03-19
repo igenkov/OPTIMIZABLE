@@ -198,9 +198,9 @@ export function getRiskLevel(score: number): RiskLevel {
 
 export function getRiskColor(level: RiskLevel): string {
   switch (level) {
-    case 'critical': return '#FF5252';
+    case 'critical': return '#E88080';
     case 'high': return '#FF8C00';
-    case 'moderate': return '#FFB300';
+    case 'moderate': return '#E8C470';
     case 'low': return '#C8A2C8';
   }
 }

@@ -56,7 +56,7 @@ export default async function ProfilePage() {
   const stats = [
     { label: 'Cycle Day',  value: cycleDay ? `Day ${cycleDay}` : '—',       icon: Calendar,     accent: '#C8A2C8' },
     { label: 'Phase',      value: cycleDay ? PHASE_LABELS[phase] : '—',      icon: Activity,     accent: '#64B5F6' },
-    { label: 'Streak',     value: streak   ? `${streak} Days` : '—',         icon: Flame,        accent: '#FFB300' },
+    { label: 'Streak',     value: streak   ? `${streak} Days` : '—',         icon: Flame,        accent: '#E8C470' },
     { label: 'Next Lab',   value: cycleDay ? `${nextLabDays}d` : '—',        icon: FlaskConical, accent: '#CE93D8' },
   ] as const;
 
@@ -111,9 +111,9 @@ export default async function ProfilePage() {
               {/* Subscription badge */}
               {isPremium ? (
                 <div className="px-4 py-1.5 border text-xs font-black tracking-widest uppercase"
-                  style={{ borderColor: 'rgba(255,179,0,0.6)', color: '#FFB300',
-                           background: 'linear-gradient(90deg, rgba(255,179,0,0.08), rgba(255,179,0,0.04), rgba(255,179,0,0.08))',
-                           boxShadow: '0 0 12px rgba(255,179,0,0.1)' }}>
+                  style={{ borderColor: 'rgba(232,196,112,0.6)', color: '#E8C470',
+                           background: 'linear-gradient(90deg, rgba(232,196,112,0.08), rgba(232,196,112,0.04), rgba(232,196,112,0.08))',
+                           boxShadow: '0 0 12px rgba(232,196,112,0.1)' }}>
                   ⭐ Premium
                 </div>
               ) : (

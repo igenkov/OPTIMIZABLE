@@ -20,9 +20,9 @@ const BODY_TYPES = [
   { level: 2, name: 'Athletic',    bf: 12, color: '#C8A2C8', markers: 'Full 6-pack visible when flexing; muscle separation.' },
   { level: 3, name: 'Defined',     bf: 15, color: '#69F0AE', markers: 'Outline of 4-pack visible; V-taper present.' },
   { level: 4, name: 'Fit',         bf: 18, color: '#FFD740', markers: 'Flat stomach; abs only visible in specific lighting.' },
-  { level: 5, name: 'Average',     bf: 22, color: '#FFB300', markers: 'No ab definition; slight love handles forming.' },
+  { level: 5, name: 'Average',     bf: 22, color: '#E8C470', markers: 'No ab definition; slight love handles forming.' },
   { level: 6, name: 'Heavy',       bf: 28, color: '#FF8C00', markers: 'Visible belly; soft chest; significant love handles.' },
-  { level: 7, name: 'Very Heavy',  bf: 33, color: '#FF5252', markers: 'Significant abdominal protrusion.' },
+  { level: 7, name: 'Very Heavy',  bf: 33, color: '#E88080', markers: 'Significant abdominal protrusion.' },
 ];
 
 export default function Phase1Page() {

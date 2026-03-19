@@ -150,7 +150,7 @@ export default function SummaryPage() {
 
             <div className="max-w-sm mx-auto p-4 bg-white/5 border border-white/5">
               <p className="text-[11px] font-bold text-white/60 uppercase tracking-tight leading-relaxed">
-                <span className="text-[#FFB300] mr-2 underline underline-offset-4 decoration-yellow-500/30">Immediate Action:</span>
+                <span className="text-[#E8C470] mr-2 underline underline-offset-4 decoration-yellow-500/30">Immediate Action:</span>
                 {action}
               </p>
             </div>
@@ -209,15 +209,15 @@ export default function SummaryPage() {
         {!excluded && extendedTests.length > 0 && (
           <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="p-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#FFB300]">Extended Calibration</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Extended Calibration</span>
               <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Personalized Add-ons</span>
             </div>
             <div className="divide-y divide-white/5">
               {extendedTests.map(b => (
                 <div key={b.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                  <div className="mt-1 w-2 h-2 rounded-full bg-[#FFB300] shrink-0" />
+                  <div className="mt-1 w-2 h-2 rounded-full bg-[#E8C470] shrink-0" />
                   <div className="flex-1">
-                    <div className="text-xs font-bold text-white group-hover:text-[#FFB300] transition-colors uppercase tracking-tight">{b.name}</div>
+                    <div className="text-xs font-bold text-white group-hover:text-[#E8C470] transition-colors uppercase tracking-tight">{b.name}</div>
                     <div className="text-[10px] text-white/30 font-medium leading-relaxed mt-1 uppercase tracking-tighter">{b.description}</div>
                   </div>
                 </div>

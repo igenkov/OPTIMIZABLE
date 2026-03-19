@@ -241,11 +241,11 @@ export default function Phase2Page() {
               <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Sedentary Hours / Day</span>
               <span className={cn(
                 'text-xl font-mono font-black',
-                form.sedentary_hours >= 10 ? 'text-[#FF5252]' : form.sedentary_hours >= 7 ? 'text-[#FFB300]' : 'text-[#C8A2C8]'
+                form.sedentary_hours >= 10 ? 'text-[#E88080]' : form.sedentary_hours >= 7 ? 'text-[#E8C470]' : 'text-[#C8A2C8]'
               )}>{form.sedentary_hours}h</span>
             </div>
             <SliderInput min={0} max={16} step={1} value={form.sedentary_hours} onChange={v => set('sedentary_hours', v)}
-              color={form.sedentary_hours >= 10 ? '#FF5252' : form.sedentary_hours >= 7 ? '#FFB300' : '#C8A2C8'} />
+              color={form.sedentary_hours >= 10 ? '#E88080' : form.sedentary_hours >= 7 ? '#E8C470' : '#C8A2C8'} />
           </div>
 
           <RatingGrid label="Subjective Stress (Work/Life)" value={form.stress_level} onChange={v => set('stress_level', v)} />

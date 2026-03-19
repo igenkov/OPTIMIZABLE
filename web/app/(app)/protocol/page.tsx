@@ -21,7 +21,7 @@ const PHASES = [
 function getTimingMeta(timing: string) {
   const t = timing.toLowerCase();
   if (t.includes('morning') || t.includes('am') || t.includes('wake'))
-    return { Icon: Sun,   color: '#FFB300', bg: 'rgba(255,179,0,0.1)' };
+    return { Icon: Sun,   color: '#E8C470', bg: 'rgba(232,196,112,0.1)' };
   if (t.includes('evening') || t.includes('night') || t.includes('bed'))
     return { Icon: Moon,  color: '#CE93D8', bg: 'rgba(206,147,216,0.1)' };
   if (t.includes('workout') || t.includes('training') || t.includes('pre-'))
@@ -33,7 +33,7 @@ const DIRECTIVE_META = {
   eating:   { title: 'Nutrition', Icon: Coffee,   color: '#64B5F6' },
   exercise: { title: 'Training',  Icon: Zap,      color: '#C8A2C8' },
   sleep:    { title: 'Sleep',     Icon: Moon,     color: '#CE93D8' },
-  stress:   { title: 'Stress',    Icon: Activity, color: '#FFB300' },
+  stress:   { title: 'Stress',    Icon: Activity, color: '#E8C470' },
   habits:   { title: 'Habits',    Icon: Target,   color: '#9A9A9A' },
 } as const;
 
@@ -189,7 +189,7 @@ export default async function ProtocolPage() {
                 <Card className="p-0 overflow-hidden">
                   <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Flame size={15} className="text-[#FF5252]" />
+                      <Flame size={15} className="text-[#E88080]" />
                       <span className="text-xs font-black text-white uppercase tracking-[2px]">Chemical Foundation</span>
                     </div>
                   </div>
@@ -207,7 +207,7 @@ export default async function ProtocolPage() {
                               <div className="flex items-center gap-2">
                                 <span className="text-sm font-black text-white uppercase tracking-tight">{s.name}</span>
                                 {i < 3 && (
-                                  <span className="text-[8px] px-1.5 py-0.5 bg-[rgba(255,179,0,0.1)] text-[#FFB300] border border-[rgba(255,179,0,0.2)] font-black uppercase tracking-tight">
+                                  <span className="text-[8px] px-1.5 py-0.5 bg-[rgba(232,196,112,0.1)] text-[#E8C470] border border-[rgba(232,196,112,0.2)] font-black uppercase tracking-tight">
                                     Priority
                                   </span>
                                 )}
@@ -293,11 +293,11 @@ export default async function ProtocolPage() {
 
           {/* Next lab trigger */}
           {nextLabDate && (
-            <Card topAccent={nextLabDays <= 7 ? 'rgba(255,82,82,0.6)' : 'rgba(255,179,0,0.5)'}>
+            <Card topAccent={nextLabDays <= 7 ? 'rgba(232,128,128,0.6)' : 'rgba(232,196,112,0.5)'}>
               <div className="flex items-center gap-2 mb-4">
-                <FlaskConical size={13} style={{ color: nextLabDays <= 7 ? '#FF5252' : '#FFB300' }} />
+                <FlaskConical size={13} style={{ color: nextLabDays <= 7 ? '#E88080' : '#E8C470' }} />
                 <span className="text-[10px] font-black uppercase tracking-widest"
-                  style={{ color: nextLabDays <= 7 ? '#FF5252' : '#FFB300' }}>
+                  style={{ color: nextLabDays <= 7 ? '#E88080' : '#E8C470' }}>
                   Next Lab Trigger
                 </span>
               </div>
