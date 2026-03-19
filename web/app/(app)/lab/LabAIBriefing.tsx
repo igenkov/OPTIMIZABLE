@@ -10,37 +10,6 @@ function splitSentences(text: string): string[] {
 
 const PREVIEW = 2;
 
-function CardContent({ children }: { children: React.ReactNode }) {
-  return (
-    <Card
-      className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8] !p-0 overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}
-    >
-      <div className="flex items-stretch" style={{ minHeight: '320px' }}>
-
-        {/* ── Text column ── */}
-        <div className="flex-1 min-w-0 p-5">
-          {children}
-        </div>
-
-        {/* ── Character column ── */}
-        <div className="hidden md:block w-[240px] shrink-0 relative overflow-hidden">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src="/lab_character.png"
-            alt=""
-            className="absolute bottom-0 right-0 h-full w-auto max-w-none"
-          />
-          {/* fade left edge of image into card bg */}
-          <div className="absolute inset-0"
-            style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.5) 15%, transparent 45%)' }} />
-        </div>
-
-      </div>
-    </Card>
-  );
-}
-
 export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStructured | null }) {
   const [expanded, setExpanded] = useState(false);
 
@@ -53,7 +22,8 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
     const visible = expanded ? sentences : sentences.slice(0, PREVIEW);
 
     return (
-      <CardContent>
+      <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
+        style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
         <div className="flex items-center gap-2 mb-5">
           <Zap size={14} className="text-[#C8A2C8]" />
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
@@ -89,7 +59,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
             </div>
           </div>
         </div>
-      </CardContent>
+      </Card>
     );
   }
 
@@ -101,7 +71,8 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
   const visibleRest = expanded ? rest : rest.slice(0, PREVIEW);
 
   return (
-    <CardContent>
+    <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
+      style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
       <div className="flex items-center gap-2 mb-5">
         <Zap size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
@@ -126,6 +97,6 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
           </button>
         )}
       </div>
-    </CardContent>
+    </Card>
   );
 }
