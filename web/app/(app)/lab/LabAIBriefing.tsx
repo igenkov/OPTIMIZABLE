@@ -1,6 +1,5 @@
 'use client';
 import { useState } from 'react';
-import Image from 'next/image';
 import { Zap, ChevronDown } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import type { ReportSummaryStructured } from '@/types';
@@ -13,16 +12,18 @@ const PREVIEW = 2;
 
 function CharacterImage() {
   return (
-    <div className="absolute bottom-0 right-0 w-[380px] h-[480px] pointer-events-none select-none hidden md:block">
-      <Image
+    <div className="absolute bottom-0 right-0 w-[360px] h-[500px] overflow-hidden pointer-events-none select-none hidden md:block">
+      {/* img anchored right-0 bottom-0 so the card clips left whitespace — character flush right */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
         src="/lab_character.png"
         alt=""
-        fill
-        className="object-contain object-right-bottom"
+        className="absolute bottom-0 right-0 h-full w-auto max-w-none"
       />
-      {/* fade left edge into card only — right/top stay crisp */}
+      {/* fade left edge into card bg */}
       <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.7) 18%, transparent 45%)' }} />
+        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.75) 22%, transparent 52%)' }} />
+      {/* fade bottom edge */}
       <div className="absolute inset-0"
         style={{ background: 'linear-gradient(to top, #141414 0%, transparent 10%)' }} />
     </div>
