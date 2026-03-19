@@ -13,7 +13,7 @@ const PREVIEW = 2;
 
 function CharacterImage() {
   return (
-    <div className="absolute bottom-0 right-0 w-[336px] h-[420px] pointer-events-none select-none hidden md:block">
+    <div className="absolute bottom-0 right-0 w-[380px] h-[480px] pointer-events-none select-none hidden md:block">
       <Image
         src="/lab_character.png"
         alt=""
@@ -57,7 +57,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
         </div>
         {/* pr-[140px] on sm+ to leave room for character */}
-        <div className="space-y-5 md:pr-[280px]">
+        <div className="space-y-5 md:pr-[340px]">
           <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
             <span className="text-[9px] font-black text-[#4A4A4A] uppercase tracking-widest block mb-2">Bottom Line</span>
             <div className="space-y-2">
@@ -105,7 +105,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
         <Zap size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
       </div>
-      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[280px]">
+      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[340px]">
         <p className="text-sm font-bold text-[#E0E0E0] leading-relaxed mb-3">{lead}</p>
         {visibleRest.length > 0 && (
           <ul className="space-y-2">
