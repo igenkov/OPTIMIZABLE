@@ -62,7 +62,8 @@ export default async function Home() {
             <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-3">
               Biological Baseline Assessment
             </div>
-            <h1 className="text-5xl font-black text-white uppercase tracking-tight leading-tight mb-5">
+            <h1 className="text-5xl lg:text-6xl font-black text-white uppercase leading-tight mb-5"
+              style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", letterSpacing: '0.04em' }}>
               Know Your Numbers.<br />
               <span className="text-[#C8A2C8]">Optimize Your Biology.</span>
             </h1>
