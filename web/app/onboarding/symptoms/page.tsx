@@ -61,8 +61,8 @@ export default function SymptomsPage() {
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
               'h-1 flex-1 rounded-full transition-all duration-500',
-              i <= 4 ? 'bg-[#00E676]' : 'bg-white/5',
-              i === 4 && 'shadow-[0_0_8px_rgba(0,230,118,0.4)]'
+              i <= 4 ? 'bg-[#C8A2C8]' : 'bg-white/5',
+              i === 4 && 'shadow-[0_0_8px_rgba(200,162,200,0.4)]'
             )} />
           ))}
         </div>
@@ -80,9 +80,9 @@ export default function SymptomsPage() {
         <div className="flex items-center gap-3">
           <div className={cn(
             'w-10 h-10 flex items-center justify-center border transition-all duration-500',
-            activeSymptomCount > 0 ? 'border-[#00E676] bg-[#00E676]/10 shadow-[0_0_15px_rgba(0,230,118,0.2)]' : 'border-white/10 bg-white/5'
+            activeSymptomCount > 0 ? 'border-[#C8A2C8] bg-[#C8A2C8]/10 shadow-[0_0_15px_rgba(200,162,200,0.2)]' : 'border-white/10 bg-white/5'
           )}>
-            <Gauge size={20} className={activeSymptomCount > 0 ? 'text-[#00E676]' : 'text-white/20'} />
+            <Gauge size={20} className={activeSymptomCount > 0 ? 'text-[#C8A2C8]' : 'text-white/20'} />
           </div>
           <div>
             <div className="text-[10px] font-black uppercase tracking-widest text-white/40">Signals Logged</div>
@@ -117,7 +117,7 @@ export default function SymptomsPage() {
                     ? 'bg-red-500'
                     : s.correlation_weight >= 0.75
                     ? 'bg-yellow-500'
-                    : 'bg-[#00E676]';
+                    : 'bg-[#C8A2C8]';
 
                   return (
                     <button
@@ -133,7 +133,7 @@ export default function SymptomsPage() {
                     >
                       <div className={cn(
                         'w-5 h-5 border flex items-center justify-center transition-all shrink-0',
-                        isSelected ? 'bg-[#00E676] border-[#00E676]' : 'border-white/10 bg-white/5 group-hover:border-white/30'
+                        isSelected ? 'bg-[#C8A2C8] border-[#C8A2C8]' : 'border-white/10 bg-white/5 group-hover:border-white/30'
                       )}>
                         {isSelected && <Check size={12} className="text-black stroke-[4px]" />}
                       </div>
@@ -198,7 +198,7 @@ export default function SymptomsPage() {
         )}
 
         <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
-          <Info size={18} className="text-[#00E676] shrink-0" />
+          <Info size={18} className="text-[#C8A2C8] shrink-0" />
           <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
             The aggregate of these signals creates your Subjective Health Score, cross-referenced against your biomarker data.
           </p>

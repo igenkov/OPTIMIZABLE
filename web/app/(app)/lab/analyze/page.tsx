@@ -127,10 +127,10 @@ export default function LabAnalyzePage() {
         {/* TOP STATUS BAR */}
         <div className="flex justify-between items-center mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-2 h-2 bg-[#00E676] rounded-full animate-ping" />
+            <div className="w-2 h-2 bg-[#C8A2C8] rounded-full animate-ping" />
             <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Processing_Sequence</span>
           </div>
-          <span className="text-[12px] font-mono text-[#00E676]">{progress}%</span>
+          <span className="text-[12px] font-mono text-[#C8A2C8]">{progress}%</span>
         </div>
 
         {/* MAIN SCANNING CARD */}
@@ -142,11 +142,11 @@ export default function LabAnalyzePage() {
           <div className="relative z-10 flex flex-col items-center">
             {/* Animated icon */}
             <div className="relative mb-10">
-              <div className="absolute inset-0 bg-[#00E676]/20 blur-[40px] rounded-full animate-pulse" />
-              <div className="relative w-24 h-24 rounded-xl border border-[#00E676]/30 flex items-center justify-center bg-black">
-                <Dna className="text-[#00E676] animate-bounce" size={40} />
-                <div className="absolute -inset-2 border border-[#00E676]/10 rounded-xl rotate-45 animate-[spin_10s_linear_infinite]" />
-                <div className="absolute -inset-4 border border-[#00E676]/5 rounded-xl -rotate-12 animate-[spin_15s_linear_infinite]" />
+              <div className="absolute inset-0 bg-[#C8A2C8]/20 blur-[40px] rounded-full animate-pulse" />
+              <div className="relative w-24 h-24 rounded-xl border border-[#C8A2C8]/30 flex items-center justify-center bg-black">
+                <Dna className="text-[#C8A2C8] animate-bounce" size={40} />
+                <div className="absolute -inset-2 border border-[#C8A2C8]/10 rounded-xl rotate-45 animate-[spin_10s_linear_infinite]" />
+                <div className="absolute -inset-4 border border-[#C8A2C8]/5 rounded-xl -rotate-12 animate-[spin_15s_linear_infinite]" />
               </div>
             </div>
 
@@ -160,7 +160,7 @@ export default function LabAnalyzePage() {
             {/* PROGRESS BAR */}
             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-12">
               <div
-                className="h-full bg-[#00E676] transition-all duration-300 ease-out shadow-[0_0_15px_rgba(0,230,118,0.5)]"
+                className="h-full bg-[#C8A2C8] transition-all duration-300 ease-out shadow-[0_0_15px_rgba(200,162,200,0.5)]"
                 style={{ width: `${progress}%` }}
               />
             </div>
@@ -169,11 +169,11 @@ export default function LabAnalyzePage() {
             <div className="w-full font-mono text-[10px] space-y-2 h-32 overflow-hidden">
               {completedLogs.slice(-4).map((log, i) => (
                 <div key={i} className="flex items-center gap-3 text-white/40">
-                  <Check size={10} className="text-[#00E676]" />
+                  <Check size={10} className="text-[#C8A2C8]" />
                   <span className="uppercase tracking-tighter">{log}</span>
                 </div>
               ))}
-              <div className="flex items-center gap-3 text-[#00E676] animate-pulse">
+              <div className="flex items-center gap-3 text-[#C8A2C8] animate-pulse">
                 <Loader2 size={10} className="animate-spin" />
                 <span className="uppercase tracking-tighter">{LOG_MESSAGES[currentLog]}</span>
               </div>

@@ -31,12 +31,12 @@ export function MobileNav({ tier }: { tier: 'free' | 'premium' | 'expert' }) {
             key={item.href}
             href={item.href}
             className="relative flex-1 flex flex-col items-center justify-center py-3 gap-0.5 transition-colors"
-            style={{ color: active ? '#00E676' : '#4A4A4A' }}
+            style={{ color: active ? '#C8A2C8' : '#4A4A4A' }}
           >
             <item.Icon size={20} strokeWidth={active ? 2.5 : 1.5} />
             <span className="text-[9px] font-bold uppercase tracking-wider">{item.label}</span>
             {active && (
-              <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-[#00E676] shadow-[0_0_6px_rgba(0,230,118,0.6)]" />
+              <span className="absolute top-0 left-1/2 -translate-x-1/2 w-8 h-0.5 bg-[#C8A2C8] shadow-[0_0_6px_rgba(200,162,200,0.6)]" />
             )}
           </Link>
         );

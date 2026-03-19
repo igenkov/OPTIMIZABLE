@@ -7,7 +7,7 @@ import { Card } from '@/components/ui/Card';
 import { Moon, Wine, Dumbbell, Heart, ChevronRight, Info, Utensils } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
-function SliderInput({ value, min, max, step, onChange, color = '#00E676' }: {
+function SliderInput({ value, min, max, step, onChange, color = '#C8A2C8' }: {
   value: number; min: number; max: number; step: number;
   onChange: (v: number) => void; color?: string;
 }) {
@@ -56,7 +56,7 @@ function RatingGrid({ label, value, onChange, max = 5 }: { label: string; value:
             className={cn(
               'h-10 border text-xs font-black transition-all',
               value === n
-                ? 'bg-[#00E676] border-[#00E676] text-black shadow-[0_0_15px_rgba(0,230,118,0.2)]'
+                ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black shadow-[0_0_15px_rgba(200,162,200,0.2)]'
                 : 'bg-white/5 border-white/5 text-white/20 hover:border-white/20'
             )}>
             {n}
@@ -141,8 +141,8 @@ export default function Phase2Page() {
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
               'h-1 flex-1 rounded-full transition-all duration-500',
-              i <= 2 ? 'bg-[#00E676]' : 'bg-white/5',
-              i === 2 && 'shadow-[0_0_8px_rgba(0,230,118,0.4)]'
+              i <= 2 ? 'bg-[#C8A2C8]' : 'bg-white/5',
+              i === 2 && 'shadow-[0_0_8px_rgba(200,162,200,0.4)]'
             )} />
           ))}
         </div>
@@ -157,7 +157,7 @@ export default function Phase2Page() {
 
         {/* SLEEP & RECOVERY */}
         <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
             <Moon size={16} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Sleep & Recovery</h2>
           </div>
@@ -166,7 +166,7 @@ export default function Phase2Page() {
             <div className="space-y-3">
               <div className="flex justify-between items-end">
                 <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Duration (Avg/Night)</span>
-                <span className="text-xl font-mono font-black text-[#00E676]">{form.avg_sleep_hours}h</span>
+                <span className="text-xl font-mono font-black text-[#C8A2C8]">{form.avg_sleep_hours}h</span>
               </div>
               <SliderInput min={4} max={10} step={0.5} value={form.avg_sleep_hours} onChange={v => set('avg_sleep_hours', v)} />
             </div>
@@ -176,7 +176,7 @@ export default function Phase2Page() {
 
         {/* HABITUAL INPUTS */}
         <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
             <Wine size={16} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Habitual Inputs</h2>
           </div>
@@ -195,22 +195,22 @@ export default function Phase2Page() {
           <div onClick={() => set('keto_diet', !form.keto_diet)}
             className={cn(
               'mt-6 p-4 border transition-all flex items-center justify-between cursor-pointer',
-              form.keto_diet ? 'bg-[#00E676]/5 border-[#00E676]/30' : 'bg-transparent border-white/5 opacity-40'
+              form.keto_diet ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-transparent border-white/5 opacity-40'
             )}>
             <div className="flex gap-4 items-center">
-              <Utensils size={18} className={form.keto_diet ? 'text-[#00E676]' : 'text-white'} />
+              <Utensils size={18} className={form.keto_diet ? 'text-[#C8A2C8]' : 'text-white'} />
               <div>
                 <div className="text-[10px] font-black uppercase tracking-widest">Chronic Keto / Low-Carb</div>
                 <div className="text-[10px] text-white/40 uppercase font-bold tracking-tighter">Strict adherence for 3+ months</div>
               </div>
             </div>
-            <div className={cn('w-2 h-2 rounded-full', form.keto_diet ? 'bg-[#00E676] animate-pulse' : 'bg-white/10')} />
+            <div className={cn('w-2 h-2 rounded-full', form.keto_diet ? 'bg-[#C8A2C8] animate-pulse' : 'bg-white/10')} />
           </div>
         </Card>
 
         {/* ACTIVITY & STRESS */}
         <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
             <Dumbbell size={16} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Activity & CNS Stress</h2>
           </div>
@@ -227,7 +227,7 @@ export default function Phase2Page() {
                   <button key={t} type="button" onClick={() => toggleExercise(t)}
                     className={cn(
                       'px-3 py-1.5 border text-[10px] font-bold transition-all uppercase',
-                      active ? 'bg-[#00E676] border-[#00E676] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
+                      active ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
                     )}>
                     {t}
                   </button>
@@ -241,11 +241,11 @@ export default function Phase2Page() {
               <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Sedentary Hours / Day</span>
               <span className={cn(
                 'text-xl font-mono font-black',
-                form.sedentary_hours >= 10 ? 'text-[#FF5252]' : form.sedentary_hours >= 7 ? 'text-[#FFB300]' : 'text-[#00E676]'
+                form.sedentary_hours >= 10 ? 'text-[#FF5252]' : form.sedentary_hours >= 7 ? 'text-[#FFB300]' : 'text-[#C8A2C8]'
               )}>{form.sedentary_hours}h</span>
             </div>
             <SliderInput min={0} max={16} step={1} value={form.sedentary_hours} onChange={v => set('sedentary_hours', v)}
-              color={form.sedentary_hours >= 10 ? '#FF5252' : form.sedentary_hours >= 7 ? '#FFB300' : '#00E676'} />
+              color={form.sedentary_hours >= 10 ? '#FF5252' : form.sedentary_hours >= 7 ? '#FFB300' : '#C8A2C8'} />
           </div>
 
           <RatingGrid label="Subjective Stress (Work/Life)" value={form.stress_level} onChange={v => set('stress_level', v)} />
@@ -253,7 +253,7 @@ export default function Phase2Page() {
 
         {/* ENDOCRINE INDICATORS */}
         <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
             <Heart size={16} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Endocrine Indicators</h2>
           </div>

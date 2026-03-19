@@ -2,7 +2,7 @@ export function ScoreRing({ score, size = 120, strokeWidth = 8, color: colorProp
   const r = (size - strokeWidth * 2) / 2;
   const circ = 2 * Math.PI * r;
   const fill = circ * (1 - score / 100);
-  const color = colorProp ?? (score >= 70 ? '#00E676' : score >= 45 ? '#FFB300' : '#FF5252');
+  const color = colorProp ?? (score >= 70 ? '#C8A2C8' : score >= 45 ? '#FFB300' : '#FF5252');
 
   return (
     <div className="relative flex items-center justify-center" style={{ width: size, height: size }}>

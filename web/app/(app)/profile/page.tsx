@@ -54,7 +54,7 @@ export default async function ProfilePage() {
   const initial = user.email?.charAt(0).toUpperCase() ?? '?';
 
   const stats = [
-    { label: 'Cycle Day',  value: cycleDay ? `Day ${cycleDay}` : '—',       icon: Calendar,     accent: '#00E676' },
+    { label: 'Cycle Day',  value: cycleDay ? `Day ${cycleDay}` : '—',       icon: Calendar,     accent: '#C8A2C8' },
     { label: 'Phase',      value: cycleDay ? PHASE_LABELS[phase] : '—',      icon: Activity,     accent: '#64B5F6' },
     { label: 'Streak',     value: streak   ? `${streak} Days` : '—',         icon: Flame,        accent: '#FFB300' },
     { label: 'Next Lab',   value: cycleDay ? `${nextLabDays}d` : '—',        icon: FlaskConical, accent: '#CE93D8' },
@@ -76,7 +76,7 @@ export default async function ProfilePage() {
 
       {/* Header */}
       <div className="mb-6">
-        <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Command Center</div>
+        <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-1">Command Center</div>
         <h1 className="text-xl font-black tracking-[2px] uppercase text-white">Profile</h1>
       </div>
 
@@ -86,20 +86,20 @@ export default async function ProfilePage() {
         <div className="lg:col-span-4 flex flex-col gap-4">
 
           {/* Identity card */}
-          <Card topAccent="rgba(0,230,118,0.5)" className="relative overflow-hidden">
+          <Card topAccent="rgba(200,162,200,0.5)" className="relative overflow-hidden">
             {/* Radial glow */}
             <div className="absolute -top-8 -left-8 w-40 h-40 rounded-full pointer-events-none"
-              style={{ background: 'radial-gradient(circle, rgba(0,230,118,0.06) 0%, transparent 70%)' }} />
+              style={{ background: 'radial-gradient(circle, rgba(200,162,200,0.06) 0%, transparent 70%)' }} />
 
             <div className="flex flex-col items-center pt-2 pb-4 relative">
               {/* Avatar with pulsing ring */}
               <div className="relative mb-4">
                 <div className="absolute inset-0 rounded-full animate-ping"
-                  style={{ background: 'rgba(0,230,118,0.15)', animationDuration: '2.5s' }} />
-                <div className="relative w-16 h-16 rounded-full border-2 border-[#00E676] flex items-center justify-center"
-                  style={{ background: 'radial-gradient(circle, rgba(0,230,118,0.15) 0%, rgba(20,20,20,0) 70%), #141414',
-                           boxShadow: '0 0 20px rgba(0,230,118,0.18)' }}>
-                  <span className="text-2xl font-black text-[#00E676]">{initial}</span>
+                  style={{ background: 'rgba(200,162,200,0.15)', animationDuration: '2.5s' }} />
+                <div className="relative w-16 h-16 rounded-full border-2 border-[#C8A2C8] flex items-center justify-center"
+                  style={{ background: 'radial-gradient(circle, rgba(200,162,200,0.15) 0%, rgba(20,20,20,0) 70%), #141414',
+                           boxShadow: '0 0 20px rgba(200,162,200,0.18)' }}>
+                  <span className="text-2xl font-black text-[#C8A2C8]">{initial}</span>
                 </div>
               </div>
 
@@ -127,7 +127,7 @@ export default async function ProfilePage() {
             {!isPremium && (
               <div className="pt-3 border-t border-[rgba(255,255,255,0.06)]">
                 <Link href="/upgrade"
-                  className="block w-full py-2 bg-[#00E676] text-black font-black text-[10px] tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors">
+                  className="block w-full py-2 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase text-center hover:bg-[#A882A8] transition-colors">
                   UPGRADE TO PREMIUM →
                 </Link>
               </div>
@@ -170,16 +170,16 @@ export default async function ProfilePage() {
                   return (
                     <a key={item.label} href={item.href}
                       className={`group flex items-center gap-4 px-5 py-4 transition-all duration-200
-                        hover:bg-[rgba(255,255,255,0.05)] hover:pl-6 border-l-2 border-l-transparent hover:border-l-[#00E676]
+                        hover:bg-[rgba(255,255,255,0.05)] hover:pl-6 border-l-2 border-l-transparent hover:border-l-[#C8A2C8]
                         ${i < section.items.length - 1 ? 'border-b border-[rgba(255,255,255,0.07)]' : ''}`}>
                       <div className="w-8 h-8 rounded-sm flex items-center justify-center shrink-0"
                         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                        <Icon size={14} className="text-[#9A9A9A] group-hover:text-[#00E676] transition-colors duration-200" />
+                        <Icon size={14} className="text-[#9A9A9A] group-hover:text-[#C8A2C8] transition-colors duration-200" />
                       </div>
                       <span className="flex-1 text-sm text-[#E0E0E0] group-hover:text-white transition-colors duration-200">
                         {item.label}
                       </span>
-                      <ChevronRight size={14} className="text-[#3A3A3A] group-hover:text-[#00E676] group-hover:translate-x-1 transition-all duration-200" />
+                      <ChevronRight size={14} className="text-[#3A3A3A] group-hover:text-[#C8A2C8] group-hover:translate-x-1 transition-all duration-200" />
                     </a>
                   );
                 })}
@@ -188,12 +188,12 @@ export default async function ProfilePage() {
           ))}
 
           {/* Disclaimer */}
-          <div className="border-l-2 border-[#00E676] px-4 py-4"
-            style={{ background: 'rgba(0,230,118,0.03)',
+          <div className="border-l-2 border-[#C8A2C8] px-4 py-4"
+            style={{ background: 'rgba(200,162,200,0.03)',
                      borderRight: '1px solid rgba(255,255,255,0.05)',
                      borderTop: '1px solid rgba(255,255,255,0.05)',
                      borderBottom: '1px solid rgba(255,255,255,0.05)' }}>
-            <div className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2 font-mono">
+            <div className="text-[9px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-2 font-mono">
               SYSTEM_NOTICE: [DISCLAIMER]
             </div>
             <p className="text-[11px] text-[#4A4A4A] leading-relaxed font-mono opacity-80">

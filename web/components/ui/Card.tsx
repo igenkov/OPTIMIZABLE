@@ -8,7 +8,7 @@ interface CardProps extends HTMLAttributes<HTMLDivElement> {
 
 export function Card({ accent, gold, topAccent, children, className = '', style, ...props }: CardProps) {
   const topBorderColor = accent
-    ? 'rgba(0,230,118,0.6)'
+    ? 'rgba(200,162,200,0.6)'
     : gold
     ? 'rgba(255,179,0,0.6)'
     : topAccent ?? 'rgba(255,255,255,0.12)';

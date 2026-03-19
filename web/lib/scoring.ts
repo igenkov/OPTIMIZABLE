@@ -201,7 +201,7 @@ export function getRiskColor(level: RiskLevel): string {
     case 'critical': return '#FF5252';
     case 'high': return '#FF8C00';
     case 'moderate': return '#FFB300';
-    case 'low': return '#00E676';
+    case 'low': return '#C8A2C8';
   }
 }
 

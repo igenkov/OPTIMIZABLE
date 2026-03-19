@@ -16,8 +16,8 @@ const CONDITIONS = [
 ];
 
 const BODY_TYPES = [
-  { level: 1, name: 'Ultra Lean',  bf: 9,  color: '#00E676', markers: 'Abs visible without flexing; visible vascularity.' },
-  { level: 2, name: 'Athletic',    bf: 12, color: '#00E676', markers: 'Full 6-pack visible when flexing; muscle separation.' },
+  { level: 1, name: 'Ultra Lean',  bf: 9,  color: '#C8A2C8', markers: 'Abs visible without flexing; visible vascularity.' },
+  { level: 2, name: 'Athletic',    bf: 12, color: '#C8A2C8', markers: 'Full 6-pack visible when flexing; muscle separation.' },
   { level: 3, name: 'Defined',     bf: 15, color: '#69F0AE', markers: 'Outline of 4-pack visible; V-taper present.' },
   { level: 4, name: 'Fit',         bf: 18, color: '#FFD740', markers: 'Flat stomach; abs only visible in specific lighting.' },
   { level: 5, name: 'Average',     bf: 22, color: '#FFB300', markers: 'No ab definition; slight love handles forming.' },
@@ -83,7 +83,7 @@ export default function Phase1Page() {
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
               'h-1 flex-1 rounded-full transition-all duration-500',
-              i === 1 ? 'bg-[#00E676] shadow-[0_0_8px_rgba(0,230,118,0.4)]' : 'bg-white/5'
+              i === 1 ? 'bg-[#C8A2C8] shadow-[0_0_8px_rgba(200,162,200,0.4)]' : 'bg-white/5'
             )} />
           ))}
         </div>
@@ -99,7 +99,7 @@ export default function Phase1Page() {
         {/* PHYSICAL STATS */}
         <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#00E676]">Physical Stats</h2>
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#C8A2C8]">Physical Stats</h2>
             <div className="flex p-0.5 bg-black border border-white/10">
               {(['metric', 'imperial'] as const).map(u => (
                 <button key={u} type="button"
@@ -139,7 +139,7 @@ export default function Phase1Page() {
         {/* BODY TYPE */}
         <section className="space-y-4">
           <div>
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#00E676] mb-1">Visual Composition</h2>
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#C8A2C8] mb-1">Visual Composition</h2>
             <p className="text-xs text-white/40">Select the physique that most closely matches your current state.</p>
           </div>
 
@@ -166,7 +166,7 @@ export default function Phase1Page() {
 
                   <div className={cn(
                     'w-6 h-6 rounded-full border flex items-center justify-center shrink-0 transition-all',
-                    isSelected ? 'bg-[#00E676] border-[#00E676] text-black' : 'border-white/10 text-transparent'
+                    isSelected ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black' : 'border-white/10 text-transparent'
                   )}>
                     <Check size={14} strokeWidth={4} />
                   </div>
@@ -179,18 +179,18 @@ export default function Phase1Page() {
           <div onClick={() => setForm(p => ({ ...p, high_muscle: !p.high_muscle }))}
             className={cn(
               'cursor-pointer p-4 border transition-all flex items-start gap-4',
-              form.high_muscle ? 'bg-[#00E676]/5 border-[#00E676]/30' : 'bg-white/[0.02] border-white/5'
+              form.high_muscle ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-white/[0.02] border-white/5'
             )}>
             <div className={cn(
               'p-2 border',
-              form.high_muscle ? 'border-[#00E676] text-[#00E676]' : 'border-white/10 text-white/20'
+              form.high_muscle ? 'border-[#C8A2C8] text-[#C8A2C8]' : 'border-white/10 text-white/20'
             )}>
               <Dumbbell size={20} />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-black uppercase tracking-widest text-white">Significant Muscle Mass</span>
-                {form.high_muscle && <span className="text-[9px] font-black text-[#00E676] bg-[#00E676]/10 px-1.5 py-0.5">Active</span>}
+                {form.high_muscle && <span className="text-[9px] font-black text-[#C8A2C8] bg-[#C8A2C8]/10 px-1.5 py-0.5">Active</span>}
               </div>
               <p className="text-[11px] text-white/40 leading-relaxed">
                 Advanced strength training history (2+ years). High lean mass adjusts androgen receptor density calculations in your final score.
@@ -199,8 +199,8 @@ export default function Phase1Page() {
           </div>
 
           {form.high_muscle && selectedType && selectedType.level >= 5 && (
-            <div className="px-4 py-3 bg-[rgba(0,230,118,0.06)] border border-[rgba(0,230,118,0.2)]">
-              <p className="text-xs text-[#00E676]">Muscle override active — body fat risk contribution halved for your score.</p>
+            <div className="px-4 py-3 bg-[rgba(200,162,200,0.06)] border border-[rgba(200,162,200,0.2)]">
+              <p className="text-xs text-[#C8A2C8]">Muscle override active — body fat risk contribution halved for your score.</p>
             </div>
           )}
         </section>
@@ -208,7 +208,7 @@ export default function Phase1Page() {
         {/* MEDICAL CONDITIONS */}
         <section className="space-y-4 pt-2">
           <div>
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#00E676] mb-1">Clinical Background</h2>
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#C8A2C8] mb-1">Clinical Background</h2>
             <p className="text-xs text-white/40">Select any diagnosed conditions that may influence biomarker baselines.</p>
           </div>
 
@@ -220,7 +220,7 @@ export default function Phase1Page() {
                   className={cn(
                     'px-4 py-2 text-[11px] font-bold border transition-all uppercase tracking-wider',
                     active
-                      ? 'bg-[#00E676] border-[#00E676] text-black'
+                      ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black'
                       : 'bg-white/[0.02] border-white/5 text-white/40 hover:border-white/20 hover:text-white/60'
                   )}>
                   {c}

@@ -89,8 +89,8 @@ export default function Phase3Page() {
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
               'h-1 flex-1 rounded-full transition-all duration-500',
-              i <= 3 ? 'bg-[#00E676]' : 'bg-white/5',
-              i === 3 && 'shadow-[0_0_8px_rgba(0,230,118,0.4)]'
+              i <= 3 ? 'bg-[#C8A2C8]' : 'bg-white/5',
+              i === 3 && 'shadow-[0_0_8px_rgba(200,162,200,0.4)]'
             )} />
           ))}
         </div>
@@ -105,7 +105,7 @@ export default function Phase3Page() {
 
         {/* PHARMACOLOGY */}
         <Card className="p-6 space-y-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 text-[#00E676]">
+          <div className="flex items-center gap-2 text-[#C8A2C8]">
             <Pill size={16} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pharmacology</h2>
           </div>
@@ -116,10 +116,10 @@ export default function Phase3Page() {
               onClick={() => set('taking_medications', !form.taking_medications)}
               className={cn(
                 'w-full flex items-center justify-between p-4 border transition-all',
-                form.taking_medications ? 'bg-[#00E676]/5 border-[#00E676]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
+                form.taking_medications ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
               )}>
               <span className="text-xs font-black uppercase tracking-widest">Currently taking medications</span>
-              <div className={cn('w-2 h-2 rounded-full', form.taking_medications ? 'bg-[#00E676]' : 'bg-white/10')} />
+              <div className={cn('w-2 h-2 rounded-full', form.taking_medications ? 'bg-[#C8A2C8]' : 'bg-white/10')} />
             </button>
 
             {form.taking_medications && (
@@ -137,7 +137,7 @@ export default function Phase3Page() {
                         <div className={cn('text-[10px] font-black uppercase tracking-widest', active ? 'text-white' : 'text-white/40')}>{cat.label}</div>
                         <div className="text-[10px] text-white/20 font-bold uppercase tracking-tighter">{cat.sublabel}</div>
                       </div>
-                      {active && <Check size={14} className="text-[#00E676] shrink-0" />}
+                      {active && <Check size={14} className="text-[#C8A2C8] shrink-0" />}
                     </button>
                   );
                 })}
@@ -153,10 +153,10 @@ export default function Phase3Page() {
               onClick={() => set('taking_supplements', !form.taking_supplements)}
               className={cn(
                 'w-full flex items-center justify-between p-4 border transition-all',
-                form.taking_supplements ? 'bg-[#00E676]/5 border-[#00E676]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
+                form.taking_supplements ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
               )}>
               <span className="text-xs font-black uppercase tracking-widest">Currently taking supplements</span>
-              <div className={cn('w-2 h-2 rounded-full', form.taking_supplements ? 'bg-[#00E676]' : 'bg-white/10')} />
+              <div className={cn('w-2 h-2 rounded-full', form.taking_supplements ? 'bg-[#C8A2C8]' : 'bg-white/10')} />
             </button>
 
             {form.taking_supplements && (
@@ -174,7 +174,7 @@ export default function Phase3Page() {
                         <div className={cn('text-[10px] font-black uppercase tracking-widest', active ? 'text-white' : 'text-white/40')}>{cat.label}</div>
                         <div className="text-[10px] text-white/20 font-bold uppercase tracking-tighter">{cat.sublabel}</div>
                       </div>
-                      {active && <Check size={14} className="text-[#00E676] shrink-0" />}
+                      {active && <Check size={14} className="text-[#C8A2C8] shrink-0" />}
                     </button>
                   );
                 })}
@@ -187,7 +187,7 @@ export default function Phase3Page() {
 
         {/* ANABOLIC EXPOSURE */}
         <Card className="p-6 space-y-8" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 text-[#00E676]">
+          <div className="flex items-center gap-2 text-[#C8A2C8]">
             <Database size={16} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Anabolic Exposure</h2>
           </div>
@@ -222,7 +222,7 @@ export default function Phase3Page() {
                       <button key={opt.value} type="button" onClick={() => set('steroid_stopped_ago', opt.value)}
                         className={cn(
                           'px-3 py-1.5 border text-[9px] font-black uppercase transition-all',
-                          form.steroid_stopped_ago === opt.value ? 'bg-[#00E676] border-[#00E676] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
+                          form.steroid_stopped_ago === opt.value ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
                         )}>
                         {opt.label}
                       </button>
@@ -242,7 +242,7 @@ export default function Phase3Page() {
                       <button key={opt.value} type="button" onClick={() => set('steroid_cycle_count', opt.value)}
                         className={cn(
                           'px-3 py-1.5 border text-[9px] font-black uppercase transition-all',
-                          form.steroid_cycle_count === opt.value ? 'bg-[#00E676] border-[#00E676] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
+                          form.steroid_cycle_count === opt.value ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
                         )}>
                         {opt.label}
                       </button>
@@ -253,7 +253,7 @@ export default function Phase3Page() {
                 <button type="button" onClick={() => set('steroid_pct', !form.steroid_pct)}
                   className={cn(
                     'w-full flex items-center justify-between p-3 border text-[10px] font-black uppercase tracking-widest transition-all',
-                    form.steroid_pct ? 'bg-[#00E676]/10 border-[#00E676]/30 text-[#00E676]' : 'bg-transparent border-white/5 text-white/20'
+                    form.steroid_pct ? 'bg-[#C8A2C8]/10 border-[#C8A2C8]/30 text-[#C8A2C8]' : 'bg-transparent border-white/5 text-white/20'
                   )}>
                   Post-Cycle Therapy (PCT) Completed
                   <Check size={14} className={cn('transition-opacity', form.steroid_pct ? 'opacity-100' : 'opacity-0')} />

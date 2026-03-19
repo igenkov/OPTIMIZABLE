@@ -14,7 +14,7 @@ import type { AnalysisReport, MarkerAnalysis, MarkerStatus, ReportSummaryStructu
 
 // ── Category config ──────────────────────────────────────────────────────────
 const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
-  hormones:  { label: 'Hormonal Axis',    color: '#00E676', Icon: Activity  },
+  hormones:  { label: 'Hormonal Axis',    color: '#C8A2C8', Icon: Activity  },
   thyroid:   { label: 'Thyroid Function', color: '#CE93D8', Icon: TestTube2 },
   metabolic: { label: 'Metabolic Health', color: '#64B5F6', Icon: Zap       },
   lipids:    { label: 'Lipid Panel',      color: '#FFB300', Icon: Droplets  },
@@ -38,9 +38,9 @@ function RangeTrack({ value, standardRange, optimalRange, status }: {
     <div className="relative h-1 w-full bg-[rgba(255,255,255,0.05)] my-4 rounded-full">
       <div className="absolute top-0 h-full bg-[rgba(255,255,255,0.1)] rounded-full"
         style={{ left: `${pct(standardRange.low)}%`, width: `${pct(standardRange.high) - pct(standardRange.low)}%` }} />
-      <div className="absolute top-0 h-full bg-[rgba(0,230,118,0.3)] border-x border-[rgba(0,230,118,0.5)]"
+      <div className="absolute top-0 h-full bg-[rgba(200,162,200,0.3)] border-x border-[rgba(200,162,200,0.5)]"
         style={{ left: `${pct(optimalRange.low)}%`, width: `${pct(optimalRange.high) - pct(optimalRange.low)}%`,
-                 boxShadow: '0 0 8px rgba(0,230,118,0.2)' }} />
+                 boxShadow: '0 0 8px rgba(200,162,200,0.2)' }} />
       <div className="absolute w-3 h-3 rounded-full border-2 border-[#0A0A0A] shadow-lg"
         style={{ left: `${pct(value)}%`, top: '50%', transform: 'translate(-50%, -50%)', background: color }} />
     </div>
@@ -74,7 +74,7 @@ export default async function LabPage() {
     return (
       <div className="px-6 lg:px-8 py-6">
         <div className="mb-6">
-          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Biomarker Analysis</div>
+          <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-1">Biomarker Analysis</div>
           <h1 className="text-xl font-black tracking-[2px] uppercase text-white">LAB</h1>
         </div>
         <div className="max-w-2xl space-y-3">
@@ -85,12 +85,12 @@ export default async function LabPage() {
               Initialize your optimization by uploading your first bloodwork panel.
             </p>
             <Link href="/lab/upload"
-              className="inline-block px-8 py-3 bg-[#00E676] text-black font-black text-xs tracking-widest uppercase hover:bg-[#00c864] transition-colors">
+              className="inline-block px-8 py-3 bg-[#C8A2C8] text-black font-black text-xs tracking-widest uppercase hover:bg-[#A882A8] transition-colors">
               Upload Bloodwork →
             </Link>
           </Card>
           <Card accent>
-            <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-3">Before Your Draw</div>
+            <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-3">Before Your Draw</div>
             {[
               'Schedule between 7:00–10:00 AM — testosterone peaks in early morning',
               'Fast for 10–12 hours (water is fine)',
@@ -98,7 +98,7 @@ export default async function LabPage() {
               'No alcohol for 48 hours before the test',
             ].map((t, i) => (
               <div key={i} className="flex gap-3 mb-2">
-                <span className="text-[#00E676] font-bold shrink-0">{i + 1}.</span>
+                <span className="text-[#C8A2C8] font-bold shrink-0">{i + 1}.</span>
                 <span className="text-[11px] text-[#9A9A9A]">{t}</span>
               </div>
             ))}
@@ -125,7 +125,7 @@ export default async function LabPage() {
       {/* ── Header ── */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[rgba(255,255,255,0.05)]">
         <div>
-          <div className="flex items-center gap-2 mb-2 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
             <Clock size={13} />
             <span className="text-[10px] font-black uppercase tracking-[3px]">
               Panel_{typedReports.length} · {new Date(latest.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
@@ -134,7 +134,7 @@ export default async function LabPage() {
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter">Biomarker Lab</h1>
         </div>
         <Link href="/lab/upload"
-          className="flex items-center gap-2 px-5 py-2.5 border border-[#00E676] text-[#00E676] font-black text-[10px] tracking-[2px] uppercase hover:bg-[rgba(0,230,118,0.08)] transition-all">
+          className="flex items-center gap-2 px-5 py-2.5 border border-[#C8A2C8] text-[#C8A2C8] font-black text-[10px] tracking-[2px] uppercase hover:bg-[rgba(200,162,200,0.08)] transition-all">
           <FlaskConical size={13} /> New Panel Submission
         </Link>
       </div>
@@ -152,7 +152,7 @@ export default async function LabPage() {
 
         {/* Score card */}
         <Card className="col-span-12 lg:col-span-4 flex flex-col items-center justify-center py-10 px-6"
-          topAccent="rgba(0,230,118,0.5)">
+          topAccent="rgba(200,162,200,0.5)">
           <ScoreRing score={latest.health_score} size={160} strokeWidth={12} />
           <div className="mt-5 text-center">
             <div className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[3px] mb-1">Health Score</div>
@@ -166,7 +166,7 @@ export default async function LabPage() {
               <span className={cn(
                 'text-[11px] font-bold px-3 py-1 inline-block',
                 latest.health_score >= previous.health_score
-                  ? 'bg-[rgba(0,230,118,0.1)] text-[#00E676]'
+                  ? 'bg-[rgba(200,162,200,0.1)] text-[#C8A2C8]'
                   : 'bg-[rgba(255,82,82,0.1)] text-[#FF5252]',
               )}>
                 {latest.health_score >= previous.health_score ? '↑' : '↓'} {Math.abs(latest.health_score - previous.health_score)} pts vs last
@@ -176,10 +176,10 @@ export default async function LabPage() {
         </Card>
 
         {/* AI Briefing */}
-        <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#00E676]"
-          style={{ background: 'linear-gradient(135deg, rgba(0,230,118,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
+        <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
+          style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
           <div className="flex items-center gap-2 mb-5">
-            <Zap size={14} className="text-[#00E676]" />
+            <Zap size={14} className="text-[#C8A2C8]" />
             <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
           </div>
           {s ? (
@@ -193,15 +193,15 @@ export default async function LabPage() {
                   <span className="text-[9px] font-black text-[#FFB300] uppercase tracking-widest block mb-1">Primary Driver</span>
                   <p className="text-xs text-[#9A9A9A] font-mono leading-relaxed">{s.primary_driver}</p>
                 </div>
-                <div className="border-l border-[rgba(0,230,118,0.4)] pl-4">
-                  <span className="text-[9px] font-black text-[#00E676] uppercase tracking-widest block mb-1">Next Action</span>
+                <div className="border-l border-[rgba(200,162,200,0.4)] pl-4">
+                  <span className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest block mb-1">Next Action</span>
                   <p className="text-xs text-[#9A9A9A] font-mono leading-relaxed">{s.next_action}</p>
                 </div>
               </div>
             </div>
           ) : (
-            <div className="border-l-2 border-[#00E676] pl-3">
-              <div className="text-[9px] font-bold tracking-[3px] text-[#00E676] uppercase mb-2">AI Assessment</div>
+            <div className="border-l-2 border-[#C8A2C8] pl-3">
+              <div className="text-[9px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-2">AI Assessment</div>
               <p className="text-[11px] text-[#D0D0D0] leading-relaxed font-mono">{summary as string}</p>
             </div>
           )}
@@ -231,7 +231,7 @@ export default async function LabPage() {
           {latest.concerns.map((c, i) => (
             <div key={i} className="flex items-start gap-3 py-2.5 border-b border-[rgba(255,255,255,0.04)] last:border-0">
               <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-[5px]"
-                style={{ background: c.severity === 'high' ? '#FF5252' : c.severity === 'medium' ? '#FFB300' : '#00E676' }} />
+                style={{ background: c.severity === 'high' ? '#FF5252' : c.severity === 'medium' ? '#FFB300' : '#C8A2C8' }} />
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] font-bold text-white tracking-widest uppercase mb-0.5">
                   {c.marker.replace(/_/g, ' ')}
@@ -240,8 +240,8 @@ export default async function LabPage() {
               </div>
               <span className="text-[10px] font-bold uppercase px-2 py-0.5 shrink-0"
                 style={{
-                  color: c.severity === 'high' ? '#FF5252' : c.severity === 'medium' ? '#FFB300' : '#00E676',
-                  background: c.severity === 'high' ? 'rgba(255,82,82,0.1)' : c.severity === 'medium' ? 'rgba(255,179,0,0.1)' : 'rgba(0,230,118,0.1)',
+                  color: c.severity === 'high' ? '#FF5252' : c.severity === 'medium' ? '#FFB300' : '#C8A2C8',
+                  background: c.severity === 'high' ? 'rgba(255,82,82,0.1)' : c.severity === 'medium' ? 'rgba(255,179,0,0.1)' : 'rgba(200,162,200,0.1)',
                 }}>
                 {c.severity}
               </span>
@@ -290,7 +290,7 @@ export default async function LabPage() {
                     <span className="text-[9px] text-[#4A4A4A] uppercase tracking-widest">Standard</span>
                   </div>
                   <div className="flex items-center gap-1.5">
-                    <div className="w-5 h-1 bg-[rgba(0,230,118,0.3)] rounded-full" />
+                    <div className="w-5 h-1 bg-[rgba(200,162,200,0.3)] rounded-full" />
                     <span className="text-[9px] text-[#4A4A4A] uppercase tracking-widest">Optimal</span>
                   </div>
                   <div className="flex items-center gap-1.5">
@@ -315,7 +315,7 @@ export default async function LabPage() {
                                 <span className="text-lg font-black text-white tabular-nums font-mono">{m.value}</span>
                                 <span className="text-[10px] font-bold text-[#4A4A4A] uppercase tracking-tight">{m.unit}</span>
                                 {diff !== null && diff !== 0 && (
-                                  <span className={cn('text-[10px] font-mono font-bold', diff > 0 ? 'text-[#00E676]' : 'text-[#FF5252]')}>
+                                  <span className={cn('text-[10px] font-mono font-bold', diff > 0 ? 'text-[#C8A2C8]' : 'text-[#FF5252]')}>
                                     {diff > 0 ? '↑' : '↓'}{Math.abs(diff).toFixed(1)}
                                   </span>
                                 )}
@@ -329,7 +329,7 @@ export default async function LabPage() {
                           <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={m.status} />
                         </summary>
                         <div className="px-5 pb-4 bg-[rgba(0,0,0,0.2)]">
-                          <p className="text-[11px] text-[#9A9A9A] leading-relaxed italic border-l border-[rgba(0,230,118,0.3)] pl-3 py-1 mb-3">
+                          <p className="text-[11px] text-[#9A9A9A] leading-relaxed italic border-l border-[rgba(200,162,200,0.3)] pl-3 py-1 mb-3">
                             &ldquo;{m.explanation}&rdquo;
                           </p>
                           <div className="flex gap-6">
@@ -338,8 +338,8 @@ export default async function LabPage() {
                               <span className="text-[10px] font-mono text-[#9A9A9A]">{m.standard_range?.low}–{m.standard_range?.high} {m.unit}</span>
                             </div>
                             <div>
-                              <div className="text-[8px] font-black text-[rgba(0,230,118,0.5)] uppercase tracking-widest mb-1">Optimal</div>
-                              <span className="text-[10px] font-mono text-[#00E676]">{m.optimal_range?.low}–{m.optimal_range?.high} {m.unit}</span>
+                              <div className="text-[8px] font-black text-[rgba(200,162,200,0.5)] uppercase tracking-widest mb-1">Optimal</div>
+                              <span className="text-[10px] font-mono text-[#C8A2C8]">{m.optimal_range?.low}–{m.optimal_range?.high} {m.unit}</span>
                             </div>
                           </div>
                         </div>
@@ -356,7 +356,7 @@ export default async function LabPage() {
       {/* ── Protocol CTA ── */}
       <div className="pt-2 border-t border-[rgba(255,255,255,0.05)]">
         <Link href="/protocol"
-          className="group flex items-center justify-between w-full p-6 bg-[#00E676] text-black hover:bg-[#00c864] transition-colors">
+          className="group flex items-center justify-between w-full p-6 bg-[#C8A2C8] text-black hover:bg-[#A882A8] transition-colors">
           <div>
             <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Next Sequence</div>
             <div className="text-xl font-black uppercase tracking-tighter">View Updated Protocol</div>
@@ -376,8 +376,8 @@ export default async function LabPage() {
               const phaseLabel = num === 1 ? 'Initial' : num === 2 ? '30-Day' : num === 3 ? '60-Day' : `Panel ${num}`;
               return (
                 <div key={r.id}
-                  className={`flex items-center justify-between gap-3 px-4 py-3 border transition-all ${isLatest ? 'border-[#00E676]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}
-                  style={{ background: isLatest ? 'rgba(0,230,118,0.04)' : 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
+                  className={`flex items-center justify-between gap-3 px-4 py-3 border transition-all ${isLatest ? 'border-[#C8A2C8]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}
+                  style={{ background: isLatest ? 'rgba(200,162,200,0.04)' : 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
                   <div className="min-w-0">
                     <span className="text-xs font-bold text-white">Panel {num}</span>
                     <span className="text-[11px] text-[#4A4A4A] ml-2">· {phaseLabel}</span>
@@ -389,7 +389,7 @@ export default async function LabPage() {
                     <span className="font-mono text-sm font-black text-white">
                       {r.health_score}<span className="text-[10px] text-[#4A4A4A]">/100</span>
                     </span>
-                    {isLatest && <span className="text-[10px] text-[#00E676] font-bold tracking-widest uppercase">Current</span>}
+                    {isLatest && <span className="text-[10px] text-[#C8A2C8] font-bold tracking-widest uppercase">Current</span>}
                   </div>
                 </div>
               );

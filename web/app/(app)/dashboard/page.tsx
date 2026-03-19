@@ -66,7 +66,7 @@ export default async function DashboardPage() {
       {/* HEADER */}
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-8">
         <div>
-          <div className="flex items-center gap-2 mb-2 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
             <Activity size={14} />
             <span className="text-[10px] font-black uppercase tracking-[3px]">Biological Baseline Assessment</span>
           </div>
@@ -77,7 +77,7 @@ export default async function DashboardPage() {
             {new Date().toLocaleDateString('en-US', { weekday: 'long', month: 'long', day: 'numeric' })}
           </span>
           {hasReport && (
-            <Link href="/lab" className="group flex items-center gap-2 text-[10px] font-black text-[#00E676] uppercase tracking-widest">
+            <Link href="/lab" className="group flex items-center gap-2 text-[10px] font-black text-[#C8A2C8] uppercase tracking-widest">
               View Latest Lab Report <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           )}
@@ -110,7 +110,7 @@ export default async function DashboardPage() {
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
                 <Link
                   href={hasReport ? '/lab' : '/lab/upload'}
-                  className="px-5 py-3 bg-[#00E676] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#00c864] transition-all text-center"
+                  className="px-5 py-3 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all text-center"
                 >
                   {hasReport ? 'Open Lab Results' : 'Upload Bloodwork'}
                 </Link>
@@ -129,7 +129,7 @@ export default async function DashboardPage() {
         {/* Biometrics */}
         <Card className="col-span-12 lg:col-span-5 p-8" style={{ background: 'rgba(255,255,255,0.01)' }}>
           <div className="flex items-center gap-2 mb-8">
-            <User size={16} className="text-[#00E676]" />
+            <User size={16} className="text-[#C8A2C8]" />
             <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Biometrics</span>
           </div>
 
@@ -143,7 +143,7 @@ export default async function DashboardPage() {
               { label: 'Exercise', val: lifestyle?.exercise_frequency ?? '—', unit: '', Icon: Activity },
             ] as { label: string; val: string | number | null; unit: string; Icon: React.ComponentType<{ size?: number; className?: string }> }[]).map((stat, i) => (
               <div key={i} className="flex flex-col p-3 bg-white/[0.02] border border-white/5">
-                <stat.Icon size={12} className="text-[#00E676]/40 mb-2" />
+                <stat.Icon size={12} className="text-[#C8A2C8]/40 mb-2" />
                 <span className="text-[9px] font-black text-white/30 uppercase tracking-tighter mb-1">{stat.label}</span>
                 <span className="text-sm font-black text-white tabular-nums">
                   {stat.val ?? '—'}{stat.unit && <span className="text-[9px] text-white/20 font-bold ml-0.5">{stat.unit}</span>}
@@ -183,24 +183,24 @@ export default async function DashboardPage() {
         <Card className="col-span-12 lg:col-span-4 p-8" accent>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <Droplets size={16} className="text-[#00E676]" />
+              <Droplets size={16} className="text-[#C8A2C8]" />
               <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Required Labs</span>
             </div>
-            <span className="text-[9px] font-bold text-[#00E676] bg-[#00E676]/10 px-2 py-0.5">Sequence_01</span>
+            <span className="text-[9px] font-bold text-[#C8A2C8] bg-[#C8A2C8]/10 px-2 py-0.5">Sequence_01</span>
           </div>
 
           <div className="grid grid-cols-1 gap-1">
             {panel.map(b => (
               <div key={b.id} className="flex items-center justify-between py-2 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                 <span className="text-[11px] font-medium text-white/60 group-hover:text-white">{b.name}</span>
-                <CheckCircle2 size={12} className="text-white/10 group-hover:text-[#00E676] transition-colors" />
+                <CheckCircle2 size={12} className="text-white/10 group-hover:text-[#C8A2C8] transition-colors" />
               </div>
             ))}
           </div>
 
           {!isPremium && (
             <Link href="/upgrade"
-              className="mt-4 block w-full py-2.5 border border-[rgba(0,230,118,0.35)] text-[#00E676] font-bold text-[11px] tracking-[2px] uppercase text-center hover:bg-[rgba(0,230,118,0.07)] transition-colors">
+              className="mt-4 block w-full py-2.5 border border-[rgba(200,162,200,0.35)] text-[#C8A2C8] font-bold text-[11px] tracking-[2px] uppercase text-center hover:bg-[rgba(200,162,200,0.07)] transition-colors">
               UNLOCK LAB ACCESS →
             </Link>
           )}
@@ -232,9 +232,9 @@ export default async function DashboardPage() {
 
           <div className="mt-8 pt-6 border-t border-white/5">
             <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5">
-              <Clipboard size={20} className="text-[#00E676]" />
+              <Clipboard size={20} className="text-[#C8A2C8]" />
               <div>
-                <span className="text-[9px] font-black text-[#00E676] uppercase tracking-widest block">Ready to start?</span>
+                <span className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest block">Ready to start?</span>
                 <span className="text-[10px] text-white/40">Download the lab requisition form in your profile.</span>
               </div>
             </div>

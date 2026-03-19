@@ -5,12 +5,12 @@
   --color-bg2: #141414;
   --color-bg3: #1a1a1a;
   --color-bg4: #1f1f1f;
-  --color-green: #00E676;
-  --color-green-dim: rgba(0,230,118,0.12);
+  --color-green: #C8A2C8;
+  --color-green-dim: rgba(200,162,200,0.12);
   --color-gold: #FFB300;
   --color-red: #FF5252;
   --color-border: rgba(255,255,255,0.07);
-  --color-border-green: rgba(0,230,118,0.25);
+  --color-border-green: rgba(200,162,200,0.25);
 }
 
 * { box-sizing: border-box; }
@@ -30,7 +30,7 @@ input, textarea, select {
 }
 
 input:focus, textarea:focus, select:focus {
-  border-color: #00E676;
+  border-color: #C8A2C8;
 }
 
 ::-webkit-scrollbar { width: 6px; }

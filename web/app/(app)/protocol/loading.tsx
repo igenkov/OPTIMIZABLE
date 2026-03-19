@@ -21,8 +21,8 @@ export default function ProtocolLoading() {
         </div>
         <div className="h-1 bg-[rgba(255,255,255,0.05)] rounded" />
       </div>
-      <div className="border border-[rgba(0,230,118,0.1)] p-6 mb-5">
-        <div className="h-3 w-32 bg-[rgba(0,230,118,0.1)] rounded mb-4" />
+      <div className="border border-[rgba(200,162,200,0.1)] p-6 mb-5">
+        <div className="h-3 w-32 bg-[rgba(200,162,200,0.1)] rounded mb-4" />
         {[1,2,3,4].map(i => (
           <div key={i} className="py-2.5 border-b border-[rgba(255,255,255,0.05)]">
             <div className="h-4 w-40 bg-[rgba(255,255,255,0.07)] rounded mb-1" />

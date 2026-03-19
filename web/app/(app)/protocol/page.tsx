@@ -25,13 +25,13 @@ function getTimingMeta(timing: string) {
   if (t.includes('evening') || t.includes('night') || t.includes('bed'))
     return { Icon: Moon,  color: '#CE93D8', bg: 'rgba(206,147,216,0.1)' };
   if (t.includes('workout') || t.includes('training') || t.includes('pre-'))
-    return { Icon: Zap,   color: '#00E676', bg: 'rgba(0,230,118,0.1)' };
+    return { Icon: Zap,   color: '#C8A2C8', bg: 'rgba(200,162,200,0.1)' };
   return   { Icon: Clock, color: '#64B5F6', bg: 'rgba(100,181,246,0.1)' };
 }
 
 const DIRECTIVE_META = {
   eating:   { title: 'Nutrition', Icon: Coffee,   color: '#64B5F6' },
-  exercise: { title: 'Training',  Icon: Zap,      color: '#00E676' },
+  exercise: { title: 'Training',  Icon: Zap,      color: '#C8A2C8' },
   sleep:    { title: 'Sleep',     Icon: Moon,     color: '#CE93D8' },
   stress:   { title: 'Stress',    Icon: Activity, color: '#FFB300' },
   habits:   { title: 'Habits',    Icon: Target,   color: '#9A9A9A' },
@@ -82,7 +82,7 @@ export default async function ProtocolPage() {
     return (
       <div className="px-6 lg:px-8 py-6">
         <div className="mb-6">
-          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Optimization Roadmap</div>
+          <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-1">Optimization Roadmap</div>
           <h1 className="text-xl font-black tracking-[2px] uppercase text-white">90-Day Protocol</h1>
         </div>
         <Card className="text-center py-20">
@@ -92,7 +92,7 @@ export default async function ProtocolPage() {
             Upload your initial bloodwork to generate your personalized 90-day biological optimization roadmap.
           </p>
           <Link href="/lab/upload"
-            className="inline-block px-8 py-3 bg-[#00E676] text-black font-black text-sm tracking-widest uppercase hover:bg-[#00c864] transition-colors">
+            className="inline-block px-8 py-3 bg-[#C8A2C8] text-black font-black text-sm tracking-widest uppercase hover:bg-[#A882A8] transition-colors">
             Initialize Lab Sequence →
           </Link>
         </Card>
@@ -112,8 +112,8 @@ export default async function ProtocolPage() {
       <div className="flex items-end justify-between mb-8 pb-6 border-b border-[rgba(255,255,255,0.05)]">
         <div>
           <div className="flex items-center gap-2 mb-2">
-            <div className="w-2 h-2 rounded-full bg-[#00E676] animate-pulse" />
-            <span className="text-[10px] font-black text-[#00E676] uppercase tracking-[4px]">Active_Protocol</span>
+            <div className="w-2 h-2 rounded-full bg-[#C8A2C8] animate-pulse" />
+            <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-[4px]">Active_Protocol</span>
           </div>
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter">90-Day Cycle</h1>
         </div>
@@ -129,13 +129,13 @@ export default async function ProtocolPage() {
             <div key={p.num} className="relative z-10 flex flex-col items-center">
               <div className={cn(
                 'w-10 h-10 rounded-full border-2 flex items-center justify-center mb-3 bg-[#141414] transition-all duration-300',
-                isActive ? 'border-[#00E676] shadow-[0_0_20px_rgba(0,230,118,0.2)]'
-                         : isDone  ? 'border-[rgba(0,230,118,0.35)]'
+                isActive ? 'border-[#C8A2C8] shadow-[0_0_20px_rgba(200,162,200,0.2)]'
+                         : isDone  ? 'border-[rgba(200,162,200,0.35)]'
                                    : 'border-[rgba(255,255,255,0.06)]',
               )}>
                 {isDone
-                  ? <ShieldCheck size={16} className="text-[#00E676]" />
-                  : <span className={cn('text-xs font-black', isActive ? 'text-[#00E676]' : 'text-[#3A3A3A]')}>{p.num}</span>
+                  ? <ShieldCheck size={16} className="text-[#C8A2C8]" />
+                  : <span className={cn('text-xs font-black', isActive ? 'text-[#C8A2C8]' : 'text-[#3A3A3A]')}>{p.num}</span>
                 }
               </div>
               <span className={cn('text-[10px] font-black uppercase tracking-widest mb-0.5', isActive ? 'text-white' : 'text-[#3A3A3A]')}>
@@ -143,7 +143,7 @@ export default async function ProtocolPage() {
               </span>
               <span className="text-[9px] font-mono text-[#3A3A3A] uppercase">Days {p.days}</span>
               {isActive && currentDay > 0 && (
-                <span className="text-[9px] font-bold text-[#00E676] mt-0.5 tracking-widest">Day {currentDay}</span>
+                <span className="text-[9px] font-bold text-[#C8A2C8] mt-0.5 tracking-widest">Day {currentDay}</span>
               )}
             </div>
           );
@@ -157,11 +157,11 @@ export default async function ProtocolPage() {
         <div className="col-span-12 lg:col-span-8 flex flex-col gap-5">
 
           {/* Today's mission */}
-          <div className="border-l-4 border-[#00E676] px-5 py-4"
-            style={{ background: 'rgba(0,230,118,0.04)', borderRadius: '0 6px 6px 0' }}>
+          <div className="border-l-4 border-[#C8A2C8] px-5 py-4"
+            style={{ background: 'rgba(200,162,200,0.04)', borderRadius: '0 6px 6px 0' }}>
             <div className="flex items-center gap-2 mb-1.5">
-              <Target size={13} className="text-[#00E676]" />
-              <span className="text-[10px] font-black text-[#00E676] uppercase tracking-[3px]">Current Mission</span>
+              <Target size={13} className="text-[#C8A2C8]" />
+              <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Current Mission</span>
             </div>
             <p className="text-base font-bold text-[#E0E0E0] leading-snug">{currentPhaseData.goal}</p>
           </div>
@@ -178,7 +178,7 @@ export default async function ProtocolPage() {
                   : 'Complete your 60-day bloodwork panel to unlock the Peak protocol.'}
               </p>
               <Link href="/lab/upload"
-                className="inline-block px-6 py-2.5 border border-[#00E676] text-[#00E676] font-bold text-xs tracking-widest uppercase hover:bg-[rgba(0,230,118,0.08)] transition-colors">
+                className="inline-block px-6 py-2.5 border border-[#C8A2C8] text-[#C8A2C8] font-bold text-xs tracking-widest uppercase hover:bg-[rgba(200,162,200,0.08)] transition-colors">
                 Upload Bloodwork to Unlock →
               </Link>
             </Card>
@@ -212,7 +212,7 @@ export default async function ProtocolPage() {
                                   </span>
                                 )}
                               </div>
-                              <span className="font-mono text-sm font-black text-[#00E676]">{s.dose}</span>
+                              <span className="font-mono text-sm font-black text-[#C8A2C8]">{s.dose}</span>
                             </div>
                             <div className="text-[10px] font-bold text-[#4A4A4A] uppercase tracking-widest mb-2">{s.timing}</div>
                             <p className="text-[11px] text-[#5A5A5A] leading-relaxed italic border-l border-[rgba(255,255,255,0.05)] pl-3">
@@ -269,7 +269,7 @@ export default async function ProtocolPage() {
 
           {/* Phase progress */}
           {currentDay > 0 && (
-            <Card topAccent="rgba(0,230,118,0.5)">
+            <Card topAccent="rgba(200,162,200,0.5)">
               <div className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[3px] mb-5">Phase Monitoring</div>
               <div className="flex items-end justify-between mb-3">
                 <div>
@@ -277,13 +277,13 @@ export default async function ProtocolPage() {
                   <span className="text-xs text-[#4A4A4A] font-bold ml-2">/ 30</span>
                 </div>
                 <div className="text-right">
-                  <div className="text-xs font-black text-[#00E676] uppercase">Day {currentDay} Total</div>
+                  <div className="text-xs font-black text-[#C8A2C8] uppercase">Day {currentDay} Total</div>
                   <div className="text-[10px] text-[#4A4A4A]">{daysRemaining}d remaining</div>
                 </div>
               </div>
               <div className="h-1 w-full bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden mb-3">
-                <div className="h-full bg-[#00E676] rounded-full transition-all"
-                  style={{ width: `${phaseProgress}%`, boxShadow: '0 0 8px rgba(0,230,118,0.5)' }} />
+                <div className="h-full bg-[#C8A2C8] rounded-full transition-all"
+                  style={{ width: `${phaseProgress}%`, boxShadow: '0 0 8px rgba(200,162,200,0.5)' }} />
               </div>
               <p className="text-[10px] text-[#4A4A4A] uppercase font-bold tracking-tight">
                 Stage: {currentPhaseData.label}
@@ -319,7 +319,7 @@ export default async function ProtocolPage() {
           {/* Phase goal */}
           <Card>
             <div className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[3px] mb-3">Phase Goal</div>
-            <div className="text-[10px] font-bold text-[#00E676] uppercase tracking-widest mb-1">{currentPhaseData.label}</div>
+            <div className="text-[10px] font-bold text-[#C8A2C8] uppercase tracking-widest mb-1">{currentPhaseData.label}</div>
             <p className="text-[11px] text-[#9A9A9A] leading-relaxed mb-3">{currentPhaseData.desc}</p>
             {recs?.supplements?.length > 0 && (
               <div className="pt-3 border-t border-[rgba(255,255,255,0.05)]">
@@ -340,7 +340,7 @@ export default async function ProtocolPage() {
                     className="px-4 py-3 border border-[rgba(255,255,255,0.05)] flex items-center justify-between opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all"
                     style={{ background: 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
                     <span className="text-[10px] font-black text-white uppercase">Phase {i + 1} Baseline</span>
-                    <div className="font-mono text-sm font-black text-[#00E676]">
+                    <div className="font-mono text-sm font-black text-[#C8A2C8]">
                       {r.health_score ?? '--'}<span className="text-[9px] text-[#4A4A4A]">/100</span>
                     </div>
                   </div>

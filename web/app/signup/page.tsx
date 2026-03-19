@@ -30,7 +30,7 @@ function SocialModule({
       onClick={onClick}
       className="group relative flex items-center justify-center gap-3 w-full py-3 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-all duration-300 overflow-hidden"
     >
-      <div className="absolute inset-y-0 left-0 w-1 group-hover:bg-[#00E676] transition-all" />
+      <div className="absolute inset-y-0 left-0 w-1 group-hover:bg-[#C8A2C8] transition-all" />
       {children}
       <span className="text-[10px] font-black uppercase tracking-[2px] text-white/60 group-hover:text-white">
         {label}
@@ -109,8 +109,8 @@ export default function SignupPage() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e] px-4">
         <div className="w-full max-w-sm text-center">
-          <div className="w-20 h-20 bg-[#00E676]/10 border border-[#00E676]/20 flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(0,230,118,0.1)]">
-            <Mail className="text-[#00E676]" size={32} />
+          <div className="w-20 h-20 bg-[#C8A2C8]/10 border border-[#C8A2C8]/20 flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(200,162,200,0.1)]">
+            <Mail className="text-[#C8A2C8]" size={32} />
           </div>
           <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Verification Required</h1>
           <p className="text-sm text-white/40 leading-relaxed mb-8">
@@ -131,8 +131,8 @@ export default function SignupPage() {
         {/* BRANDING */}
         <div className="flex flex-col items-center mb-12">
           <div className="relative mb-4">
-            <Fingerprint className="text-[#00E676] relative z-10" size={48} strokeWidth={1} />
-            <div className="absolute inset-0 bg-[#00E676]/20 blur-2xl rounded-full" />
+            <Fingerprint className="text-[#C8A2C8] relative z-10" size={48} strokeWidth={1} />
+            <div className="absolute inset-0 bg-[#C8A2C8]/20 blur-2xl rounded-full" />
           </div>
           <div className="text-white font-bold uppercase tracking-[0.2em] text-2xl"
             style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
@@ -149,14 +149,14 @@ export default function SignupPage() {
         </div>
 
         <div className="relative">
-          <div className="absolute -top-2 -left-2 w-4 h-4 border-t border-l border-[#00E676]/40" />
-          <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b border-r border-[#00E676]/40" />
+          <div className="absolute -top-2 -left-2 w-4 h-4 border-t border-l border-[#C8A2C8]/40" />
+          <div className="absolute -bottom-2 -right-2 w-4 h-4 border-b border-r border-[#C8A2C8]/40" />
 
           <div className="border border-white/5 bg-white/[0.02] p-8 md:p-10">
             <header className="mb-10">
               <h1 className="text-lg font-black tracking-tight text-white uppercase mb-1">Create Clinical Profile</h1>
               <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest flex items-center gap-2">
-                <ShieldCheck size={12} className="text-[#00E676]" />
+                <ShieldCheck size={12} className="text-[#C8A2C8]" />
                 Encrypted Data Initialization
               </p>
             </header>
@@ -239,7 +239,7 @@ export default function SignupPage() {
         <div className="mt-10 space-y-6">
           <p className="text-center text-[10px] font-black tracking-[2px] text-white/20 uppercase">
             Existing Member?{' '}
-            <Link href="/login" className="text-[#00E676] hover:text-white transition-colors ml-2 underline underline-offset-4">
+            <Link href="/login" className="text-[#C8A2C8] hover:text-white transition-colors ml-2 underline underline-offset-4">
               Authenticate Here
             </Link>
           </p>

@@ -34,7 +34,7 @@ const BLANK: Omit<CheckIn, 'date'> = {
 
 // ── Metric config ────────────────────────────────────────────────────────────
 const METRICS = [
-  { key: 'energy'         as const, label: 'Energy',        color: '#00E676' },
+  { key: 'energy'         as const, label: 'Energy',        color: '#C8A2C8' },
   { key: 'mood'           as const, label: 'Mood',          color: '#64B5F6' },
   { key: 'libido'         as const, label: 'Libido',        color: '#FF5252' },
   { key: 'sleep_quality'  as const, label: 'Sleep',         color: '#FFB300' },
@@ -169,7 +169,7 @@ function MetricCard({ metric, checkins }: { metric: typeof METRICS[number]; chec
         {latest ?? '—'}<span className="text-[10px] text-[#4A4A4A] font-normal">/10</span>
       </div>
       {delta && (
-        <div className="text-[10px] mb-2" style={{ color: delta.delta > 0 ? '#00E676' : delta.delta < 0 ? '#FF5252' : '#4A4A4A' }}>
+        <div className="text-[10px] mb-2" style={{ color: delta.delta > 0 ? '#C8A2C8' : delta.delta < 0 ? '#FF5252' : '#4A4A4A' }}>
           {delta.delta > 0 ? '+' : ''}{delta.delta} <span className="text-[#4A4A4A]">7d avg</span>
         </div>
       )}
@@ -267,7 +267,7 @@ export default function WellbeingPage() {
   if (loading) {
     return (
       <div className="px-6 lg:px-8 py-6 flex items-center justify-center min-h-[50vh]">
-        <div className="w-8 h-8 border-2 border-[#00E676] border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-[#C8A2C8] border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -280,14 +280,14 @@ export default function WellbeingPage() {
       {/* Header */}
       <div className="flex items-start justify-between mb-5">
         <div>
-          <div className="text-[11px] font-bold tracking-[3px] text-[#00E676] uppercase mb-1">Daily Check-in</div>
+          <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-1">Daily Check-in</div>
           <h1 className="text-xl font-black tracking-[2px] uppercase text-white mb-1">Wellbeing</h1>
           <p className="text-[11px] text-[#4A4A4A]">{dateStr}</p>
         </div>
         {streak > 0 && (
           <div className="text-right">
             <div className="text-2xl font-black text-white">{streak}</div>
-            <div className="text-[9px] text-[#00E676] uppercase tracking-widest">day streak</div>
+            <div className="text-[9px] text-[#C8A2C8] uppercase tracking-widest">day streak</div>
           </div>
         )}
       </div>
@@ -300,16 +300,16 @@ export default function WellbeingPage() {
 
           {todayDone && todayData ? (
             /* Completed state — Digital Receipt */
-            <Card topAccent="rgba(0,230,118,0.5)" className="relative overflow-hidden">
+            <Card topAccent="rgba(200,162,200,0.5)" className="relative overflow-hidden">
               {/* Stamp watermark */}
-              <div className="absolute -top-4 -right-4 w-24 h-24 border-4 border-[rgba(0,230,118,0.08)] rounded-full flex items-center justify-center -rotate-12 pointer-events-none">
-                <span className="text-[rgba(0,230,118,0.08)] font-black text-[9px] tracking-[4px] uppercase">Logged</span>
+              <div className="absolute -top-4 -right-4 w-24 h-24 border-4 border-[rgba(200,162,200,0.08)] rounded-full flex items-center justify-center -rotate-12 pointer-events-none">
+                <span className="text-[rgba(200,162,200,0.08)] font-black text-[9px] tracking-[4px] uppercase">Logged</span>
               </div>
 
               <div className="flex items-center gap-4 mb-6">
-                <div className="w-11 h-11 rounded-full border border-[rgba(0,230,118,0.4)] bg-[rgba(0,230,118,0.1)] flex items-center justify-center shrink-0"
-                  style={{ boxShadow: '0 0 15px rgba(0,230,118,0.15)' }}>
-                  <svg className="w-5 h-5 text-[#00E676]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div className="w-11 h-11 rounded-full border border-[rgba(200,162,200,0.4)] bg-[rgba(200,162,200,0.1)] flex items-center justify-center shrink-0"
+                  style={{ boxShadow: '0 0 15px rgba(200,162,200,0.15)' }}>
+                  <svg className="w-5 h-5 text-[#C8A2C8]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
                   </svg>
                 </div>
@@ -320,7 +320,7 @@ export default function WellbeingPage() {
               </div>
               <div className="grid grid-cols-3 gap-3 mb-4">
                 {[
-                  { label: 'Energy',    value: todayData.energy,        color: '#00E676' },
+                  { label: 'Energy',    value: todayData.energy,        color: '#C8A2C8' },
                   { label: 'Mood',      value: todayData.mood,          color: '#64B5F6' },
                   { label: 'Libido',    value: todayData.libido,        color: '#FF5252' },
                   { label: 'Sleep',     value: todayData.sleep_quality, color: '#FFB300' },
@@ -357,10 +357,10 @@ export default function WellbeingPage() {
               <div>
                 <div className="flex items-center justify-between mb-1">
                   <div className="text-[9px] text-[#4A4A4A] uppercase tracking-widest">Check-in progress</div>
-                  <div className="text-[9px] text-[#00E676] font-bold">{formProgress}%</div>
+                  <div className="text-[9px] text-[#C8A2C8] font-bold">{formProgress}%</div>
                 </div>
                 <div className="h-0.5 bg-[rgba(255,255,255,0.05)]">
-                  <div className="h-full bg-[#00E676] transition-all duration-300" style={{ width: `${formProgress}%` }} />
+                  <div className="h-full bg-[#C8A2C8] transition-all duration-300" style={{ width: `${formProgress}%` }} />
                 </div>
               </div>
 
@@ -380,7 +380,7 @@ export default function WellbeingPage() {
                         className={`flex-1 py-2.5 text-[11px] font-black tracking-widest border transition-all ${
                           form.morning_erection === opt.val
                             ? opt.val
-                              ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.1)]'
+                              ? 'border-[#C8A2C8] text-[#C8A2C8] bg-[rgba(200,162,200,0.1)]'
                               : 'border-[#FF5252] text-[#FF5252] bg-[rgba(255,82,82,0.08)]'
                             : 'border-[rgba(255,255,255,0.07)] text-[#4A4A4A] hover:border-[rgba(255,255,255,0.15)]'
                         }`}>
@@ -392,7 +392,7 @@ export default function WellbeingPage() {
 
                 {/* Energy + Libido */}
                 {[
-                  { key: 'energy' as const, label: 'Energy', color: '#00E676' },
+                  { key: 'energy' as const, label: 'Energy', color: '#C8A2C8' },
                   { key: 'libido' as const, label: 'Libido', color: '#FF5252' },
                 ].map(m => (
                   <div key={m.key} className="mb-4 pb-4 border-b border-[rgba(255,255,255,0.05)]">
@@ -437,7 +437,7 @@ export default function WellbeingPage() {
                       <button key={String(opt.val)} type="button" onClick={() => set('exercised', opt.val)}
                         className={`flex-1 py-2.5 text-[11px] font-black tracking-widest border transition-all ${
                           form.exercised === opt.val
-                            ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.1)]'
+                            ? 'border-[#C8A2C8] text-[#C8A2C8] bg-[rgba(200,162,200,0.1)]'
                             : 'border-[rgba(255,255,255,0.07)] text-[#4A4A4A] hover:border-[rgba(255,255,255,0.15)]'
                         }`}>
                         {opt.label}
@@ -483,7 +483,7 @@ export default function WellbeingPage() {
                       <button key={opt.val} type="button" onClick={() => set('plan_adherence', opt.val)}
                         className={`py-2 text-[11px] font-bold border transition-all ${
                           form.plan_adherence === opt.val
-                            ? 'border-[#00E676] text-[#00E676] bg-[rgba(0,230,118,0.08)]'
+                            ? 'border-[#C8A2C8] text-[#C8A2C8] bg-[rgba(200,162,200,0.08)]'
                             : 'border-[rgba(255,255,255,0.07)] text-[#4A4A4A] hover:border-[rgba(255,255,255,0.12)]'
                         }`}>
                         {opt.label}
@@ -495,7 +495,7 @@ export default function WellbeingPage() {
                   <div className="text-[11px] font-semibold text-[#E0E0E0] mb-2">Notes (optional)</div>
                   <textarea value={form.notes} onChange={e => set('notes', e.target.value)}
                     placeholder="Anything notable today..." rows={2}
-                    className="w-full px-3 py-2 text-sm bg-[#1f1f1f] border border-[rgba(255,255,255,0.07)] text-white placeholder-[#4A4A4A] focus:border-[#00E676] outline-none resize-none" />
+                    className="w-full px-3 py-2 text-sm bg-[#1f1f1f] border border-[rgba(255,255,255,0.07)] text-white placeholder-[#4A4A4A] focus:border-[#C8A2C8] outline-none resize-none" />
                 </div>
               </Card>
 
@@ -512,7 +512,7 @@ export default function WellbeingPage() {
           {checkins.length >= 2 ? (
             <Card>
               <div className="flex items-center justify-between mb-3">
-                <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase">30-Day Trend</div>
+                <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase">30-Day Trend</div>
                 <div className="text-[9px] text-[#4A4A4A]">{checkins.length} check-ins</div>
               </div>
 
@@ -571,7 +571,7 @@ export default function WellbeingPage() {
                     {checkins.map((c, i) => (
                       <div key={i} className="flex-1 h-2"
                         style={{
-                          background: c.morning_erection === null ? 'rgba(255,255,255,0.04)' : c.morning_erection ? '#00E676' : 'rgba(255,82,82,0.3)',
+                          background: c.morning_erection === null ? 'rgba(255,255,255,0.04)' : c.morning_erection ? '#C8A2C8' : 'rgba(255,82,82,0.3)',
                         }}
                         title={c.morning_erection === null ? 'No data' : c.morning_erection ? 'Yes' : 'No'} />
                     ))}
@@ -581,7 +581,7 @@ export default function WellbeingPage() {
             </Card>
           ) : (
             <Card>
-              <div className="text-[10px] font-bold tracking-[3px] text-[#00E676] uppercase mb-3">30-Day Trend</div>
+              <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-3">30-Day Trend</div>
               <div className="flex items-center justify-center h-32 text-center">
                 <div>
                   <div className="text-[11px] text-[#4A4A4A] mb-1">Not enough data yet</div>

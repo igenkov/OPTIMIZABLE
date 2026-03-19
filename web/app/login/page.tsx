@@ -29,7 +29,7 @@ function AuthModule({
       onClick={onClick}
       className="group relative flex items-center justify-center gap-3 w-full py-3 border border-white/5 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/10 transition-all duration-300 overflow-hidden"
     >
-      <div className="absolute inset-y-0 left-0 w-1 group-hover:bg-[#00E676] transition-all" />
+      <div className="absolute inset-y-0 left-0 w-1 group-hover:bg-[#C8A2C8] transition-all" />
       {children}
       <span className="text-[10px] font-black uppercase tracking-[2px] text-white/60 group-hover:text-white">
         {label}
@@ -100,8 +100,8 @@ export default function LoginPage() {
         {/* BRANDING */}
         <div className="flex flex-col items-center mb-12">
           <div className="relative mb-4">
-            <ShieldCheck className="text-[#00E676] relative z-10" size={48} strokeWidth={1} />
-            <div className="absolute inset-0 bg-[#00E676]/10 blur-3xl rounded-full" />
+            <ShieldCheck className="text-[#C8A2C8] relative z-10" size={48} strokeWidth={1} />
+            <div className="absolute inset-0 bg-[#C8A2C8]/10 blur-3xl rounded-full" />
           </div>
           <div className="text-white font-bold uppercase tracking-[0.2em] text-2xl"
             style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
@@ -125,7 +125,7 @@ export default function LoginPage() {
             <header className="mb-10">
               <h1 className="text-lg font-black tracking-tight text-white uppercase mb-1">Authenticate Access</h1>
               <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest flex items-center gap-2">
-                <KeyRound size={12} className="text-[#00E676]" />
+                <KeyRound size={12} className="text-[#C8A2C8]" />
                 Secure Session Authorization
               </p>
             </header>
@@ -175,7 +175,7 @@ export default function LoginPage() {
               <div className="space-y-1.5">
                 <div className="flex justify-between items-center">
                   <label className="text-[9px] font-black text-white/40 uppercase tracking-widest">Access Key</label>
-                  <Link href="/forgot-password" className="text-[9px] font-black text-[#00E676]/60 uppercase tracking-widest hover:text-[#00E676] transition-colors">
+                  <Link href="/forgot-password" className="text-[9px] font-black text-[#C8A2C8]/60 uppercase tracking-widest hover:text-[#C8A2C8] transition-colors">
                     Recovery?
                   </Link>
                 </div>
@@ -213,7 +213,7 @@ export default function LoginPage() {
         <div className="mt-10 space-y-8">
           <p className="text-center text-[10px] font-black tracking-[2px] text-white/20 uppercase">
             First Time Here?{' '}
-            <Link href="/signup" className="text-[#00E676] hover:text-white transition-colors ml-2 underline underline-offset-4">
+            <Link href="/signup" className="text-[#C8A2C8] hover:text-white transition-colors ml-2 underline underline-offset-4">
               Establish Profile
             </Link>
           </p>

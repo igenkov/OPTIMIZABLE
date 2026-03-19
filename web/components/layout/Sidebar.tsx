@@ -45,16 +45,16 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
           <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
             <defs>
               <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#00E676"/>
-                <stop offset="100%" stopColor="#007A3D"/>
+                <stop offset="0%" stopColor="#C8A2C8"/>
+                <stop offset="100%" stopColor="#8E5E8E"/>
               </linearGradient>
             </defs>
             <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
             <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7"/>
             <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.45"/>
             <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.25"/>
-            <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round"/>
-            <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
+            <line x1="22" y1="12" x2="29" y2="5" stroke="#C8A2C8" strokeWidth="2.5" strokeLinecap="round"/>
+            <polyline points="23.5,5 29,5 29,11.5" stroke="#C8A2C8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
           </svg>
           <div>
             <div
@@ -75,9 +75,9 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
 
       {/* Phase progress bar — premium only */}
       {isPremium && cycleInfo && (
-        <div className="px-6 py-3 border-b border-[rgba(255,255,255,0.07)] bg-[rgba(0,230,118,0.03)]">
+        <div className="px-6 py-3 border-b border-[rgba(255,255,255,0.07)] bg-[rgba(200,162,200,0.03)]">
           <div className="flex items-center justify-between mb-1.5">
-            <div className="text-[9px] text-[#00E676] font-bold tracking-widest uppercase">
+            <div className="text-[9px] text-[#C8A2C8] font-bold tracking-widest uppercase">
               {PHASE_LABELS[cycleInfo.phase]}
             </div>
             <div className="text-[9px] text-[#4A4A4A]">
@@ -86,7 +86,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
           </div>
           <div className="h-0.5 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
             <div
-              className="h-full bg-[#00E676] transition-all"
+              className="h-full bg-[#C8A2C8] transition-all"
               style={{ width: `${phaseProgress}%` }}
             />
           </div>
@@ -106,7 +106,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
               href={item.href}
               className={`flex items-center gap-3 px-6 py-3 text-sm transition-colors
                 ${active
-                  ? 'text-[#00E676] bg-[rgba(0,230,118,0.08)] border-r-2 border-[#00E676]'
+                  ? 'text-[#C8A2C8] bg-[rgba(200,162,200,0.08)] border-r-2 border-[#C8A2C8]'
                   : 'text-[#9A9A9A] hover:text-white hover:bg-[rgba(255,255,255,0.03)]'
                 }`}
             >
@@ -121,13 +121,13 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
       {!isPremium && (
         <div className="px-4 pb-3 pt-2 border-t border-[rgba(255,255,255,0.07)]">
           <div className="text-[9px] text-[#4A4A4A] uppercase tracking-widest mb-2 px-1">Unlock LAB</div>
-          <div className="border border-[rgba(0,230,118,0.3)] bg-[rgba(0,230,118,0.04)] p-3">
+          <div className="border border-[rgba(200,162,200,0.3)] bg-[rgba(200,162,200,0.04)] p-3">
             <div className="text-[10px] text-[#9A9A9A] leading-relaxed mb-2">
               Upload bloodwork → AI analysis → 90-day protocol
             </div>
             <Link
               href="/upgrade"
-              className="block w-full py-1.5 bg-[#00E676] text-black font-black text-[10px] tracking-widest uppercase text-center hover:bg-[#00c864] transition-colors"
+              className="block w-full py-1.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase text-center hover:bg-[#A882A8] transition-colors"
             >
               UPGRADE →
             </Link>

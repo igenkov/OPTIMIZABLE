@@ -32,14 +32,14 @@ function BiomarkerRow({
   return (
     <div className="group flex items-center justify-between py-4 px-4 border-b border-white/[0.03] hover:bg-white/[0.01] transition-all">
       <div className="flex flex-col">
-        <span className="text-[11px] font-black text-white uppercase tracking-tight group-hover:text-[#00E676] transition-colors">
+        <span className="text-[11px] font-black text-white uppercase tracking-tight group-hover:text-[#C8A2C8] transition-colors">
           {name}
         </span>
         {hasAlts ? (
           <select
             value={selectedUnit}
             onChange={e => onUnitChange(id, e.target.value)}
-            className="mt-0.5 bg-transparent border-0 text-[9px] font-mono text-white/40 uppercase tracking-widest outline-none cursor-pointer hover:text-[#00E676] transition-colors pr-1"
+            className="mt-0.5 bg-transparent border-0 text-[9px] font-mono text-white/40 uppercase tracking-widest outline-none cursor-pointer hover:text-[#C8A2C8] transition-colors pr-1"
           >
             <option value={unitPrimary}>{unitPrimary}</option>
             {unitAlternatives.map(a => (
@@ -57,9 +57,9 @@ function BiomarkerRow({
           value={value}
           onChange={e => onChange(id, e.target.value)}
           placeholder={`${displayLow}–${displayHigh}`}
-          className="w-32 px-4 py-2.5 text-right text-sm font-mono bg-black border border-white/10 text-[#00E676] placeholder-white/10 focus:border-[#00E676] focus:ring-1 focus:ring-[#00E676]/20 outline-none transition-all"
+          className="w-32 px-4 py-2.5 text-right text-sm font-mono bg-black border border-white/10 text-[#C8A2C8] placeholder-white/10 focus:border-[#C8A2C8] focus:ring-1 focus:ring-[#C8A2C8]/20 outline-none transition-all"
         />
-        {value && <div className="absolute inset-0 bg-[#00E676]/5 pointer-events-none animate-pulse" />}
+        {value && <div className="absolute inset-0 bg-[#C8A2C8]/5 pointer-events-none animate-pulse" />}
       </div>
     </div>
   );
@@ -148,7 +148,7 @@ export default function LabUploadPage() {
       {/* HEADER */}
       <div className="border-b border-white/5 pb-8 flex justify-between items-end">
         <div>
-          <div className="flex items-center gap-2 mb-2 text-[#00E676]">
+          <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
             <Cpu size={14} className="animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-[4px]">Data_Injection_Sequence</span>
           </div>
@@ -169,7 +169,7 @@ export default function LabUploadPage() {
           <section>
             <div className="flex items-center justify-between mb-4 px-2">
               <div className="flex items-center gap-2">
-                <Activity size={16} className="text-[#00E676]" />
+                <Activity size={16} className="text-[#C8A2C8]" />
                 <h2 className="text-[10px] font-black text-white uppercase tracking-[3px]">Primary Biomarkers</h2>
               </div>
               <span className="text-[9px] font-mono text-white/20 uppercase">Placeholders = Ref Ranges</span>
@@ -228,7 +228,7 @@ export default function LabUploadPage() {
 
           <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="flex items-center gap-3 mb-6">
-              <Calendar className="text-[#00E676]" size={18} />
+              <Calendar className="text-[#C8A2C8]" size={18} />
               <span className="text-[10px] font-black text-white uppercase tracking-widest">Entry Metadata</span>
             </div>
             <div className="space-y-4">
@@ -238,7 +238,7 @@ export default function LabUploadPage() {
                   value={labName}
                   onChange={e => setLabName(e.target.value)}
                   placeholder="e.g. QUEST DIAGNOSTICS"
-                  className="w-full bg-black border border-white/10 px-4 py-3 text-xs font-mono text-white outline-none focus:border-[#00E676] transition-all placeholder-white/20"
+                  className="w-full bg-black border border-white/10 px-4 py-3 text-xs font-mono text-white outline-none focus:border-[#C8A2C8] transition-all placeholder-white/20"
                 />
               </div>
               <div className="space-y-1.5">
@@ -247,7 +247,7 @@ export default function LabUploadPage() {
                   type="date"
                   value={collectionDate}
                   onChange={e => setCollectionDate(e.target.value)}
-                  className="w-full bg-black border border-white/10 px-4 py-3 text-xs font-mono text-white outline-none focus:border-[#00E676] transition-all"
+                  className="w-full bg-black border border-white/10 px-4 py-3 text-xs font-mono text-white outline-none focus:border-[#C8A2C8] transition-all"
                 />
               </div>
             </div>
@@ -265,7 +265,7 @@ export default function LabUploadPage() {
               </div>
               <div className="flex justify-between items-center text-[11px] font-mono">
                 <span className="text-white/30 uppercase">Requirement:</span>
-                <span className={cn(filled.length >= 3 ? 'text-[#00E676]' : 'text-red-500/50')}>
+                <span className={cn(filled.length >= 3 ? 'text-[#C8A2C8]' : 'text-red-500/50')}>
                   {filled.length >= 3 ? 'PASSED' : 'MIN 3'}
                 </span>
               </div>
@@ -284,7 +284,7 @@ export default function LabUploadPage() {
             loading={uploading}
             disabled={filled.length < 3}
             fullWidth
-            className="py-5 flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(0,230,118,0.1)]"
+            className="py-5 flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(200,162,200,0.1)]"
           >
             {uploading ? 'Analyzing Data...' : <><span>Confirm & Process</span><ArrowRight size={16} /></>}
           </Button>

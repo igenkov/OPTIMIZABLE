@@ -83,7 +83,7 @@ export default function SummaryPage() {
 
   if (!loaded) return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-      <Activity className="text-[#00E676] animate-pulse" size={40} />
+      <Activity className="text-[#C8A2C8] animate-pulse" size={40} />
       <div className="text-[10px] font-black uppercase tracking-[4px] text-white/40">Synthesizing Profile...</div>
     </div>
   );
@@ -95,10 +95,10 @@ export default function SummaryPage() {
       <header className="mb-12">
         <div className="flex gap-1.5 mb-6">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="h-1 flex-1 rounded-full bg-[#00E676] shadow-[0_0_8px_rgba(0,230,118,0.4)]" />
+            <div key={i} className="h-1 flex-1 rounded-full bg-[#C8A2C8] shadow-[0_0_8px_rgba(200,162,200,0.4)]" />
           ))}
         </div>
-        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-[#00E676] mb-4">
+        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-[#C8A2C8] mb-4">
           Analysis Complete / Final Synthesis
         </div>
         <h1 className="text-3xl font-black text-white tracking-tight mb-2">Diagnostic Report</h1>
@@ -143,7 +143,7 @@ export default function SummaryPage() {
               'inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[3px] mb-8 border',
               level === 'high' ? 'border-red-500/50 text-red-500 bg-red-500/10' :
               level === 'moderate' ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10' :
-              'border-[#00E676]/50 text-[#00E676] bg-[#00E676]/10'
+              'border-[#C8A2C8]/50 text-[#C8A2C8] bg-[#C8A2C8]/10'
             )}>
               {label} Risk Detected
             </div>
@@ -185,7 +185,7 @@ export default function SummaryPage() {
 
         <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="p-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#00E676]">
+            <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A2C8]">
               {excluded ? 'Monitoring Panel' : 'Core Hormonal Panel'}
             </span>
             <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Essential Biomarkers</span>
@@ -195,10 +195,10 @@ export default function SummaryPage() {
               <div key={b.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
                 <div className={cn(
                   'mt-1 w-2 h-2 rounded-full shrink-0',
-                  excluded ? 'bg-yellow-500' : 'bg-[#00E676]'
+                  excluded ? 'bg-yellow-500' : 'bg-[#C8A2C8]'
                 )} />
                 <div className="flex-1">
-                  <div className="text-xs font-bold text-white group-hover:text-[#00E676] transition-colors uppercase tracking-tight">{b.name}</div>
+                  <div className="text-xs font-bold text-white group-hover:text-[#C8A2C8] transition-colors uppercase tracking-tight">{b.name}</div>
                   <div className="text-[10px] text-white/30 font-medium leading-relaxed mt-1 uppercase tracking-tighter">{b.description}</div>
                 </div>
               </div>
@@ -228,8 +228,8 @@ export default function SummaryPage() {
       </div>
 
       {/* PRE-DRAW INSTRUCTIONS */}
-      <Card className="mb-12 p-6 space-y-4" style={{ border: '1px solid rgba(0,230,118,0.2)', background: 'rgba(0,230,118,0.02)' }}>
-        <div className="flex items-center gap-2 text-[#00E676]">
+      <Card className="mb-12 p-6 space-y-4" style={{ border: '1px solid rgba(200,162,200,0.2)', background: 'rgba(200,162,200,0.02)' }}>
+        <div className="flex items-center gap-2 text-[#C8A2C8]">
           <Clock size={16} />
           <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pre-Draw Protocol</h2>
         </div>
@@ -243,7 +243,7 @@ export default function SummaryPage() {
             <div key={i} className="p-3 bg-black/20 border border-white/5">
               <div className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">{item.label}</div>
               <div className="text-xs font-bold text-white uppercase tracking-tight">{item.val}</div>
-              <div className="text-[9px] text-[#00E676]/40 font-bold uppercase tracking-tighter mt-1">{item.detail}</div>
+              <div className="text-[9px] text-[#C8A2C8]/40 font-bold uppercase tracking-tighter mt-1">{item.detail}</div>
             </div>
           ))}
         </div>
@@ -259,7 +259,7 @@ export default function SummaryPage() {
           Access Command Dashboard <ArrowRight size={16} />
         </Button>
       ) : (
-        <div className="relative overflow-hidden p-8 border border-[#00E676]/30" style={{ background: 'rgba(0,230,118,0.05)' }}>
+        <div className="relative overflow-hidden p-8 border border-[#C8A2C8]/30" style={{ background: 'rgba(200,162,200,0.05)' }}>
           <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
             <Lock size={80} />
           </div>
@@ -272,7 +272,7 @@ export default function SummaryPage() {
 
             <div className="space-y-3">
               <Link href="/signup"
-                className="flex items-center justify-center w-full py-4 bg-[#00E676] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#00c864] transition-all">
+                className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
                 Create Clinical Account <ChevronRight size={16} className="ml-1" />
               </Link>
               <Link href="/login"
