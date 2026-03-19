@@ -12,7 +12,7 @@ const PREVIEW = 2;
 
 function CharacterImage() {
   return (
-    <div className="absolute bottom-0 right-0 w-[360px] h-[500px] overflow-hidden pointer-events-none select-none hidden md:block">
+    <div className="absolute bottom-0 right-0 w-[360px] h-[500px] overflow-hidden pointer-events-none select-none hidden md:block z-10">
       {/* img anchored right-0 bottom-0 so the card clips left whitespace — character flush right */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
@@ -53,12 +53,11 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
 
     return (
       <CardContent>
-        <div className="flex items-center gap-2 mb-5">
+        <div className="relative z-20 flex items-center gap-2 mb-5">
           <Zap size={14} className="text-[#C8A2C8]" />
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
         </div>
-        {/* pr-[140px] on sm+ to leave room for character */}
-        <div className="space-y-5 md:pr-[340px]">
+        <div className="relative z-20 space-y-5 md:pr-[340px]">
           <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
             <span className="text-[9px] font-black text-[#4A4A4A] uppercase tracking-widest block mb-2">Bottom Line</span>
             <div className="space-y-2">
@@ -102,11 +101,11 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
 
   return (
     <CardContent>
-      <div className="flex items-center gap-2 mb-5">
+      <div className="relative z-20 flex items-center gap-2 mb-5">
         <Zap size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
       </div>
-      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[340px]">
+      <div className="relative z-20 border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[340px]">
         <p className="text-sm font-bold text-[#E0E0E0] leading-relaxed mb-3">{lead}</p>
         {visibleRest.length > 0 && (
           <ul className="space-y-2">
