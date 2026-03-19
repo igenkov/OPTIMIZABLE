@@ -12,28 +12,31 @@ const PREVIEW = 2;
 
 function CharacterImage() {
   return (
-    <div className="absolute bottom-0 right-0 w-[360px] h-[500px] overflow-hidden pointer-events-none select-none hidden md:block z-10">
-      {/* img anchored right-0 bottom-0 so the card clips left whitespace — character flush right */}
+    <div className="absolute bottom-0 right-0 w-[360px] h-[380px] pointer-events-none select-none hidden md:block z-10">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
         src="/lab_character.png"
         alt=""
         className="absolute bottom-0 right-0 h-full w-auto max-w-none"
       />
-      {/* fade left edge into card bg */}
+      {/* only fade the left edge — keep rest crisp */}
       <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.75) 22%, transparent 52%)' }} />
-      {/* fade bottom edge */}
+        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.6) 12%, transparent 35%)' }} />
       <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to top, #141414 0%, transparent 10%)' }} />
+        style={{ background: 'linear-gradient(to top, #141414 0%, transparent 6%)' }} />
     </div>
   );
 }
 
 function CardContent({ children }: { children: React.ReactNode }) {
   return (
-    <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8] relative overflow-hidden"
-      style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
+    <Card
+      className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8] relative overflow-hidden"
+      style={{
+        background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414',
+        minHeight: '380px',
+      }}
+    >
       {children}
       <CharacterImage />
     </Card>
