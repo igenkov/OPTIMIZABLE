@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import Image from 'next/image';
 import { Zap, ChevronDown } from 'lucide-react';
 import { Card } from '@/components/ui/Card';
 import type { ReportSummaryStructured } from '@/types';
@@ -9,6 +10,35 @@ function splitSentences(text: string): string[] {
 }
 
 const PREVIEW = 2;
+
+function CharacterImage() {
+  return (
+    <div className="absolute bottom-0 right-0 w-[160px] h-[200px] pointer-events-none select-none hidden sm:block">
+      {/* gradient fade: left edge and bottom edge blend into card bg */}
+      <div className="absolute inset-0 z-10"
+        style={{
+          background: 'linear-gradient(to right, #141414 0%, transparent 35%), linear-gradient(to top, #141414 0%, transparent 25%)',
+        }} />
+      <Image
+        src="/lab_character.png"
+        alt=""
+        fill
+        className="object-contain object-bottom"
+        style={{ mixBlendMode: 'multiply' }}
+      />
+    </div>
+  );
+}
+
+function CardContent({ children }: { children: React.ReactNode }) {
+  return (
+    <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8] relative overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
+      {children}
+      <CharacterImage />
+    </Card>
+  );
+}
 
 export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStructured | null }) {
   const [expanded, setExpanded] = useState(false);
@@ -22,13 +52,13 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
     const visible = expanded ? sentences : sentences.slice(0, PREVIEW);
 
     return (
-      <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
-        style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
+      <CardContent>
         <div className="flex items-center gap-2 mb-5">
           <Zap size={14} className="text-[#C8A2C8]" />
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
         </div>
-        <div className="space-y-5">
+        {/* pr-[140px] on sm+ to leave room for character */}
+        <div className="space-y-5 sm:pr-[140px]">
           <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
             <span className="text-[9px] font-black text-[#4A4A4A] uppercase tracking-widest block mb-2">Bottom Line</span>
             <div className="space-y-2">
@@ -59,7 +89,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
             </div>
           </div>
         </div>
-      </Card>
+      </CardContent>
     );
   }
 
@@ -71,13 +101,12 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
   const visibleRest = expanded ? rest : rest.slice(0, PREVIEW);
 
   return (
-    <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
-      style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
+    <CardContent>
       <div className="flex items-center gap-2 mb-5">
         <Zap size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
       </div>
-      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
+      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4 sm:pr-[140px]">
         <p className="text-sm font-bold text-[#E0E0E0] leading-relaxed mb-3">{lead}</p>
         {visibleRest.length > 0 && (
           <ul className="space-y-2">
@@ -97,6 +126,6 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
           </button>
         )}
       </div>
-    </Card>
+    </CardContent>
   );
 }
