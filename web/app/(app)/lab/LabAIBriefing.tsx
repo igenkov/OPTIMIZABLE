@@ -10,35 +10,33 @@ function splitSentences(text: string): string[] {
 
 const PREVIEW = 2;
 
-function CharacterImage() {
-  return (
-    <div className="absolute bottom-0 right-0 w-[360px] h-[380px] pointer-events-none select-none hidden md:block z-10">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
-        src="/lab_character.png"
-        alt=""
-        className="absolute bottom-0 right-0 h-full w-auto max-w-none"
-      />
-      {/* only fade the left edge — keep rest crisp */}
-      <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.6) 12%, transparent 35%)' }} />
-      <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to top, #141414 0%, transparent 6%)' }} />
-    </div>
-  );
-}
-
 function CardContent({ children }: { children: React.ReactNode }) {
   return (
     <Card
-      className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8] relative overflow-hidden"
-      style={{
-        background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414',
-        minHeight: '380px',
-      }}
+      className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8] !p-0 overflow-hidden"
+      style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}
     >
-      {children}
-      <CharacterImage />
+      <div className="flex items-stretch" style={{ minHeight: '320px' }}>
+
+        {/* ── Text column ── */}
+        <div className="flex-1 min-w-0 p-5">
+          {children}
+        </div>
+
+        {/* ── Character column ── */}
+        <div className="hidden md:block w-[240px] shrink-0 relative overflow-hidden">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/lab_character.png"
+            alt=""
+            className="absolute bottom-0 right-0 h-full w-auto max-w-none"
+          />
+          {/* fade left edge of image into card bg */}
+          <div className="absolute inset-0"
+            style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.5) 15%, transparent 45%)' }} />
+        </div>
+
+      </div>
     </Card>
   );
 }
@@ -56,11 +54,11 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
 
     return (
       <CardContent>
-        <div className="relative z-20 flex items-center gap-2 mb-5">
+        <div className="flex items-center gap-2 mb-5">
           <Zap size={14} className="text-[#C8A2C8]" />
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
         </div>
-        <div className="relative z-20 space-y-5 md:pr-[340px]">
+        <div className="space-y-5">
           <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
             <span className="text-[9px] font-black text-[#4A4A4A] uppercase tracking-widest block mb-2">Bottom Line</span>
             <div className="space-y-2">
@@ -104,11 +102,11 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
 
   return (
     <CardContent>
-      <div className="relative z-20 flex items-center gap-2 mb-5">
+      <div className="flex items-center gap-2 mb-5">
         <Zap size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
       </div>
-      <div className="relative z-20 border-l border-[rgba(255,255,255,0.1)] pl-4 md:pr-[340px]">
+      <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
         <p className="text-sm font-bold text-[#E0E0E0] leading-relaxed mb-3">{lead}</p>
         {visibleRest.length > 0 && (
           <ul className="space-y-2">
