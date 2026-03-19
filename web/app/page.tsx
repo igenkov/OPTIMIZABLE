@@ -30,86 +30,111 @@ const ROW2: Step[] = [
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function StepCard({ step }: { step: Step }) {
-  const lit = !!step.milestone;
+function StepNode({ step }: { step: Step }) {
+  const glow = step.milestone ? 'glow-pulse' : '';
   return (
-    <div className={`relative flex-1 min-w-0 p-4 flex flex-col gap-3 ${
-      lit
-        ? 'border border-[#C8A2C8] bg-[#141414] shadow-[0_0_28px_rgba(200,162,200,0.1)]'
-        : 'border border-[rgba(255,255,255,0.06)] bg-[#111111]'
+    <div className={`w-16 h-16 rounded-full shrink-0 flex items-center justify-center ${glow} ${
+      step.milestone
+        ? 'border-2 border-[#C8A2C8] bg-[#0e0e0e]'
+        : step.pro
+        ? 'border border-[rgba(200,162,200,0.18)] bg-[#141414]'
+        : 'border border-[rgba(255,255,255,0.1)] bg-[#141414]'
     }`}>
-      {/* step number */}
-      <div className={`text-[32px] font-black leading-none tracking-tight ${
-        lit ? 'text-[rgba(200,162,200,0.18)]' : 'text-[rgba(255,255,255,0.05)]'
+      <step.Icon size={22} className={
+        step.milestone ? 'text-[#C8A2C8]'
+        : step.pro     ? 'text-[rgba(200,162,200,0.35)]'
+        :                'text-[#3A3A3A]'
+      }/>
+    </div>
+  );
+}
+
+function StepLabel({ step }: { step: Step }) {
+  return (
+    <div className="text-center w-16 shrink-0">
+      <div className={`text-[8px] font-black tracking-[2px] uppercase mb-1 ${
+        step.milestone ? 'text-[#C8A2C8]' : 'text-[#2E2E2E]'
       }`}>{step.n}</div>
+      <div className={`text-[11px] font-black uppercase tracking-tight leading-tight mb-1 ${
+        step.milestone ? 'text-white' : 'text-[#4A4A4A]'
+      }`}>{step.title}</div>
+      <p className={`text-[9.5px] leading-relaxed ${
+        step.milestone ? 'text-[#5A5A5A]' : 'text-[#2A2A2A]'
+      }`}>{step.desc}</p>
+    </div>
+  );
+}
 
-      {/* icon */}
-      <div className={`w-8 h-8 flex items-center justify-center rounded-sm ${
-        lit ? 'bg-[rgba(200,162,200,0.1)]' : 'bg-[rgba(255,255,255,0.03)]'
-      }`}>
-        <step.Icon size={15} className={
-          lit ? 'text-[#C8A2C8]' : step.pro ? 'text-[rgba(200,162,200,0.25)]' : 'text-[#3A3A3A]'
-        }/>
+// Horizontal connector with directional arrow in center
+function HConnector({ reverse = false, dim = false, proGate = false }: {
+  reverse?: boolean; dim?: boolean; proGate?: boolean;
+}) {
+  const Arrow = reverse ? ChevronLeft : ChevronRight;
+  return (
+    <div className="flex-1 flex items-center justify-center relative" style={{ marginTop: '-1px' }}>
+      <div className={`w-full h-px ${dim ? 'bg-[rgba(200,162,200,0.18)]' : 'bg-[rgba(255,255,255,0.1)]'}`}/>
+      <div className="absolute flex items-center justify-center bg-[#0e0e0e] px-1">
+        <Arrow size={13} className={dim ? 'text-[rgba(200,162,200,0.35)]' : 'text-[rgba(255,255,255,0.22)]'}/>
       </div>
-
-      {/* text */}
-      <div>
-        <div className={`text-[11px] font-black uppercase tracking-tight leading-tight mb-1.5 ${
-          lit ? 'text-white' : 'text-[#404040]'
-        }`}>{step.title}</div>
-        <p className={`text-[9.5px] leading-relaxed ${lit ? 'text-[#5A5A5A]' : 'text-[#2A2A2A]'}`}>{step.desc}</p>
-      </div>
-
-      {/* pro badge */}
-      {step.pro && (
-        <div className="absolute top-2.5 right-2.5 text-[6px] font-black text-black bg-[#C8A2C8] px-1.5 py-0.5 uppercase tracking-[1.5px]">
+      {proGate && (
+        <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[6px] font-black text-black bg-[#C8A2C8] px-1.5 py-0.5 uppercase tracking-[1.5px] whitespace-nowrap">
           Pro
-        </div>
+        </span>
       )}
     </div>
   );
 }
 
-function Chevron({ dir }: { dir: 'right' | 'left' | 'down' }) {
-  const cls = 'shrink-0 text-[rgba(255,255,255,0.1)]';
-  if (dir === 'right') return <ChevronRight size={16} className={cls}/>;
-  if (dir === 'left')  return <ChevronLeft  size={16} className={cls}/>;
-  return <ChevronDown size={14} className={cls}/>;
-}
-
 function SnakeFlow() {
   return (
-    <div className="w-full">
-      <div className="text-[8px] font-black text-[#252525] uppercase tracking-[3px] mb-6 text-right">
+    <div className="w-full select-none">
+      <div className="text-[8px] font-black text-[#252525] uppercase tracking-[3px] mb-8 text-right">
         The Optimization Sequence
       </div>
 
-      {/* ROW 1 — 01 → 02 → 03 */}
-      <div className="flex items-stretch">
-        <StepCard step={ROW1[0]}/>
-        <div className="flex items-center px-2"><Chevron dir="right"/></div>
-        <StepCard step={ROW1[1]}/>
-        <div className="flex items-center px-2"><Chevron dir="right"/></div>
-        <StepCard step={ROW1[2]}/>
+      {/* ── ROW 1 nodes : 01 → 02 → 03 ── */}
+      <div className="flex items-center">
+        <StepNode step={ROW1[0]}/>
+        <HConnector/>
+        <StepNode step={ROW1[1]}/>
+        <HConnector/>
+        <StepNode step={ROW1[2]}/>
       </div>
 
-      {/* VERTICAL BEND — right column, aligns with step 03 / step 04 */}
-      <div className="flex justify-end">
-        <div className="w-1/3 flex justify-center py-2.5">
-          <div className="flex flex-col items-center">
-            <div className="w-px h-4 bg-[rgba(255,255,255,0.06)]"/>
-            <Chevron dir="down"/>
-          </div>
+      {/* Labels row 1 */}
+      <div className="flex mt-3 mb-1">
+        <StepLabel step={ROW1[0]}/>
+        <div className="flex-1"/>
+        <StepLabel step={ROW1[1]}/>
+        <div className="flex-1"/>
+        <StepLabel step={ROW1[2]}/>
+      </div>
+
+      {/* ── VERTICAL BEND (right side, below node 03 / above node 04) ── */}
+      <div className="flex justify-end" style={{ marginRight: '24px' }}>
+        <div className="flex flex-col items-center gap-0">
+          <div className="w-px h-6 bg-[rgba(255,255,255,0.1)]"/>
+          <ChevronDown size={13} className="text-[rgba(255,255,255,0.22)] -mt-0.5"/>
+          <div className="w-px h-3 bg-[rgba(255,255,255,0.06)]"/>
         </div>
       </div>
 
-      {/* ROW 2 — 06 ← 05 ← 04  (04 on right, snake continues) */}
-      <div className="flex items-stretch">
-        <StepCard step={ROW2[2]}/>
-        <div className="flex items-center px-2"><Chevron dir="left"/></div>
-        <StepCard step={ROW2[1]}/>
-        <div className="flex items-center px-2"><Chevron dir="left"/></div>
-        <StepCard step={ROW2[0]}/>
+      {/* ── ROW 2 nodes : 06 ← 05 ← 04 (04 on right) ── */}
+      <div className="flex items-center flex-row-reverse">
+        <StepNode step={ROW2[0]}/>
+        <HConnector reverse dim proGate/>
+        <StepNode step={ROW2[1]}/>
+        <HConnector reverse dim/>
+        <StepNode step={ROW2[2]}/>
+      </div>
+
+      {/* Labels row 2 — reversed to align with the reversed node order */}
+      <div className="flex mt-3 flex-row-reverse">
+        <StepLabel step={ROW2[0]}/>
+        <div className="flex-1"/>
+        <StepLabel step={ROW2[1]}/>
+        <div className="flex-1"/>
+        <StepLabel step={ROW2[2]}/>
       </div>
     </div>
   );
