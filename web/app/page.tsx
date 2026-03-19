@@ -2,8 +2,154 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowRight, FlaskConical, ShieldCheck, Zap, Brain } from 'lucide-react';
-import { Card } from '@/components/ui/Card';
-import { cn } from '@/lib/utils';
+
+// ── Mini mock screens ────────────────────────────────────────────────────────
+
+function DashboardMock() {
+  return (
+    <div className="h-full flex flex-col overflow-hidden"
+      style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.08)' }}>
+      {/* chrome */}
+      <div style={{ padding: '9px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 8, fontWeight: 900, color: '#C8A2C8', letterSpacing: 3, textTransform: 'uppercase' }}>Dashboard</span>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {['#3a3a3a','#3a3a3a','#C8A2C8'].map((c,i) => <div key={i} style={{ width: 5, height: 5, borderRadius: '50%', background: c }} />)}
+        </div>
+      </div>
+      {/* score hero */}
+      <div style={{ padding: '14px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: 14 }}>
+        <svg width="58" height="58" viewBox="0 0 58 58">
+          <circle cx="29" cy="29" r="22" fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="5"/>
+          <circle cx="29" cy="29" r="22" fill="none" stroke="#C8A2C8" strokeWidth="5"
+            strokeDasharray={`${2*Math.PI*22*0.72} ${2*Math.PI*22}`}
+            strokeDashoffset={`${2*Math.PI*22*0.25}`}
+            strokeLinecap="round"/>
+          <text x="29" y="33" textAnchor="middle" fill="white" fontSize="12" fontWeight="900" fontFamily="sans-serif">72</text>
+        </svg>
+        <div>
+          <div style={{ fontSize: 7, color: '#4A4A4A', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 2 }}>Hormonal Risk Score</div>
+          <div style={{ fontSize: 7, color: '#C8A2C8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1, display: 'inline-block', padding: '2px 6px', background: 'rgba(200,162,200,0.1)', border: '1px solid rgba(200,162,200,0.2)' }}>Low Risk</div>
+        </div>
+      </div>
+      {/* biomarkers */}
+      <div style={{ padding: '10px 14px 6px', flex: 1 }}>
+        <div style={{ fontSize: 7, color: '#4A4A4A', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 7 }}>Key Biomarkers</div>
+        {[
+          { label: 'Free Testosterone', val: '24.2 pg/mL', color: '#C8A2C8' },
+          { label: 'Cortisol', val: '18.1 µg/dL', color: '#E8C470' },
+          { label: 'Vitamin D', val: '28 ng/mL', color: '#E88080' },
+          { label: 'SHBG', val: '32 nmol/L', color: '#C8A2C8' },
+        ].map((m, i) => (
+          <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: 6, marginBottom: 6, borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+            <span style={{ fontSize: 8, color: '#6A6A6A' }}>{m.label}</span>
+            <span style={{ fontSize: 8, fontWeight: 700, color: m.color }}>{m.val}</span>
+          </div>
+        ))}
+      </div>
+      {/* protocol bar */}
+      <div style={{ padding: '8px 14px', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 5 }}>
+          <span style={{ fontSize: 7, color: '#C8A2C8', fontWeight: 800, textTransform: 'uppercase', letterSpacing: 1 }}>Foundation Phase</span>
+          <span style={{ fontSize: 7, color: '#4A4A4A' }}>Day 18 / 90</span>
+        </div>
+        <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', borderRadius: 99 }}>
+          <div style={{ height: '100%', width: '20%', background: '#C8A2C8', borderRadius: 99 }} />
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function LabMock() {
+  return (
+    <div className="h-full flex flex-col overflow-hidden"
+      style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ padding: '9px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <span style={{ fontSize: 8, fontWeight: 900, color: '#C8A2C8', letterSpacing: 3, textTransform: 'uppercase' }}>Biomarker Lab</span>
+        <span style={{ fontSize: 7, color: '#4A4A4A', textTransform: 'uppercase', letterSpacing: 1 }}>Panel_2 · Oct 2024</span>
+      </div>
+      {/* score row */}
+      <div style={{ padding: '12px 14px', display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderBottom: '1px solid rgba(255,255,255,0.05)', background: 'rgba(255,255,255,0.015)' }}>
+        <div>
+          <div style={{ fontSize: 7, color: '#4A4A4A', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 2 }}>Health Score</div>
+          <div style={{ fontSize: 26, fontWeight: 900, color: 'white', lineHeight: 1 }}>84<span style={{ fontSize: 9, color: '#4A4A4A', fontWeight: 400 }}>/100</span></div>
+        </div>
+        <div style={{ textAlign: 'right' }}>
+          <div style={{ fontSize: 7, color: '#C8A2C8', background: 'rgba(200,162,200,0.1)', border: '1px solid rgba(200,162,200,0.2)', padding: '2px 6px', textTransform: 'uppercase', letterSpacing: 1, marginBottom: 4 }}>↑ 12 pts vs last</div>
+          <div style={{ fontSize: 7, color: '#4A4A4A' }}>2 markers need attention</div>
+        </div>
+      </div>
+      {/* markers */}
+      {[
+        { name: 'Testosterone Total', val: '612', unit: 'ng/dL', color: '#C8A2C8', label: 'Optimal' },
+        { name: 'LH', val: '4.8', unit: 'mIU/mL', color: '#C8A2C8', label: 'Optimal' },
+        { name: 'SHBG', val: '52', unit: 'nmol/L', color: '#E8C470', label: 'Suboptimal' },
+        { name: 'Estradiol', val: '38', unit: 'pg/mL', color: '#E88080', label: 'Attention' },
+        { name: 'TSH', val: '1.9', unit: 'mIU/L', color: '#C8A2C8', label: 'Optimal' },
+      ].map((m, i) => (
+        <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '7px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)' }}>
+          <span style={{ fontSize: 8, color: '#7A7A7A', textTransform: 'uppercase', letterSpacing: 0.5 }}>{m.name}</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <span style={{ fontSize: 8, fontWeight: 700, color: 'white' }}>{m.val} <span style={{ color: '#4A4A4A', fontWeight: 400 }}>{m.unit}</span></span>
+            <div style={{ width: 5, height: 5, borderRadius: '50%', background: m.color, flexShrink: 0 }} />
+          </div>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ProtocolMock() {
+  return (
+    <div className="h-full flex flex-col overflow-hidden"
+      style={{ background: '#141414', border: '1px solid rgba(255,255,255,0.08)' }}>
+      <div style={{ padding: '9px 14px', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+        <span style={{ fontSize: 8, fontWeight: 900, color: '#C8A2C8', letterSpacing: 3, textTransform: 'uppercase' }}>90-Day Protocol</span>
+      </div>
+      {/* phases */}
+      {[
+        { phase: 'Foundation', days: '1–30', pct: 100, done: true },
+        { phase: 'Calibration', days: '31–60', pct: 45, active: true },
+        { phase: 'Peak Performance', days: '61–90', pct: 0, done: false },
+      ].map((p, i) => (
+        <div key={i} style={{ padding: '9px 14px', borderBottom: '1px solid rgba(255,255,255,0.04)', background: p.active ? 'rgba(200,162,200,0.03)' : 'transparent' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: p.active ? 5 : 0 }}>
+            <span style={{ fontSize: 8, fontWeight: 700, color: p.active ? '#C8A2C8' : p.done ? '#3A3A3A' : '#5A5A5A', textTransform: 'uppercase', letterSpacing: 1 }}>{p.phase}</span>
+            <span style={{ fontSize: 7, color: p.done ? '#3A3A3A' : '#4A4A4A' }}>Days {p.days}</span>
+          </div>
+          {p.active && (
+            <div style={{ height: 2, background: 'rgba(255,255,255,0.05)', borderRadius: 99 }}>
+              <div style={{ height: '100%', width: `${p.pct}%`, background: '#C8A2C8', borderRadius: 99 }} />
+            </div>
+          )}
+        </div>
+      ))}
+      {/* stack items */}
+      <div style={{ padding: '8px 14px 4px' }}>
+        <div style={{ fontSize: 7, color: '#4A4A4A', textTransform: 'uppercase', letterSpacing: 2, marginBottom: 7 }}>Active Stack</div>
+        {[
+          { name: 'Zinc Picolinate', dose: '30mg', time: 'Night' },
+          { name: 'Vitamin D3/K2', dose: '5000IU', time: 'Morning' },
+          { name: 'Ashwagandha KSM-66', dose: '600mg', time: 'Evening' },
+          { name: 'Magnesium Glycinate', dose: '400mg', time: 'Night' },
+        ].map((item, i) => (
+          <div key={i} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: 6, marginBottom: 6, borderBottom: '1px solid rgba(255,255,255,0.03)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <div style={{ width: 4, height: 4, borderRadius: '50%', background: '#C8A2C8', opacity: 0.5, flexShrink: 0 }} />
+              <span style={{ fontSize: 8, color: '#7A7A7A' }}>{item.name}</span>
+            </div>
+            <div style={{ display: 'flex', gap: 6, alignItems: 'center' }}>
+              <span style={{ fontSize: 8, color: '#C8A2C8', fontWeight: 700 }}>{item.dose}</span>
+              <span style={{ fontSize: 7, color: '#4A4A4A' }}>{item.time}</span>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ── Page ─────────────────────────────────────────────────────────────────────
 
 export default async function Home() {
   const supabase = await createClient();
@@ -18,7 +164,7 @@ export default async function Home() {
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white flex flex-col">
 
-      {/* NAV — mirrors sidebar logo exactly */}
+      {/* NAV */}
       <nav className="border-b border-[rgba(255,255,255,0.07)] px-8 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
           <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
@@ -46,7 +192,6 @@ export default async function Home() {
             </div>
           </div>
         </div>
-
         <Link href="/login"
           className="text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
           Sign In
@@ -58,12 +203,12 @@ export default async function Home() {
         <div className="grid grid-cols-12 gap-10 w-full items-center">
 
           {/* LEFT */}
-          <div className="col-span-12 lg:col-span-6">
+          <div className="col-span-12 lg:col-span-5">
             <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-3">
               Biological Baseline Assessment
             </div>
-            <h1 className="text-5xl lg:text-6xl font-black text-white uppercase leading-tight mb-5"
-              style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", letterSpacing: '0.04em' }}>
+            <h1 className="font-black text-white uppercase leading-tight mb-5"
+              style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: 'clamp(2.4rem, 4vw, 3.6rem)', letterSpacing: '0.04em' }}>
               Know Your Numbers.<br />
               <span className="text-[#C8A2C8]">Optimize Your Biology.</span>
             </h1>
@@ -84,9 +229,9 @@ export default async function Home() {
 
             <div className="flex items-center gap-8 border-t border-[rgba(255,255,255,0.05)] pt-8">
               {[
-                { val: '25', label: 'Biomarkers tracked' },
+                { val: '25+', label: 'Biomarkers tracked' },
                 { val: '90', label: 'Day protocol' },
-                { val: '3min', label: 'Instant scoring' },
+                { val: '3 min', label: 'Instant scoring' },
               ].map((s, i) => (
                 <div key={i} className="flex flex-col">
                   <span className="text-lg font-black text-white uppercase">{s.val}</span>
@@ -96,53 +241,34 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* RIGHT — mock dashboard preview */}
-          <div className="hidden lg:block col-span-6">
-            <Card className="p-0 overflow-hidden" topAccent="rgba(200,162,200,0.4)">
-              {/* Card header */}
-              <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between">
-                <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Health Dashboard Preview</span>
-                <div className="flex items-center gap-1.5">
-                  <div className="w-1.5 h-1.5 rounded-full bg-[#C8A2C8] animate-pulse" />
-                  <span className="text-[9px] text-[#4A4A4A] uppercase tracking-widest">Live</span>
-                </div>
+          {/* RIGHT — stacked screen mockups */}
+          <div className="hidden lg:block col-span-7">
+            <div className="relative" style={{ height: '460px' }}>
+
+              {/* Shadow glow behind stack */}
+              <div className="absolute inset-0 -z-10"
+                style={{ background: 'radial-gradient(ellipse at 60% 60%, rgba(200,162,200,0.08) 0%, transparent 70%)' }} />
+
+              {/* BACK — Protocol */}
+              <div className="absolute inset-0"
+                style={{ transform: 'rotate(5deg) translate(32px, -18px)', zIndex: 10, transformOrigin: 'bottom center' }}>
+                <ProtocolMock />
               </div>
 
-              <div className="p-5 space-y-4">
-                {/* Score row */}
-                <div className="flex items-center gap-5 p-4 border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.02)]">
-                  <div className="flex flex-col">
-                    <span className="text-[9px] text-[#4A4A4A] uppercase tracking-widest mb-1">Hormonal Risk Score</span>
-                    <span className="text-4xl font-black text-[#C8A2C8]">84</span>
-                    <span className="text-[9px] font-bold text-[#C8A2C8] uppercase tracking-widest">Low Risk</span>
-                  </div>
-                  <div className="flex-1 space-y-2">
-                    {[
-                      { label: 'Free Testosterone', val: '24.2 pg/mL', good: true },
-                      { label: 'SHBG', val: '32 nmol/L', good: true },
-                      { label: 'Vitamin D', val: '28 ng/mL', good: false },
-                    ].map((m, i) => (
-                      <div key={i} className="flex items-center justify-between py-1.5 border-b border-[rgba(255,255,255,0.04)] last:border-0">
-                        <span className="text-[10px] text-[#7A7A7A]">{m.label}</span>
-                        <span className={cn('text-[10px] font-black', m.good ? 'text-[#C8A2C8]' : 'text-[#E88080]')}>{m.val}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Protocol bar */}
-                <div className="p-4 border border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.02)]">
-                  <div className="flex items-center justify-between mb-2">
-                    <span className="text-[9px] font-black text-[#9A9A9A] uppercase tracking-[2px]">90-Day Protocol</span>
-                    <span className="text-[9px] text-[#4A4A4A]">Day 42 / 90</span>
-                  </div>
-                  <div className="h-1 bg-[rgba(255,255,255,0.05)] rounded-full overflow-hidden">
-                    <div className="h-full bg-[#C8A2C8] rounded-full" style={{ width: '47%' }} />
-                  </div>
-                </div>
+              {/* MID — Lab */}
+              <div className="absolute inset-0"
+                style={{ transform: 'rotate(2.5deg) translate(16px, -9px)', zIndex: 20, transformOrigin: 'bottom center' }}>
+                <LabMock />
               </div>
-            </Card>
+
+              {/* FRONT — Dashboard */}
+              <div className="absolute inset-0" style={{ zIndex: 30 }}>
+                <DashboardMock />
+              </div>
+
+            </div>
           </div>
+
         </div>
       </div>
 
