@@ -8,9 +8,10 @@ import {
   Activity, Zap, Droplets, FlaskConical,
   ArrowUpRight, ChevronRight, TestTube2, ClipboardCheck, Clock,
 } from 'lucide-react';
+import { LabAIBriefing } from './LabAIBriefing';
 import { cn } from '@/lib/utils';
 import { BIOMARKERS } from '@/constants/biomarkers';
-import type { AnalysisReport, MarkerAnalysis, MarkerStatus, ReportSummaryStructured } from '@/types';
+import type { AnalysisReport, MarkerAnalysis, MarkerStatus } from '@/types';
 
 // ── Category config ──────────────────────────────────────────────────────────
 const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
@@ -116,8 +117,6 @@ export default async function LabPage() {
   }
 
   const summary = latest.report_summary;
-  const isStructured = typeof summary === 'object' && summary !== null;
-  const s = isStructured ? summary as ReportSummaryStructured : null;
 
   return (
     <div className="px-4 lg:px-8 py-5 lg:py-6 space-y-5 lg:space-y-6">
@@ -176,36 +175,7 @@ export default async function LabPage() {
         </Card>
 
         {/* AI Briefing */}
-        <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
-          style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
-          <div className="flex items-center gap-2 mb-5">
-            <Zap size={14} className="text-[#C8A2C8]" />
-            <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
-          </div>
-          {s ? (
-            <div className="space-y-5">
-              <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
-                <span className="text-[9px] font-black text-[#4A4A4A] uppercase tracking-widest block mb-1">Bottom Line</span>
-                <p className="text-sm text-[#E0E0E0] leading-relaxed">{s.bottom_line}</p>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div className="border-l border-[rgba(232,196,112,0.4)] pl-4">
-                  <span className="text-[9px] font-black text-[#E8C470] uppercase tracking-widest block mb-1">Primary Driver</span>
-                  <p className="text-xs text-[#9A9A9A] font-mono leading-relaxed">{s.primary_driver}</p>
-                </div>
-                <div className="border-l border-[rgba(200,162,200,0.4)] pl-4">
-                  <span className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest block mb-1">Next Action</span>
-                  <p className="text-xs text-[#9A9A9A] font-mono leading-relaxed">{s.next_action}</p>
-                </div>
-              </div>
-            </div>
-          ) : (
-            <div className="border-l-2 border-[#C8A2C8] pl-3">
-              <div className="text-[9px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-2">AI Assessment</div>
-              <p className="text-[11px] text-[#D0D0D0] leading-relaxed font-mono">{summary as string}</p>
-            </div>
-          )}
-        </Card>
+        <LabAIBriefing summary={summary} />
       </div>
 
       {/* ── Key Ratios ── */}
