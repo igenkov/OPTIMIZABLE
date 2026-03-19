@@ -4,6 +4,7 @@ import Link from 'next/link';
 import {
   ArrowRight, UserCircle, Activity, ClipboardList,
   BarChart2, FlaskConical, TrendingUp,
+  ChevronRight, ChevronLeft, ChevronDown,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
@@ -22,107 +23,93 @@ const ROW1: Step[] = [
   { n: '03', Icon: ClipboardList, title: 'Symptom Audit',     desc: 'Energy, libido, cognition, recovery' },
 ];
 const ROW2: Step[] = [
-  { n: '04', Icon: BarChart2,    title: 'Risk Score',      desc: 'Hormonal coefficient + bloodwork roadmap', milestone: true },
-  { n: '05', Icon: FlaskConical, title: 'Lab Analysis',    desc: 'AI deep-dive of 40+ biomarkers', milestone: true, pro: true },
-  { n: '06', Icon: TrendingUp,   title: 'Track & Optimize', desc: '90-day protocol + daily progress logs', pro: true },
+  { n: '04', Icon: BarChart2,    title: 'Risk Score',       desc: 'Hormonal coefficient + bloodwork roadmap', milestone: true },
+  { n: '05', Icon: FlaskConical, title: 'Lab Analysis',     desc: 'AI deep-dive of 40+ biomarkers',           milestone: true, pro: true },
+  { n: '06', Icon: TrendingUp,   title: 'Track & Optimize', desc: '90-day protocol + daily progress logs',    pro: true },
 ];
 
 // ── Sub-components ────────────────────────────────────────────────────────────
 
-function StepNode({ step }: { step: Step }) {
+function StepCard({ step }: { step: Step }) {
+  const lit = !!step.milestone;
   return (
-    <div className={`w-12 h-12 rounded-full shrink-0 flex items-center justify-center
-      ${step.milestone
-        ? 'border-2 border-[#C8A2C8] bg-[#0e0e0e] shadow-[0_0_20px_rgba(200,162,200,0.25)]'
-        : step.pro
-        ? 'border border-[rgba(200,162,200,0.2)] bg-[#141414]'
-        : 'border border-[rgba(255,255,255,0.08)] bg-[#141414]'
+    <div className={`relative flex-1 min-w-0 p-4 flex flex-col gap-3 ${
+      lit
+        ? 'border border-[#C8A2C8] bg-[#141414] shadow-[0_0_28px_rgba(200,162,200,0.1)]'
+        : 'border border-[rgba(255,255,255,0.06)] bg-[#111111]'
+    }`}>
+      {/* step number */}
+      <div className={`text-[32px] font-black leading-none tracking-tight ${
+        lit ? 'text-[rgba(200,162,200,0.18)]' : 'text-[rgba(255,255,255,0.05)]'
+      }`}>{step.n}</div>
+
+      {/* icon */}
+      <div className={`w-8 h-8 flex items-center justify-center rounded-sm ${
+        lit ? 'bg-[rgba(200,162,200,0.1)]' : 'bg-[rgba(255,255,255,0.03)]'
       }`}>
-      <step.Icon size={18}
-        className={step.milestone ? 'text-[#C8A2C8]' : step.pro ? 'text-[rgba(200,162,200,0.4)]' : 'text-[#3A3A3A]'}/>
-    </div>
-  );
-}
+        <step.Icon size={15} className={
+          lit ? 'text-[#C8A2C8]' : step.pro ? 'text-[rgba(200,162,200,0.25)]' : 'text-[#3A3A3A]'
+        }/>
+      </div>
 
-function StepLabel({ step, align = 'center' }: { step: Step; align?: 'left' | 'center' | 'right' }) {
-  const ta = align === 'left' ? 'text-left' : align === 'right' ? 'text-right' : 'text-center';
-  return (
-    <div className={ta}>
-      <div className={`text-[7px] font-black tracking-[2px] uppercase mb-1.5
-        ${step.milestone ? 'text-[#C8A2C8]' : 'text-[#2A2A2A]'}`}>{step.n}</div>
-      <div className={`text-[11px] font-black uppercase tracking-tight leading-tight mb-1.5
-        ${step.milestone ? 'text-white' : step.pro ? 'text-[#5A5A5A]' : 'text-[#5A5A5A]'}`}>{step.title}</div>
-      <p className="text-[9.5px] text-[#2A2A2A] leading-relaxed">{step.desc}</p>
-    </div>
-  );
-}
+      {/* text */}
+      <div>
+        <div className={`text-[11px] font-black uppercase tracking-tight leading-tight mb-1.5 ${
+          lit ? 'text-white' : 'text-[#404040]'
+        }`}>{step.title}</div>
+        <p className={`text-[9.5px] leading-relaxed ${lit ? 'text-[#5A5A5A]' : 'text-[#2A2A2A]'}`}>{step.desc}</p>
+      </div>
 
-// Horizontal connector — a flex-1 line at node center height
-function HConnector({ dim = false, proGate = false }: { dim?: boolean; proGate?: boolean }) {
-  return (
-    <div className="flex-1 flex flex-col items-center justify-start pt-[23px] relative">
-      <div className={`w-full h-px ${dim ? 'bg-[rgba(200,162,200,0.12)]' : 'bg-[rgba(255,255,255,0.07)]'}`}/>
-      {proGate && (
-        <span className="absolute top-[13px] text-[7px] font-black text-black bg-[#C8A2C8] px-2 py-0.5 uppercase tracking-[2px]">
+      {/* pro badge */}
+      {step.pro && (
+        <div className="absolute top-2.5 right-2.5 text-[6px] font-black text-black bg-[#C8A2C8] px-1.5 py-0.5 uppercase tracking-[1.5px]">
           Pro
-        </span>
+        </div>
       )}
     </div>
   );
 }
 
+function Chevron({ dir }: { dir: 'right' | 'left' | 'down' }) {
+  const cls = 'shrink-0 text-[rgba(255,255,255,0.1)]';
+  if (dir === 'right') return <ChevronRight size={16} className={cls}/>;
+  if (dir === 'left')  return <ChevronLeft  size={16} className={cls}/>;
+  return <ChevronDown size={14} className={cls}/>;
+}
+
 function SnakeFlow() {
   return (
     <div className="w-full">
-      <div className="text-[8px] font-black text-[#2A2A2A] uppercase tracking-[3px] mb-8 text-right">
+      <div className="text-[8px] font-black text-[#252525] uppercase tracking-[3px] mb-6 text-right">
         The Optimization Sequence
       </div>
 
-      {/* ── ROW 1 : left → right ── */}
-      <div className="flex items-start">
-        {ROW1.map((step, i) => (
-          <div key={step.n} className={`flex items-start ${i < ROW1.length - 1 ? 'flex-1' : ''}`}>
-            {/* Node + label */}
-            <div className="flex flex-col items-center gap-3 w-12 shrink-0">
-              <StepNode step={step}/>
-            </div>
-            {/* Connector to next */}
-            {i < ROW1.length - 1 && <HConnector/>}
-          </div>
-        ))}
+      {/* ROW 1 — 01 → 02 → 03 */}
+      <div className="flex items-stretch">
+        <StepCard step={ROW1[0]}/>
+        <div className="flex items-center px-2"><Chevron dir="right"/></div>
+        <StepCard step={ROW1[1]}/>
+        <div className="flex items-center px-2"><Chevron dir="right"/></div>
+        <StepCard step={ROW1[2]}/>
       </div>
 
-      {/* Labels row 1 */}
-      <div className="grid grid-cols-3 gap-2 mt-3 mb-1">
-        {ROW1.map(step => <StepLabel key={step.n} step={step}/>)}
-      </div>
-
-      {/* ── VERTICAL BEND (right side) ── */}
+      {/* VERTICAL BEND — right column, aligns with step 03 / step 04 */}
       <div className="flex justify-end">
-        <div className="w-12 flex justify-center py-3">
-          <div className="w-px h-8 bg-[rgba(255,255,255,0.07)]"/>
+        <div className="w-1/3 flex justify-center py-2.5">
+          <div className="flex flex-col items-center">
+            <div className="w-px h-4 bg-[rgba(255,255,255,0.06)]"/>
+            <Chevron dir="down"/>
+          </div>
         </div>
       </div>
 
-      {/* ── ROW 2 : right → left (reversed flex) ── */}
-      <div className="flex flex-row-reverse items-start">
-        {ROW2.map((step, i) => (
-          <div key={step.n} className={`flex flex-row-reverse items-start ${i < ROW2.length - 1 ? 'flex-1' : ''}`}>
-            {/* Node */}
-            <div className="flex flex-col items-center gap-3 w-12 shrink-0">
-              <StepNode step={step}/>
-            </div>
-            {/* Connector */}
-            {i < ROW2.length - 1 && (
-              <HConnector dim proGate={i === 0}/>
-            )}
-          </div>
-        ))}
-      </div>
-
-      {/* Labels row 2 — visually reversed to match node positions */}
-      <div className="grid grid-cols-3 gap-2 mt-3">
-        {[...ROW2].reverse().map(step => <StepLabel key={step.n} step={step}/>)}
+      {/* ROW 2 — 06 ← 05 ← 04  (04 on right, snake continues) */}
+      <div className="flex items-stretch">
+        <StepCard step={ROW2[2]}/>
+        <div className="flex items-center px-2"><Chevron dir="left"/></div>
+        <StepCard step={ROW2[1]}/>
+        <div className="flex items-center px-2"><Chevron dir="left"/></div>
+        <StepCard step={ROW2[0]}/>
       </div>
     </div>
   );
