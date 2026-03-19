@@ -13,19 +13,20 @@ const PREVIEW = 2;
 
 function CharacterImage() {
   return (
-    <div className="absolute bottom-0 right-0 w-[160px] h-[200px] pointer-events-none select-none hidden sm:block">
-      {/* gradient fade: left edge and bottom edge blend into card bg */}
-      <div className="absolute inset-0 z-10"
-        style={{
-          background: 'linear-gradient(to right, #141414 0%, transparent 35%), linear-gradient(to top, #141414 0%, transparent 25%)',
-        }} />
+    <div className="absolute bottom-0 right-0 w-[170px] h-[210px] pointer-events-none select-none hidden sm:block">
       <Image
         src="/lab_character.png"
         alt=""
         fill
         className="object-contain object-bottom"
-        style={{ mixBlendMode: 'multiply' }}
       />
+      {/* gradient overlays to fade white bg into card */}
+      <div className="absolute inset-0"
+        style={{ background: 'linear-gradient(to right, #141414 0%, rgba(20,20,20,0.6) 30%, transparent 60%)' }} />
+      <div className="absolute inset-0"
+        style={{ background: 'linear-gradient(to top, #141414 0%, transparent 20%)' }} />
+      <div className="absolute inset-0"
+        style={{ background: 'linear-gradient(to bottom, #141414 0%, transparent 15%)' }} />
     </div>
   );
 }
