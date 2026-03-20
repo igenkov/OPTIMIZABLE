@@ -20,8 +20,8 @@ function TimelineFlow() {
 
           {/* Step 01 — LEFT */}
           <div className="flex items-center justify-end relative">
-            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
+            <div className="step-card bg-[#111111] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#4A4A4A]">
                 <UserCircle size={16}/>
               </div>
               <div>
@@ -40,8 +40,8 @@ function TimelineFlow() {
             <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
               <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
             </div>
-            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
+            <div className="step-card bg-[#111111] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#4A4A4A]">
                 <Activity size={16}/>
               </div>
               <div>
@@ -54,8 +54,8 @@ function TimelineFlow() {
 
           {/* Step 03 — LEFT */}
           <div className="flex items-center justify-end relative">
-            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
+            <div className="step-card bg-[#111111] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#4A4A4A]">
                 <ClipboardList size={16}/>
               </div>
               <div>
@@ -74,8 +74,8 @@ function TimelineFlow() {
 
           {/* Step 04 — centered, plain (free) */}
           <div className="md:col-span-2 flex justify-center py-2 relative">
-            <div className="bg-white/[0.02] border border-white/5 px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
-              <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-[#4A4A4A]">
+            <div className="bg-[#111111] border border-white/5 px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
+              <div className="w-10 h-10 bg-[#1a1a1a] rounded-full flex items-center justify-center text-[#4A4A4A]">
                 <BarChart2 size={20}/>
               </div>
               <div>
