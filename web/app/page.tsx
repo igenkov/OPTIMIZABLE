@@ -189,10 +189,14 @@ export default async function Home() {
             <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-4">
               Biological Baseline Assessment
             </div>
-            <h1 className="font-black text-white uppercase leading-none mb-5"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: 'clamp(2.2rem,3.5vw,3.2rem)', letterSpacing: '0.03em' }}>
-              If you don't wake up hard every morning,<br/>
-              <span className="text-[#C8A2C8]">something is off.<br/>Find it and optimize it.</span>
+            <h1 className="font-black uppercase leading-none mb-5"
+              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", letterSpacing: '0.03em' }}>
+              <span className="text-white" style={{ fontSize: 'clamp(1.2rem,2vw,1.6rem)' }}>
+                If you don't wake up hard every morning, something is off.
+              </span><br/>
+              <span className="text-[#C8A2C8]" style={{ fontSize: 'clamp(2.2rem,3.5vw,3.2rem)' }}>
+                Find it and optimize it!
+              </span>
             </h1>
             <p className="text-[12px] text-[#5A5A5A] leading-relaxed mb-8">
               From a 3-minute assessment to a full clinical bloodwork analysis and 90-day optimization protocol.
