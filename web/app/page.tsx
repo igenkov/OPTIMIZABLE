@@ -79,7 +79,7 @@ function TimelineFlow() {
                 <BarChart2 size={20}/>
               </div>
               <div>
-                <div className="text-[8px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Milestone</div>
+                <div className="text-[8px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Step 04</div>
                 <div className="text-xs font-black uppercase text-white leading-tight">Risk Score & Roadmap</div>
               </div>
             </div>
