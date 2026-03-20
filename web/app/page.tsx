@@ -195,7 +195,10 @@ export default async function Home() {
                 If you don't wake up hard every morning, something is off.
               </span><br/>
               <span className="text-[#C8A2C8]" style={{ fontSize: 'clamp(2.2rem,3.5vw,3.2rem)' }}>
-                Find it and optimize it!
+                Find it and{' '}
+                <span style={{ textShadow: '0 0 24px rgba(200,162,200,0.8), 0 0 48px rgba(200,162,200,0.4)' }}>
+                  optimize it!
+                </span>
               </span>
             </h1>
             <p className="text-[12px] text-[#5A5A5A] leading-relaxed mb-8">
