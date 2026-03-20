@@ -26,8 +26,8 @@ function TimelineFlow() {
               </div>
               <div>
                 <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 01</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personal Profile</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Age, body comp, history</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personal Details</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Age, body composition, medical history</div>
               </div>
             </div>
             <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
@@ -46,8 +46,8 @@ function TimelineFlow() {
               </div>
               <div>
                 <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 02</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lifestyle Signals</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Sleep, stress, training</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lifestyle Assessment</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Sleep, stress, bad habits, physical activity</div>
               </div>
             </div>
           </div>
@@ -60,8 +60,8 @@ function TimelineFlow() {
               </div>
               <div>
                 <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 03</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Symptom Audit</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Energy, libido, cognition</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Symptoms Audit</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Energy, libido, recovery, cognition</div>
               </div>
             </div>
             <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
@@ -80,7 +80,8 @@ function TimelineFlow() {
               </div>
               <div>
                 <div className="text-[8px] font-black text-[#3A3A3A] uppercase tracking-[3px]">Step 04</div>
-                <div className="text-xs font-black uppercase text-white leading-tight">Risk Score & Roadmap</div>
+                <div className="text-xs font-black uppercase text-white leading-tight">Risk Score</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Hormonal coefficient + bloodwork panel recommendation</div>
               </div>
             </div>
           </div>
@@ -101,7 +102,7 @@ function TimelineFlow() {
               <div>
                 <div className="text-[8px] font-bold text-[#C8A2C8] uppercase tracking-widest">Step 05</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lab Analysis</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">AI deep-dive, 40+ biomarkers</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Deep AI analysis of bloodwork. Actual hormonal health status</div>
               </div>
             </div>
           </div>
@@ -115,8 +116,8 @@ function TimelineFlow() {
               </div>
               <div>
                 <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 06</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personalized Protocol</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">90-day optimization roadmap</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Optimization</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">90-day optimization protocol</div>
               </div>
             </div>
             <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
@@ -137,7 +138,7 @@ function TimelineFlow() {
               <div>
                 <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 07</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Progress Tracking</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Daily logs + performance metrics</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Daily progress assessment</div>
               </div>
             </div>
           </div>
