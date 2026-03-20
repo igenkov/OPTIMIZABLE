@@ -196,7 +196,7 @@ export default async function Home() {
               </span><br/>
               <span className="text-[#C8A2C8]" style={{ fontSize: 'clamp(2.2rem,3.5vw,3.2rem)' }}>
                 Find it and{' '}
-                <span style={{ textShadow: '0 0 24px rgba(200,162,200,0.8), 0 0 48px rgba(200,162,200,0.4)' }}>
+                <span style={{ textShadow: '0 0 12px rgba(200,162,200,0.7), 0 0 24px rgba(200,162,200,0.3)' }}>
                   optimize it!
                 </span>
               </span>
