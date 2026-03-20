@@ -203,18 +203,6 @@ export default async function Home() {
                 Sign In
               </Link>
             </div>
-            <div className="flex items-center gap-6 pt-6 border-t border-[rgba(255,255,255,0.05)]">
-              {[
-                { val: '25+', label: 'Biomarkers' },
-                { val: '90d', label: 'Protocol' },
-                { val: '3min', label: 'To score' },
-              ].map((s, i) => (
-                <div key={i}>
-                  <div className="text-base font-black text-white">{s.val}</div>
-                  <div className="text-[8px] text-[#3A3A3A] uppercase tracking-widest mt-0.5">{s.label}</div>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* RIGHT — timeline sequence map */}
