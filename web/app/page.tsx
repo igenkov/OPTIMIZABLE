@@ -115,8 +115,8 @@ function TimelineFlow() {
               </div>
               <div>
                 <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 06</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Track & Optimize</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">90-day protocol + daily logs</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personalized Protocol</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">90-day optimization roadmap</div>
               </div>
             </div>
             <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
@@ -124,8 +124,23 @@ function TimelineFlow() {
             </div>
           </div>
 
-          {/* Empty right cell */}
-          <div className="hidden md:block"/>
+          {/* Step 07 — RIGHT (PRO), slightly lower via pt-3 */}
+          <div className="flex items-start pt-3 relative">
+            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
+              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
+            </div>
+            <div className="step-card pro bg-[rgba(200,162,200,0.03)] border border-[rgba(200,162,200,0.2)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
+              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
+                <Activity size={16}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 07</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Progress Tracking</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Daily logs + performance metrics</div>
+              </div>
+            </div>
+          </div>
 
         </div>
       </div>
@@ -166,10 +181,10 @@ export default async function Home() {
 
       {/* HERO */}
       <div className="flex-1 flex items-center px-6 lg:px-12 py-12 max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-12 gap-8 lg:gap-16 w-full items-start">
+        <div className="grid grid-cols-12 gap-8 lg:gap-16 w-full items-stretch">
 
           {/* LEFT — text */}
-          <div className="col-span-12 lg:col-span-4 xl:col-span-4">
+          <div className="col-span-12 lg:col-span-4 xl:col-span-4 flex flex-col">
             <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-4">
               Biological Baseline Assessment
             </div>
@@ -181,7 +196,7 @@ export default async function Home() {
             <p className="text-[12px] text-[#5A5A5A] leading-relaxed mb-8">
               From a 3-minute assessment to a full clinical bloodwork analysis and 90-day optimization protocol.
             </p>
-            <div className="flex flex-col gap-2.5 mb-10">
+            <div className="flex flex-col gap-2.5 mt-auto">
               <Link href="/onboarding/phase1"
                 className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[3px] uppercase hover:bg-[#A882A8] transition-colors">
                 Start Free Assessment <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform"/>
