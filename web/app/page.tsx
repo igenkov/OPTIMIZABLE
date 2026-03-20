@@ -69,34 +69,39 @@ function TimelineFlow() {
             </div>
           </div>
 
-          {/* Step 04 — RIGHT (regular, free) */}
-          <div className="flex items-center relative">
-            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
-            </div>
-            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
-                <BarChart2 size={16}/>
+          {/* Empty right cell */}
+          <div className="hidden md:block"/>
+
+          {/* Step 04 — centered, plain (free) */}
+          <div className="md:col-span-2 flex justify-center py-2 relative">
+            <div className="bg-white/[0.02] border border-white/5 px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
+              <div className="w-10 h-10 bg-white/5 rounded-full flex items-center justify-center text-[#4A4A4A]">
+                <BarChart2 size={20}/>
               </div>
               <div>
-                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 04</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Risk Score</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Hormonal coefficient + roadmap</div>
+                <div className="text-[8px] font-black text-[#3A3A3A] uppercase tracking-[3px]">Step 04</div>
+                <div className="text-xs font-black uppercase text-white leading-tight">Risk Score & Roadmap</div>
               </div>
             </div>
           </div>
 
-          {/* Step 05 — HERO centered (PRO) */}
-          <div className="md:col-span-2 flex justify-center py-2 relative">
-            <div className="glow-pulse bg-[#0e0e0e] border-2 border-[rgba(200,162,200,0.5)] px-6 py-3 rounded-2xl flex items-center gap-4 z-20 relative overflow-hidden">
+          {/* Empty left cell */}
+          <div className="hidden md:block"/>
+
+          {/* Step 05 — RIGHT, glowing (PRO) */}
+          <div className="flex items-center relative">
+            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
+              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
+            </div>
+            <div className="step-card pro glow-pulse bg-[rgba(200,162,200,0.03)] border-2 border-[rgba(200,162,200,0.5)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
               <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
-              <div className="w-10 h-10 bg-[rgba(200,162,200,0.1)] rounded-full flex items-center justify-center text-[#C8A2C8]">
-                <FlaskConical size={20}/>
+              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
+                <FlaskConical size={16}/>
               </div>
               <div>
-                <div className="text-[8px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Step 05</div>
-                <div className="text-xs font-black uppercase text-white leading-tight">Lab Analysis — AI Deep-Dive</div>
-                <div className="text-[9px] text-[#5A5A5A] mt-0.5">40+ biomarkers · personalized protocol</div>
+                <div className="text-[8px] font-bold text-[#C8A2C8] uppercase tracking-widest">Step 05</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lab Analysis</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">AI deep-dive, 40+ biomarkers</div>
               </div>
             </div>
           </div>
