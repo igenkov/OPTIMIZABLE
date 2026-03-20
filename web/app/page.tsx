@@ -178,7 +178,7 @@ export default async function Home() {
 
       {/* HERO */}
       <div className="flex-1 flex items-center px-6 lg:px-12 py-12 max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-12 gap-8 lg:gap-16 w-full items-center">
+        <div className="grid grid-cols-12 gap-8 lg:gap-16 w-full items-start">
 
           {/* LEFT — text */}
           <div className="col-span-12 lg:col-span-4 xl:col-span-4">
