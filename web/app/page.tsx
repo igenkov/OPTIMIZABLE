@@ -20,52 +20,52 @@ function TimelineFlow() {
 
           {/* Step 01 — LEFT */}
           <div className="flex items-center justify-end relative">
-            <div className="step-card bg-[#111111] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#4A4A4A]">
+            <div className="step-card bg-[#111111] border border-white/10 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#666666]">
                 <UserCircle size={16}/>
               </div>
               <div>
-                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 01</div>
+                <div className="text-[8px] font-bold text-[#5A5A5A] uppercase tracking-widest">Step 01</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personal Details</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Age, body composition, medical history</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Age, body composition, medical history</div>
               </div>
             </div>
-            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
+            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/25 z-10">
+              <div className="w-1 h-1 rounded-full bg-white/40 absolute inset-0 m-auto"/>
             </div>
           </div>
 
           {/* Step 02 — RIGHT */}
           <div className="flex items-center relative">
-            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
+            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/25 z-10">
+              <div className="w-1 h-1 rounded-full bg-white/40 absolute inset-0 m-auto"/>
             </div>
-            <div className="step-card bg-[#111111] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#4A4A4A]">
+            <div className="step-card bg-[#111111] border border-white/10 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#666666]">
                 <Activity size={16}/>
               </div>
               <div>
-                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 02</div>
+                <div className="text-[8px] font-bold text-[#5A5A5A] uppercase tracking-widest">Step 02</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lifestyle Assessment</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Sleep, stress, bad habits, physical activity</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Sleep, stress, bad habits, physical activity</div>
               </div>
             </div>
           </div>
 
           {/* Step 03 — LEFT */}
           <div className="flex items-center justify-end relative">
-            <div className="step-card bg-[#111111] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#4A4A4A]">
+            <div className="step-card bg-[#111111] border border-white/10 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#666666]">
                 <ClipboardList size={16}/>
               </div>
               <div>
-                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 03</div>
+                <div className="text-[8px] font-bold text-[#5A5A5A] uppercase tracking-widest">Step 03</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Symptoms Audit</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Energy, libido, recovery, cognition</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Energy, libido, recovery, cognition</div>
               </div>
             </div>
-            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
+            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/25 z-10">
+              <div className="w-1 h-1 rounded-full bg-white/40 absolute inset-0 m-auto"/>
             </div>
           </div>
 
@@ -74,14 +74,14 @@ function TimelineFlow() {
 
           {/* Step 04 — centered, plain (free) */}
           <div className="md:col-span-2 flex justify-center py-2 relative">
-            <div className="bg-[#111111] border border-white/5 px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
-              <div className="w-10 h-10 bg-[#1a1a1a] rounded-full flex items-center justify-center text-[#4A4A4A]">
+            <div className="bg-[#111111] border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
+              <div className="w-10 h-10 bg-[#1a1a1a] rounded-full flex items-center justify-center text-[#666666]">
                 <BarChart2 size={20}/>
               </div>
               <div>
                 <div className="text-[8px] font-black text-[#3A3A3A] uppercase tracking-[3px]">Step 04</div>
                 <div className="text-xs font-black uppercase text-white leading-tight">Risk Score</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Hormonal coefficient + bloodwork panel recommendation</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Hormonal coefficient + bloodwork panel recommendation</div>
               </div>
             </div>
           </div>
@@ -102,7 +102,7 @@ function TimelineFlow() {
               <div>
                 <div className="text-[8px] font-bold text-[#C8A2C8] uppercase tracking-widest">Step 05</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lab Analysis</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Deep AI analysis of bloodwork. Actual hormonal health status</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Deep AI analysis of bloodwork. Actual hormonal health status</div>
               </div>
             </div>
           </div>
@@ -117,7 +117,7 @@ function TimelineFlow() {
               <div>
                 <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 06</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Optimization</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">90-day optimization protocol</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">90-day optimization protocol</div>
               </div>
             </div>
             <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
@@ -138,7 +138,7 @@ function TimelineFlow() {
               <div>
                 <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 07</div>
                 <div className="text-[11px] font-bold uppercase tracking-wide text-white">Progress Tracking</div>
-                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Daily progress assessment</div>
+                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Daily progress assessment</div>
               </div>
             </div>
           </div>
@@ -171,7 +171,7 @@ export default async function Home() {
           <div>
             <div className="text-white font-bold uppercase tracking-[0.14em]"
               style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '1.15rem' }}>OPTIMIZABLE</div>
-            <div className="text-[#4A4A4A] uppercase tracking-[0.18em] mt-0.5"
+            <div className="text-[#666666] uppercase tracking-[0.18em] mt-0.5"
               style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '0.58rem' }}>MALEMAXXING QUANTIFIED</div>
           </div>
         </div>
@@ -203,7 +203,7 @@ export default async function Home() {
                 Start Free Assessment <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform"/>
               </Link>
               <Link href="/login"
-                className="inline-flex items-center justify-center px-6 py-3.5 border border-[rgba(255,255,255,0.07)] text-[#4A4A4A] font-bold text-[10px] tracking-[3px] uppercase hover:border-[rgba(255,255,255,0.15)] hover:text-white transition-all">
+                className="inline-flex items-center justify-center px-6 py-3.5 border border-[rgba(255,255,255,0.07)] text-[#666666] font-bold text-[10px] tracking-[3px] uppercase hover:border-[rgba(255,255,255,0.15)] hover:text-white transition-all">
                 Sign In
               </Link>
             </div>
