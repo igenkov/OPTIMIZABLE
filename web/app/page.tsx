@@ -191,8 +191,8 @@ export default async function Home() {
             </div>
             <h1 className="font-black uppercase leading-none mb-5"
               style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", letterSpacing: '0.03em' }}>
-              <span className="text-white" style={{ fontSize: 'clamp(1.2rem,2vw,1.6rem)' }}>
-                If you don't wake up hard every morning, something is off.
+              <span className="text-white" style={{ fontSize: 'clamp(1.1rem,1.8vw,1.5rem)' }}>
+                If you don't wake up hard every morning,<br/>something is off.
               </span><br/>
               <span className="text-[#C8A2C8]" style={{ fontSize: 'clamp(2.2rem,3.5vw,3.2rem)' }}>
                 Find it and{' '}
