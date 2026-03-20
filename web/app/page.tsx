@@ -223,12 +223,12 @@ export default async function Home() {
           <div className="flex flex-wrap justify-center gap-8">
             {['Clinical Grade Analysis','Encrypted & Private','AI-Powered Protocol','90-Day Optimization'].map((text, i) => (
               <div key={i} className="flex items-center gap-2">
-                <div className="w-1 h-1 rounded-full bg-[#C8A2C8] opacity-40"/>
-                <span className="text-[9px] text-[#2A2A2A] uppercase tracking-widest">{text}</span>
+                <div className="w-1 h-1 rounded-full bg-[#C8A2C8] opacity-60"/>
+                <span className="text-[9px] text-[#5A5A5A] uppercase tracking-widest">{text}</span>
               </div>
             ))}
           </div>
-          <p className="text-[9px] text-[#1A1A1A] uppercase tracking-widest">Wellness only · Not medical advice</p>
+          <p className="text-[9px] text-[#4A4A4A] uppercase tracking-widest">Wellness only · Not medical advice</p>
         </div>
       </footer>
     </div>
