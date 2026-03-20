@@ -4,137 +4,130 @@ import Link from 'next/link';
 import {
   ArrowRight, UserCircle, Activity, ClipboardList,
   BarChart2, FlaskConical, TrendingUp,
-  ChevronRight, ChevronLeft, ChevronDown,
 } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
 
-type Step = {
-  n: string;
-  Icon: LucideIcon;
-  title: string;
-  desc: string;
-  milestone?: boolean;
-  pro?: boolean;
-};
+// ── Timeline sequence map ─────────────────────────────────────────────────────
 
-const ROW1: Step[] = [
-  { n: '01', Icon: UserCircle,    title: 'Personal Profile',  desc: 'Age, body composition, hormonal history' },
-  { n: '02', Icon: Activity,      title: 'Lifestyle Signals', desc: 'Sleep, stress, training volume' },
-  { n: '03', Icon: ClipboardList, title: 'Symptom Audit',     desc: 'Energy, libido, cognition, recovery' },
-];
-const ROW2: Step[] = [
-  { n: '04', Icon: BarChart2,    title: 'Risk Score',       desc: 'Hormonal coefficient + bloodwork roadmap', milestone: true },
-  { n: '05', Icon: FlaskConical, title: 'Lab Analysis',     desc: 'AI deep-dive of 40+ biomarkers',           milestone: true, pro: true },
-  { n: '06', Icon: TrendingUp,   title: 'Track & Optimize', desc: '90-day protocol + daily progress logs',    pro: true },
-];
-
-// ── Sub-components ────────────────────────────────────────────────────────────
-
-function StepNode({ step }: { step: Step }) {
-  const glow = step.milestone ? 'glow-pulse' : '';
+function TimelineFlow() {
   return (
-    <div className={`w-16 h-16 rounded-full shrink-0 flex items-center justify-center ${glow} ${
-      step.milestone
-        ? 'border-2 border-[#C8A2C8] bg-[#0e0e0e]'
-        : step.pro
-        ? 'border border-[rgba(200,162,200,0.18)] bg-[#141414]'
-        : 'border border-[rgba(255,255,255,0.1)] bg-[#141414]'
-    }`}>
-      <step.Icon size={22} className={
-        step.milestone ? 'text-[#C8A2C8]'
-        : step.pro     ? 'text-[rgba(200,162,200,0.35)]'
-        :                'text-[#3A3A3A]'
-      }/>
-    </div>
-  );
-}
+    <div className="relative flex items-center justify-center w-full">
+      <div className="w-full max-w-2xl relative">
 
-function StepLabel({ step }: { step: Step }) {
-  return (
-    <div className="text-center w-16 shrink-0">
-      <div className={`text-[8px] font-black tracking-[2px] uppercase mb-1 ${
-        step.milestone ? 'text-[#C8A2C8]' : 'text-[#2E2E2E]'
-      }`}>{step.n}</div>
-      <div className={`text-[11px] font-black uppercase tracking-tight leading-tight mb-1 ${
-        step.milestone ? 'text-white' : 'text-[#4A4A4A]'
-      }`}>{step.title}</div>
-      <p className={`text-[9.5px] leading-relaxed ${
-        step.milestone ? 'text-[#5A5A5A]' : 'text-[#2A2A2A]'
-      }`}>{step.desc}</p>
-    </div>
-  );
-}
+        {/* Vertical center line */}
+        <div className="absolute left-1/2 top-2 bottom-2 w-px glow-line -translate-x-1/2 hidden md:block"/>
 
-// Horizontal connector with directional arrow in center
-function HConnector({ reverse = false, dim = false, proGate = false }: {
-  reverse?: boolean; dim?: boolean; proGate?: boolean;
-}) {
-  const Arrow = reverse ? ChevronLeft : ChevronRight;
-  return (
-    <div className="flex-1 flex items-center justify-center relative" style={{ marginTop: '-1px' }}>
-      <div className={`w-full h-px ${dim ? 'bg-[rgba(200,162,200,0.18)]' : 'bg-[rgba(255,255,255,0.1)]'}`}/>
-      <div className="absolute flex items-center justify-center bg-[#0e0e0e] px-1">
-        <Arrow size={13} className={dim ? 'text-[rgba(200,162,200,0.35)]' : 'text-[rgba(255,255,255,0.22)]'}/>
-      </div>
-      {proGate && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 text-[6px] font-black text-black bg-[#C8A2C8] px-1.5 py-0.5 uppercase tracking-[1.5px] whitespace-nowrap">
-          Pro
-        </span>
-      )}
-    </div>
-  );
-}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3 relative">
 
-function SnakeFlow() {
-  return (
-    <div className="w-full select-none">
-      <div className="text-[8px] font-black text-[#252525] uppercase tracking-[3px] mb-8 text-right">
-        The Optimization Sequence
-      </div>
+          {/* Step 01 — LEFT */}
+          <div className="flex items-center justify-end relative">
+            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
+                <UserCircle size={16}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 01</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personal Profile</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Age, body comp, history</div>
+              </div>
+            </div>
+            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
+              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
+            </div>
+          </div>
 
-      {/* ── ROW 1 nodes : 01 → 02 → 03 ── */}
-      <div className="flex items-center">
-        <StepNode step={ROW1[0]}/>
-        <HConnector/>
-        <StepNode step={ROW1[1]}/>
-        <HConnector/>
-        <StepNode step={ROW1[2]}/>
-      </div>
+          {/* Step 02 — RIGHT */}
+          <div className="flex items-center relative">
+            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
+              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
+            </div>
+            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
+                <Activity size={16}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 02</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lifestyle Signals</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Sleep, stress, training</div>
+              </div>
+            </div>
+          </div>
 
-      {/* Labels row 1 */}
-      <div className="flex mt-3 mb-1">
-        <StepLabel step={ROW1[0]}/>
-        <div className="flex-1"/>
-        <StepLabel step={ROW1[1]}/>
-        <div className="flex-1"/>
-        <StepLabel step={ROW1[2]}/>
-      </div>
+          {/* Step 03 — LEFT */}
+          <div className="flex items-center justify-end relative">
+            <div className="step-card bg-white/[0.02] border border-white/5 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
+              <div className="w-8 h-8 shrink-0 bg-white/5 rounded-lg flex items-center justify-center text-[#4A4A4A]">
+                <ClipboardList size={16}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-widest">Step 03</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Symptom Audit</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">Energy, libido, cognition</div>
+              </div>
+            </div>
+            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/15 z-10">
+              <div className="w-1 h-1 rounded-full bg-white/25 absolute inset-0 m-auto"/>
+            </div>
+          </div>
 
-      {/* ── VERTICAL BEND (right side, below node 03 / above node 04) ── */}
-      <div className="flex justify-end" style={{ marginRight: '24px' }}>
-        <div className="flex flex-col items-center gap-0">
-          <div className="w-px h-6 bg-[rgba(255,255,255,0.1)]"/>
-          <ChevronDown size={13} className="text-[rgba(255,255,255,0.22)] -mt-0.5"/>
-          <div className="w-px h-3 bg-[rgba(255,255,255,0.06)]"/>
+          {/* Empty right cell */}
+          <div className="hidden md:block"/>
+
+          {/* MILESTONE — full width centered */}
+          <div className="md:col-span-2 flex justify-center py-2 relative">
+            <div className="glow-pulse bg-[#0e0e0e] border-2 border-[rgba(200,162,200,0.5)] px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
+              <div className="w-10 h-10 bg-[rgba(200,162,200,0.1)] rounded-full flex items-center justify-center text-[#C8A2C8]">
+                <BarChart2 size={20}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Milestone</div>
+                <div className="text-xs font-black uppercase text-white leading-tight">Risk Score & Roadmap</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Empty left cell */}
+          <div className="hidden md:block"/>
+
+          {/* Step 05 — RIGHT (PRO) */}
+          <div className="flex items-center relative">
+            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
+              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
+            </div>
+            <div className="step-card pro bg-[rgba(200,162,200,0.03)] border border-[rgba(200,162,200,0.2)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
+              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
+                <FlaskConical size={16}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 05</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lab Analysis</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">AI deep-dive, 40+ biomarkers</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Step 06 — LEFT (PRO) */}
+          <div className="flex items-center justify-end relative">
+            <div className="step-card pro bg-[rgba(200,162,200,0.03)] border border-[rgba(200,162,200,0.2)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
+              <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
+              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
+                <TrendingUp size={16}/>
+              </div>
+              <div>
+                <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 06</div>
+                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Track & Optimize</div>
+                <div className="text-[9px] text-[#4A4A4A] leading-snug mt-0.5">90-day protocol + daily logs</div>
+              </div>
+            </div>
+            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
+              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
+            </div>
+          </div>
+
+          {/* Empty right cell */}
+          <div className="hidden md:block"/>
+
         </div>
-      </div>
-
-      {/* ── ROW 2 nodes : 06 ← 05 ← 04 (04 on right) ── */}
-      <div className="flex items-center flex-row-reverse">
-        <StepNode step={ROW2[0]}/>
-        <HConnector reverse dim proGate/>
-        <StepNode step={ROW2[1]}/>
-        <HConnector reverse dim/>
-        <StepNode step={ROW2[2]}/>
-      </div>
-
-      {/* Labels row 2 — reversed to align with the reversed node order */}
-      <div className="flex mt-3 flex-row-reverse">
-        <StepLabel step={ROW2[0]}/>
-        <div className="flex-1"/>
-        <StepLabel step={ROW2[1]}/>
-        <div className="flex-1"/>
-        <StepLabel step={ROW2[2]}/>
       </div>
     </div>
   );
@@ -224,9 +217,9 @@ export default async function Home() {
             </div>
           </div>
 
-          {/* RIGHT — S-shape workflow */}
-          <div className="hidden lg:block col-span-8 xl:col-span-8">
-            <SnakeFlow/>
+          {/* RIGHT — timeline sequence map */}
+          <div className="hidden lg:flex col-span-8 xl:col-span-8 items-center justify-center">
+            <TimelineFlow/>
           </div>
 
         </div>

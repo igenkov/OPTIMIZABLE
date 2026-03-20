@@ -16,10 +16,29 @@
 * { box-sizing: border-box; }
 
 @keyframes lilac-pulse {
-  0%, 100% { box-shadow: 0 0 18px rgba(200,162,200,0.35), 0 0 6px rgba(200,162,200,0.2); }
-  50%       { box-shadow: 0 0 36px rgba(200,162,200,0.65), 0 0 12px rgba(200,162,200,0.4); }
+  0%, 100% { box-shadow: 0 0 0 1px rgba(200,162,200,0.35), 0 0 20px rgba(200,162,200,0.15); }
+  50%       { box-shadow: 0 0 0 1px rgba(200,162,200,0.55), 0 0 36px rgba(200,162,200,0.35); }
 }
 .glow-pulse { animation: lilac-pulse 2.8s ease-in-out infinite; }
+
+.glow-line {
+  background: linear-gradient(to bottom,
+    transparent,
+    rgba(200,162,200,0.25) 20%,
+    rgba(200,162,200,0.25) 80%,
+    transparent);
+}
+
+.step-card {
+  transition: border-color 0.25s, background 0.25s;
+}
+.step-card:hover {
+  border-color: rgba(200,162,200,0.3);
+  background: rgba(255,255,255,0.03);
+}
+.step-card.pro:hover {
+  background: rgba(200,162,200,0.05);
+}
 
 body {
   background: #0e0e0e;
