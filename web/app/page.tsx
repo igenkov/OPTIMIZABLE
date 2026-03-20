@@ -167,7 +167,7 @@ export default async function Home() {
       {/* NAV */}
       <nav className="border-b border-[rgba(255,255,255,0.07)] px-6 lg:px-12 py-5 flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <img src="/logo_trsp.png" alt="Optimizable" width={44} height={44} style={{ objectFit: 'contain' }}/>
+          <img src="/logo_trsp.png" alt="Optimizable" width={44} height={44} style={{ objectFit: 'contain', display: 'block' }}/>
           <div>
             <div className="text-white font-bold uppercase tracking-[0.14em]"
               style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '1.15rem' }}>OPTIMIZABLE</div>
