@@ -1,5 +1,6 @@
 'use client';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { LayoutDashboard, FlaskConical, ClipboardList, HeartPulse, UserCircle, LogOut } from 'lucide-react';
@@ -42,7 +43,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
       {/* Logo */}
       <div className="p-6 border-b border-[rgba(255,255,255,0.07)]">
         <div className="flex items-center gap-3">
-          <img src="/logo_trsp.png" alt="Optimizable" width={40} height={40} style={{ objectFit: 'contain', display: 'block' }} className="shrink-0"/>
+          <Image src="/logo_trsp.png" alt="Optimizable" width={40} height={40} style={{ objectFit: 'contain' }} className="shrink-0"/>
           <div>
             <div
               className="text-white font-bold uppercase tracking-[0.14em]"

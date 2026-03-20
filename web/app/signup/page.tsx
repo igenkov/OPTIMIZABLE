@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
@@ -130,7 +131,7 @@ export default function SignupPage() {
         {/* BRANDING */}
         <div className="flex flex-col items-center mb-12">
           <div className="relative mb-4">
-            <img src="/logo_trsp.png" alt="Optimizable" width={64} height={64} style={{ objectFit: 'contain', display: 'block' }}/>
+            <Image src="/logo_trsp.png" alt="Optimizable" width={64} height={64} style={{ objectFit: 'contain' }}/>
           </div>
           <div className="text-white font-bold uppercase tracking-[0.2em] text-2xl"
             style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
