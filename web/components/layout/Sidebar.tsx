@@ -42,20 +42,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
       {/* Logo */}
       <div className="p-6 border-b border-[rgba(255,255,255,0.07)]">
         <div className="flex items-center gap-3">
-          <svg width="28" height="28" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
-            <defs>
-              <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stopColor="#C8A2C8"/>
-                <stop offset="100%" stopColor="#8E5E8E"/>
-              </linearGradient>
-            </defs>
-            <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none"/>
-            <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.7"/>
-            <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.45"/>
-            <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg)" strokeWidth="3.5" strokeLinecap="round" fill="none" opacity="0.25"/>
-            <line x1="22" y1="12" x2="29" y2="5" stroke="#C8A2C8" strokeWidth="2.5" strokeLinecap="round"/>
-            <polyline points="23.5,5 29,5 29,11.5" stroke="#C8A2C8" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-          </svg>
+          <img src="/logo_trsp.png" alt="Optimizable" width={40} height={40} style={{ objectFit: 'contain' }} className="shrink-0"/>
           <div>
             <div
               className="text-white font-bold uppercase tracking-[0.14em]"

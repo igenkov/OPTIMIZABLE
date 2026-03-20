@@ -100,8 +100,7 @@ export default function LoginPage() {
         {/* BRANDING */}
         <div className="flex flex-col items-center mb-12">
           <div className="relative mb-4">
-            <ShieldCheck className="text-[#C8A2C8] relative z-10" size={48} strokeWidth={1} />
-            <div className="absolute inset-0 bg-[#C8A2C8]/10 blur-3xl rounded-full" />
+            <img src="/logo_trsp.png" alt="Optimizable" width={64} height={64} style={{ objectFit: 'contain' }}/>
           </div>
           <div className="text-white font-bold uppercase tracking-[0.2em] text-2xl"
             style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
