@@ -176,9 +176,14 @@ export default async function Home() {
               style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '0.58rem' }}>MALEMAXXING QUANTIFIED</div>
           </div>
         </div>
-        <Link href="/login" className="text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
-          Sign In
-        </Link>
+        <div className="flex items-center gap-6">
+          <Link href="/how-it-works" className="text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
+            How It Works
+          </Link>
+          <Link href="/login" className="text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
+            Sign In
+          </Link>
+        </div>
       </nav>
 
       {/* HERO */}
