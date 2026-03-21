@@ -226,7 +226,11 @@ export default function Phase3Page() {
             <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Anabolic Steroid History</span>
             <div className="grid grid-cols-3 gap-2">
               {(['never', 'past', 'current'] as const).map(v => (
-                <button key={v} type="button" onClick={() => set('steroid_history', v)}
+                <button key={v} type="button" onClick={() => setForm(p => ({
+                  ...p,
+                  steroid_history: v,
+                  ...(v !== 'past' ? { steroid_stopped_ago: '' as const, steroid_cycle_count: '' as const, steroid_pct: false } : {}),
+                }))}
                   className={cn(
                     'py-2.5 border text-[10px] font-black uppercase tracking-widest transition-all capitalize',
                     form.steroid_history === v ? 'bg-white/10 border-white/20 text-white' : 'bg-transparent border-white/5 text-white/20'
@@ -296,7 +300,11 @@ export default function Phase3Page() {
             <span className="text-[10px] font-black uppercase tracking-widest text-white/40">TRT / Hormone Replacement</span>
             <div className="grid grid-cols-3 gap-2">
               {(['never', 'past', 'current'] as const).map(v => (
-                <button key={v} type="button" onClick={() => set('trt_history', v)}
+                <button key={v} type="button" onClick={() => setForm(p => ({
+                  ...p,
+                  trt_history: v,
+                  ...(v === 'never' ? { trt_type: '' } : {}),
+                }))}
                   className={cn(
                     'py-2.5 border text-[10px] font-black uppercase tracking-widest transition-all capitalize',
                     form.trt_history === v ? 'bg-white/10 border-white/20 text-white' : 'bg-transparent border-white/5 text-white/20'
