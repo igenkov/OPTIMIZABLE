@@ -159,9 +159,19 @@ export const BIOMARKERS: BiomarkerDef[] = [
     standard_range_low: 12, standard_range_high: 300, optimal_range_low: 50, optimal_range_high: 150,
     description: 'Iron storage marker — elevated ferritin (hemochromatosis) deposits iron in the pituitary and testes, directly suppressing testosterone production', category: 'metabolic',
   },
+  {
+    id: 'alt', name: 'ALT (Alanine Aminotransferase)', unit_primary: 'U/L',
+    standard_range_low: 7, standard_range_high: 56, optimal_range_low: 7, optimal_range_high: 30,
+    description: 'Liver enzyme — elevated levels indicate hepatocellular damage; the liver regulates SHBG production and estrogen clearance', category: 'liver',
+  },
+  {
+    id: 'ast', name: 'AST (Aspartate Aminotransferase)', unit_primary: 'U/L',
+    standard_range_low: 10, standard_range_high: 40, optimal_range_low: 10, optimal_range_high: 30,
+    description: 'Liver/muscle enzyme — elevated with liver damage or intense exercise; liver dysfunction impairs testosterone metabolism and SHBG regulation', category: 'liver',
+  },
 ];
 
 export const CORE_PANEL_IDS = ['total_t', 'free_t', 'shbg', 'albumin'];
-export const EXTENDED_PANEL_IDS = ['estradiol', 'lh', 'fsh', 'prolactin', 'vitamin_d', 'cortisol', 'cortisol_am', 'tsh', 'free_t3', 'free_t4', 'glucose', 'fasting_insulin', 'hba1c', 'hdl', 'ldl', 'triglycerides', 'hematocrit', 'dht', 'coq10', 'ferritin'];
+export const EXTENDED_PANEL_IDS = ['estradiol', 'lh', 'fsh', 'prolactin', 'vitamin_d', 'cortisol', 'cortisol_am', 'tsh', 'free_t3', 'free_t4', 'glucose', 'fasting_insulin', 'hba1c', 'hdl', 'ldl', 'triglycerides', 'hematocrit', 'dht', 'coq10', 'ferritin', 'alt', 'ast'];
 // TRT / active hormone monitoring panel — shown to excluded users
 export const TRT_PANEL_IDS = ['total_t', 'free_t', 'estradiol', 'hematocrit', 'lh', 'albumin', 'shbg', 'psa'];

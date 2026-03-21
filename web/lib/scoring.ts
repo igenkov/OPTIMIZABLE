@@ -46,8 +46,10 @@ export function calculateRiskScore(
 
   const p1_capped = Math.min(p1, 25);
 
-  // --- Phase 2: Lifestyle (max 25) ---
-  let p2 = 0;
+  // --- Phase 2: Lifestyle sub-score (max 15) + Endocrine indicators sub-score (max 20) ---
+  // Separated so lifestyle inputs remain visible even when endocrine symptoms are maxed (prevents information shadowing)
+
+  let p2_lifestyle = 0;
 
   // Sleep hours
   let sleepPts = 0;
@@ -56,57 +58,78 @@ export function calculateRiskScore(
   else if (phase2.avg_sleep_hours < 7) sleepPts = 5;
   else if (phase2.avg_sleep_hours < 8) sleepPts = 2;
 
-  // Sleep quality modifier: low quality amplifies sleep risk, high quality reduces it
-  if (phase2.sleep_quality <= 2) sleepPts = Math.round(sleepPts * 1.2);
-  else if (phase2.sleep_quality >= 4) sleepPts = Math.max(0, sleepPts - 3);
-  p2 += sleepPts;
+  // Sleep quality: amplifies hour-based risk AND adds standalone penalty for LH pulse fragmentation
+  if (phase2.sleep_quality <= 2) {
+    sleepPts = Math.round(sleepPts * 1.2);
+    sleepPts += 5; // independent penalty: fragmented sleep disrupts pulsatile LH regardless of duration
+  } else if (phase2.sleep_quality >= 4) {
+    sleepPts = Math.max(0, sleepPts - 3);
+  }
+  p2_lifestyle += sleepPts;
 
   // Beer (penalized more — hops phytoestrogens)
   const beerScore: Record<string, number> = { never: 0, '1-2x_week': 2, '3x_week': 5, '4-6x_week': 10, daily: 15 };
-  p2 += beerScore[phase2.beer_frequency] ?? 0;
+  p2_lifestyle += beerScore[phase2.beer_frequency] ?? 0;
 
   // Spirits / wine
   const spiritsScore: Record<string, number> = { never: 0, '1-2x_week': 2, '3x_week': 4, '4-6x_week': 8, daily: 12 };
-  p2 += spiritsScore[phase2.spirits_wine_frequency] ?? 0;
+  p2_lifestyle += spiritsScore[phase2.spirits_wine_frequency] ?? 0;
 
   // Smoking
-  if (phase2.smoking_status === 'daily') p2 += 10;
-  else if (phase2.smoking_status === 'occasional') p2 += 5;
+  if (phase2.smoking_status === 'daily') p2_lifestyle += 10;
+  else if (phase2.smoking_status === 'occasional') p2_lifestyle += 5;
 
   // Sugar consumption
-  if (phase2.sugar_consumption === 'very_high') p2 += 10;
-  else if (phase2.sugar_consumption === 'frequent') p2 += 6;
-  else if (phase2.sugar_consumption === 'moderate') p2 += 3;
+  if (phase2.sugar_consumption === 'very_high') p2_lifestyle += 10;
+  else if (phase2.sugar_consumption === 'frequent') p2_lifestyle += 6;
+  else if (phase2.sugar_consumption === 'moderate') p2_lifestyle += 3;
 
   // Sedentary hours
-  if (phase2.sedentary_hours >= 10) p2 += 8;
-  else if (phase2.sedentary_hours >= 7) p2 += 5;
-  else if (phase2.sedentary_hours >= 4) p2 += 2;
+  if (phase2.sedentary_hours >= 10) p2_lifestyle += 8;
+  else if (phase2.sedentary_hours >= 7) p2_lifestyle += 5;
+  else if (phase2.sedentary_hours >= 4) p2_lifestyle += 2;
 
   // Stress — pregnenolone steal: cortisol production competes with testosterone synthesis
-  if (phase2.stress_level >= 5) p2 += 10;
-  else if (phase2.stress_level >= 4) p2 += 6;
+  if (phase2.stress_level >= 5) p2_lifestyle += 10;
+  else if (phase2.stress_level >= 4) p2_lifestyle += 6;
 
   // Coffee
-  if (phase2.coffee_per_day === '6+') p2 += 4;
-  else if (phase2.coffee_per_day === '4-5') p2 += 2;
+  if (phase2.coffee_per_day === '6+') p2_lifestyle += 4;
+  else if (phase2.coffee_per_day === '4-5') p2_lifestyle += 2;
 
   // Exercise — Goldilocks scoring
-  if (phase2.exercise_frequency === 'none') p2 += 10;
-  else if (phase2.exercise_frequency === '3-4x' || phase2.exercise_frequency === '5-6x') p2 = Math.max(0, p2 - 5);
-  else if (phase2.exercise_frequency === 'daily') p2 += 5; // overtraining risk
+  if (phase2.exercise_frequency === 'none') p2_lifestyle += 10;
+  else if (phase2.exercise_frequency === '3-4x' || phase2.exercise_frequency === '5-6x') p2_lifestyle = Math.max(0, p2_lifestyle - 5);
+  else if (phase2.exercise_frequency === 'daily') p2_lifestyle += 5; // overtraining risk
 
-  // Morning erections — direct proxy for nocturnal testosterone surge (updated weights)
+  // Exercise type — anabolic stimulus gradient: resistance/HIIT increases AR density + GH pulse amplitude
+  const anabolicTypes = ['Weightlifting', 'HIIT'];
+  const hasAnabolicTraining = (phase2.exercise_types || []).some((t: string) => anabolicTypes.includes(t));
+  if (hasAnabolicTraining && phase2.exercise_frequency !== 'none' && phase2.exercise_frequency !== 'daily') {
+    p2_lifestyle = Math.max(0, p2_lifestyle - 3); // anabolic stimulus bonus
+  }
+  if (phase2.exercise_frequency === 'daily' && hasAnabolicTraining) {
+    p2_lifestyle += 3; // daily high-intensity amplifies overtraining cortisol risk
+  }
+
+  const p2_lifestyle_capped = Math.min(p2_lifestyle, 15);
+
+  // Endocrine indicators sub-score (max 20) — kept separate so they don't shadow lifestyle inputs
+  let p2_endocrine = 0;
+
+  // Morning erections — direct proxy for nocturnal testosterone surge
   const mefScore: Record<string, number> = { daily: 0, '4-6x_week': 4, '2-3x_week': 10, rarely: 15, never: 18 };
-  p2 += mefScore[phase2.morning_erection_frequency] ?? 0;
+  p2_endocrine += mefScore[phase2.morning_erection_frequency] ?? 0;
 
-  // Libido rating slider (≤2 = clinically significant suppression)
-  if (phase2.libido_rating <= 2) p2 += 15;
+  // Libido rating (≤2 = clinically significant suppression)
+  if (phase2.libido_rating <= 2) p2_endocrine += 15;
 
-  // Erectile quality slider (≤2 = clinically significant dysfunction)
-  if ((phase2.erectile_rating ?? 3) <= 2) p2 += 15;
+  // Erectile quality (≤2 = clinically significant dysfunction)
+  if ((phase2.erectile_rating ?? 3) <= 2) p2_endocrine += 15;
 
-  const p2_capped = Math.min(p2, 25);
+  const p2_endocrine_capped = Math.min(p2_endocrine, 20);
+
+  const p2_capped = p2_lifestyle_capped + p2_endocrine_capped; // max 35
 
   // --- Phase 3: Medical History (max 35) ---
   let p3 = 0;
@@ -264,6 +287,14 @@ export function getKeyFactors(
     factors.push({ title: `Suboptimal sleep (${phase2.avg_sleep_hours}h average)`, explanation });
   }
 
+  // 1b. Sleep quality — fragmentation independent of hours
+  if (phase2.sleep_quality <= 2 && phase2.avg_sleep_hours >= 7) {
+    factors.push({
+      title: 'Poor sleep quality — LH pulse fragmentation risk',
+      explanation: `Sleep architecture — specifically REM and deep sleep stages — drives the pulsatile release of Luteinizing Hormone that triggers testosterone production overnight. Fragmented or non-restorative sleep disrupts this signal even with adequate hours in bed, independently reducing morning testosterone by 15–20%. Consider screening for obstructive sleep apnea.`,
+    });
+  }
+
   // 2. Beer
   if (phase2.beer_frequency === 'daily' || phase2.beer_frequency === '4-6x_week') {
     factors.push({
@@ -283,6 +314,11 @@ export function getKeyFactors(
       title: `High spirits/wine consumption (${phase2.spirits_wine_frequency.replace(/_/g, ' ')})`,
       explanation: 'Frequent alcohol consumption disrupts sleep architecture, increases cortisol, and directly suppresses Leydig cell testosterone production.',
     });
+  } else if (phase2.spirits_wine_frequency === '3x_week') {
+    factors.push({
+      title: 'Regular spirits/wine use (3x/week)',
+      explanation: 'Ethanol is a direct testicular toxin that suppresses the overnight LH pulse — the primary driver of testosterone production during sleep. Three units per week is sufficient to measurably impair recovery-phase testosterone synthesis and fragment sleep architecture.',
+    });
   }
 
   // 4. Smoking
@@ -298,6 +334,19 @@ export function getKeyFactors(
     });
   }
 
+  // 4b. Coffee — standalone factor (high intake competes with testosterone precursors)
+  if (phase2.coffee_per_day === '6+') {
+    factors.push({
+      title: 'Very high caffeine (6+ units/day) — cortisol competition',
+      explanation: 'Chronic high caffeine intake raises cortisol, which directly competes with testosterone for the same biosynthetic precursor (pregnenolone). At 6+ units daily, caffeine also disrupts deep sleep architecture regardless of timing — suppressing the nocturnal LH and testosterone surge.',
+    });
+  } else if (phase2.coffee_per_day === '4-5') {
+    factors.push({
+      title: 'High caffeine intake (4-5 units/day)',
+      explanation: 'Four to five coffees daily raises cortisol and compresses the effective deep sleep window — the primary period of testosterone synthesis. Late consumption particularly delays sleep onset and fragments REM stages critical for LH pulsatility.',
+    });
+  }
+
   // 5. Morning erections
   if (phase2.morning_erection_frequency === 'never') {
     factors.push({
@@ -308,6 +357,19 @@ export function getKeyFactors(
     factors.push({
       title: 'Rare morning erections',
       explanation: 'Morning erections reflect the quality of your testosterone surge during sleep. Occurring rarely (less than once a week) is a strong signal of suboptimal androgen production.',
+    });
+  }
+
+  // 5b. Vascular ED pattern — smoking amplifies urgency
+  const vascularPattern =
+    (phase2.libido_rating ?? 3) >= 4 &&
+    ((phase2.erectile_rating ?? 3) <= 2 ||
+      phase2.morning_erection_frequency === 'rarely' ||
+      phase2.morning_erection_frequency === 'never');
+  if (vascularPattern && (phase2.smoking_status === 'daily' || phase2.smoking_status === 'occasional')) {
+    factors.push({
+      title: 'Vascular ED pattern — smoking elevates urgency',
+      explanation: 'Your combination of high libido but poor erectile function points to a vascular rather than hormonal cause. Smoking is an independent endothelial toxin that accelerates arterial narrowing — including the penile microvasculature. This combination warrants urgent lipid panel and physician review.',
     });
   }
 
@@ -336,6 +398,11 @@ export function getKeyFactors(
     factors.push({
       title: 'Very high sugar consumption',
       explanation: 'Chronic high sugar intake drives insulin resistance, which directly suppresses testosterone synthesis and elevates SHBG — reducing both total and free testosterone.',
+    });
+  } else if (phase2.sugar_consumption === 'frequent') {
+    factors.push({
+      title: 'Frequent sugar intake — glycemic load & SHBG disruption',
+      explanation: 'Frequent sugar consumption triggers repeated insulin spikes that suppress SHBG production. Low SHBG leads to "leaky" testosterone — free T is cleared from circulation before tissues can use it, or gets aromatized into estrogen. Even without a sedentary lifestyle, this pattern alone can measurably impair androgen availability.',
     });
   }
 
@@ -472,6 +539,14 @@ export function getKeyFactors(
         explanation: 'Previous steroid use suppresses the HPT axis. Depending on cycle count and time since stopping, your natural production may still be in recovery. LH and FSH are essential to assess axis status.',
       });
     }
+  }
+
+  // 12b. Past TRT — HPT axis suppression from exogenous testosterone
+  if (phase3.trt_history === 'past') {
+    factors.push({
+      title: 'Prior TRT / hormone replacement',
+      explanation: 'Exogenous testosterone suppresses the hypothalamic-pituitary-testicular axis by shutting down LH and FSH signaling. After stopping TRT, the axis must restart — a process that can take months to years and may never fully recover in some men. LH and FSH are essential to assess where your axis currently stands.',
+    });
   }
 
   // 13. Libido slider
@@ -623,8 +698,21 @@ export function getPersonalizedExtendedTests(
   const highBodyFat = (phase1.body_fat_percent ?? 0) > 25;
   if (heavyBeer || highBodyFat) tests.add('estradiol');
 
-  // LH + FSH: past steroid use (HPT axis assessment)
-  if (phase3.steroid_history === 'past') {
+  // Liver panel (ALT/AST): heavy spirits/wine — ethanol-driven liver stress impairs SHBG production + estrogen clearance
+  const heavySpirits = phase2.spirits_wine_frequency === '4-6x_week' || phase2.spirits_wine_frequency === 'daily';
+  if (heavySpirits) {
+    tests.add('alt');
+    tests.add('ast');
+  }
+
+  // Liver panel also for liver disease condition
+  if (conditions.some(c => c.toLowerCase().includes('liver'))) {
+    tests.add('alt');
+    tests.add('ast');
+  }
+
+  // LH + FSH: past steroid use OR past TRT (HPT axis assessment)
+  if (phase3.steroid_history === 'past' || phase3.trt_history === 'past') {
     tests.add('lh');
     tests.add('fsh');
   }
@@ -763,16 +851,22 @@ export function getPersonalizedExtendedTests(
     tests.add('vitamin_d');
   }
 
-  // Glucose + Fasting Insulin: diabetes condition, very high sugar, highly sedentary, or afternoon crash
+  // Glucose + Fasting Insulin + HbA1c: diabetes condition, high sugar, highly sedentary, or afternoon crash
   if (
     conditions.some(c => c.toLowerCase().includes('diabetes')) ||
     phase2.sugar_consumption === 'very_high' ||
+    phase2.sugar_consumption === 'frequent' ||
     phase2.sedentary_hours >= 10 ||
     symptoms.includes('afternoon_crash')
   ) {
     tests.add('glucose');
   }
   if (phase2.sedentary_hours >= 10 || symptoms.includes('afternoon_crash')) {
+    tests.add('fasting_insulin');
+  }
+  // HbA1c: 3-month glycemic average — gold standard for metabolic-induced Low T risk
+  if (phase2.sugar_consumption === 'very_high' || phase2.sugar_consumption === 'frequent') {
+    tests.add('hba1c');
     tests.add('fasting_insulin');
   }
 
@@ -810,6 +904,10 @@ export function getPersonalizedExtendedTests(
     tests.add('ldl');
     tests.add('triglycerides');
     tests.add('prolactin');
+    // Smoking amplifies vascular risk — add glucose (smoking impairs insulin sensitivity → compounding endothelial damage)
+    if (phase2.smoking_status === 'daily' || phase2.smoking_status === 'occasional') {
+      tests.add('glucose');
+    }
   }
 
   // Hematocrit: always include as safety baseline

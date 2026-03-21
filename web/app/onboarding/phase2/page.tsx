@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
@@ -91,6 +91,7 @@ function SegmentedControl({ label, options, value, onChange }: { label: string; 
 export default function Phase2Page() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     avg_sleep_hours: 7,
     sleep_quality: 3,
@@ -109,6 +110,16 @@ export default function Phase2Page() {
     erectile_rating: 3,
   });
 
+  // Pre-populate from localStorage so users can edit previous answers
+  useEffect(() => {
+    const saved = localStorage.getItem('phase2');
+    if (!saved) return;
+    try {
+      const data = JSON.parse(saved);
+      setForm(prev => ({ ...prev, ...data }));
+    } catch { /* ignore corrupt data */ }
+  }, []);
+
   function set<K extends keyof typeof form>(key: K, val: typeof form[K]) {
     setForm(prev => ({ ...prev, [key]: val }));
   }
@@ -124,10 +135,14 @@ export default function Phase2Page() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError('');
     setLoading(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
-    if (user) await supabase.from('lifestyle').upsert({ user_id: user.id, ...form });
+    if (user) {
+      const { error: dbError } = await supabase.from('lifestyle').upsert({ user_id: user.id, ...form });
+      if (dbError) { setError('Failed to save data. Please try again.'); setLoading(false); return; }
+    }
     localStorage.setItem('phase2', JSON.stringify(form));
     router.push('/onboarding/phase3');
   }
@@ -270,7 +285,12 @@ export default function Phase2Page() {
         </Card>
 
         {/* ACTIONS */}
-        <div className="pt-4">
+        <div className="pt-4 space-y-4">
+          {error && (
+            <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[11px] font-bold uppercase tracking-widest">
+              <Info size={14} /> {error}
+            </div>
+          )}
           <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
             {!loading && <>Execute Phase 03 <ChevronRight size={16} /></>}
           </Button>
