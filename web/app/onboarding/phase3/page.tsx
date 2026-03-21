@@ -1,11 +1,11 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Pill, Database, ShieldAlert, ChevronRight, Check } from 'lucide-react';
+import { Pill, Database, ShieldAlert, ChevronRight, Check, AlertTriangle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const SUPP_CATEGORIES = [
@@ -26,6 +26,7 @@ const MED_CATEGORIES = [
 export default function Phase3Page() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
   const [form, setForm] = useState({
     taking_medications: false,
     medication_categories: [] as string[],
@@ -40,6 +41,24 @@ export default function Phase3Page() {
     trt_history: 'never' as 'never' | 'past' | 'current',
     trt_type: '',
   });
+
+  // Pre-populate from localStorage — medications/supplements stored as arrays, convert back to strings
+  useEffect(() => {
+    const saved = localStorage.getItem('phase3');
+    if (!saved) return;
+    try {
+      const data = JSON.parse(saved);
+      setForm(prev => ({
+        ...prev,
+        ...data,
+        medications: Array.isArray(data.medications) ? data.medications.join(', ') : (data.medications ?? ''),
+        supplements: Array.isArray(data.supplements) ? data.supplements.join(', ') : (data.supplements ?? ''),
+        steroid_stopped_ago: data.steroid_stopped_ago ?? '',
+        steroid_cycle_count: data.steroid_cycle_count ?? '',
+        trt_type: data.trt_type ?? '',
+      }));
+    } catch { /* ignore corrupt data */ }
+  }, []);
 
   function set<K extends keyof typeof form>(key: K, val: typeof form[K]) {
     setForm(prev => ({ ...prev, [key]: val }));
@@ -56,6 +75,7 @@ export default function Phase3Page() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError('');
     setLoading(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -75,7 +95,10 @@ export default function Phase3Page() {
       trt_type: form.trt_type || null,
     };
 
-    if (user) await supabase.from('medical_history').upsert({ user_id: user.id, ...data });
+    if (user) {
+      const { error: dbError } = await supabase.from('medical_history').upsert({ user_id: user.id, ...data });
+      if (dbError) { setError('Failed to save data. Please try again.'); setLoading(false); return; }
+    }
     localStorage.setItem('phase3', JSON.stringify(data));
     router.push('/onboarding/symptoms');
   }
@@ -113,7 +136,10 @@ export default function Phase3Page() {
           {/* Medications */}
           <div className="space-y-4">
             <button type="button"
-              onClick={() => set('taking_medications', !form.taking_medications)}
+              onClick={() => setForm(p => p.taking_medications
+                ? { ...p, taking_medications: false, medication_categories: [], medications: '' }
+                : { ...p, taking_medications: true }
+              )}
               className={cn(
                 'w-full flex items-center justify-between p-4 border transition-all',
                 form.taking_medications ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
@@ -150,7 +176,10 @@ export default function Phase3Page() {
           {/* Supplements */}
           <div className="space-y-4 pt-4 border-t border-white/5">
             <button type="button"
-              onClick={() => set('taking_supplements', !form.taking_supplements)}
+              onClick={() => setForm(p => p.taking_supplements
+                ? { ...p, taking_supplements: false, supplement_categories: [], supplements: '' }
+                : { ...p, taking_supplements: true }
+              )}
               className={cn(
                 'w-full flex items-center justify-between p-4 border transition-all',
                 form.taking_supplements ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30 text-white' : 'bg-transparent border-white/5 text-white/40'
@@ -285,15 +314,43 @@ export default function Phase3Page() {
 
         {/* ACTIONS */}
         <div className="pt-4 space-y-4">
-          <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
-            <ShieldAlert size={18} className="text-[#E8C470] shrink-0" />
-            <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
-              Clinical accuracy: pharmacological data is essential for interpreting total vs. free testosterone and SHBG levels.
-            </p>
-          </div>
-          <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
-            {!loading && <>Execute Symptom Log <ChevronRight size={16} /></>}
-          </Button>
+          {(form.steroid_history === 'current' || form.trt_history === 'current') ? (
+            <div className="space-y-4">
+              <div className="p-5 border border-[#E8C470]/30 bg-[#E8C470]/5 space-y-3">
+                <div className="flex items-center gap-2 text-[#E8C470]">
+                  <AlertTriangle size={16} />
+                  <span className="text-[10px] font-black uppercase tracking-[3px]">Evaluation Not Applicable</span>
+                </div>
+                <p className="text-[11px] text-white/60 leading-relaxed">
+                  Current exogenous hormone use introduces too many confounding variables for accurate baseline assessment. Testosterone, LH, FSH, and estradiol values are all directly driven by the exogenous compound — not your endogenous axis.
+                </p>
+                <p className="text-[11px] text-white/40 leading-relaxed">
+                  This platform is designed for natural hormonal evaluation. For TRT monitoring or PED cycle management, a certified endocrinologist or sports medicine physician with hormone expertise is the appropriate resource.
+                </p>
+              </div>
+              <button type="button" onClick={() => router.push('/')}
+                className="w-full py-5 border border-white/10 text-[11px] font-black uppercase tracking-[3px] text-white/40 hover:text-white hover:border-white/20 transition-all">
+                Return to Home
+              </button>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
+                <ShieldAlert size={18} className="text-[#E8C470] shrink-0" />
+                <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
+                  Clinical accuracy: pharmacological data is essential for interpreting total vs. free testosterone and SHBG levels.
+                </p>
+              </div>
+              {error && (
+                <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[11px] font-bold uppercase tracking-widest">
+                  <ShieldAlert size={14} /> {error}
+                </div>
+              )}
+              <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
+                {!loading && <>Execute Symptom Log <ChevronRight size={16} /></>}
+              </Button>
+            </>
+          )}
         </div>
       </form>
     </div>

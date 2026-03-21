@@ -184,6 +184,7 @@ export function calculateRiskScore(
   const medCats = phase3.medication_categories || [];
   if (medCats.includes('opioids')) p3 += 10;       // OPIAD: suppresses LH/FSH → testosterone
   if (medCats.includes('corticosteroids')) p3 += 8; // direct HPT axis suppression
+  if (medCats.includes('ssri_snri')) p3 += 5;      // prolactin elevation → GnRH suppression → reduced LH/FSH → testosterone
 
   // Supplement resistance: taking foundational T-support but still low libido/energy
   const symptoms = symptomIds.filter(id => id !== 'none');
