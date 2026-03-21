@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { BIOMARKERS } from '@/constants/biomarkers';
+import { SYMPTOMS } from '@/constants/symptoms';
+import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
 
 // Strip control characters and limit length to prevent prompt injection
 function san(val: unknown, maxLen = 150): string {
@@ -20,6 +22,19 @@ export async function POST(req: NextRequest) {
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
     const { panelValues, phase1, phase2, phase3, symptoms } = await req.json();
+
+    // Calculate onboarding risk score for context
+    const symptomIds: string[] = symptoms?.symptoms_selected ?? [];
+    const riskScore = (phase1 && phase2 && phase3)
+      ? calculateRiskScore(phase1, phase2, phase3, symptomIds)
+      : null;
+    const riskLevel = riskScore != null ? getRiskLevel(riskScore) : null;
+
+    // Map symptom IDs to human-readable names
+    const symptomNames = symptomIds
+      .filter(id => id !== 'none')
+      .map(id => SYMPTOMS.find(s => s.id === id)?.name ?? id)
+      .join(', ') || 'none';
 
     const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
     if (!apiKey) return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
@@ -61,6 +76,13 @@ Map your analysis to the JSON structure below. Specifically:
 
 
 
+ONBOARDING RISK ASSESSMENT:
+- Initial risk score: ${riskScore != null ? `${riskScore}/100 — ${riskLevel} risk` : 'N/A (current TRT or steroid use — scoring excluded)'}
+- This score was calculated from demographics, lifestyle, medical history, and reported symptoms BEFORE bloodwork. Use it as the prior probability when interpreting biomarker results.
+
+CLINICAL DIRECTIVE:
+Interpret every biomarker value through the lens of this patient's complete onboarding profile. Do not analyze markers in isolation. Explicitly reference the onboarding inputs that explain or amplify each result. For example: if SHBG is elevated, reference keto diet or hypothyroidism status; if estradiol is high, reference beer consumption and body fat level; if LH/FSH are suppressed, reference steroid history and medication categories; if cortisol is elevated, reference stress level and sleep data; if glucose or insulin is abnormal, reference sedentary hours, sugar consumption, and insulin resistance/diabetes conditions.
+
 PATIENT PROFILE:
 - Age: ${phase1?.age ?? 'unknown'}
 - BMI: ${bmi}${phase1?.body_fat_percent ? `, Body fat: ${phase1.body_fat_percent}%` : ''}${phase1?.high_muscle_override ? ' (high muscle mass — elevated BMI reflects muscle, not fat)' : ''}
@@ -92,7 +114,7 @@ MEDICAL HISTORY:
 - Supplements: ${sanArr(phase3?.supplements)}
 
 SYMPTOMS:
-- ${sanArr(symptoms?.symptoms_selected)}
+- ${symptomNames}
 
 BLOODWORK VALUES:
 ${biomarkerContext}

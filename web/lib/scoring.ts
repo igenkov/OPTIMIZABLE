@@ -115,7 +115,12 @@ export function calculateRiskScore(
   if (conditions.some(c => c.toLowerCase().includes('sleep apnea'))) p3 += 12;
   if (conditions.some(c => c.toLowerCase().includes('diabetes') || c.toLowerCase().includes('insulin resistance'))) p3 += 10;
   if (conditions.some(c => c.toLowerCase().includes('testicular'))) p3 += 8;
-  if (conditions.some(c => c.toLowerCase().includes('hypertension') || c.toLowerCase().includes('cardiovascular'))) p3 += 5;
+  if (conditions.some(c => c.toLowerCase().includes('hypertension'))) p3 += 5;
+  if (conditions.some(c => c.toLowerCase().includes('cardiovascular'))) p3 += 8;
+  // Hypothyroidism: elevates SHBG, impairs T3-driven androgen receptor sensitivity, slows testosterone utilization
+  if (conditions.some(c => c.toLowerCase().includes('hypothyroidism'))) p3 += 6;
+  // Depression/Anxiety: chronic HPA axis overactivation elevates cortisol → suppresses GnRH/LH → reduces testosterone
+  if (conditions.some(c => c.toLowerCase().includes('depression') || c.toLowerCase().includes('anxiety'))) p3 += 5;
   if (conditions.some(c => c.toLowerCase().includes('obesity'))) p3 += 12;
   // Hemochromatosis: iron deposits destroy pituitary + Leydig cells → secondary hypogonadism
   if (conditions.some(c => c.toLowerCase().includes('hemochromatosis'))) p3 += 10;
@@ -394,6 +399,20 @@ export function getKeyFactors(
     factors.push({
       title: 'Obesity (diagnosed)',
       explanation: 'Obesity dramatically increases aromatization of testosterone to estrogen, suppresses LH signaling, and creates chronic inflammation — all of which impair testosterone production at multiple levels.',
+    });
+  }
+
+  if (conditions.some(c => c.toLowerCase().includes('hypothyroidism'))) {
+    factors.push({
+      title: 'Hypothyroidism — SHBG elevation + androgen conversion impairment',
+      explanation: 'Thyroid hormones regulate SHBG production and androgen receptor sensitivity. Hypothyroidism typically elevates SHBG — binding up free testosterone — and impairs T3-driven utilization of androgens at the tissue level. Your total testosterone may appear normal while free (active) testosterone is suppressed. TSH, Free T3, and Free T4 are essential context for your hormone panel.',
+    });
+  }
+
+  if (conditions.some(c => c.toLowerCase().includes('depression') || c.toLowerCase().includes('anxiety'))) {
+    factors.push({
+      title: 'Depression / Anxiety — HPA axis dysregulation',
+      explanation: 'Chronic depression and anxiety drive sustained HPA axis overactivation. Elevated cortisol chronically suppresses GnRH and LH signaling — reducing the downstream testosterone signal. Elevated prolactin (common in depression) further suppresses GnRH. This creates a hormonal environment where testosterone production is suppressed from multiple points in the axis simultaneously.',
     });
   }
 
@@ -761,6 +780,18 @@ export function getPersonalizedExtendedTests(
   if (conditions.some(c => c.toLowerCase().includes('obesity'))) {
     tests.add('fasting_insulin');
     tests.add('hba1c');
+  }
+
+  // Insulin resistance → direct bloodwork markers
+  if (conditions.some(c => c.toLowerCase().includes('insulin resistance'))) {
+    tests.add('glucose');
+    tests.add('fasting_insulin');
+  }
+
+  // Depression/Anxiety → cortisol AM (HPA axis) + TSH (thyroid dysfunction mimics both)
+  if (conditions.some(c => c.toLowerCase().includes('depression') || c.toLowerCase().includes('anxiety'))) {
+    tests.add('cortisol_am');
+    tests.add('tsh');
   }
 
   // Lipid panel: hypertension or cardiovascular disease condition

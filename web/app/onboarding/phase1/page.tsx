@@ -1,5 +1,5 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
@@ -9,7 +9,7 @@ import { User, Ruler, Scale, Dumbbell, Check, ChevronRight, Info } from 'lucide-
 import { cn } from '@/lib/utils';
 
 const CONDITIONS = [
-  'Type 2 Diabetes', 'Hypertension', 'Hypothyroidism', 'Sleep Apnea',
+  'Type 2 Diabetes', 'Insulin Resistance', 'Hypertension', 'Hypothyroidism', 'Sleep Apnea',
   'Depression/Anxiety', 'Cardiovascular Disease', 'Obesity',
   'Testicular Trauma', 'Hemochromatosis', 'Pituitary Disorder',
   'Liver Disease', 'Chronic Kidney Disease',
@@ -37,6 +37,39 @@ export default function Phase1Page() {
     medical_conditions: [] as string[],
   });
 
+  // Load saved data from localStorage so users can edit previous answers
+  useEffect(() => {
+    const saved = localStorage.getItem('phase1');
+    if (!saved) return;
+    try {
+      const data = JSON.parse(saved);
+      const isImperial = data.unit_preference === 'imperial';
+      setForm({
+        age: String(data.age ?? ''),
+        height_cm: isImperial ? String(Math.round(data.height_cm / 2.54)) : String(data.height_cm ?? ''),
+        weight_kg: isImperial ? String(Math.round(data.weight_kg * 2.2046)) : String(data.weight_kg ?? ''),
+        unit_preference: data.unit_preference ?? 'metric',
+        body_type_level: data.body_type_level ?? 0,
+        high_muscle: data.high_muscle_override ?? false,
+        medical_conditions: data.medical_conditions ?? [],
+      });
+    } catch { /* ignore corrupt data */ }
+  }, []);
+
+  // Convert display values in-place when switching units
+  function toggleUnit(newUnit: 'metric' | 'imperial') {
+    if (newUnit === form.unit_preference) return;
+    const toImperial = newUnit === 'imperial';
+    const h = Number(form.height_cm);
+    const w = Number(form.weight_kg);
+    setForm(p => ({
+      ...p,
+      unit_preference: newUnit,
+      height_cm: h ? String(toImperial ? Math.round(h / 2.54) : Math.round(h * 2.54)) : '',
+      weight_kg: w ? String(toImperial ? Math.round(w * 2.2046) : Math.round((w / 2.2046) * 10) / 10) : '',
+    }));
+  }
+
   function toggleCondition(c: string) {
     setForm(prev => ({
       ...prev,
@@ -48,7 +81,10 @@ export default function Phase1Page() {
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    setError('');
     if (!form.age || !form.height_cm || !form.weight_kg) { setError('Please fill in age, height, and weight'); return; }
+    const ageNum = Number(form.age);
+    if (ageNum < 18 || ageNum > 80) { setError('Age must be between 18 and 80'); return; }
     if (!form.body_type_level) { setError('Please select your body type'); return; }
     setLoading(true);
 
@@ -56,10 +92,14 @@ export default function Phase1Page() {
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
 
+    const isImperial = form.unit_preference === 'imperial';
+    const height_cm = isImperial ? Math.round(Number(form.height_cm) * 2.54) : Number(form.height_cm);
+    const weight_kg = isImperial ? Math.round(Number(form.weight_kg) / 2.2046 * 10) / 10 : Number(form.weight_kg);
+
     const data = {
       age: Number(form.age),
-      height_cm: Number(form.height_cm),
-      weight_kg: Number(form.weight_kg),
+      height_cm,
+      weight_kg,
       body_fat_percent: selectedType.bf,
       body_type_level: form.body_type_level,
       high_muscle_override: form.high_muscle,
@@ -67,7 +107,10 @@ export default function Phase1Page() {
       medical_conditions: form.medical_conditions,
     };
 
-    if (user) await supabase.from('profiles').upsert({ user_id: user.id, ...data });
+    if (user) {
+      const { error: dbError } = await supabase.from('profiles').upsert({ user_id: user.id, ...data });
+      if (dbError) { setError('Failed to save profile. Please try again.'); setLoading(false); return; }
+    }
     localStorage.setItem('phase1', JSON.stringify(data));
     router.push('/onboarding/phase2');
   }
@@ -103,7 +146,7 @@ export default function Phase1Page() {
             <div className="flex p-0.5 bg-black border border-white/10">
               {(['metric', 'imperial'] as const).map(u => (
                 <button key={u} type="button"
-                  onClick={() => setForm(p => ({ ...p, unit_preference: u }))}
+                  onClick={() => toggleUnit(u)}
                   className={cn(
                     'px-3 py-1 text-[9px] font-black uppercase tracking-widest transition-all',
                     form.unit_preference === u ? 'bg-white/10 text-white' : 'text-white/20 hover:text-white/40'
@@ -176,10 +219,12 @@ export default function Phase1Page() {
           </div>
 
           {/* Muscle override */}
+          <div className="pt-4 border-t border-white/5">
+            <p className="text-[9px] font-black uppercase tracking-[2px] text-white/20 mb-3">Optional modifier</p>
           <div onClick={() => setForm(p => ({ ...p, high_muscle: !p.high_muscle }))}
             className={cn(
               'cursor-pointer p-4 border transition-all flex items-start gap-4',
-              form.high_muscle ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-white/[0.02] border-white/5'
+              form.high_muscle ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-white/[0.02] border-white/5 hover:border-white/10'
             )}>
             <div className={cn(
               'p-2 border',
@@ -199,10 +244,11 @@ export default function Phase1Page() {
           </div>
 
           {form.high_muscle && selectedType && selectedType.level >= 5 && (
-            <div className="px-4 py-3 bg-[rgba(200,162,200,0.06)] border border-[rgba(200,162,200,0.2)]">
+            <div className="px-4 py-3 bg-[rgba(200,162,200,0.06)] border border-[rgba(200,162,200,0.2)] mt-2">
               <p className="text-xs text-[#C8A2C8]">Muscle override active — body fat risk contribution halved for your score.</p>
             </div>
           )}
+          </div>
         </section>
 
         {/* MEDICAL CONDITIONS */}
@@ -213,6 +259,16 @@ export default function Phase1Page() {
           </div>
 
           <div className="flex flex-wrap gap-2">
+            <button type="button"
+              onClick={() => setForm(p => ({ ...p, medical_conditions: [] }))}
+              className={cn(
+                'px-4 py-2 text-[11px] font-bold border transition-all uppercase tracking-wider',
+                form.medical_conditions.length === 0
+                  ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black'
+                  : 'bg-white/[0.02] border-white/5 text-white/40 hover:border-white/20 hover:text-white/60'
+              )}>
+              None
+            </button>
             {CONDITIONS.map(c => {
               const active = form.medical_conditions.includes(c);
               return (
