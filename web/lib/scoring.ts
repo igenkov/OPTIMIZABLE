@@ -213,7 +213,14 @@ export function calculateRiskScore(
   }
   p4 += secondaryCount * 5;
 
-  const p4_capped = Math.min(p4, 40);
+  let p4_capped = Math.min(p4, 40);
+
+  // Objective physiological signs (gynecomastia, testicular_ache) are not subjective complaints —
+  // when present alongside enough symptoms to hit the cap, they distinguish "Full Metabolic Suite"
+  // from purely subjective symptom clusters, preventing clinical under-weighting
+  if (p4 > 40 && (symptoms.includes('gynecomastia') || symptoms.includes('testicular_ache'))) {
+    p4_capped += 5;
+  }
 
   return Math.min(p1_capped + p2_capped + p3_capped + p4_capped, 100);
 }
@@ -765,10 +772,23 @@ export function getPersonalizedExtendedTests(
   }
 
   // Depression symptom → cortisol AM (HPA dysregulation), prolactin (T suppression chain), TSH (hypothyroidism mimics depression)
+  // + Vitamin D (deficiency causes identical mood symptoms) + B12 (the "Great Mimicker" of low-T depression and brain fog)
   if (symptoms.includes('depression')) {
     tests.add('cortisol_am');
     tests.add('prolactin');
     tests.add('tsh');
+    tests.add('vitamin_d');
+    tests.add('vitamin_b12');
+  }
+
+  // Brain fog / poor memory → Ferritin (low iron even without anemia causes identical cognitive slowness to low T)
+  if (symptoms.includes('brain_fog') || symptoms.includes('poor_memory')) {
+    tests.add('ferritin');
+  }
+
+  // Joint pain / slow recovery → hs-CRP (high systemic inflammation directly inhibits Leydig cell testosterone production)
+  if (symptoms.includes('joint_pain') || symptoms.includes('slow_recovery')) {
+    tests.add('hs_crp');
   }
 
   // Muscle loss / reduced strength → cortisol AM (catabolic state — elevated cortisol breaks down muscle tissue)
@@ -777,9 +797,11 @@ export function getPersonalizedExtendedTests(
   }
 
   // Suspected sleep apnea symptom → cortisol AM (disrupted sleep elevates cortisol) + TSH (hypothyroidism is a leading cause of OSA)
+  // + hematocrit (chronic hypoxia → polycythemia; if T is also low, high hematocrit is a red flag for stroke risk)
   if (symptoms.includes('sleep_apnea')) {
     tests.add('cortisol_am');
     tests.add('tsh');
+    tests.add('hematocrit');
   }
 
   // Statins → CoQ10 + Vitamin D

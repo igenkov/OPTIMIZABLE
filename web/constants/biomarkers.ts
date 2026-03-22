@@ -160,6 +160,17 @@ export const BIOMARKERS: BiomarkerDef[] = [
     description: 'Iron storage marker — elevated ferritin (hemochromatosis) deposits iron in the pituitary and testes, directly suppressing testosterone production', category: 'metabolic',
   },
   {
+    id: 'vitamin_b12', name: 'Vitamin B12', unit_primary: 'pg/mL',
+    unit_alternatives: [{ unit: 'pmol/L', toCanonical: 0.7378 }],
+    standard_range_low: 200, standard_range_high: 900, optimal_range_low: 500, optimal_range_high: 800,
+    description: 'Essential for neurological function and red blood cell production — deficiency mimics low-T symptoms including fatigue, brain fog, depression, and cognitive decline', category: 'metabolic',
+  },
+  {
+    id: 'hs_crp', name: 'hs-CRP (High-Sensitivity C-Reactive Protein)', unit_primary: 'mg/L',
+    standard_range_low: 0, standard_range_high: 3.0, optimal_range_low: 0, optimal_range_high: 1.0,
+    description: 'Systemic inflammation marker — chronic inflammation directly inhibits Leydig cell testosterone production and impairs androgen receptor signaling', category: 'metabolic',
+  },
+  {
     id: 'alt', name: 'ALT (Alanine Aminotransferase)', unit_primary: 'U/L',
     standard_range_low: 7, standard_range_high: 56, optimal_range_low: 7, optimal_range_high: 30,
     description: 'Liver enzyme — elevated levels indicate hepatocellular damage; the liver regulates SHBG production and estrogen clearance', category: 'liver',
@@ -172,6 +183,6 @@ export const BIOMARKERS: BiomarkerDef[] = [
 ];
 
 export const CORE_PANEL_IDS = ['total_t', 'free_t', 'shbg', 'albumin'];
-export const EXTENDED_PANEL_IDS = ['estradiol', 'lh', 'fsh', 'prolactin', 'vitamin_d', 'cortisol', 'cortisol_am', 'tsh', 'free_t3', 'free_t4', 'glucose', 'fasting_insulin', 'hba1c', 'hdl', 'ldl', 'triglycerides', 'hematocrit', 'dht', 'coq10', 'ferritin', 'alt', 'ast'];
+export const EXTENDED_PANEL_IDS = ['estradiol', 'lh', 'fsh', 'prolactin', 'vitamin_d', 'cortisol', 'cortisol_am', 'tsh', 'free_t3', 'free_t4', 'glucose', 'fasting_insulin', 'hba1c', 'hdl', 'ldl', 'triglycerides', 'hematocrit', 'dht', 'coq10', 'ferritin', 'vitamin_b12', 'hs_crp', 'alt', 'ast'];
 // TRT / active hormone monitoring panel — shown to excluded users
 export const TRT_PANEL_IDS = ['total_t', 'free_t', 'estradiol', 'hematocrit', 'lh', 'albumin', 'shbg', 'psa'];
