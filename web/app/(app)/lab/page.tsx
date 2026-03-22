@@ -151,7 +151,7 @@ export default async function LabPage() {
 
         {/* Score card */}
         <Card className="col-span-12 lg:col-span-4 flex flex-col items-center justify-center py-10 px-6"
-          topAccent="rgba(200,162,200,0.5)">
+          topAccent={latest.health_score >= 70 ? 'rgba(74,222,128,0.5)' : latest.health_score >= 45 ? 'rgba(232,196,112,0.5)' : 'rgba(232,128,128,0.5)'}>
           <ScoreRing score={latest.health_score} size={160} strokeWidth={12} />
           <div className="mt-5 text-center">
             <div className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[3px] mb-1">Health Score</div>
