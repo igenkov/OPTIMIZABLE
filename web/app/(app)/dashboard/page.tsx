@@ -90,7 +90,7 @@ export default async function DashboardPage() {
         {/* Risk Score Hero */}
         <Card
           className="col-span-12 lg:col-span-7 p-8 relative overflow-hidden group"
-          style={{ borderLeftColor: color, borderLeftWidth: '4px' }}
+          topAccent={level === 'critical' ? 'rgba(232,128,128,0.5)' : level === 'high' ? 'rgba(255,140,0,0.5)' : level === 'moderate' ? 'rgba(232,196,112,0.5)' : 'rgba(74,222,128,0.5)'}
         >
           <div className="flex flex-col sm:flex-row items-center sm:items-start gap-6 sm:gap-8 relative z-10">
             <ScoreRing score={riskScore ?? 0} size={130} strokeWidth={12} color={color} />
