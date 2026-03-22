@@ -2,7 +2,7 @@ import type { MarkerStatus } from '@/types';
 
 export function getStatusColor(status: MarkerStatus): string {
   switch (status) {
-    case 'optimal': return '#C8A2C8';
+    case 'optimal': return '#4ADE80';
     case 'suboptimal': return '#E8C470';
     case 'attention': return '#E88080';
   }
