@@ -26,6 +26,7 @@ export default function SummaryPage() {
   const [excludedReason, setExcludedReason] = useState<'trt' | 'steroids' | 'both'>('trt');
   const [keyFactors, setKeyFactors] = useState<KeyFactor[]>([]);
   const [extendedTestIds, setExtendedTestIds] = useState<string[]>([]);
+  const [symptomIds, setSymptomIds] = useState<string[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -38,7 +39,8 @@ export default function SummaryPage() {
     const p2 = JSON.parse(p2Raw || '{}') as Phase2Data;
     const p3 = JSON.parse(p3Raw || '{}') as Phase3Data;
     const sym = JSON.parse(symRaw || '{}');
-    const symptomIds: string[] = sym.symptoms_selected || [];
+    const symptomIds_: string[] = sym.symptoms_selected || [];
+    setSymptomIds(symptomIds_);
 
     createClient().auth.getUser().then(async ({ data }) => {
       const loggedIn = !!data.user;
@@ -65,9 +67,9 @@ export default function SummaryPage() {
         else if (p3.steroid_history === 'current') setExcludedReason('steroids');
         else setExcludedReason('trt');
       } else {
-        setRiskScore(calculateRiskScore(p1, p2, p3, symptomIds));
-        setKeyFactors(getKeyFactors(p1, p2, p3, symptomIds));
-        setExtendedTestIds(getPersonalizedExtendedTests(p1, p2, p3, symptomIds));
+        setRiskScore(calculateRiskScore(p1, p2, p3, symptomIds_));
+        setKeyFactors(getKeyFactors(p1, p2, p3, symptomIds_));
+        setExtendedTestIds(getPersonalizedExtendedTests(p1, p2, p3, symptomIds_));
       }
     }
     setLoaded(true);
@@ -77,8 +79,10 @@ export default function SummaryPage() {
   const color = getRiskColor(level);
   const label = getRiskLabel(level);
   const action = getRiskAction(level);
-  const core = BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id));
-  const extendedTests = BIOMARKERS.filter(b => extendedTestIds.includes(b.id));
+  // Fertility concerns → promote prolactin from extended to core panel
+  const promotedToCore = symptomIds.includes('fertility_concerns') ? ['prolactin'] : [];
+  const core = BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id) || promotedToCore.includes(b.id));
+  const extendedTests = BIOMARKERS.filter(b => extendedTestIds.includes(b.id) && !promotedToCore.includes(b.id));
   const trtPanel = BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id));
 
   if (!loaded) return (
@@ -239,6 +243,7 @@ export default function SummaryPage() {
             { label: 'Metabolic State', val: 'Fasted (10-12 HR)', detail: 'Water only' },
             { label: 'Physical State', val: 'Rest Day', detail: 'No heavy lifting 24hr prior' },
             { label: 'Sleep Hygiene', val: 'Normal Duration', detail: 'Aim for 7+ hours prior' },
+            { label: 'Sexual Activity', val: 'Abstain 24HR Prior', detail: 'Preserves baseline LH and testosterone levels' },
           ].map((item, i) => (
             <div key={i} className="p-3 bg-black/20 border border-white/5">
               <div className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">{item.label}</div>

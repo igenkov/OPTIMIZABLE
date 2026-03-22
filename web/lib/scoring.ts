@@ -539,12 +539,12 @@ export function getKeyFactors(
     if (phase3.steroid_pct === false) {
       factors.push({
         title: `Prior steroid use without PCT${agoDisplay}`,
-        explanation: 'Anabolic steroid use suppresses the HPT axis. Without post-cycle therapy, natural testosterone production may still be significantly impaired or never fully recovered. LH and FSH will reveal whether the axis has restarted.',
+        explanation: 'Anabolic steroid use suppresses the HPT axis. Without post-cycle therapy, natural testosterone production may still be significantly impaired or never fully recovered. LH and FSH will reveal whether the axis has restarted. Former users also frequently develop post-cycle aromatization — the body over-converts testosterone to estradiol — and a persistently elevated prolactin floor, both of which continue suppressing natural LH production. Estradiol and prolactin are included in your panel to detect this shadow of suppression.',
       });
     } else {
       factors.push({
         title: `Prior anabolic steroid use${agoDisplay}`,
-        explanation: 'Previous steroid use suppresses the HPT axis. Depending on cycle count and time since stopping, your natural production may still be in recovery. LH and FSH are essential to assess axis status.',
+        explanation: 'Previous steroid use suppresses the HPT axis. Depending on cycle count and time since stopping, your natural production may still be in recovery. LH and FSH are essential to assess axis status. Even years after cessation, former users can maintain a high prolactin floor or over-aromatize testosterone into estradiol — a "post-cycle shadow" that continues suppressing natural LH output. Prolactin and estradiol are included in your panel to detect this.',
       });
     }
   }
@@ -553,7 +553,7 @@ export function getKeyFactors(
   if (phase3.trt_history === 'past') {
     factors.push({
       title: 'Prior TRT / hormone replacement',
-      explanation: 'Exogenous testosterone suppresses the hypothalamic-pituitary-testicular axis by shutting down LH and FSH signaling. After stopping TRT, the axis must restart — a process that can take months to years and may never fully recover in some men. LH and FSH are essential to assess where your axis currently stands.',
+      explanation: 'Exogenous testosterone suppresses the hypothalamic-pituitary-testicular axis by shutting down LH and FSH signaling. After stopping TRT, the axis must restart — a process that can take months to years and may never fully recover in some men. LH and FSH are essential to assess where your axis currently stands. Post-TRT patients also commonly develop elevated aromatase activity (converting T→estradiol) and a high prolactin floor — both of which continue suppressing natural recovery. Estradiol and prolactin are included in your panel to catch this.',
     });
   }
 
@@ -673,7 +673,7 @@ export function getKeyFactors(
     { id: 'muscle_loss', title: 'Muscle loss or difficulty building muscle', explanation: 'Testosterone is the primary anabolic hormone. Losing muscle despite training, or being unable to build it, is a strong indicator of suboptimal androgen levels.' },
     { id: 'hot_flashes', title: 'Hot flashes or night sweats reported', explanation: 'Hot flashes in men are typically caused by estrogen fluctuation or rapid estrogen decline — the same mechanism as in menopause. This can occur with low testosterone, post-cycle, or with aromatase inhibitor use. Estradiol bloodwork is essential.' },
     { id: 'testicular_ache', title: 'Testicular discomfort reported', explanation: 'Chronic testicular pain or aching can indicate varicocele, epididymal inflammation, or primary hypogonadism — conditions where the testes themselves are compromised. LH and FSH will distinguish primary from secondary hypogonadism.' },
-    { id: 'fertility_concerns', title: 'Fertility concerns reported', explanation: 'Male fertility depends on adequate LH and FSH signaling to drive sperm production, independent of testosterone levels. Fertility issues can exist even with normal testosterone — LH, FSH, and a semen analysis are the appropriate starting point.' },
+    { id: 'fertility_concerns', title: 'Fertility concerns reported', explanation: 'Male fertility depends on adequate LH and FSH signaling to drive sperm production, independent of testosterone levels. Fertility issues can exist even with normal testosterone — LH, FSH, and a semen analysis are the appropriate starting point. Prolactin is essential in this context: elevated prolactin silently suppresses pulsatile GnRH release, blunting the FSH signal needed for spermatogenesis. It is one of the most commonly missed causes of unexplained male infertility.' },
     { id: 'reduced_ejaculate', title: 'Reduced ejaculate volume reported', explanation: 'Ejaculate volume decline often reflects reduced testosterone and DHT driving accessory gland function (prostate and seminal vesicles), or early FSH/LH axis impairment. It correlates closely with total androgen status.' },
     { id: 'insomnia', title: 'Insomnia or poor sleep onset reported', explanation: 'Difficulty initiating or maintaining sleep is frequently linked to elevated evening cortisol — which directly suppresses the testosterone production that occurs during deep sleep stages. This creates a compounding cycle: poor sleep raises cortisol, high cortisol worsens sleep.' },
     { id: 'non_restorative', title: 'Waking unrefreshed despite adequate sleep', explanation: 'Unrefreshing sleep despite sufficient hours suggests disrupted sleep architecture — typically from elevated cortisol or undiagnosed sleep apnea. Both suppress the nocturnal testosterone surge. You may be logging hours but not achieving the deep sleep stages where testosterone is produced.' },
@@ -723,10 +723,15 @@ export function getPersonalizedExtendedTests(
     tests.add('ast');
   }
 
-  // LH + FSH: past steroid use OR past TRT (HPT axis assessment)
+  // Past steroid/TRT use → full HPT axis + post-cycle shadow markers
+  // LH + FSH assess axis recovery; Prolactin + Estradiol catch the "shadow" of suppression —
+  // former users often over-aromatize T→E2 or maintain a high prolactin floor that continues
+  // suppressing natural LH production years after cessation
   if (phase3.steroid_history === 'past' || phase3.trt_history === 'past') {
     tests.add('lh');
     tests.add('fsh');
+    tests.add('prolactin');
+    tests.add('estradiol');
   }
 
   // Hemochromatosis → ferritin (primary marker) + LH/FSH (assess pituitary damage)
@@ -859,6 +864,13 @@ export function getPersonalizedExtendedTests(
   ) {
     tests.add('lh');
     tests.add('fsh');
+  }
+
+  // Fertility concerns → Prolactin is essential, not optional
+  // High prolactin suppresses pulsatile GnRH release, blunting the FSH signal
+  // needed for spermatogenesis — a silent fertility killer
+  if (symptoms.includes('fertility_concerns')) {
+    tests.add('prolactin');
   }
 
   // Estradiol: hot flashes in men = estrogen fluctuation signal
