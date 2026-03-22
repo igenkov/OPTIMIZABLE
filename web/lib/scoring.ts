@@ -673,6 +673,10 @@ export function getKeyFactors(
     { id: 'anxiety', title: 'Increased anxiety or irritability reported', explanation: 'Chronic anxiety elevates cortisol, which competes with testosterone for the same biosynthetic precursors (pregnenolone steal). Low testosterone itself also worsens mood stability and stress tolerance — the relationship is bidirectional.' },
     { id: 'afternoon_crash', title: 'Afternoon energy crashes reported', explanation: 'Afternoon energy drops often reflect cortisol dysregulation or blood glucose instability driven by insulin resistance — a frequent downstream effect of low testosterone and high sedentary time. Morning cortisol testing distinguishes HPA axis dysfunction from simple sleep debt.' },
     { id: 'slow_recovery', title: 'Slow recovery from exercise reported', explanation: 'Impaired recovery from training is a hallmark of testosterone deficiency and elevated cortisol — both of which reduce the anabolic signaling required for muscle repair. Vitamin D deficiency also independently impairs recovery and is frequently overlooked.' },
+    { id: 'low_energy', title: 'Persistent fatigue / low energy reported', explanation: 'Chronic low energy is one of the highest-sensitivity indicators of suboptimal testosterone and is frequently compounded by cortisol dysregulation, vitamin D deficiency, thyroid dysfunction, and disrupted sleep architecture. The combination with other reported symptoms determines the most likely root cause.' },
+    { id: 'depression', title: 'Low mood or depression reported', explanation: 'Testosterone and mood have a bidirectional relationship — low T impairs dopamine and serotonin signaling, while depression chronically elevates cortisol and prolactin, both of which suppress GnRH and reduce testosterone production. Morning cortisol and prolactin are key markers to assess in this context.' },
+    { id: 'brain_fog', title: 'Brain fog or poor concentration reported', explanation: 'Cognitive clarity depends on testosterone, thyroid hormones, and cortisol balance. Brain fog is one of the most reliable early indicators of thyroid dysfunction (TSH, Free T3) and is a hallmark of chronic cortisol elevation impairing neuronal androgen receptor signaling.' },
+    { id: 'reduced_strength', title: 'Significant strength reduction reported', explanation: 'Progressive strength loss despite consistent training is a primary anabolic deficiency signal. Testosterone drives myofibrillar protein synthesis and neuromuscular efficiency — declining strength often precedes visible muscle loss and reflects androgen insufficiency earlier than body composition changes.' },
   ];
 
   for (const s of flaggedSymptoms) {
@@ -758,6 +762,24 @@ export function getPersonalizedExtendedTests(
     medCats.includes('ssri_snri')
   ) {
     tests.add('prolactin');
+  }
+
+  // Depression symptom → cortisol AM (HPA dysregulation), prolactin (T suppression chain), TSH (hypothyroidism mimics depression)
+  if (symptoms.includes('depression')) {
+    tests.add('cortisol_am');
+    tests.add('prolactin');
+    tests.add('tsh');
+  }
+
+  // Muscle loss / reduced strength → cortisol AM (catabolic state — elevated cortisol breaks down muscle tissue)
+  if (symptoms.includes('muscle_loss') || symptoms.includes('reduced_strength')) {
+    tests.add('cortisol_am');
+  }
+
+  // Suspected sleep apnea symptom → cortisol AM (disrupted sleep elevates cortisol) + TSH (hypothyroidism is a leading cause of OSA)
+  if (symptoms.includes('sleep_apnea')) {
+    tests.add('cortisol_am');
+    tests.add('tsh');
   }
 
   // Statins → CoQ10 + Vitamin D

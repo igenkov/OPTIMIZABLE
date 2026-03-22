@@ -1,22 +1,24 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { SYMPTOMS, SYMPTOM_CATEGORIES } from '@/constants/symptoms';
 import { scoreSymptoms } from '@/lib/scoring';
 import {
-  Activity, Brain, Zap, Heart,
+  Activity, Brain, Zap, Heart, Moon,
   ShieldAlert, ChevronRight, Info, Check,
   AlertCircle, Gauge
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
-  'Sexual': Heart,
-  'Physical': Activity,
-  'Mental/Cognitive': Brain,
-  'Metabolic': Zap,
+  'Energy & Vitality': Zap,
+  'Body Composition': Activity,
+  'Sexual Health': Heart,
+  'Mood & Cognition': Brain,
+  'Sleep': Moon,
+  'Physical Signs': ShieldAlert,
 };
 
 export default function SymptomsPage() {
@@ -24,6 +26,15 @@ export default function SymptomsPage() {
   const [selected, setSelected] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    const saved = localStorage.getItem('symptoms');
+    if (!saved) return;
+    try {
+      const data = JSON.parse(saved);
+      if (Array.isArray(data.symptoms_selected)) setSelected(data.symptoms_selected);
+    } catch { /* ignore corrupt data */ }
+  }, []);
 
   function toggle(id: string) {
     if (id === 'none') { setSelected(['none']); return; }
@@ -38,6 +49,7 @@ export default function SymptomsPage() {
       setError('Signal required: Select at least one symptom or "None".');
       return;
     }
+    setError('');
     setLoading(true);
     const supabase = createClient();
     const { data: { user } } = await supabase.auth.getUser();
@@ -45,7 +57,10 @@ export default function SymptomsPage() {
     const { weighted_score, symptom_count } = scoreSymptoms(selected);
     const data = { symptoms_selected: selected, symptom_count, weighted_score };
 
-    if (user) await supabase.from('symptom_assessments').insert({ user_id: user.id, ...data });
+    if (user) {
+      const { error: dbError } = await supabase.from('symptom_assessments').upsert({ user_id: user.id, ...data });
+      if (dbError) { setError('Failed to save data. Please try again.'); setLoading(false); return; }
+    }
     localStorage.setItem('symptoms', JSON.stringify(data));
     router.push('/onboarding/summary');
   }
@@ -100,7 +115,7 @@ export default function SymptomsPage() {
       {/* SYMPTOM CATEGORIES */}
       <div className="space-y-10 mb-12">
         {SYMPTOM_CATEGORIES.map(cat => {
-          const items = SYMPTOMS.filter(s => s.category === cat);
+          const items = SYMPTOMS.filter(s => s.category === cat && s.id !== 'none');
           const Icon = CATEGORY_ICONS[cat] || Activity;
 
           return (
