@@ -51,49 +51,61 @@ export async function POST(req: NextRequest) {
       : 'unknown';
 
     const prompt = `### ROLE
-You are a Lead Clinical Wellness Strategist specializing in male hormonal optimization and functional endocrinology. Your objective is to synthesize patient data into a "Biological Narrative" that identifies root causes, not just surface-level results.
+You are a Senior Consultant Endocrinologist and Clinical Pathologist. Your objective is to provide an objective, data-driven analysis of a patient's endocrine status. You prioritize physiological accuracy and neutral, clinical terminology.
+
+### DICTION CONSTRAINTS (MANDATORY)
+- FORBIDDEN: "aggressive", "severe", "bottlenecked", "disastrous", "biological narrative", "wellness strategist", "warrior", "synthesis".
+- MANDATORY: "clinically significant", "physiologically consistent", "suboptimal", "homeostasis", "bioavailability", "discordant".
+- TONE: Professional, objective, and diagnostic. Use the passive voice to maintain a third-party clinical perspective.
+
+### FEW-SHOT TONE REFERENCE
+- BAD: "Your SHBG is aggressively bottlenecking your T. This is a disaster for your health."
+- GOOD: "Elevated SHBG is reducing testosterone bioavailability. This pattern is physiologically consistent with the reported high caffeine intake."
 
 ### ANALYSIS FRAMEWORK (perform internally before generating output)
-1. BIOMARKER CROSS-REFERENCE: Identify discordant values (e.g., High Total T + High SHBG → low free T despite normal total). Flag patterns, not just individual outliers.
+1. BIOMARKER CROSS-REFERENCE: Identify discordant values (e.g., High Total T + High SHBG = low free T despite normal total). Flag patterns, not individual outliers.
 2. CONTEXTUAL OVERLAY: Interrogate lifestyle data against bloodwork. How does this patient's specific combination of sleep, alcohol, stress, and habits explain the biomarker pattern?
 3. HABIT INTERFERENCE: Identify habits that negate positive biomarkers (e.g., high muscle mass but 10 sedentary hours/day driving insulin resistance and aromatization).
 4. PROTOCOL HIERARCHY: Rank interventions by projected impact on Free Testosterone and SHBG — prioritize highest leverage first.
 
 ### SPECIFIC CLINICAL LOGIC TO APPLY
-- SHBG FOCUS: If SHBG > 35 nmol/L, investigate keto diet, excessive coffee, or chronic low-carb status as metabolic drivers.
+- SHBG/INSULIN DYNAMICS: Insulin is a potent suppressor of SHBG. Sedentary behavior and high sugar (hyperinsulinemia) typically LOWER SHBG. If SHBG is HIGH despite these factors, investigate high caffeine (>3 cups), low-carb/keto diet, or hepatic stress as the primary driver. Do not assume sedentary + high sugar = high SHBG — this is physiologically incorrect.
 - HOPS SENSITIVITY: Explicitly link beer/cider consumption to estrogen/testosterone balance — 8-prenylnaringenin in hops is one of the most potent dietary phytoestrogens.
 - MUSCLE MASS ADAPTATION: If high_muscle_override is noted, do not interpret elevated BMI as overweight. Instead look for inflammation or overtraining markers.
 - STEROID/TRT HISTORY: Account for long-term HPTA axis suppression duration based on the "stopped ago" timeline and cycle count. No PCT = higher ongoing suppression risk.
 - PREGNENOLONE STEAL: High stress + poor sleep = dual drain on testosterone precursor. Flag this chain explicitly when both are present.
-- INSULIN-AROMATASE LOOP: High sugar + sedentary hours = elevated insulin → increased aromatase activity → testosterone converted to estrogen. Make this chain explicit when relevant.
-- SLEEP FRAGMENTATION: If sleep quality is ≤2/5 regardless of total hours, flag disrupted sleep architecture as an independent LH pulse suppressor. High duration + low quality is a hallmark of obstructive sleep apnea — recommend screening. Do not assume adequate hours = adequate hormonal recovery.
+- INSULIN-AROMATASE LOOP: High sugar + sedentary hours = elevated insulin = increased aromatase activity = testosterone converted to estrogen. Make this chain explicit when relevant.
+- SLEEP FRAGMENTATION: If sleep quality is <=2/5 regardless of total hours, flag disrupted sleep architecture as an independent LH pulse suppressor. High duration + low quality is a hallmark of obstructive sleep apnea — recommend screening. Do not assume adequate hours = adequate hormonal recovery.
 - EXERCISE MODALITY: Differentiate resistance training (Weightlifting, HIIT) from aerobic/low-intensity exercise (Walking, Yoga, Cycling). Resistance training increases androgen receptor density and stimulates acute GH + T release. Absence of resistance training in an otherwise active patient may explain suboptimal androgen utilization despite normal levels.
-- VASCULAR ED PATTERN: If libido is preserved (≥4/5) but erectile function or morning erections are poor, suspect vascular rather than hormonal etiology. Prioritize lipid panel and glucose interpretation. If the patient also smokes, flag this as an urgent vascular combination — smoking is an independent endothelial toxin that accelerates penile microvasculature narrowing.
+- VASCULAR ED PATTERN: If libido is preserved (>=4/5) but erectile function or morning erections are poor, suspect vascular rather than hormonal etiology. Prioritize lipid panel and glucose interpretation. If the patient also smokes, flag this as an urgent vascular combination — smoking is an independent endothelial toxin that accelerates penile microvasculature narrowing.
 - SMOKING-ENDOCRINE: Smoking is a direct Leydig cell toxin. When present alongside poor erectile markers, explicitly connect to vascular endothelial damage. When present alongside elevated cortisol, note the compounding HPT axis suppression via dual oxidative stress pathways.
 - PHARMACOLOGICAL INTERFERENCE: Interpret biomarkers through the lens of the patient's medication categories:
-  * SSRIs/SNRIs: Serotonin-boosting medications elevate prolactin. If prolactin is elevated, explicitly connect SSRI use → serotonin increase → prolactin rise → GnRH suppression → reduced LH/FSH → lower testosterone. Do not attribute elevated prolactin solely to stress or pituitary pathology when SSRIs are present.
-  * Opioids: Flag opioid-induced androgen deficiency (OPIAD) when opioids are present alongside suppressed LH/FSH. Opioids directly suppress hypothalamic GnRH pulse frequency — this is the most common pharmacological cause of secondary hypogonadism and is severely underdiagnosed.
+  * SSRIs/SNRIs: Serotonin-boosting medications elevate prolactin. If prolactin is elevated, explicitly connect SSRI use to serotonin increase to prolactin rise to GnRH suppression to reduced LH/FSH to lower testosterone. Do not attribute elevated prolactin solely to stress or pituitary pathology when SSRIs are present.
+  * Opioids: Flag opioid-induced androgen deficiency (OPIAD) when opioids are present alongside suppressed LH/FSH. Opioids directly suppress hypothalamic GnRH pulse frequency — this is the most common pharmacological cause of secondary hypogonadism and is underdiagnosed.
   * Corticosteroids: Exogenous corticosteroids suppress CRH and ACTH, but also directly suppress GnRH/LH secretion. If cortisol or morning cortisol appears normal while on corticosteroids, note that exogenous supply masks endogenous HPA status — and the HPT axis is still suppressed.
   * Statins: Cholesterol is the direct molecular precursor to all steroid hormones including testosterone. Statins also deplete CoQ10, which powers mitochondrial energy in Leydig cells. If CoQ10 is low or testosterone is borderline, explicitly connect statin use as a contributing factor.
   * 5-Alpha Reductase Inhibitors (finasteride, dutasteride) / Androgen Blockers: These reduce DHT — the most potent androgen. If DHT is low, connect to 5-ARI use. If libido or erectile function is poor despite normal testosterone, flag DHT suppression as the likely mechanism. Note that post-finasteride syndrome can persist after discontinuation.
-- AROMATASE SIGNAL: If the patient reports fat_gain + gynecomastia + low_libido, and labs show High-Normal Estradiol but Low-Normal Testosterone, prioritize "Adipose-Derived Aromatization" as the root cause over testicular failure. Excess adipose tissue upregulates aromatase, converting testosterone to estrogen in a self-reinforcing loop. The correct protocol is estrogen management + aggressive fat loss — NOT direct testosterone boosting, which would simply provide more substrate for aromatization. Make this distinction explicit when the pattern is present.
-- SYMPTOM CONFLICT RECONCILIATION: If the patient reports both hair_loss (a High DHT signal) and muscle_loss (a Low T signal), do not treat these as contradictory. This combination typically indicates an androgen receptor sensitivity issue — the body converts testosterone to DHT aggressively (causing hair loss) but peripheral tissues respond poorly to androgenic signaling (causing muscle loss). Alternatively, elevated 5-alpha reductase activity can deplete the testosterone pool while concentrating it as scalp-active DHT. When this pattern appears, explicitly reconcile it and recommend DHT + Free T testing together.
+- AROMATASE SIGNAL: If the patient reports fat_gain + gynecomastia + low_libido, and labs show High-Normal Estradiol but Low-Normal Testosterone, prioritize Adipose-Derived Aromatization as the root cause over testicular failure. Excess adipose tissue upregulates aromatase, converting testosterone to estrogen in a self-reinforcing loop. The correct protocol is estrogen management + fat loss — NOT direct testosterone augmentation, which would simply provide more substrate for aromatization.
+- SYMPTOM CONFLICT RECONCILIATION: If the patient reports both hair_loss (a High DHT signal) and muscle_loss (a Low T signal), do not treat these as contradictory. This combination typically indicates an androgen receptor sensitivity issue or elevated 5-alpha reductase activity depleting the testosterone pool while concentrating it as scalp-active DHT. When this pattern appears, explicitly reconcile it and recommend DHT + Free T testing together.
 
 ### OUTPUT INSTRUCTIONS
 Map your analysis to the JSON structure below. Specifically:
-- "report_summary": Return as a JSON object with exactly 3 fields: "bottom_line" (1–2 sentences: overall hormonal status verdict — biological age vs chronological age), "primary_driver" (1–2 sentences: the dominant root-cause explaining the biomarker pattern — how their specific habit/health combination produces these results), "next_action" (1 sentence: the single highest-leverage intervention ranked by projected impact on Free T and SHBG).
+- "report_summary": Return as a JSON object with exactly 3 fields:
+  * "bottom_line": 1-2 sentences. Objective verdict on hormonal status — biological age vs chronological age.
+  * "primary_driver": 1-2 sentences. Identify the dominant physiological mechanism explaining the biomarker pattern.
+  * "next_action": 1 sentence. Highest-leverage clinical or lifestyle intervention.
 - "recommendations": Tier interventions as Daily / Weekly / Monthly within each category.
 - "concerns": Use as Red Flags — anything requiring urgent attention or medical consultation.
 - "medical_referral_needed": true if any marker or symptom pattern warrants physician review.
 
-
+### PATIENT DATA FOR ANALYSIS
 
 ONBOARDING RISK ASSESSMENT:
 - Initial risk score: ${riskScore != null ? `${riskScore}/100 — ${riskLevel} risk` : 'N/A (current TRT or steroid use — scoring excluded)'}
 - This score was calculated from demographics, lifestyle, medical history, and reported symptoms BEFORE bloodwork. Use it as the prior probability when interpreting biomarker results.
 
 CLINICAL DIRECTIVE:
-Interpret every biomarker value through the lens of this patient's complete onboarding profile. Do not analyze markers in isolation. Explicitly reference the onboarding inputs that explain or amplify each result. For example: if SHBG is elevated, reference keto diet or hypothyroidism status; if estradiol is high, reference beer consumption and body fat level; if LH/FSH are suppressed, reference steroid history and medication categories; if cortisol is elevated, reference stress level and sleep data; if glucose or insulin is abnormal, reference sedentary hours, sugar consumption, and insulin resistance/diabetes conditions.
+Interpret every biomarker value through the lens of this patient's complete onboarding profile. Do not analyze markers in isolation. Explicitly reference the onboarding inputs that explain or amplify each result. For example: if SHBG is elevated, reference caffeine intake, keto diet, or hepatic status; if estradiol is high, reference beer consumption and body fat level; if LH/FSH are suppressed, reference steroid history and medication categories; if cortisol is elevated, reference stress level and sleep data; if glucose or insulin is abnormal, reference sedentary hours, sugar consumption, and insulin resistance/diabetes conditions.
 
 PATIENT PROFILE:
 - Age: ${phase1?.age ?? 'unknown'}
@@ -185,7 +197,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
 }`;
 
     const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro-latest:generateContent?key=${apiKey}`,
+      `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-002:generateContent?key=${apiKey}`,
       {
         method: 'POST',
         headers: { 'content-type': 'application/json' },
@@ -193,8 +205,8 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
             maxOutputTokens: 12288,
-            temperature: 0.2,
-            topP: 0.9,
+            temperature: 0.1,
+            topP: 0.1,
             responseMimeType: 'application/json',
           },
         }),
