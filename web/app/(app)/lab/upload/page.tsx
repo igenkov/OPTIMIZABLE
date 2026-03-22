@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
@@ -67,12 +67,39 @@ function BiomarkerRow({
 
 export default function LabUploadPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editPanelId = searchParams.get('edit');
+  const editReportId = searchParams.get('reportId');
+  const isEditMode = !!editPanelId;
+
   const [values, setValues] = useState<Record<string, string>>({});
   const [selectedUnits, setSelectedUnits] = useState<Record<string, string>>({});
   const [labName, setLabName] = useState('');
   const [collectionDate, setCollectionDate] = useState(new Date().toISOString().split('T')[0]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+
+  // Pre-populate form when editing an existing panel
+  useEffect(() => {
+    if (!editPanelId) return;
+    async function loadPanel() {
+      const supabase = createClient();
+      const { data } = await supabase
+        .from('bloodwork_panels')
+        .select('values, lab_name, collection_date')
+        .eq('id', editPanelId)
+        .single();
+      if (!data) return;
+      const loaded: Record<string, string> = {};
+      for (const [id, v] of Object.entries(data.values as Record<string, { value: number }>)) {
+        loaded[id] = String(v.value);
+      }
+      setValues(loaded);
+      if (data.lab_name) setLabName(data.lab_name);
+      if (data.collection_date) setCollectionDate(data.collection_date);
+    }
+    loadPanel();
+  }, [editPanelId]);
 
   const core = BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id));
   const extended = BIOMARKERS.filter(b => EXTENDED_PANEL_IDS.includes(b.id));
@@ -112,6 +139,21 @@ export default function LabUploadPage() {
       formattedValues[id] = { marker: id, value: canonicalValue, unit: b?.unit_primary ?? '' };
     }
 
+    // EDIT MODE — update existing panel, re-run analysis on same report
+    if (isEditMode && editPanelId && editReportId) {
+      const { error: updateErr } = await supabase
+        .from('bloodwork_panels')
+        .update({ values: formattedValues, collection_date: collectionDate, lab_name: labName || null })
+        .eq('id', editPanelId);
+      if (updateErr) { setError(updateErr.message); setUploading(false); return; }
+      localStorage.setItem('pending_panel_id', editPanelId);
+      localStorage.setItem('pending_panel_values', JSON.stringify(formattedValues));
+      localStorage.setItem('pending_edit_report_id', editReportId);
+      router.push('/lab/analyze');
+      return;
+    }
+
+    // NEW PANEL — insert fresh panel + start/continue optimization cycle
     const countRes = await supabase.from('bloodwork_panels').select('id').eq('user_id', user.id);
     const panelNumber = (countRes.data?.length ?? 0) + 1;
 
@@ -152,7 +194,7 @@ export default function LabUploadPage() {
             <Cpu size={14} className="animate-pulse" />
             <span className="text-[10px] font-black uppercase tracking-[4px]">Data_Injection_Sequence</span>
           </div>
-          <h1 className="text-4xl font-black text-white uppercase tracking-tighter">Enter Panel Data</h1>
+          <h1 className="text-4xl font-black text-white uppercase tracking-tighter">{isEditMode ? 'Edit Panel Data' : 'Enter Panel Data'}</h1>
         </div>
         <div className="hidden md:flex flex-col items-end opacity-20">
           <span className="text-[10px] font-mono">ENCRYPTION: AES-256</span>
@@ -286,7 +328,7 @@ export default function LabUploadPage() {
             fullWidth
             className="py-5 flex items-center justify-center gap-2 shadow-[0_10px_30px_rgba(200,162,200,0.1)]"
           >
-            {uploading ? 'Analyzing Data...' : <><span>Confirm & Process</span><ArrowRight size={16} /></>}
+            {uploading ? 'Re-analyzing...' : isEditMode ? <><span>Save & Re-analyze</span><ArrowRight size={16} /></> : <><span>Confirm & Process</span><ArrowRight size={16} /></>}
           </Button>
 
           <div className="flex items-start gap-3 p-4" style={{ background: 'rgba(255,255,255,0.01)' }}>

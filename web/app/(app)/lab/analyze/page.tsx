@@ -84,13 +84,22 @@ export default function LabAnalyzePage() {
       if (!res.ok) throw new Error(await res.text());
       const analysisData = await res.json();
 
-      const { error: dbErr } = await supabase.from('analysis_reports').insert({
-        user_id: user.id,
-        bloodwork_panel_id: panelId,
-        ...analysisData,
-      });
-
-      if (dbErr) throw dbErr;
+      const editReportId = localStorage.getItem('pending_edit_report_id');
+      if (editReportId) {
+        const { error: dbErr } = await supabase
+          .from('analysis_reports')
+          .update({ ...analysisData })
+          .eq('id', editReportId);
+        if (dbErr) throw dbErr;
+        localStorage.removeItem('pending_edit_report_id');
+      } else {
+        const { error: dbErr } = await supabase.from('analysis_reports').insert({
+          user_id: user.id,
+          bloodwork_panel_id: panelId,
+          ...analysisData,
+        });
+        if (dbErr) throw dbErr;
+      }
 
       localStorage.removeItem('pending_panel_id');
       localStorage.removeItem('pending_panel_values');

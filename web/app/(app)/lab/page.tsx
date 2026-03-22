@@ -9,6 +9,7 @@ import {
   ArrowUpRight, ChevronRight, TestTube2, ClipboardCheck, Clock,
 } from 'lucide-react';
 import { LabAIBriefing } from './LabAIBriefing';
+import { PanelActions } from './PanelActions';
 import { cn } from '@/lib/utils';
 import { BIOMARKERS } from '@/constants/biomarkers';
 import type { AnalysisReport, MarkerAnalysis, MarkerStatus } from '@/types';
@@ -336,37 +337,35 @@ export default async function LabPage() {
       </div>
 
       {/* ── Panel History ── */}
-      {typedReports.length > 1 && (
-        <div>
-          <div className="text-[10px] font-bold tracking-[3px] text-[#4A4A4A] uppercase mb-3">Panel History</div>
-          <div className="flex flex-col gap-2">
-            {[...typedReports].reverse().map((r, i) => {
-              const num = typedReports.length - i;
-              const isLatest = i === 0;
-              const phaseLabel = num === 1 ? 'Initial' : num === 2 ? '30-Day' : num === 3 ? '60-Day' : `Panel ${num}`;
-              return (
-                <div key={r.id}
-                  className={`flex items-center justify-between gap-3 px-4 py-3 border transition-all ${isLatest ? 'border-[#C8A2C8]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}
-                  style={{ background: isLatest ? 'rgba(200,162,200,0.04)' : 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
-                  <div className="min-w-0">
-                    <span className="text-xs font-bold text-white">Panel {num}</span>
-                    <span className="text-[11px] text-[#4A4A4A] ml-2">· {phaseLabel}</span>
-                    <span className="text-[11px] text-[#4A4A4A] ml-1 hidden sm:inline">
-                      · {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
-                    </span>
-                  </div>
-                  <div className="flex items-center gap-2 shrink-0">
-                    <span className="font-mono text-sm font-black text-white">
-                      {r.health_score}<span className="text-[10px] text-[#4A4A4A]">/100</span>
-                    </span>
-                    {isLatest && <span className="text-[10px] text-[#C8A2C8] font-bold tracking-widest uppercase">Current</span>}
-                  </div>
+      <div>
+        <div className="text-[10px] font-bold tracking-[3px] text-[#4A4A4A] uppercase mb-3">Panel History</div>
+        <div className="flex flex-col gap-2">
+          {[...typedReports].reverse().map((r, i) => {
+            const num = typedReports.length - i;
+            const isLatest = i === 0;
+            const phaseLabel = num === 1 ? 'Initial' : num === 2 ? '30-Day' : num === 3 ? '60-Day' : `Panel ${num}`;
+            return (
+              <div key={r.id}
+                className={`flex items-center justify-between gap-3 px-4 py-3 border transition-all ${isLatest ? 'border-[#C8A2C8]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}
+                style={{ background: isLatest ? 'rgba(200,162,200,0.04)' : 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
+                <div className="min-w-0">
+                  <span className="text-xs font-bold text-white">Panel {num}</span>
+                  <span className="text-[11px] text-[#4A4A4A] ml-2">· {phaseLabel}</span>
+                  <span className="text-[11px] text-[#4A4A4A] ml-1 hidden sm:inline">
+                    · {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
+                  </span>
                 </div>
-              );
-            })}
-          </div>
+                <div className="flex items-center gap-3 shrink-0">
+                  <span className="font-mono text-sm font-black text-white">
+                    {r.health_score}<span className="text-[10px] text-[#4A4A4A]">/100</span>
+                  </span>
+                  <PanelActions panelId={r.bloodwork_panel_id} reportId={r.id} />
+                </div>
+              </div>
+            );
+          })}
         </div>
-      )}
+      </div>
     </div>
   );
 }
