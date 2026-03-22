@@ -207,7 +207,6 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
             maxOutputTokens: 12288,
             temperature: 0.1,
             topP: 0.1,
-            responseMimeType: 'application/json',
           },
         }),
       }
@@ -219,7 +218,9 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
     }
 
     const geminiData = await response.json();
-    const text = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    const raw = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    // Strip markdown code fences if model wraps output despite prompt instruction
+    const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const analysis = JSON.parse(text);
 
     return NextResponse.json(analysis);
