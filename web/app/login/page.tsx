@@ -75,7 +75,7 @@ export default function LoginPage() {
         p1.age && supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
         p2?.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
         p3?.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
-        sym?.symptoms_selected && supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }),
+        sym?.symptoms_selected && supabase.from('symptom_assessments').upsert({ user_id: userId, ...sym }),
       ]);
       router.push('/dashboard');
     } else {

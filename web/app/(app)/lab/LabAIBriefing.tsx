@@ -13,8 +13,13 @@ const PREVIEW = 2;
 export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStructured | null }) {
   const [expanded, setExpanded] = useState(false);
 
-  const isStructured = typeof summary === 'object' && summary !== null;
-  const s = isStructured ? (summary as ReportSummaryStructured) : null;
+  // Handle report_summary stored as stringified JSON (text column) or as object (jsonb column)
+  let parsed = summary;
+  if (typeof summary === 'string') {
+    try { parsed = JSON.parse(summary); } catch { /* not JSON — treat as plain string */ }
+  }
+  const isStructured = typeof parsed === 'object' && parsed !== null && 'bottom_line' in parsed;
+  const s = isStructured ? (parsed as ReportSummaryStructured) : null;
 
   if (s) {
     const sentences = splitSentences(s.bottom_line);

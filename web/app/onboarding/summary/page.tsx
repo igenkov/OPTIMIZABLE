@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils';
 
 export default function SummaryPage() {
   const router = useRouter();
-  const [riskScore, setRiskScore] = useState<number | null>(0);
+  const [riskScore, setRiskScore] = useState<number | null>(null);
   const [excluded, setExcluded] = useState(false);
   const [excludedReason, setExcludedReason] = useState<'trt' | 'steroids' | 'both'>('trt');
   const [keyFactors, setKeyFactors] = useState<KeyFactor[]>([]);
@@ -35,28 +35,36 @@ export default function SummaryPage() {
     const p2Raw = localStorage.getItem('phase2');
     const p3Raw = localStorage.getItem('phase3');
     const symRaw = localStorage.getItem('symptoms');
-    const p1 = JSON.parse(p1Raw || '{}') as Phase1Data;
-    const p2 = JSON.parse(p2Raw || '{}') as Phase2Data;
-    const p3 = JSON.parse(p3Raw || '{}') as Phase3Data;
-    const sym = JSON.parse(symRaw || '{}');
-    const symptomIds_: string[] = sym.symptoms_selected || [];
+    let p1 = {} as Phase1Data;
+    let p2 = {} as Phase2Data;
+    let p3 = {} as Phase3Data;
+    let sym: Record<string, unknown> = {};
+    try {
+      if (p1Raw) p1 = JSON.parse(p1Raw);
+      if (p2Raw) p2 = JSON.parse(p2Raw);
+      if (p3Raw) p3 = JSON.parse(p3Raw);
+      if (symRaw) sym = JSON.parse(symRaw);
+    } catch { /* corrupted localStorage — fall through with empty data */ }
+    const symptomIds_: string[] = (sym.symptoms_selected as string[]) || [];
     setSymptomIds(symptomIds_);
 
     createClient().auth.getUser().then(async ({ data }) => {
       const loggedIn = !!data.user;
       setIsLoggedIn(loggedIn);
       if (loggedIn && p1Raw && p1.age) {
-        const supabase = createClient();
-        const userId = data.user!.id;
-        const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', userId).single();
-        if (!profile?.age) {
-          await Promise.all([
-            supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
-            p2Raw && p2.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
-            p3Raw && p3.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
-            symRaw && sym.symptoms_selected && supabase.from('symptom_assessments').insert({ user_id: userId, ...sym }),
-          ]);
-        }
+        try {
+          const supabase = createClient();
+          const userId = data.user!.id;
+          const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', userId).single();
+          if (!profile?.age) {
+            await Promise.all([
+              supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
+              p2Raw && p2.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
+              p3Raw && p3.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
+              symRaw && sym.symptoms_selected && supabase.from('symptom_assessments').upsert({ user_id: userId, ...sym }),
+            ]);
+          }
+        } catch { /* DB write failed — data persists in localStorage, user can retry on next visit */ }
       }
     });
 
@@ -89,6 +97,19 @@ export default function SummaryPage() {
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
       <Activity className="text-[#C8A2C8] animate-pulse" size={40} />
       <div className="text-[10px] font-black uppercase tracking-[4px] text-white/40">Synthesizing Profile...</div>
+    </div>
+  );
+
+  if (riskScore === null && !excluded) return (
+    <div className="max-w-2xl mx-auto pb-32 text-center">
+      <div className="flex items-center justify-center gap-3 text-yellow-500 mb-6 mt-20">
+        <AlertTriangle size={24} />
+        <h2 className="text-lg font-black uppercase tracking-tight">Incomplete Profile Data</h2>
+      </div>
+      <p className="text-sm text-white/40 mb-8">Complete all four phases of the onboarding assessment to generate your diagnostic report.</p>
+      <Button onClick={() => router.push('/onboarding/phase1')} fullWidth className="py-4">
+        Start Assessment <ArrowRight size={16} className="ml-2" />
+      </Button>
     </div>
   );
 
@@ -145,11 +166,12 @@ export default function SummaryPage() {
 
             <div className={cn(
               'inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[3px] mb-8 border',
+              level === 'critical' ? 'border-red-600/60 text-red-400 bg-red-500/15' :
               level === 'high' ? 'border-red-500/50 text-red-500 bg-red-500/10' :
               level === 'moderate' ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10' :
               'border-[#C8A2C8]/50 text-[#C8A2C8] bg-[#C8A2C8]/10'
             )}>
-              {label} Risk Detected
+              {label} Detected
             </div>
 
             <div className="max-w-sm mx-auto p-4 bg-white/5 border border-white/5">
