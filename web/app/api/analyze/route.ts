@@ -257,7 +257,8 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
             maxOutputTokens: 12288,
-            temperature: 1.0,
+            temperature: 0.1,
+            topP: 0.2,
             responseMimeType: 'application/json',
           },
         }),
