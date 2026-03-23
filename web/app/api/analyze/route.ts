@@ -251,7 +251,9 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
     // Try primary model first; fall back to flash if overloaded (503)
     const models = ['gemini-2.5-pro', 'gemini-2.5-flash'];
     let response!: Response;
+    let usedModel = models[0];
     for (const model of models) {
+      usedModel = model;
       response = await fetch(
         `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
         {
@@ -282,7 +284,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
     const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const analysis = JSON.parse(text);
 
-    return NextResponse.json(analysis);
+    return NextResponse.json({ ...analysis, _model: usedModel });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: msg }, { status: 500 });
