@@ -249,7 +249,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
 }`;
 
     // Try primary model first; fall back to flash if overloaded (503)
-    const models = ['gemini-2.5-pro', 'gemini-1.5-pro'];
+    const models = ['gemini-2.5-pro', 'gemini-2.5-flash'];
     let response!: Response;
     for (const model of models) {
       response = await fetch(
