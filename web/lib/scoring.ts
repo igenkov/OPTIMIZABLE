@@ -1,4 +1,5 @@
 import { SYMPTOMS } from '../constants/symptoms';
+import { ALWAYS_ESSENTIAL_IDS } from '../constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '../types';
 
 export type RiskLevel = 'low' | 'moderate' | 'high' | 'critical';
@@ -6,6 +7,22 @@ export type RiskLevel = 'low' | 'moderate' | 'high' | 'critical';
 export interface KeyFactor {
   title: string;
   explanation: string;
+}
+
+// --- Dynamic panel tiering types ---
+export type BiomarkerTier = 'essential' | 'recommended' | 'extended';
+
+export interface TieredMarker {
+  id: string;
+  tier: BiomarkerTier;
+  reasons: string[];
+}
+
+export interface PersonalizedPanel {
+  essential: TieredMarker[];
+  recommended: TieredMarker[];
+  extended: TieredMarker[];
+  allIds: string[];
 }
 
 export function isExcluded(phase3: Phase3Data): boolean {
@@ -695,280 +712,318 @@ export function getKeyFactors(
   return factors.slice(0, 6);
 }
 
-export function getPersonalizedExtendedTests(
+// --- Weighted trigger accumulation for dynamic panel tiering ---
+
+function addTrigger(
+  triggers: Map<string, { weight: number; reasons: string[] }>,
+  ids: string | string[],
+  weight: number,
+  reason: string,
+) {
+  const arr = Array.isArray(ids) ? ids : [ids];
+  for (const id of arr) {
+    const existing = triggers.get(id);
+    if (existing) {
+      existing.weight += weight;
+      if (!existing.reasons.includes(reason)) existing.reasons.push(reason);
+    } else {
+      triggers.set(id, { weight, reasons: [reason] });
+    }
+  }
+}
+
+const TIER_THRESHOLDS = { essential: 4, recommended: 2 } as const;
+
+export function getPersonalizedPanel(
   phase1: Phase1Data,
   phase2: Phase2Data,
   phase3: Phase3Data,
-  symptomIds: string[]
-): string[] {
-  const tests = new Set<string>();
+  symptomIds: string[],
+): PersonalizedPanel {
+  const triggers = new Map<string, { weight: number; reasons: string[] }>();
   const symptoms = symptomIds.filter(id => id !== 'none');
   const conditions = phase1.medical_conditions || [];
-
-  // Estradiol: heavy beer OR elevated body fat
-  const heavyBeer = phase2.beer_frequency === '4-6x_week' || phase2.beer_frequency === 'daily';
-  const highBodyFat = (phase1.body_fat_percent ?? 0) > 25;
-  if (heavyBeer || highBodyFat) tests.add('estradiol');
-
-  // Liver panel (ALT/AST): heavy spirits/wine — ethanol-driven liver stress impairs SHBG production + estrogen clearance
-  const heavySpirits = phase2.spirits_wine_frequency === '4-6x_week' || phase2.spirits_wine_frequency === 'daily';
-  if (heavySpirits) {
-    tests.add('alt');
-    tests.add('ast');
-  }
-
-  // Liver panel also for liver disease condition
-  if (conditions.some(c => c.toLowerCase().includes('liver'))) {
-    tests.add('alt');
-    tests.add('ast');
-  }
-
-  // Past steroid/TRT use → full HPT axis + post-cycle shadow markers
-  // LH + FSH assess axis recovery; Prolactin + Estradiol catch the "shadow" of suppression —
-  // former users often over-aromatize T→E2 or maintain a high prolactin floor that continues
-  // suppressing natural LH production years after cessation
-  if (phase3.steroid_history === 'past' || phase3.trt_history === 'past') {
-    tests.add('lh');
-    tests.add('fsh');
-    tests.add('prolactin');
-    tests.add('estradiol');
-  }
-
-  // Hemochromatosis → ferritin (primary marker) + LH/FSH (assess pituitary damage)
-  if (conditions.some(c => c.toLowerCase().includes('hemochromatosis'))) {
-    tests.add('ferritin');
-    tests.add('lh');
-    tests.add('fsh');
-  }
-
-  // Pituitary disorder → prolactin (adenomas often prolactin-secreting) + LH/FSH + cortisol_am (ACTH axis) + thyroid (pituitary controls TSH)
-  if (conditions.some(c => c.toLowerCase().includes('pituitary'))) {
-    tests.add('prolactin');
-    tests.add('lh');
-    tests.add('fsh');
-    tests.add('cortisol_am');
-    tests.add('tsh');
-    tests.add('free_t4');
-  }
-
-  // Liver disease → estradiol (impaired estrogen clearance) + vitamin_d (liver activates vitamin D)
-  if (conditions.some(c => c.toLowerCase().includes('liver'))) {
-    tests.add('estradiol');
-    tests.add('vitamin_d');
-  }
-
-  // Chronic kidney disease → LH/FSH (HPT axis suppression assessment) + vitamin_d (kidney activates vitamin D)
-  if (conditions.some(c => c.toLowerCase().includes('kidney'))) {
-    tests.add('lh');
-    tests.add('fsh');
-    tests.add('vitamin_d');
-  }
-
   const medCats = phase3.medication_categories || [];
+  const suppCats = phase3.supplement_categories || [];
 
-  // Prolactin: low libido OR ED symptom OR depression/anxiety condition OR SSRIs
-  if (
-    symptoms.includes('low_libido') ||
-    symptoms.includes('ed') ||
-    conditions.some(c => c.toLowerCase().includes('depression') || c.toLowerCase().includes('anxiety')) ||
-    medCats.includes('ssri_snri')
-  ) {
-    tests.add('prolactin');
+  // ── CONDITION-BASED (weight 3 — clinically necessary) ──────────────
+
+  // Past steroid/TRT → HPT axis recovery + post-cycle shadow
+  if (phase3.steroid_history === 'past' || phase3.trt_history === 'past') {
+    addTrigger(triggers, ['lh', 'fsh'], 3, 'Past AAS/TRT use (HPT axis recovery assessment)');
+    addTrigger(triggers, ['prolactin', 'estradiol'], 3, 'Past AAS/TRT use (post-cycle shadow markers)');
   }
 
-  // Depression symptom → cortisol AM (HPA dysregulation), prolactin (T suppression chain), TSH (hypothyroidism mimics depression)
-  // + Vitamin D (deficiency causes identical mood symptoms) + B12 (the "Great Mimicker" of low-T depression and brain fog)
-  if (symptoms.includes('depression')) {
-    tests.add('cortisol_am');
-    tests.add('prolactin');
-    tests.add('tsh');
-    tests.add('vitamin_d');
-    tests.add('vitamin_b12');
+  // Hemochromatosis → ferritin (primary) + LH/FSH (pituitary damage)
+  if (conditions.some(c => c.toLowerCase().includes('hemochromatosis'))) {
+    addTrigger(triggers, 'ferritin', 3, 'Hemochromatosis diagnosis');
+    addTrigger(triggers, ['lh', 'fsh'], 2, 'Hemochromatosis (pituitary iron deposition)');
   }
 
-  // Brain fog / poor memory → Ferritin (low iron even without anemia causes identical cognitive slowness to low T)
-  if (symptoms.includes('brain_fog') || symptoms.includes('poor_memory')) {
-    tests.add('ferritin');
+  // Pituitary disorder → full pituitary axis workup
+  if (conditions.some(c => c.toLowerCase().includes('pituitary'))) {
+    addTrigger(triggers, ['prolactin', 'lh', 'fsh'], 3, 'Pituitary disorder diagnosis');
+    addTrigger(triggers, ['cortisol_am', 'tsh', 'free_t4'], 3, 'Pituitary disorder (axis assessment)');
   }
 
-  // Joint pain / slow recovery → hs-CRP (high systemic inflammation directly inhibits Leydig cell testosterone production)
-  if (symptoms.includes('joint_pain') || symptoms.includes('slow_recovery')) {
-    tests.add('hs_crp');
+  // Liver disease → liver enzymes + estrogen clearance + vitamin D activation
+  if (conditions.some(c => c.toLowerCase().includes('liver'))) {
+    addTrigger(triggers, ['alt', 'ast'], 3, 'Liver disease diagnosis');
+    addTrigger(triggers, 'estradiol', 2, 'Liver disease (impaired estrogen clearance)');
+    addTrigger(triggers, 'vitamin_d', 1, 'Liver disease (vitamin D activation)');
   }
 
-  // Muscle loss / reduced strength → cortisol AM (catabolic state — elevated cortisol breaks down muscle tissue)
-  if (symptoms.includes('muscle_loss') || symptoms.includes('reduced_strength')) {
-    tests.add('cortisol_am');
+  // Kidney disease → HPT axis + vitamin D activation
+  if (conditions.some(c => c.toLowerCase().includes('kidney'))) {
+    addTrigger(triggers, ['lh', 'fsh'], 2, 'Chronic kidney disease (HPT axis)');
+    addTrigger(triggers, 'vitamin_d', 2, 'Chronic kidney disease (vitamin D activation)');
   }
 
-  // Suspected sleep apnea symptom → cortisol AM (disrupted sleep elevates cortisol) + TSH (hypothyroidism is a leading cause of OSA)
-  // + hematocrit (chronic hypoxia → polycythemia; if T is also low, high hematocrit is a red flag for stroke risk)
-  if (symptoms.includes('sleep_apnea')) {
-    tests.add('cortisol_am');
-    tests.add('tsh');
-    tests.add('hematocrit');
+  // Hypothyroidism → thyroid panel tracking
+  if (conditions.some(c => c.toLowerCase().includes('hypothyroidism'))) {
+    addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 3, 'Hypothyroidism diagnosis');
+  }
+
+  // Diabetes → metabolic panel
+  if (conditions.some(c => c.toLowerCase().includes('diabetes'))) {
+    addTrigger(triggers, 'glucose', 2, 'Diabetes diagnosis');
+    addTrigger(triggers, ['fasting_insulin', 'hba1c'], 2, 'Diabetes diagnosis');
+  }
+
+  // Insulin resistance → direct markers
+  if (conditions.some(c => c.toLowerCase().includes('insulin resistance'))) {
+    addTrigger(triggers, ['glucose', 'fasting_insulin'], 2, 'Insulin resistance diagnosis');
+  }
+
+  // Obesity → metabolic screening
+  if (conditions.some(c => c.toLowerCase().includes('obesity'))) {
+    addTrigger(triggers, ['fasting_insulin', 'hba1c'], 2, 'Obesity diagnosis');
+  }
+
+  // Depression/Anxiety condition → cortisol + thyroid
+  if (conditions.some(c => c.toLowerCase().includes('depression') || c.toLowerCase().includes('anxiety'))) {
+    addTrigger(triggers, 'cortisol_am', 2, 'Depression/anxiety diagnosis (HPA axis)');
+    addTrigger(triggers, 'tsh', 2, 'Depression/anxiety diagnosis (thyroid differential)');
+  }
+
+  // Hypertension / cardiovascular → lipid panel
+  if (conditions.some(c => c.toLowerCase().includes('hypertension') || c.toLowerCase().includes('cardiovascular'))) {
+    addTrigger(triggers, ['hdl', 'ldl', 'triglycerides'], 1, 'Cardiovascular/hypertension condition');
+  }
+
+  // ── FERTILITY & SEXUAL FUNCTION (weight 2-3) ──────────────────────
+
+  // Fertility concerns → essential fertility workup
+  if (symptoms.includes('fertility_concerns')) {
+    addTrigger(triggers, ['lh', 'fsh', 'prolactin'], 3, 'Fertility concerns (HPT axis + prolactin)');
+  }
+
+  // Low libido / ED → prolactin
+  if (symptoms.includes('low_libido') || symptoms.includes('ed')) {
+    addTrigger(triggers, 'prolactin', 2, 'Low libido / erectile dysfunction');
+  }
+
+  // Testicular ache → LH/FSH
+  if (symptoms.includes('testicular_ache')) {
+    addTrigger(triggers, ['lh', 'fsh'], 2, 'Testicular discomfort');
+  }
+
+  // Reduced ejaculate / hot flashes → HPT axis
+  if (symptoms.includes('reduced_ejaculate')) {
+    addTrigger(triggers, ['lh', 'fsh'], 1, 'Reduced ejaculate volume');
+  }
+  if (symptoms.includes('hot_flashes')) {
+    addTrigger(triggers, ['lh', 'fsh'], 1, 'Hot flashes (HPT axis)');
+    addTrigger(triggers, 'estradiol', 2, 'Hot flashes (estrogen fluctuation)');
+  }
+
+  // Vascular ED pattern: high libido + poor erections/morning erections
+  const erectileRating = phase2.erectile_rating ?? 3;
+  const morningErectionPoor = phase2.morning_erection_frequency === 'rarely' || phase2.morning_erection_frequency === 'never';
+  if (phase2.libido_rating >= 4 && (erectileRating <= 2 || morningErectionPoor)) {
+    addTrigger(triggers, ['hdl', 'ldl', 'triglycerides'], 2, 'Vascular ED pattern (lipid assessment)');
+    addTrigger(triggers, 'prolactin', 1, 'Vascular ED pattern (prolactin differential)');
+    if (phase2.smoking_status === 'daily' || phase2.smoking_status === 'occasional') {
+      addTrigger(triggers, 'glucose', 1, 'Vascular ED + smoking (insulin sensitivity)');
+    }
+  }
+
+  // ── MEDICATION-BASED (weight 2) ───────────────────────────────────
+
+  // SSRIs → prolactin
+  if (medCats.includes('ssri_snri')) {
+    addTrigger(triggers, 'prolactin', 2, 'SSRI/SNRI medication (prolactin elevation risk)');
+  }
+
+  // Opioids / Corticosteroids → LH + FSH
+  if (medCats.includes('opioids')) {
+    addTrigger(triggers, ['lh', 'fsh'], 2, 'Opioid medication (OPIAD screening)');
+  }
+  if (medCats.includes('corticosteroids')) {
+    addTrigger(triggers, ['lh', 'fsh'], 2, 'Corticosteroid medication (HPT suppression)');
   }
 
   // Statins → CoQ10 + Vitamin D
   if (medCats.includes('statins')) {
-    tests.add('coq10');
-    tests.add('vitamin_d');
-  }
-
-  // Opioids + Corticosteroids → LH + FSH (HPT axis suppression)
-  if (medCats.includes('opioids') || medCats.includes('corticosteroids')) {
-    tests.add('lh');
-    tests.add('fsh');
+    addTrigger(triggers, 'coq10', 2, 'Statin medication (CoQ10 depletion)');
+    addTrigger(triggers, 'vitamin_d', 1, 'Statin medication');
   }
 
   // Androgen blockers / 5-ARIs → DHT
   if (medCats.includes('androgen_blockers')) {
-    tests.add('dht');
+    addTrigger(triggers, 'dht', 2, 'Androgen blocker / 5-ARI medication');
   }
 
-  // Supplement categories
-  const suppCats = phase3.supplement_categories || [];
-  // DHT reducers (Saw Palmetto etc.) → DHT (same mechanism as finasteride)
-  if (suppCats.includes('dht_reducers')) tests.add('dht');
-  // Estrogen modulators (DIM etc.) → Estradiol (user suspects estrogen imbalance)
-  if (suppCats.includes('estrogen_modulators')) tests.add('estradiol');
+  // ── SUPPLEMENT-BASED (weight 1) ───────────────────────────────────
 
-  // TSH + Free T3 + Free T4: brain fog, depression, poor memory, dry skin symptoms, OR hypothyroidism condition
-  if (
-    symptoms.includes('brain_fog') ||
-    symptoms.includes('depression') ||
-    symptoms.includes('poor_memory') ||
-    symptoms.includes('dry_skin') ||
-    conditions.some(c => c.toLowerCase().includes('hypothyroidism'))
-  ) {
-    tests.add('tsh');
-    tests.add('free_t3');
-    tests.add('free_t4');
+  if (suppCats.includes('dht_reducers')) addTrigger(triggers, 'dht', 1, 'DHT-reducing supplement use');
+  if (suppCats.includes('estrogen_modulators')) addTrigger(triggers, 'estradiol', 1, 'Estrogen modulator supplement use');
+
+  // ── LIFESTYLE-BASED (weight 1-2) ─────────────────────────────────
+
+  // Heavy beer → estradiol
+  const heavyBeer = phase2.beer_frequency === '4-6x_week' || phase2.beer_frequency === 'daily';
+  if (heavyBeer) addTrigger(triggers, 'estradiol', 2, 'Heavy beer consumption (hops phytoestrogen)');
+
+  // High body fat → estradiol
+  if ((phase1.body_fat_percent ?? 0) > 25) addTrigger(triggers, 'estradiol', 2, 'Elevated body fat (aromatization risk)');
+
+  // Heavy spirits → liver panel
+  const heavySpirits = phase2.spirits_wine_frequency === '4-6x_week' || phase2.spirits_wine_frequency === 'daily';
+  if (heavySpirits) addTrigger(triggers, ['alt', 'ast'], 2, 'Heavy alcohol consumption (liver stress)');
+
+  // High stress → cortisol
+  if ((phase2.stress_level ?? 3) >= 4) addTrigger(triggers, 'cortisol_am', 2, 'High chronic stress level');
+
+  // High sugar → metabolic markers
+  if (phase2.sugar_consumption === 'very_high' || phase2.sugar_consumption === 'frequent') {
+    addTrigger(triggers, 'glucose', 1, 'High sugar consumption');
+    addTrigger(triggers, ['hba1c', 'fasting_insulin'], 1, 'High sugar (glycemic assessment)');
   }
 
-  // DHT: hair loss or 5-alpha reductase inhibitor use
+  // Highly sedentary → metabolic markers
+  if (phase2.sedentary_hours >= 10) {
+    addTrigger(triggers, ['glucose', 'fasting_insulin'], 1, 'Highly sedentary lifestyle (>=10h/day)');
+  }
+
+  // ── SYMPTOM-BASED ─────────────────────────────────────────────────
+
+  // Depression → cortisol, prolactin, thyroid, vitamin D, B12
+  if (symptoms.includes('depression')) {
+    addTrigger(triggers, ['cortisol_am', 'prolactin', 'tsh'], 2, 'Depression symptom');
+    addTrigger(triggers, ['vitamin_d', 'vitamin_b12'], 1, 'Depression (mimicker exclusion)');
+  }
+
+  // Brain fog / poor memory → ferritin, thyroid
+  if (symptoms.includes('brain_fog') || symptoms.includes('poor_memory')) {
+    addTrigger(triggers, 'ferritin', 1, 'Brain fog / poor memory (iron assessment)');
+    addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 2, 'Brain fog / poor memory (thyroid assessment)');
+  }
+
+  // Dry skin → thyroid
+  if (symptoms.includes('dry_skin')) {
+    addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 1, 'Dry skin (thyroid differential)');
+  }
+
+  // Joint pain / slow recovery → inflammation
+  if (symptoms.includes('joint_pain') || symptoms.includes('slow_recovery')) {
+    addTrigger(triggers, 'hs_crp', 1, 'Joint pain / slow recovery (inflammation marker)');
+  }
+
+  // Muscle loss / reduced strength → cortisol
+  if (symptoms.includes('muscle_loss') || symptoms.includes('reduced_strength')) {
+    addTrigger(triggers, 'cortisol_am', 1, 'Muscle loss / reduced strength (catabolic state)');
+  }
+
+  // Sleep apnea → cortisol, thyroid, hematocrit
+  if (symptoms.includes('sleep_apnea')) {
+    addTrigger(triggers, 'cortisol_am', 1, 'Sleep apnea symptom');
+    addTrigger(triggers, 'tsh', 1, 'Sleep apnea (hypothyroidism differential)');
+    addTrigger(triggers, 'hematocrit', 1, 'Sleep apnea (polycythemia risk)');
+  }
+
+  // Insomnia / non-restorative / afternoon crash → cortisol
+  if (symptoms.includes('insomnia') || symptoms.includes('non_restorative')) {
+    addTrigger(triggers, 'cortisol_am', 1, 'Sleep disruption');
+  }
+  if (symptoms.includes('afternoon_crash')) {
+    addTrigger(triggers, 'cortisol_am', 1, 'Afternoon energy crashes');
+    addTrigger(triggers, ['glucose', 'fasting_insulin'], 1, 'Afternoon crashes (glycemic assessment)');
+  }
+
+  // Hair loss / finasteride → DHT
   if (
     symptoms.includes('hair_loss') ||
     (phase3.medications || []).some(m => m.toLowerCase().includes('finasteride') || m.toLowerCase().includes('dutasteride'))
   ) {
-    tests.add('dht');
+    addTrigger(triggers, 'dht', 2, 'Hair loss / finasteride use');
   }
 
-  // LH + FSH: fertility concerns, testicular pain, reduced ejaculate volume, or hot flashes
-  // → assessing HPT axis output / primary vs secondary hypogonadism
-  if (
-    symptoms.includes('fertility_concerns') ||
-    symptoms.includes('reduced_ejaculate') ||
-    symptoms.includes('testicular_ache') ||
-    symptoms.includes('hot_flashes')
-  ) {
-    tests.add('lh');
-    tests.add('fsh');
-  }
-
-  // Fertility concerns → Prolactin is essential, not optional
-  // High prolactin suppresses pulsatile GnRH release, blunting the FSH signal
-  // needed for spermatogenesis — a silent fertility killer
-  if (symptoms.includes('fertility_concerns')) {
-    tests.add('prolactin');
-  }
-
-  // Estradiol: hot flashes in men = estrogen fluctuation signal
-  if (symptoms.includes('hot_flashes')) {
-    tests.add('estradiol');
-  }
-
-  // Prolactin: low motivation (dopamine suppression link) or anxiety (elevated prolactin → GnRH suppression)
-  if (symptoms.includes('low_motivation') || symptoms.includes('anxiety')) {
-    tests.add('prolactin');
-  }
-
-  // Cortisol AM: high stress, insomnia, waking unrefreshed, afternoon crash, or slow recovery
-  if (
-    (phase2.stress_level ?? 3) >= 4 ||
-    symptoms.includes('insomnia') ||
-    symptoms.includes('non_restorative') ||
-    symptoms.includes('afternoon_crash') ||
-    symptoms.includes('slow_recovery')
-  ) {
-    tests.add('cortisol_am');
-  }
-
-  // TSH: anxiety (hyperthyroidism mimics anxiety disorder)
+  // Anxiety → prolactin, thyroid
   if (symptoms.includes('anxiety')) {
-    tests.add('tsh');
+    addTrigger(triggers, 'prolactin', 1, 'Anxiety (GnRH suppression link)');
+    addTrigger(triggers, 'tsh', 1, 'Anxiety (hyperthyroidism differential)');
   }
 
-  // Vitamin D: slow recovery, joint pain, or fatigue — all linked to deficiency
-  if (
-    symptoms.includes('slow_recovery') ||
-    symptoms.includes('joint_pain') ||
-    symptoms.includes('low_energy')
-  ) {
-    tests.add('vitamin_d');
+  // Low motivation → prolactin
+  if (symptoms.includes('low_motivation')) {
+    addTrigger(triggers, 'prolactin', 1, 'Low motivation (dopamine-prolactin link)');
   }
 
-  // Glucose + Fasting Insulin + HbA1c: diabetes condition, high sugar, highly sedentary, or afternoon crash
-  if (
-    conditions.some(c => c.toLowerCase().includes('diabetes')) ||
-    phase2.sugar_consumption === 'very_high' ||
-    phase2.sugar_consumption === 'frequent' ||
-    phase2.sedentary_hours >= 10 ||
-    symptoms.includes('afternoon_crash')
-  ) {
-    tests.add('glucose');
-  }
-  if (phase2.sedentary_hours >= 10 || symptoms.includes('afternoon_crash')) {
-    tests.add('fasting_insulin');
-  }
-  // HbA1c: 3-month glycemic average — gold standard for metabolic-induced Low T risk
-  if (phase2.sugar_consumption === 'very_high' || phase2.sugar_consumption === 'frequent') {
-    tests.add('hba1c');
-    tests.add('fasting_insulin');
+  // Energy / recovery / joints → vitamin D
+  if (symptoms.includes('slow_recovery') || symptoms.includes('joint_pain') || symptoms.includes('low_energy')) {
+    addTrigger(triggers, 'vitamin_d', 1, 'Recovery / energy / joint symptoms');
   }
 
-  // Fasting Insulin + HbA1c: obesity condition
-  if (conditions.some(c => c.toLowerCase().includes('obesity'))) {
-    tests.add('fasting_insulin');
-    tests.add('hba1c');
+  // Gynecomastia → estradiol
+  if (symptoms.includes('gynecomastia')) {
+    addTrigger(triggers, 'estradiol', 2, 'Gynecomastia (estrogen assessment)');
   }
 
-  // Insulin resistance → direct bloodwork markers
-  if (conditions.some(c => c.toLowerCase().includes('insulin resistance'))) {
-    tests.add('glucose');
-    tests.add('fasting_insulin');
+  // ── SAFETY BASELINE ───────────────────────────────────────────────
+
+  addTrigger(triggers, 'hematocrit', 1, 'Safety baseline');
+  addTrigger(triggers, 'albumin', 1, 'Backup free T calculation (Vermeulen equation) if Free T is not directly measured');
+
+  // ── BUILD TIERED RESULT ───────────────────────────────────────────
+
+  const essential: TieredMarker[] = [];
+  const recommended: TieredMarker[] = [];
+  const extended: TieredMarker[] = [];
+
+  // Always-essential triad
+  for (const id of ALWAYS_ESSENTIAL_IDS) {
+    essential.push({ id, tier: 'essential', reasons: ['Testosterone triad — always required'] });
   }
 
-  // Depression/Anxiety → cortisol AM (HPA axis) + TSH (thyroid dysfunction mimics both)
-  if (conditions.some(c => c.toLowerCase().includes('depression') || c.toLowerCase().includes('anxiety'))) {
-    tests.add('cortisol_am');
-    tests.add('tsh');
-  }
-
-  // Lipid panel: hypertension or cardiovascular disease condition
-  if (conditions.some(c => c.toLowerCase().includes('hypertension') || c.toLowerCase().includes('cardiovascular'))) {
-    tests.add('hdl');
-    tests.add('ldl');
-    tests.add('triglycerides');
-  }
-
-  // Vascular correlation: high libido rating BUT poor erectile quality OR rare morning erections
-  // → suggests vascular rather than hormonal cause → add lipid panel + prolactin
-  const erectileRating = phase2.erectile_rating ?? 3;
-  const morningErectionPoor = phase2.morning_erection_frequency === 'rarely' || phase2.morning_erection_frequency === 'never';
-  if (phase2.libido_rating >= 4 && (erectileRating <= 2 || morningErectionPoor)) {
-    tests.add('hdl');
-    tests.add('ldl');
-    tests.add('triglycerides');
-    tests.add('prolactin');
-    // Smoking amplifies vascular risk — add glucose (smoking impairs insulin sensitivity → compounding endothelial damage)
-    if (phase2.smoking_status === 'daily' || phase2.smoking_status === 'occasional') {
-      tests.add('glucose');
+  // Assign tiers based on accumulated weights
+  for (const [id, { weight, reasons }] of triggers) {
+    if (ALWAYS_ESSENTIAL_IDS.includes(id)) continue; // Already in essential
+    if (weight >= TIER_THRESHOLDS.essential) {
+      essential.push({ id, tier: 'essential', reasons });
+    } else if (weight >= TIER_THRESHOLDS.recommended) {
+      recommended.push({ id, tier: 'recommended', reasons });
+    } else {
+      extended.push({ id, tier: 'extended', reasons });
     }
   }
 
-  // Hematocrit: always include as safety baseline
-  tests.add('hematocrit');
+  const allIds = [
+    ...essential.map(m => m.id),
+    ...recommended.map(m => m.id),
+    ...extended.map(m => m.id),
+  ];
 
-  return Array.from(tests);
+  return { essential, recommended, extended, allIds };
+}
+
+// Backward-compatible wrapper — returns flat list of non-essential marker IDs
+export function getPersonalizedExtendedTests(
+  phase1: Phase1Data,
+  phase2: Phase2Data,
+  phase3: Phase3Data,
+  symptomIds: string[],
+): string[] {
+  const panel = getPersonalizedPanel(phase1, phase2, phase3, symptomIds);
+  return [...panel.recommended.map(m => m.id), ...panel.extended.map(m => m.id)];
 }

@@ -183,6 +183,8 @@ export const BIOMARKERS: BiomarkerDef[] = [
 ];
 
 export const CORE_PANEL_IDS = ['total_t', 'free_t', 'shbg', 'albumin'];
+// The testosterone triad — always essential regardless of patient profile
+export const ALWAYS_ESSENTIAL_IDS = ['total_t', 'free_t', 'shbg'];
 export const EXTENDED_PANEL_IDS = ['estradiol', 'lh', 'fsh', 'prolactin', 'vitamin_d', 'cortisol', 'cortisol_am', 'tsh', 'free_t3', 'free_t4', 'glucose', 'fasting_insulin', 'hba1c', 'hdl', 'ldl', 'triglycerides', 'hematocrit', 'dht', 'coq10', 'ferritin', 'vitamin_b12', 'hs_crp', 'alt', 'ast'];
 // TRT / active hormone monitoring panel — shown to excluded users
 export const TRT_PANEL_IDS = ['total_t', 'free_t', 'estradiol', 'hematocrit', 'lh', 'albumin', 'shbg', 'psa'];
