@@ -248,22 +248,28 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
   "medical_referral_reason": "<specific reason citing marker values, or null>"
 }`;
 
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            maxOutputTokens: 12288,
-            temperature: 0.1,
-            topP: 0.2,
-            responseMimeType: 'application/json',
-          },
-        }),
-      }
-    );
+    // Try primary model first; fall back to flash if overloaded (503)
+    const models = ['gemini-2.5-pro', 'gemini-2.0-flash'];
+    let response!: Response;
+    for (const model of models) {
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              maxOutputTokens: 12288,
+              temperature: 0.1,
+              topP: 0.2,
+              responseMimeType: 'application/json',
+            },
+          }),
+        }
+      );
+      if (response.status !== 503) break;
+    }
 
     if (!response.ok) {
       const err = await response.text();
