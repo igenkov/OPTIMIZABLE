@@ -15,7 +15,7 @@ const LOG_MESSAGES = [
   'Running hormonal homeostasis simulation...',
   'Identifying micronutrient deficiencies...',
   'Cross-referencing metabolic health markers...',
-  'Generating 90-day optimization protocol...',
+  'Mapping hormonal correlations...',
   'Finalizing diagnostic report...',
 ];
 
