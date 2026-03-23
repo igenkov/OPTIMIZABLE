@@ -55,7 +55,9 @@ export default async function DashboardPage() {
   const personalizedPanel = excluded ? null : getPersonalizedPanel(p1, p2, p3, symptomIds);
   const panelBiomarkers = excluded
     ? BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id))
-    : personalizedPanel!.essential.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean);
+    : [...personalizedPanel!.essential, ...personalizedPanel!.recommended]
+        .map(m => BIOMARKERS.find(b => b.id === m.id)!)
+        .filter(Boolean);
 
   const bmi = p1.weight_kg && p1.height_cm
     ? (p1.weight_kg / Math.pow(p1.height_cm / 100, 2)).toFixed(1)
