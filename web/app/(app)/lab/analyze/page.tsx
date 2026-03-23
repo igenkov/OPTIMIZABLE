@@ -82,7 +82,7 @@ export default function LabAnalyzePage() {
       });
 
       if (!res.ok) throw new Error(await res.text());
-      const analysisData = await res.json();
+      const { _model: _m, ...analysisData } = await res.json();
 
       const editReportId = localStorage.getItem('pending_edit_report_id');
       if (editReportId) {
