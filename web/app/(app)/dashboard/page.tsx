@@ -10,9 +10,9 @@ import { Card } from '@/components/ui/Card';
 import { ScoreRing } from '@/components/ui/ScoreRing';
 import {
   calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
-  getKeyFactors, getPersonalizedExtendedTests, isExcluded,
+  getKeyFactors, getPersonalizedPanel, isExcluded,
 } from '@/lib/scoring';
-import { BIOMARKERS, CORE_PANEL_IDS, TRT_PANEL_IDS } from '@/constants/biomarkers';
+import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
 export default async function DashboardPage() {
@@ -52,9 +52,10 @@ export default async function DashboardPage() {
   const color = getRiskColor(level);
   const label = getRiskLabel(level);
 
-  const panel = excluded
+  const personalizedPanel = excluded ? null : getPersonalizedPanel(p1, p2, p3, symptomIds);
+  const panelBiomarkers = excluded
     ? BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id))
-    : BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id));
+    : personalizedPanel!.essential.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean);
 
   const bmi = p1.weight_kg && p1.height_cm
     ? (p1.weight_kg / Math.pow(p1.height_cm / 100, 2)).toFixed(1)
@@ -190,7 +191,7 @@ export default async function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-1 gap-1">
-            {panel.map(b => (
+            {panelBiomarkers.map(b => (
               <div key={b.id} className="flex items-center justify-between py-2 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                 <span className="text-[11px] font-medium text-white/60 group-hover:text-white">{b.name}</span>
                 <CheckCircle2 size={12} className="text-white/10 group-hover:text-[#C8A2C8] transition-colors" />

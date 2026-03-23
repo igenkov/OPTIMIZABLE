@@ -12,6 +12,9 @@ import {
 import { cn } from '@/lib/utils';
 import { BIOMARKERS, CORE_PANEL_IDS, EXTENDED_PANEL_IDS } from '@/constants/biomarkers';
 import type { UnitAlternative } from '@/constants/biomarkers';
+import { getPersonalizedPanel } from '@/lib/scoring';
+import type { PersonalizedPanel } from '@/lib/scoring';
+import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
 function BiomarkerRow({
   id, name, unitPrimary, unitAlternatives, selectedUnit, value,
@@ -78,6 +81,25 @@ export default function LabUploadPage() {
   const [collectionDate, setCollectionDate] = useState(new Date().toISOString().split('T')[0]);
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
+  const [panel, setPanel] = useState<PersonalizedPanel | null>(null);
+
+  // Load onboarding data → personalized panel tiers
+  useEffect(() => {
+    try {
+      const p1Raw = localStorage.getItem('phase1');
+      const p2Raw = localStorage.getItem('phase2');
+      const p3Raw = localStorage.getItem('phase3');
+      const symRaw = localStorage.getItem('symptoms');
+      if (p1Raw && p2Raw && p3Raw) {
+        const p1 = JSON.parse(p1Raw) as Phase1Data;
+        const p2 = JSON.parse(p2Raw) as Phase2Data;
+        const p3 = JSON.parse(p3Raw) as Phase3Data;
+        const sym = symRaw ? JSON.parse(symRaw) : {};
+        const symptomIds: string[] = sym.symptoms_selected || [];
+        setPanel(getPersonalizedPanel(p1, p2, p3, symptomIds));
+      }
+    } catch { /* missing/corrupt localStorage — fall back to static split */ }
+  }, []);
 
   // Pre-populate form when editing an existing panel
   useEffect(() => {
@@ -101,8 +123,16 @@ export default function LabUploadPage() {
     loadPanel();
   }, [editPanelId]);
 
-  const core = BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id));
-  const extended = BIOMARKERS.filter(b => EXTENDED_PANEL_IDS.includes(b.id));
+  // Personalized tiers or static fallback
+  const essentialBio = panel
+    ? panel.essential.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean)
+    : BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id));
+  const recommendedBio = panel
+    ? panel.recommended.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean)
+    : [];
+  const extendedBio = panel
+    ? panel.extended.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean)
+    : BIOMARKERS.filter(b => EXTENDED_PANEL_IDS.includes(b.id));
   const filled = Object.entries(values).filter(([, v]) => v.trim() !== '');
 
   async function handleSubmit(e: React.FormEvent) {
@@ -207,18 +237,18 @@ export default function LabUploadPage() {
         {/* LEFT: BIOMARKER ARRAYS */}
         <div className="col-span-12 lg:col-span-8 space-y-12">
 
-          {/* CORE PANEL */}
+          {/* ESSENTIAL PANEL */}
           <section>
             <div className="flex items-center justify-between mb-4 px-2">
               <div className="flex items-center gap-2">
                 <Activity size={16} className="text-[#C8A2C8]" />
-                <h2 className="text-[10px] font-black text-white uppercase tracking-[3px]">Primary Biomarkers</h2>
+                <h2 className="text-[10px] font-black text-white uppercase tracking-[3px]">Essential Biomarkers</h2>
               </div>
               <span className="text-[9px] font-mono text-white/20 uppercase">Placeholders = Ref Ranges</span>
             </div>
-            <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+            <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(200,162,200,0.08)' }}>
               <div>
-                {core.map(b => (
+                {essentialBio.map(b => (
                   <BiomarkerRow
                     key={b.id}
                     id={b.id}
@@ -237,32 +267,63 @@ export default function LabUploadPage() {
             </Card>
           </section>
 
-          {/* EXTENDED PANEL */}
-          <section>
-            <div className="flex items-center gap-2 mb-4 px-2">
-              <TestTube2 size={16} className="text-white/20" />
-              <h2 className="text-[10px] font-black text-white/20 uppercase tracking-[3px]">Extended Variables</h2>
-            </div>
-            <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
-              <div>
-                {extended.map(b => (
-                  <BiomarkerRow
-                    key={b.id}
-                    id={b.id}
-                    name={b.name}
-                    unitPrimary={b.unit_primary}
-                    unitAlternatives={b.unit_alternatives ?? []}
-                    selectedUnit={selectedUnits[b.id] ?? b.unit_primary}
-                    value={values[b.id] ?? ''}
-                    rangeLow={b.standard_range_low}
-                    rangeHigh={b.standard_range_high}
-                    onChange={(id, val) => setValues(prev => ({ ...prev, [id]: val }))}
-                    onUnitChange={(id, unit) => setSelectedUnits(prev => ({ ...prev, [id]: unit }))}
-                  />
-                ))}
+          {/* RECOMMENDED PANEL */}
+          {recommendedBio.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-4 px-2">
+                <TestTube2 size={16} className="text-[#E8C470]" />
+                <h2 className="text-[10px] font-black text-[#E8C470] uppercase tracking-[3px]">Recommended Biomarkers</h2>
               </div>
-            </Card>
-          </section>
+              <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(232,196,112,0.08)' }}>
+                <div>
+                  {recommendedBio.map(b => (
+                    <BiomarkerRow
+                      key={b.id}
+                      id={b.id}
+                      name={b.name}
+                      unitPrimary={b.unit_primary}
+                      unitAlternatives={b.unit_alternatives ?? []}
+                      selectedUnit={selectedUnits[b.id] ?? b.unit_primary}
+                      value={values[b.id] ?? ''}
+                      rangeLow={b.standard_range_low}
+                      rangeHigh={b.standard_range_high}
+                      onChange={(id, val) => setValues(prev => ({ ...prev, [id]: val }))}
+                      onUnitChange={(id, unit) => setSelectedUnits(prev => ({ ...prev, [id]: unit }))}
+                    />
+                  ))}
+                </div>
+              </Card>
+            </section>
+          )}
+
+          {/* EXTENDED PANEL */}
+          {extendedBio.length > 0 && (
+            <section>
+              <div className="flex items-center gap-2 mb-4 px-2">
+                <TestTube2 size={16} className="text-white/20" />
+                <h2 className="text-[10px] font-black text-white/20 uppercase tracking-[3px]">Extended Variables</h2>
+              </div>
+              <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div>
+                  {extendedBio.map(b => (
+                    <BiomarkerRow
+                      key={b.id}
+                      id={b.id}
+                      name={b.name}
+                      unitPrimary={b.unit_primary}
+                      unitAlternatives={b.unit_alternatives ?? []}
+                      selectedUnit={selectedUnits[b.id] ?? b.unit_primary}
+                      value={values[b.id] ?? ''}
+                      rangeLow={b.standard_range_low}
+                      rangeHigh={b.standard_range_high}
+                      onChange={(id, val) => setValues(prev => ({ ...prev, [id]: val }))}
+                      onUnitChange={(id, unit) => setSelectedUnits(prev => ({ ...prev, [id]: unit }))}
+                    />
+                  ))}
+                </div>
+              </Card>
+            </section>
+          )}
         </div>
 
         {/* RIGHT: SIDEBAR CONTEXT */}

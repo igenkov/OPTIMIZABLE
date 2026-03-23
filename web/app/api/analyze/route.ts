@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { BIOMARKERS } from '@/constants/biomarkers';
+import { calculateFreeTestosterone } from '@/lib/vermeulen';
 import { SYMPTOMS } from '@/constants/symptoms';
 import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
 
@@ -39,7 +40,21 @@ export async function POST(req: NextRequest) {
     const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
     if (!apiKey) return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
 
-    // Build biomarker context
+    // Vermeulen fallback: calculate free_t when missing but total_t + shbg present
+    // MUST run before biomarkerContext is built so the calculated value appears in the marker list
+    let vermeulenNote = '';
+    if (!panelValues.free_t && panelValues.total_t && panelValues.shbg) {
+      const totalT = Number(panelValues.total_t.value);
+      const shbg = Number(panelValues.shbg.value);
+      const albumin = panelValues.albumin ? Number(panelValues.albumin.value) : 4.3;
+      const calcFreeT = calculateFreeTestosterone(totalT, shbg, albumin);
+      if (calcFreeT > 0) {
+        panelValues.free_t = { marker: 'free_t', value: calcFreeT, unit: 'pg/mL' };
+        vermeulenNote = `\nNote: Free Testosterone was NOT directly measured. The value ${calcFreeT} pg/mL was CALCULATED using the Vermeulen/Sodergard equation from Total T (${totalT} ng/dL) + SHBG (${shbg} nmol/L)${panelValues.albumin ? ` + Albumin (${albumin} g/dL)` : ' + population-average Albumin (4.3 g/dL)'}. Flag this as "[CALCULATED]" in your analysis — it is an estimate, not a direct measurement. Recommend the patient get Free T directly measured on their next panel for confirmation.`;
+      }
+    }
+
+    // Build biomarker context (after Vermeulen so calculated free_t is included)
     const biomarkerContext = BIOMARKERS.map(b => {
       const val = panelValues[b.id];
       if (!val) return null;
@@ -178,7 +193,7 @@ SYMPTOMS:
 - ${symptomNames}
 
 BLOODWORK VALUES:
-${biomarkerContext}
+${biomarkerContext}${vermeulenNote}
 
 Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
 {

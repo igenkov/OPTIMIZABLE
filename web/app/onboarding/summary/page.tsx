@@ -7,10 +7,10 @@ import { Card } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/client';
 import {
   calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
-  getKeyFactors, getPersonalizedExtendedTests, isExcluded,
+  getKeyFactors, getPersonalizedPanel, isExcluded,
 } from '@/lib/scoring';
-import type { KeyFactor } from '@/lib/scoring';
-import { BIOMARKERS, CORE_PANEL_IDS, TRT_PANEL_IDS } from '@/constants/biomarkers';
+import type { KeyFactor, PersonalizedPanel } from '@/lib/scoring';
+import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import {
   Activity, FlaskConical, ClipboardList,
@@ -25,8 +25,7 @@ export default function SummaryPage() {
   const [excluded, setExcluded] = useState(false);
   const [excludedReason, setExcludedReason] = useState<'trt' | 'steroids' | 'both'>('trt');
   const [keyFactors, setKeyFactors] = useState<KeyFactor[]>([]);
-  const [extendedTestIds, setExtendedTestIds] = useState<string[]>([]);
-  const [symptomIds, setSymptomIds] = useState<string[]>([]);
+  const [panel, setPanel] = useState<PersonalizedPanel | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -46,7 +45,6 @@ export default function SummaryPage() {
       if (symRaw) sym = JSON.parse(symRaw);
     } catch { /* corrupted localStorage — fall through with empty data */ }
     const symptomIds_: string[] = (sym.symptoms_selected as string[]) || [];
-    setSymptomIds(symptomIds_);
 
     createClient().auth.getUser().then(async ({ data }) => {
       const loggedIn = !!data.user;
@@ -77,7 +75,7 @@ export default function SummaryPage() {
       } else {
         setRiskScore(calculateRiskScore(p1, p2, p3, symptomIds_));
         setKeyFactors(getKeyFactors(p1, p2, p3, symptomIds_));
-        setExtendedTestIds(getPersonalizedExtendedTests(p1, p2, p3, symptomIds_));
+        setPanel(getPersonalizedPanel(p1, p2, p3, symptomIds_));
       }
     }
     setLoaded(true);
@@ -87,10 +85,6 @@ export default function SummaryPage() {
   const color = getRiskColor(level);
   const label = getRiskLabel(level);
   const action = getRiskAction(level);
-  // Fertility concerns → promote prolactin from extended to core panel
-  const promotedToCore = symptomIds.includes('fertility_concerns') ? ['prolactin'] : [];
-  const core = BIOMARKERS.filter(b => CORE_PANEL_IDS.includes(b.id) || promotedToCore.includes(b.id));
-  const extendedTests = BIOMARKERS.filter(b => extendedTestIds.includes(b.id) && !promotedToCore.includes(b.id));
   const trtPanel = BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id));
 
   if (!loaded) return (
@@ -209,47 +203,117 @@ export default function SummaryPage() {
           <h2 className="text-[10px] font-black tracking-[3px] uppercase">Recommended Laboratory Sequence</h2>
         </div>
 
-        <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="p-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
-            <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A2C8]">
-              {excluded ? 'Monitoring Panel' : 'Core Hormonal Panel'}
-            </span>
-            <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Essential Biomarkers</span>
-          </div>
-          <div className="divide-y divide-white/5">
-            {(excluded ? trtPanel : core).map(b => (
-              <div key={b.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                <div className={cn(
-                  'mt-1 w-2 h-2 rounded-full shrink-0',
-                  excluded ? 'bg-yellow-500' : 'bg-[#C8A2C8]'
-                )} />
-                <div className="flex-1">
-                  <div className="text-xs font-bold text-white group-hover:text-[#C8A2C8] transition-colors uppercase tracking-tight">{b.name}</div>
-                  <div className="text-[10px] text-white/30 font-medium leading-relaxed mt-1 uppercase tracking-tighter">{b.description}</div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </Card>
-
-        {!excluded && extendedTests.length > 0 && (
+        {excluded ? (
           <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
             <div className="p-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Extended Calibration</span>
-              <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Personalized Add-ons</span>
+              <span className="text-[10px] font-black uppercase tracking-widest text-yellow-500">Monitoring Panel</span>
+              <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Safety Biomarkers</span>
             </div>
             <div className="divide-y divide-white/5">
-              {extendedTests.map(b => (
+              {trtPanel.map(b => (
                 <div key={b.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                  <div className="mt-1 w-2 h-2 rounded-full bg-[#E8C470] shrink-0" />
+                  <div className="mt-1 w-2 h-2 rounded-full bg-yellow-500 shrink-0" />
                   <div className="flex-1">
-                    <div className="text-xs font-bold text-white group-hover:text-[#E8C470] transition-colors uppercase tracking-tight">{b.name}</div>
+                    <div className="text-xs font-bold text-white group-hover:text-yellow-500 transition-colors uppercase tracking-tight">{b.name}</div>
                     <div className="text-[10px] text-white/30 font-medium leading-relaxed mt-1 uppercase tracking-tighter">{b.description}</div>
                   </div>
                 </div>
               ))}
             </div>
           </Card>
+        ) : panel && (
+          <>
+            {/* ESSENTIAL */}
+            {panel.essential.length > 0 && (
+              <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(200,162,200,0.15)' }}>
+                <div className="p-4 bg-[#C8A2C8]/5 border-b border-[#C8A2C8]/10 flex justify-between items-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A2C8]">Essential Panel</span>
+                  <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Required for Analysis</span>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {panel.essential.map(m => {
+                    const bio = BIOMARKERS.find(b => b.id === m.id);
+                    if (!bio) return null;
+                    return (
+                      <div key={m.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
+                        <div className="mt-1 w-2 h-2 rounded-full bg-[#C8A2C8] shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-white group-hover:text-[#C8A2C8] transition-colors uppercase tracking-tight">{bio.name}</div>
+                          {m.reasons.length > 0 && (
+                            <div className="text-[10px] text-[#C8A2C8]/50 font-medium leading-relaxed mt-1 tracking-tight">{m.reasons.join(' · ')}</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+
+            {/* RECOMMENDED */}
+            {panel.recommended.length > 0 && (
+              <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(232,196,112,0.15)' }}>
+                <div className="p-4 bg-[#E8C470]/5 border-b border-[#E8C470]/10 flex justify-between items-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Recommended Panel</span>
+                  <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Strongly Advised</span>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {panel.recommended.map(m => {
+                    const bio = BIOMARKERS.find(b => b.id === m.id);
+                    if (!bio) return null;
+                    return (
+                      <div key={m.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
+                        <div className="mt-1 w-2 h-2 rounded-full bg-[#E8C470] shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-white group-hover:text-[#E8C470] transition-colors uppercase tracking-tight">{bio.name}</div>
+                          {m.reasons.length > 0 && (
+                            <div className="text-[10px] text-[#E8C470]/50 font-medium leading-relaxed mt-1 tracking-tight">{m.reasons.join(' · ')}</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+
+            {/* EXTENDED */}
+            {panel.extended.length > 0 && (
+              <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
+                <div className="p-4 bg-white/[0.03] border-b border-white/5 flex justify-between items-center">
+                  <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Extended Refinement</span>
+                  <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Additional Markers</span>
+                </div>
+                <div className="divide-y divide-white/5">
+                  {panel.extended.map(m => {
+                    const bio = BIOMARKERS.find(b => b.id === m.id);
+                    if (!bio) return null;
+                    return (
+                      <div key={m.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
+                        <div className="mt-1 w-2 h-2 rounded-full bg-white/20 shrink-0" />
+                        <div className="flex-1">
+                          <div className="text-xs font-bold text-white/60 group-hover:text-white transition-colors uppercase tracking-tight">{bio.name}</div>
+                          {m.reasons.length > 0 && (
+                            <div className="text-[10px] text-white/25 font-medium leading-relaxed mt-1 tracking-tight">{m.reasons.join(' · ')}</div>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </Card>
+            )}
+
+            {/* DISCLAIMER */}
+            <div className="px-1">
+              <p className="text-[10px] text-white/25 leading-relaxed italic">
+                The endocrine system is a complex dynamic system where all markers work in correlation.
+                The more biomarkers included, the more accurate and personalized your analysis will be.
+                Essential markers are required for a meaningful result — recommended and extended markers
+                significantly improve diagnostic precision.
+              </p>
+            </div>
+          </>
         )}
       </div>
 

@@ -1017,13 +1017,3 @@ export function getPersonalizedPanel(
   return { essential, recommended, extended, allIds };
 }
 
-// Backward-compatible wrapper — returns flat list of non-essential marker IDs
-export function getPersonalizedExtendedTests(
-  phase1: Phase1Data,
-  phase2: Phase2Data,
-  phase3: Phase3Data,
-  symptomIds: string[],
-): string[] {
-  const panel = getPersonalizedPanel(phase1, phase2, phase3, symptomIds);
-  return [...panel.recommended.map(m => m.id), ...panel.extended.map(m => m.id)];
-}
