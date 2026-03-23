@@ -326,11 +326,11 @@ export default async function LabPage() {
 
       {/* ── Protocol CTA ── */}
       <div className="pt-2 border-t border-[rgba(255,255,255,0.05)]">
-        <Link href="/protocol"
+        <Link href="/lab/generate-protocol"
           className="group flex items-center justify-between w-full p-6 bg-[#C8A2C8] text-black hover:bg-[#A882A8] transition-colors">
           <div>
             <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Next Sequence</div>
-            <div className="text-xl font-black uppercase tracking-tighter">View Updated Protocol</div>
+            <div className="text-xl font-black uppercase tracking-tighter">Generate Personalised Protocol</div>
           </div>
           <ArrowUpRight size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
         </Link>

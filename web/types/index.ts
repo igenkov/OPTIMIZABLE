@@ -112,9 +112,22 @@ export interface AnalysisReport {
   key_ratios: KeyRatio[];
   report_summary: string | ReportSummaryStructured;
   concerns: { marker: string; severity: 'low' | 'medium' | 'high'; explanation: string }[];
-  recommendations: OptimizationPlan;
   medical_referral_needed: boolean;
   medical_referral_reason?: string;
+  created_at: string;
+}
+
+export interface ProtocolReport {
+  id: string;
+  user_id: string;
+  analysis_report_id: string;
+  supplements: SupplementRecommendation[];
+  eating: string[];
+  exercise: string[];
+  sleep: string[];
+  stress: string[];
+  habits: string[];
+  model_used?: string;
   created_at: string;
 }
 

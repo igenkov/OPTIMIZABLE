@@ -8,7 +8,7 @@ import {
   ChevronRight, Activity, Flame, Target,
   FlaskConical, ArrowRight,
 } from 'lucide-react';
-import type { AnalysisReport, OptimizationPlan } from '@/types';
+import type { ProtocolReport, OptimizationPlan } from '@/types';
 
 // ── Phase definitions ────────────────────────────────────────────────────────
 const PHASES = [
@@ -47,10 +47,10 @@ export default async function ProtocolPage() {
   if (userData?.subscription_tier === 'free') redirect('/dashboard');
 
   const { data: reports } = await supabase
-    .from('analysis_reports').select('*').eq('user_id', user.id)
+    .from('protocol_reports').select('*').eq('user_id', user.id)
     .order('created_at', { ascending: true });
 
-  const typedReports = (reports ?? []) as AnalysisReport[];
+  const typedReports = (reports ?? []) as ProtocolReport[];
 
   const { data: cycle } = await supabase
     .from('optimization_cycles').select('start_date').eq('user_id', user.id)
@@ -102,7 +102,14 @@ export default async function ProtocolPage() {
 
   const currentPhaseData = PHASES[currentPhase - 1];
   const currentReport    = typedReports[currentPhase - 1] ?? typedReports[typedReports.length - 1];
-  const recs: OptimizationPlan = currentReport?.recommendations ?? ({} as OptimizationPlan);
+  const recs: OptimizationPlan = currentReport ? {
+    supplements: currentReport.supplements ?? [],
+    eating: currentReport.eating ?? [],
+    exercise: currentReport.exercise ?? [],
+    sleep: currentReport.sleep ?? [],
+    stress: currentReport.stress ?? [],
+    habits: currentReport.habits ?? [],
+  } : ({} as OptimizationPlan);
   const isLocked = !currentReport;
 
   return (
@@ -339,9 +346,9 @@ export default async function ProtocolPage() {
                   <div key={i}
                     className="px-4 py-3 border border-[rgba(255,255,255,0.05)] flex items-center justify-between opacity-50 grayscale hover:grayscale-0 hover:opacity-100 transition-all"
                     style={{ background: 'linear-gradient(165deg, rgba(255,255,255,0.02) 0%, rgba(20,20,20,0) 55%), #141414' }}>
-                    <span className="text-[10px] font-black text-white uppercase">Phase {i + 1} Baseline</span>
-                    <div className="font-mono text-sm font-black text-[#C8A2C8]">
-                      {r.health_score ?? '--'}<span className="text-[9px] text-[#4A4A4A]">/100</span>
+                    <span className="text-[10px] font-black text-white uppercase">Phase {i + 1} Protocol</span>
+                    <div className="text-[10px] font-bold text-[#C8A2C8] uppercase tracking-widest">
+                      {new Date(r.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}
                     </div>
                   </div>
                 ))}
