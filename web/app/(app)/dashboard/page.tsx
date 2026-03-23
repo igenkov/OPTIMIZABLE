@@ -53,11 +53,15 @@ export default async function DashboardPage() {
   const label = getRiskLabel(level);
 
   const personalizedPanel = excluded ? null : getPersonalizedPanel(p1, p2, p3, symptomIds);
-  const panelBiomarkers = excluded
+  const essentialBio = excluded
     ? BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id))
-    : [...personalizedPanel!.essential, ...personalizedPanel!.recommended]
-        .map(m => BIOMARKERS.find(b => b.id === m.id)!)
-        .filter(Boolean);
+    : personalizedPanel!.essential.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean);
+  const recommendedBio = excluded
+    ? []
+    : personalizedPanel!.recommended.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean);
+  const extendedBio = excluded
+    ? []
+    : personalizedPanel!.extended.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean);
 
   const bmi = p1.weight_kg && p1.height_cm
     ? (p1.weight_kg / Math.pow(p1.height_cm / 100, 2)).toFixed(1)
@@ -192,13 +196,40 @@ export default async function DashboardPage() {
             <span className="text-[9px] font-bold text-[#C8A2C8] bg-[#C8A2C8]/10 px-2 py-0.5">Sequence_01</span>
           </div>
 
-          <div className="grid grid-cols-1 gap-1">
-            {panelBiomarkers.map(b => (
-              <div key={b.id} className="flex items-center justify-between py-2 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
-                <span className="text-[11px] font-medium text-white/60 group-hover:text-white">{b.name}</span>
-                <CheckCircle2 size={12} className="text-white/10 group-hover:text-[#C8A2C8] transition-colors" />
+          <div className="space-y-4">
+            {essentialBio.length > 0 && (
+              <div>
+                <div className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest mb-1.5">Essential</div>
+                {essentialBio.map(b => (
+                  <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
+                    <span className="text-[11px] font-medium text-white/80 group-hover:text-white">{b.name}</span>
+                    <CheckCircle2 size={12} className="text-[#C8A2C8]/30 group-hover:text-[#C8A2C8] transition-colors" />
+                  </div>
+                ))}
               </div>
-            ))}
+            )}
+            {recommendedBio.length > 0 && (
+              <div>
+                <div className="text-[9px] font-black text-[#E8C470] uppercase tracking-widest mb-1.5">Recommended</div>
+                {recommendedBio.map(b => (
+                  <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
+                    <span className="text-[11px] font-medium text-white/60 group-hover:text-white">{b.name}</span>
+                    <CheckCircle2 size={12} className="text-white/10 group-hover:text-[#E8C470]/60 transition-colors" />
+                  </div>
+                ))}
+              </div>
+            )}
+            {extendedBio.length > 0 && (
+              <div>
+                <div className="text-[9px] font-black text-white/25 uppercase tracking-widest mb-1.5">Extended</div>
+                {extendedBio.map(b => (
+                  <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
+                    <span className="text-[11px] font-medium text-white/30 group-hover:text-white/60">{b.name}</span>
+                    <CheckCircle2 size={12} className="text-white/5 group-hover:text-white/20 transition-colors" />
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {!isPremium && (
