@@ -4,8 +4,51 @@ import { BIOMARKERS } from '@/constants/biomarkers';
 import { calculateFreeTestosterone } from '@/lib/vermeulen';
 import { SYMPTOMS } from '@/constants/symptoms';
 import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
-import { buildAnalysisPrompt } from '@/lib/prompts/analysis';
+import { buildPass1Prompt, buildSynthesisPrompt } from '@/lib/prompts/analysis';
 
+/* ── Gemini call helper with model fallback ── */
+async function callGemini(
+  prompt: string,
+  apiKey: string,
+  maxTokens = 12288,
+): Promise<{ parsed: Record<string, unknown>; model: string }> {
+  const models = ['gemini-2.5-pro', 'gemini-2.5-flash'];
+  let response!: Response;
+  let usedModel = models[0];
+
+  for (const model of models) {
+    usedModel = model;
+    response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            maxOutputTokens: maxTokens,
+            temperature: 0.1,
+            topP: 0.2,
+            responseMimeType: 'application/json',
+          },
+        }),
+      },
+    );
+    if (response.status !== 503) break;
+  }
+
+  if (!response.ok) {
+    const err = await response.text();
+    throw new Error(`Gemini API error (${usedModel}): ${err}`);
+  }
+
+  const data = await response.json();
+  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  return { parsed: JSON.parse(text), model: usedModel };
+}
+
+/* ── Main route ── */
 export async function POST(req: NextRequest) {
   try {
     const supabase = await createClient();
@@ -52,47 +95,27 @@ export async function POST(req: NextRequest) {
       ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1)
       : 'unknown';
 
-    const prompt = buildAnalysisPrompt({
+    const promptParams = {
       riskScore, riskLevel, bmi,
       phase1, phase2, phase3,
       symptomNames, biomarkerContext, vermeulenNote,
+    };
+
+    // ── Pass 1: Detailed marker analysis ──
+    const pass1Prompt = buildPass1Prompt(promptParams);
+    const pass1 = await callGemini(pass1Prompt, apiKey, 12288);
+
+    // ── Pass 2: Executive summary + health score ──
+    const pass2Prompt = buildSynthesisPrompt({
+      ...promptParams,
+      pass1Result: JSON.stringify(pass1.parsed),
     });
+    const pass2 = await callGemini(pass2Prompt, apiKey, 4096);
 
-    const models = ['gemini-2.5-pro', 'gemini-2.5-flash'];
-    let response!: Response;
-    let usedModel = models[0];
-    for (const model of models) {
-      usedModel = model;
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 12288,
-              temperature: 0.1,
-              topP: 0.2,
-              responseMimeType: 'application/json',
-            },
-          }),
-        }
-      );
-      if (response.status !== 503) break;
-    }
+    // Merge both passes into final response
+    const analysis = { ...pass1.parsed, ...pass2.parsed };
 
-    if (!response.ok) {
-      const err = await response.text();
-      return NextResponse.json({ error: `Gemini API error: ${err}` }, { status: 500 });
-    }
-
-    const geminiData = await response.json();
-    const raw = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
-    const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-    const analysis = JSON.parse(text);
-
-    return NextResponse.json({ ...analysis, _model: usedModel });
+    return NextResponse.json({ ...analysis, _model: pass1.model });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: msg }, { status: 500 });
