@@ -895,6 +895,14 @@ export function getPersonalizedPanel(
   // High stress → cortisol
   if ((phase2.stress_level ?? 3) >= 4) addTrigger(triggers, 'cortisol_am', 2, 'High chronic stress level');
 
+  // Smoking → cortisol, hematocrit
+  if (phase2.smoking_status === 'daily') {
+    addTrigger(triggers, 'cortisol_am', 2, 'Daily smoking (HPT axis disruption via cortisol)');
+    addTrigger(triggers, 'hematocrit', 1, 'Daily smoking (erythrocytosis risk)');
+  } else if (phase2.smoking_status === 'occasional') {
+    addTrigger(triggers, 'cortisol_am', 1, 'Occasional smoking (cortisol spikes)');
+  }
+
   // High sugar → metabolic markers
   if (phase2.sugar_consumption === 'very_high' || phase2.sugar_consumption === 'frequent') {
     addTrigger(triggers, 'glucose', 1, 'High sugar consumption');
@@ -959,8 +967,9 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'dht', 2, 'Hair loss / finasteride use');
   }
 
-  // Anxiety → prolactin, thyroid
+  // Anxiety → cortisol, prolactin, thyroid
   if (symptoms.includes('anxiety')) {
+    addTrigger(triggers, 'cortisol_am', 2, 'Anxiety (HPA axis overactivation)');
     addTrigger(triggers, 'prolactin', 1, 'Anxiety (GnRH suppression link)');
     addTrigger(triggers, 'tsh', 1, 'Anxiety (hyperthyroidism differential)');
   }
