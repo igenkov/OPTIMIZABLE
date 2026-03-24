@@ -967,11 +967,11 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'dht', 2, 'Hair loss / finasteride use');
   }
 
-  // Anxiety → cortisol, prolactin, thyroid
+  // Anxiety → cortisol, prolactin, thyroid (full panel — TSH alone is incomplete)
   if (symptoms.includes('anxiety')) {
     addTrigger(triggers, 'cortisol_am', 2, 'Anxiety (HPA axis overactivation)');
     addTrigger(triggers, 'prolactin', 1, 'Anxiety (GnRH suppression link)');
-    addTrigger(triggers, 'tsh', 1, 'Anxiety (hyperthyroidism differential)');
+    addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 1, 'Anxiety (hyperthyroidism differential)');
   }
 
   // Low motivation → prolactin
