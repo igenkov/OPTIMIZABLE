@@ -27,9 +27,8 @@ function toStringArray(val: unknown): string[] {
 
 // ── Phase definitions ────────────────────────────────────────────────────────
 const PHASES = [
-  { num: 1 as const, label: 'Foundation',  days: '1–30',  desc: 'Establish your baseline protocol.',             goal: 'Build consistency — the first 30 days set the trajectory.' },
-  { num: 2 as const, label: 'Calibration', days: '31–60', desc: 'Adjusted protocol based on 30-day progress.',   goal: 'Fine-tune based on real results — your body has adapted.' },
-  { num: 3 as const, label: 'Peak',        days: '61–90', desc: 'Maximum optimization based on 60-day results.', goal: 'Execute the peak window — maximize output.' },
+  { num: 1 as const, label: 'Foundation',  days: '1–45',  desc: 'Establish your baseline protocol. Build the habits and supplementation stack your bloodwork demands.', goal: 'Build consistency — the first 45 days set the trajectory.' },
+  { num: 2 as const, label: 'Calibration', days: '46–90', desc: 'Adjusted protocol based on your 45-day control bloodwork. Fine-tune interventions to your biological response.', goal: 'Execute the calibration — your body has data, now act on it.' },
 ];
 
 // ── Icon engine ──────────────────────────────────────────────────────────────
@@ -72,23 +71,31 @@ export default async function ProtocolPage() {
     .eq('status', 'active').single();
 
   let currentDay = 0;
-  let currentPhase: 1 | 2 | 3 = 1;
+  let currentPhase: 1 | 2 = 1;
   if (cycle) {
     const startDate = new Date(cycle.start_date);
     currentDay = Math.min(90, Math.max(1, Math.floor((Date.now() - startDate.getTime()) / 86400000) + 1));
-    currentPhase = currentDay <= 30 ? 1 : currentDay <= 60 ? 2 : 3;
+    currentPhase = currentDay <= 45 ? 1 : 2;
   }
 
-  const phaseDay      = currentDay > 0 ? ((currentDay - 1) % 30) + 1 : 1;
-  const phaseProgress = Math.round(((phaseDay - 1) / 30) * 100);
-  const daysRemaining = 30 - phaseDay;
+  const phaseDay      = currentDay > 0 ? ((currentDay - 1) % 45) + 1 : 1;
+  const phaseProgress = Math.round(((phaseDay - 1) / 45) * 100);
+  const daysRemaining = 45 - phaseDay;
 
+  // Phase 1 → control bloodwork at day 45; Phase 2 → final bloodwork at day 90
   let nextLabDate: Date | null = null;
   let nextLabDays = 0;
-  if (cycle && currentPhase < 3) {
+  let nextLabLabel = '';
+  if (cycle) {
     const start = new Date(cycle.start_date);
     nextLabDate = new Date(start);
-    nextLabDate.setDate(nextLabDate.getDate() + currentPhase * 30);
+    if (currentPhase === 1) {
+      nextLabDate.setDate(nextLabDate.getDate() + 45);
+      nextLabLabel = 'Control bloodwork — unlock Calibration protocol';
+    } else {
+      nextLabDate.setDate(nextLabDate.getDate() + 90);
+      nextLabLabel = 'Final bloodwork — complete the 90-day cycle';
+    }
     nextLabDays = Math.max(0, Math.ceil((nextLabDate.getTime() - Date.now()) / 86400000));
   }
 
@@ -142,7 +149,7 @@ export default async function ProtocolPage() {
       </div>
 
       {/* ── Phase stepper ── */}
-      <div className="grid grid-cols-3 gap-4 mb-10 relative">
+      <div className="grid grid-cols-2 gap-4 mb-10 relative max-w-xs">
         <div className="absolute top-5 left-0 right-0 h-px bg-[rgba(255,255,255,0.05)] z-0" />
         {PHASES.map(p => {
           const isActive = p.num === currentPhase;
@@ -195,9 +202,7 @@ export default async function ProtocolPage() {
               </div>
               <div className="text-sm font-bold text-white mb-2">Phase {currentPhase}: {currentPhaseData.label}</div>
               <p className="text-[11px] text-[#9A9A9A] leading-relaxed mb-6 max-w-xs mx-auto">
-                {currentPhase === 2
-                  ? 'Complete your 30-day bloodwork panel to unlock the Calibration protocol.'
-                  : 'Complete your 60-day bloodwork panel to unlock the Peak protocol.'}
+                Complete your 45-day control bloodwork panel to unlock the Calibration protocol.
               </p>
               <Link href="/lab/upload"
                 className="inline-block px-6 py-2.5 border border-[#C8A2C8] text-[#C8A2C8] font-bold text-xs tracking-widest uppercase hover:bg-[rgba(200,162,200,0.08)] transition-colors">
@@ -296,7 +301,7 @@ export default async function ProtocolPage() {
               <div className="flex items-end justify-between mb-3">
                 <div>
                   <span className="text-4xl font-black text-white tabular-nums leading-none">{phaseDay}</span>
-                  <span className="text-xs text-[#4A4A4A] font-bold ml-2">/ 30</span>
+                  <span className="text-xs text-[#4A4A4A] font-bold ml-2">/ 45</span>
                 </div>
                 <div className="text-right">
                   <div className="text-xs font-black text-[#C8A2C8] uppercase">Day {currentDay} Total</div>
@@ -320,16 +325,15 @@ export default async function ProtocolPage() {
                 <FlaskConical size={13} style={{ color: nextLabDays <= 7 ? '#E88080' : '#E8C470' }} />
                 <span className="text-[10px] font-black uppercase tracking-widest"
                   style={{ color: nextLabDays <= 7 ? '#E88080' : '#E8C470' }}>
-                  Next Lab Trigger
+                  {currentPhase === 1 ? 'Control Lab' : 'Final Lab'}
                 </span>
               </div>
               <div className="text-4xl font-black text-white mb-1 tabular-nums">{nextLabDays}</div>
               <p className="text-[11px] text-[#4A4A4A] uppercase font-bold tracking-tight mb-4">
-                Days until calibration window
+                Days remaining
               </p>
               <div className="text-[11px] text-[#9A9A9A] mb-4">
-                {nextLabDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} — unlock{' '}
-                <span className="text-white font-semibold">{PHASES[currentPhase].label}</span> protocol
+                {nextLabDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} — {nextLabLabel}
               </div>
               <Link href="/lab/upload"
                 className="flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(255,255,255,0.08)] text-[#9A9A9A] font-bold text-[10px] tracking-widest uppercase hover:bg-[rgba(255,255,255,0.04)] hover:text-white transition-all">
