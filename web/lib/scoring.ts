@@ -888,17 +888,21 @@ export function getPersonalizedPanel(
   // High body fat → estradiol
   if ((phase1.body_fat_percent ?? 0) > 25) addTrigger(triggers, 'estradiol', 2, 'Elevated body fat (aromatization risk)');
 
-  // Heavy spirits → liver panel
+  // Heavy spirits → liver panel + lipids
   const heavySpirits = phase2.spirits_wine_frequency === '4-6x_week' || phase2.spirits_wine_frequency === 'daily';
-  if (heavySpirits) addTrigger(triggers, ['alt', 'ast'], 2, 'Heavy alcohol consumption (liver stress)');
+  if (heavySpirits) {
+    addTrigger(triggers, ['alt', 'ast'], 2, 'Heavy alcohol consumption (liver stress)');
+    addTrigger(triggers, ['hdl', 'ldl', 'triglycerides'], 1, 'Heavy alcohol consumption (lipid impact)');
+  }
 
   // High stress → cortisol
   if ((phase2.stress_level ?? 3) >= 4) addTrigger(triggers, 'cortisol_am', 2, 'High chronic stress level');
 
-  // Smoking → cortisol, hematocrit
+  // Smoking → cortisol, hematocrit, inflammation
   if (phase2.smoking_status === 'daily') {
     addTrigger(triggers, 'cortisol_am', 2, 'Daily smoking (HPT axis disruption via cortisol)');
     addTrigger(triggers, 'hematocrit', 1, 'Daily smoking (erythrocytosis risk)');
+    addTrigger(triggers, 'hs_crp', 2, 'Daily smoking (systemic inflammation)');
   } else if (phase2.smoking_status === 'occasional') {
     addTrigger(triggers, 'cortisol_am', 1, 'Occasional smoking (cortisol spikes)');
   }
@@ -909,9 +913,9 @@ export function getPersonalizedPanel(
     addTrigger(triggers, ['hba1c', 'fasting_insulin'], 1, 'High sugar (glycemic assessment)');
   }
 
-  // Highly sedentary → metabolic markers
-  if (phase2.sedentary_hours >= 10) {
-    addTrigger(triggers, ['glucose', 'fasting_insulin'], 1, 'Highly sedentary lifestyle (>=10h/day)');
+  // Sedentary → metabolic markers
+  if (phase2.sedentary_hours >= 8) {
+    addTrigger(triggers, ['glucose', 'fasting_insulin'], 1, 'Sedentary lifestyle (>=8h/day)');
   }
 
   // ── SYMPTOM-BASED ─────────────────────────────────────────────────
@@ -922,10 +926,11 @@ export function getPersonalizedPanel(
     addTrigger(triggers, ['vitamin_d', 'vitamin_b12'], 1, 'Depression (mimicker exclusion)');
   }
 
-  // Brain fog / poor memory → ferritin, thyroid
+  // Brain fog / poor memory → ferritin, thyroid, B12
   if (symptoms.includes('brain_fog') || symptoms.includes('poor_memory')) {
     addTrigger(triggers, 'ferritin', 1, 'Brain fog / poor memory (iron assessment)');
     addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 2, 'Brain fog / poor memory (thyroid assessment)');
+    addTrigger(triggers, 'vitamin_b12', 1, 'Brain fog / poor memory (B12 deficiency mimics low-T cognition)');
   }
 
   // Dry skin → thyroid
@@ -948,6 +953,11 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'cortisol_am', 1, 'Sleep apnea symptom');
     addTrigger(triggers, 'tsh', 1, 'Sleep apnea (hypothyroidism differential)');
     addTrigger(triggers, 'hematocrit', 1, 'Sleep apnea (polycythemia risk)');
+  }
+
+  // Poor sleep quality (≤2/5) → cortisol regardless of symptoms
+  if ((phase2.sleep_quality ?? 3) <= 2) {
+    addTrigger(triggers, 'cortisol_am', 2, 'Poor sleep quality (HPA axis / cortisol dysregulation)');
   }
 
   // Insomnia / non-restorative / afternoon crash → cortisol
@@ -979,9 +989,12 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'prolactin', 1, 'Low motivation (dopamine-prolactin link)');
   }
 
-  // Energy / recovery / joints → vitamin D
+  // Energy / recovery / joints → vitamin D + B12
   if (symptoms.includes('slow_recovery') || symptoms.includes('joint_pain') || symptoms.includes('low_energy')) {
     addTrigger(triggers, 'vitamin_d', 1, 'Recovery / energy / joint symptoms');
+  }
+  if (symptoms.includes('low_energy')) {
+    addTrigger(triggers, 'vitamin_b12', 1, 'Low energy (B12 deficiency mimics low-T fatigue)');
   }
 
   // Gynecomastia → estradiol
@@ -993,6 +1006,9 @@ export function getPersonalizedPanel(
 
   addTrigger(triggers, 'estradiol', 2, 'T:E2 ratio requires estradiol — core to any testosterone analysis');
   addTrigger(triggers, ['lh', 'fsh'], 2, 'LH/FSH required to distinguish primary vs secondary hypogonadism — core to any testosterone analysis');
+  addTrigger(triggers, 'prolactin', 2, 'Prolactin silently suppresses testosterone — core screen for any testosterone analysis');
+  addTrigger(triggers, 'vitamin_d', 2, 'Vitamin D receptors on Leydig cells — deficiency directly impairs testosterone synthesis');
+  addTrigger(triggers, 'tsh', 2, 'Thyroid function affects SHBG and free testosterone — core hormonal screen');
   addTrigger(triggers, 'hematocrit', 1, 'Safety baseline');
   addTrigger(triggers, 'albumin', 1, 'Backup free T calculation (Vermeulen equation) if Free T is not directly measured');
 
