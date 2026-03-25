@@ -10,6 +10,21 @@ import {
 } from 'lucide-react';
 import type { ProtocolReport, OptimizationPlan } from '@/types';
 
+// Normalize fields that the LLM occasionally returns as objects instead of strings
+function toStringArray(val: unknown): string[] {
+  if (!Array.isArray(val)) return [];
+  return (val as unknown[]).map(item => {
+    if (typeof item === 'string') return item;
+    if (item && typeof item === 'object') {
+      const o = item as Record<string, unknown>;
+      const str = o.directive ?? o.text ?? o.action ?? o.recommendation ?? o.habit ?? o.content;
+      if (typeof str === 'string') return str;
+      return Object.values(o).filter(v => typeof v === 'string').join(' — ');
+    }
+    return String(item);
+  }).filter(Boolean) as string[];
+}
+
 // ── Phase definitions ────────────────────────────────────────────────────────
 const PHASES = [
   { num: 1 as const, label: 'Foundation',  days: '1–30',  desc: 'Establish your baseline protocol.',             goal: 'Build consistency — the first 30 days set the trajectory.' },
@@ -104,11 +119,11 @@ export default async function ProtocolPage() {
   const currentReport    = typedReports[currentPhase - 1] ?? typedReports[typedReports.length - 1];
   const recs: OptimizationPlan = currentReport ? {
     supplements: currentReport.supplements ?? [],
-    eating: currentReport.eating ?? [],
-    exercise: currentReport.exercise ?? [],
-    sleep: currentReport.sleep ?? [],
-    stress: currentReport.stress ?? [],
-    habits: currentReport.habits ?? [],
+    eating:   toStringArray(currentReport.eating),
+    exercise: toStringArray(currentReport.exercise),
+    sleep:    toStringArray(currentReport.sleep),
+    stress:   toStringArray(currentReport.stress),
+    habits:   toStringArray(currentReport.habits),
   } : ({} as OptimizationPlan);
   const isLocked = !currentReport;
 

@@ -41,7 +41,7 @@ export async function POST(req: NextRequest) {
           body: JSON.stringify({
             contents: [{ parts: [{ text: prompt }] }],
             generationConfig: {
-              maxOutputTokens: 4096,
+              maxOutputTokens: 8192,
               temperature: 0.1,
               topP: 0.2,
               responseMimeType: 'application/json',
@@ -58,7 +58,11 @@ export async function POST(req: NextRequest) {
     }
 
     const geminiData = await response.json();
-    const raw = geminiData.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+    const candidate = geminiData.candidates?.[0];
+    if (candidate?.finishReason === 'MAX_TOKENS') {
+      return NextResponse.json({ error: 'Protocol generation was truncated (output too long). Try again.' }, { status: 500 });
+    }
+    const raw = candidate?.content?.parts?.[0]?.text ?? '';
     const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const protocol = JSON.parse(text);
 
