@@ -6,6 +6,59 @@ import { SYMPTOMS } from '@/constants/symptoms';
 import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
 import { buildPass1Prompt, buildSynthesisPrompt } from '@/lib/prompts/analysis';
 
+/* ── Server-side ratio computation ── */
+function computeRatios(
+  panelValues: Record<string, { value: number | string; unit: string }>,
+  vermeulenCalculated: boolean,
+): string {
+  const lines: string[] = [];
+
+  // HOMA-IR: (fasting_insulin mU/L × fasting_glucose mg/dL) / 405
+  const insulin = panelValues.fasting_insulin ? Number(panelValues.fasting_insulin.value) : null;
+  const glucose = panelValues.glucose ? Number(panelValues.glucose.value) : null;
+  if (insulin != null && glucose != null && insulin > 0 && glucose > 0) {
+    const homaIr = (insulin * glucose) / 405;
+    let status: string;
+    if (homaIr <= 1.5) status = 'OPTIMAL';
+    else if (homaIr <= 2.5) status = 'SUBOPTIMAL — early insulin sensitivity decline';
+    else if (homaIr <= 5.0) status = 'RISK INDICATOR — consistent with insulin resistance pattern; describe as such, not as a confirmed diagnosis';
+    else status = 'HIGH RISK — consistent with significant insulin resistance pattern; describe as such, not as a confirmed diagnosis';
+    lines.push(`HOMA-IR: ${homaIr.toFixed(2)} [${status}]`);
+  } else {
+    lines.push('HOMA-IR: not calculable (fasting glucose and/or fasting insulin not submitted)');
+  }
+
+  // T:E2 Ratio: total_t (ng/dL) / estradiol (pg/mL) — do NOT convert units before dividing
+  const totalT = panelValues.total_t ? Number(panelValues.total_t.value) : null;
+  const estradiol = panelValues.estradiol ? Number(panelValues.estradiol.value) : null;
+  if (totalT != null && estradiol != null && estradiol > 0) {
+    const teRatio = totalT / estradiol;
+    let status: string;
+    if (teRatio < 10) status = 'LOW — relative estrogen excess; testosterone-to-estrogen conversion may be occurring';
+    else if (teRatio <= 25) status = 'OPTIMAL — do NOT claim active testosterone-to-estrogen conversion as a primary driver';
+    else status = 'HIGH — investigate context (very high total T or very low estradiol)';
+    lines.push(`T:E2 Ratio: ${teRatio.toFixed(1)} [${status}]`);
+  } else {
+    lines.push('T:E2 Ratio: not calculable (total testosterone and/or estradiol not submitted)');
+  }
+
+  // % Free Testosterone: free_t (pg/mL) / (total_t (ng/dL) × 10) × 100
+  const freeT = panelValues.free_t ? Number(panelValues.free_t.value) : null;
+  if (freeT != null && totalT != null && totalT > 0) {
+    const pctFreeT = (freeT / (totalT * 10)) * 100;
+    let status: string;
+    if (pctFreeT < 0.8) status = 'LOW — significant binding suppression; free androgen availability reduced';
+    else if (pctFreeT <= 3.5) status = 'OPTIMAL';
+    else status = 'HIGH — low SHBG or elevated free fraction';
+    const calcNote = vermeulenCalculated ? ' [CALCULATED via Vermeulen — estimated]' : '';
+    lines.push(`% Free Testosterone: ${pctFreeT.toFixed(2)}%${calcNote} [${status}]`);
+  } else {
+    lines.push('% Free Testosterone: not calculable (free testosterone and/or total testosterone not submitted)');
+  }
+
+  return lines.join('\n');
+}
+
 /* ── Gemini call helper with model fallback ── */
 async function callGemini(
   prompt: string,
@@ -91,6 +144,9 @@ export async function POST(req: NextRequest) {
       return `${b.name}: ${val.value} ${val.unit} (standard: ${b.standard_range_low}–${b.standard_range_high}, optimal: ${b.optimal_range_low}–${b.optimal_range_high})`;
     }).filter(Boolean).join('\n');
 
+    // Pre-compute ratios server-side — LLM must not recalculate these
+    const computedRatiosContext = computeRatios(panelValues, !!vermeulenNote);
+
     const bmi = phase1?.weight_kg && phase1?.height_cm
       ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1)
       : 'unknown';
@@ -98,7 +154,7 @@ export async function POST(req: NextRequest) {
     const promptParams = {
       riskScore, riskLevel, bmi,
       phase1, phase2, phase3,
-      symptomNames, biomarkerContext, vermeulenNote,
+      symptomNames, biomarkerContext, vermeulenNote, computedRatiosContext,
     };
 
     // ── Pass 1: Detailed marker analysis ──
