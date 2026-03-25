@@ -992,6 +992,7 @@ export function getPersonalizedPanel(
   // ── SAFETY BASELINE ───────────────────────────────────────────────
 
   addTrigger(triggers, 'estradiol', 2, 'T:E2 ratio requires estradiol — core to any testosterone analysis');
+  addTrigger(triggers, ['lh', 'fsh'], 2, 'LH/FSH required to distinguish primary vs secondary hypogonadism — core to any testosterone analysis');
   addTrigger(triggers, 'hematocrit', 1, 'Safety baseline');
   addTrigger(triggers, 'albumin', 1, 'Backup free T calculation (Vermeulen equation) if Free T is not directly measured');
 
