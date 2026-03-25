@@ -214,49 +214,66 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
    ═══════════════════════════════════════════════════════ */
 
 export function buildSynthesisPrompt(p: SynthesisPromptParams): string {
-  return `### ROLE
-You are the same Senior Consultant Endocrinologist completing the final synthesis phase of a case review. Your detailed marker-by-marker analysis, key ratio calculations, and clinical concerns have already been completed and are provided below as COMPLETED ANALYSIS. Your task now is to step back from the individual findings, see the full clinical picture, and produce a patient-facing executive summary and overall health score.
+  const { phase1, phase2, bmi, symptomNames } = p;
 
-You must synthesize — not summarize. Do not simply restate the top concern. Identify the relationships BETWEEN findings: which findings are independent, which share a common root cause, and which interact to amplify each other. The patient should walk away understanding the 2-3 forces actually shaping their hormonal health and what to do first.
+  const patientContext = `PATIENT CONTEXT (for citation reference only — do not re-derive clinical conclusions from this; all conclusions must come from COMPLETED ANALYSIS):
+- Age: ${phase1?.age ?? 'unknown'}, BMI: ${bmi}${phase1?.body_fat_percent ? `, Body fat: ${phase1.body_fat_percent}%` : ''}
+- Smoking: ${phase2?.smoking_status ?? 'unknown'}, Sedentary: ${phase2?.sedentary_hours ?? 'unknown'}h/day
+- Stress: ${phase2?.stress_level ?? 'unknown'}/5, Sleep: ${phase2?.avg_sleep_hours ?? '?'}h quality ${phase2?.sleep_quality ?? '?'}/5
+- Beer/cider: ${phase2?.beer_frequency ?? 'unknown'}, Spirits/wine: ${phase2?.spirits_wine_frequency ?? 'unknown'}
+- Coffee/day: ${phase2?.coffee_per_day ?? 'unknown'}, Sugar: ${phase2?.sugar_consumption ?? 'unknown'}
+- Symptoms: ${symptomNames}`;
+
+  return `### ROLE
+You are the same Senior Consultant Endocrinologist completing the final synthesis phase of a case review. Your detailed marker-by-marker analysis, key ratio calculations, and clinical concerns are provided below as COMPLETED ANALYSIS. Your task is to read across all of those findings as a whole and produce a patient-facing executive summary.
+
+### CRITICAL INSTRUCTION
+Do NOT re-derive conclusions from the patient context. Patient context is provided only so you can cite specific values (age, lifestyle inputs) in your writing. Every clinical conclusion must come from COMPLETED ANALYSIS — not from re-reading raw data.
 
 ### RULES
-1. CITE PATIENT DATA: Every statement must reference specific values — biomarker results, lifestyle inputs, or medical history items. Say "your SHBG at 58 nmol/L" not "elevated SHBG". Say "your 5 cups of coffee per day" not "caffeine intake".
+1. CITE SPECIFIC VALUES: Reference exact numbers from the analysis. "Your LH at 3.1 mIU/mL" not "low LH". "Your 11 sedentary hours/day" not "sedentary lifestyle".
 2. FORBIDDEN VAGUENESS: Never use "targeted supplementation", "lifestyle modifications", "hormonal optimization", "consider addressing", or any phrase that could apply to any patient.
 3. FORBIDDEN WORDS: "aggressive", "severe", "bottlenecked", "disastrous", "biological narrative", "wellness strategist", "warrior", "synthesis".
-4. TONE: Professional but direct. Write as if explaining to an intelligent patient who has no medical background. Use active voice. Every sentence should answer "so what does this mean for me?"
-5. INDEPENDENT CONCURRENT ISSUES: When the analysis reveals multiple independent problems with different root causes, present them as separate concurrent findings — do not force them into a single cascade. If thyroid dysfunction drives one pattern and insulin resistance drives another, name both and explain why they are separate.
-6. CLINICAL FINDINGS vs DIAGNOSES: These are risk indicators warranting investigation, never confirmed diagnoses. Do not write "you have [condition]".
+4. TONE: Direct and plain. Write as if explaining to an intelligent patient with no medical background. Active voice. Every sentence answers "so what does this mean for me?"
+5. CLINICAL LANGUAGE: Use the same risk indicator language from the analysis — do not upgrade correlation to causation in the summary.
+6. NON-SPECIFIC MARKERS: Do not attribute hs-CRP, ferritin, or metabolic markers to a single cause. When citing them, reference all correlated risk factors present in the analysis.
 
-### COMPLETED ANALYSIS (your detailed findings from Phase 1)
+### COMPLETED ANALYSIS
 ${p.pass1Result}
 
-### PATIENT DATA (for citation reference)
-${buildPatientData(p)}
+### PATIENT CONTEXT
+${patientContext}
 
 ### SYNTHESIS TASK
 
-**report_summary**: This is the first thing the patient reads. Make it count.
+Before writing any output, perform this mapping from COMPLETED ANALYSIS:
+1. List all HIGH and MEDIUM severity concerns from the concerns array
+2. Map each to its anatomical axis: HPG axis (hypothalamus → pituitary → testes), metabolic axis, inflammatory pathway, thyroid axis, or circulation/vascular
+3. Identify which concerns share an upstream mechanism (e.g., HOMA-IR and hs-CRP both suppressing the same HPG signaling pathway = one upstream problem with two measured expressions)
+4. Identify which concerns are independent of each other (different axes, different mechanisms)
+5. Note what the key_ratios tell you about what is NOT the problem — if % Free T is OPTIMAL, binding is not a driver; if T:E2 is OPTIMAL, aromatization is not a driver. State this explicitly — ruling out a mechanism is as valuable as identifying one.
+6. Write your summary from this map. The insight must come from the relationships between findings, not from restating any single concern.
 
-- "bottom_line": 2-3 sentences. State the verdict in plain language. Include the patient's age and how their hormonal profile compares. Reference at least one specific biomarker value and one lifestyle factor. NO academic abstractions.
-  * BAD: "Overall endocrine homeostasis is characterized by robust total androgen production rendered inactive by elevated binding proteins."
-  * GOOD: "At 32, your total testosterone of 620 ng/dL is healthy, but your free testosterone is only 6.2 pg/mL — meaning most of it is locked up by a binding protein called SHBG (yours is 58 nmol/L, well above optimal). Your body is producing enough testosterone, but your cells cannot access it. Your 5 cups of coffee per day is the most likely reason — caffeine drives your liver to overproduce SHBG."
+**bottom_line**: 2-3 sentences. State the overall picture — what is working, what is not, and the single most important pattern. Include age, at least one specific biomarker value, and what it means in plain language.
+  * BAD: "At 38, your hormonal profile shows significant impairment driven by metabolic dysfunction."
+  * GOOD: "At 38, your testosterone production system has a signal problem, not a hardware problem — your testes are capable, but the instruction coming from your brain (LH at 3.1 mIU/mL) is weaker than it should be for your testosterone level of 315 ng/dL. Your % Free Testosterone at 1.84% is healthy, which rules out a binding issue — the shortage is upstream, in the signal, not in how your body handles the testosterone it does make."
 
-- "primary_driver": 2-3 sentences. If there are multiple independent drivers, name them separately. Name the root cause mechanism(s) and trace each back to the specific lifestyle inputs or medical history that produce it. Include the causal chain with actual values.
-  * BAD: "Elevated SHBG is sequestering circulating testosterone, resulting in reduced free testosterone bioavailability."
-  * GOOD: "Your SHBG at 58 nmol/L is acting like a cage around your testosterone — it binds it so tightly that your tissues cannot use it, which is why free testosterone is only 6.2 pg/mL despite a healthy total. Coffee is the primary suspect: at 5 cups per day, caffeine forces your liver to produce excess SHBG. This is the single highest-leverage problem because your body is making enough testosterone — it just cannot deliver it."
+**primary_driver**: 2-3 sentences. If the mapping reveals multiple independent axes are affected, name them separately and explain why they are separate. If multiple concerns share one upstream mechanism, explain the shared root. Trace mechanisms back to the patient's specific values.
+  * BAD: "Metabolic stress and inflammation are suppressing your testosterone production."
+  * GOOD: "Two patterns are converging on the same upstream control point. Your HOMA-IR of 3.54 creates metabolic pressure that blunts the hypothalamic signal driving LH. Independently, your hs-CRP of 2.9 mg/L reflects a chronic inflammatory state — with smoking, sedentary hours, and metabolic stress all contributing — that suppresses the same GnRH signaling pathway. These are not one problem; they are two separate mechanisms both reducing the brain's instruction to produce testosterone."
 
-- "next_action": 1-2 sentences. ONE specific, actionable intervention with dosage/quantity/timeline. Not a category — an instruction. Choose the single highest-leverage action from the concerns. Do NOT attribute non-specific markers (hs-CRP, ferritin) to a single cause in this sentence — these markers confirm a pattern exists, they do not establish causation. Say "address the primary drivers of inflammation identified in your results" not "your smoking is the primary cause of your hs-CRP."
-  * BAD: "Implement SHBG-modulating interventions including targeted supplementation and caffeine reduction."
-  * GOOD: "Cut coffee from 5 cups to 2 cups per day for 6 weeks and retest SHBG and free testosterone — this alone could increase free T by 15-25%."
+**next_action**: 1-2 sentences. ONE specific intervention with quantity/frequency/timeline. Choose the highest-leverage action from the HIGH-severity concerns. Do not attribute non-specific markers to a single cause.
+  * BAD: "Begin a smoking cessation program to reduce inflammation."
+  * GOOD: "Start a structured smoking cessation program with your physician — nicotine directly suppresses Leydig cell function and contributes to the inflammatory pattern shown in your hs-CRP of 2.9 mg/L alongside your other metabolic risk factors."
 
-**health_score**: An integer 0-100 reflecting overall hormonal health. Weight this score toward free/bioavailable hormone levels rather than total levels. A patient with perfect total testosterone but very low free testosterone should NOT score above 60. Multiple high-severity concerns should pull the score significantly lower. Consider the patient's age — the same values are more concerning at 25 than at 55.
+**health_score**: An integer 0-100 reflecting overall hormonal health. Base this on the full pattern from COMPLETED ANALYSIS: weight free/bioavailable hormone levels heavily, penalise multiple high-severity concerns, factor in age (same values are more concerning at 28 than at 52), and credit findings that rule out additional problems (optimal T:E2, optimal % Free T are positive signals).
 
 Return ONLY valid JSON (no markdown, no code fences):
 {
   "report_summary": {
-    "bottom_line": "<2-3 sentences, plain language, cite specific values and lifestyle factors>",
-    "primary_driver": "<2-3 sentences, full causal chain with actual values>",
-    "next_action": "<1-2 sentences, ONE specific intervention with dose/quantity/timeline>"
+    "bottom_line": "<2-3 sentences>",
+    "primary_driver": "<2-3 sentences>",
+    "next_action": "<1-2 sentences>"
   },
   "health_score": <integer 0-100>
 }`;
