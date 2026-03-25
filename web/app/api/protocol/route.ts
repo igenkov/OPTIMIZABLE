@@ -28,23 +28,29 @@ export async function POST(req: NextRequest) {
       analysisJson: JSON.stringify(analysis, null, 2),
     });
 
-    const model = 'gemini-2.5-pro';
-    const response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            maxOutputTokens: 4096,
-            temperature: 0.1,
-            topP: 0.2,
-            responseMimeType: 'application/json',
-          },
-        }),
-      },
-    );
+    const models = ['gemini-2.5-pro', 'gemini-2.5-flash'] as const;
+    let response!: Response;
+    let model: string = models[0];
+    for (const m of models) {
+      model = m;
+      response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`,
+        {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({
+            contents: [{ parts: [{ text: prompt }] }],
+            generationConfig: {
+              maxOutputTokens: 4096,
+              temperature: 0.1,
+              topP: 0.2,
+              responseMimeType: 'application/json',
+            },
+          }),
+        },
+      );
+      if (response.status !== 503) break;
+    }
 
     if (!response.ok) {
       const err = await response.text();
