@@ -6,6 +6,27 @@ import { SYMPTOMS } from '@/constants/symptoms';
 import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
 import { buildPass1Prompt, buildSynthesisPrompt } from '@/lib/prompts/analysis';
 
+/* ── Server-side concern severity computation ── */
+function computeConcernSeverity(
+  marker: string,
+  panelValues: Record<string, { value: number | string; unit: string }>,
+): 'monitor' | 'address' | 'urgent' | null {
+  const pv = panelValues[marker];
+  if (!pv) return null; // lifestyle concern or marker not in panel — keep LLM assessment
+  const bm = BIOMARKERS.find(b => b.id === marker);
+  if (!bm) return null;
+  const value = Number(pv.value);
+  if (isNaN(value)) return null;
+  const { standard_range_low: stdLow, standard_range_high: stdHigh } = bm;
+  const stdRange = stdHigh - stdLow;
+  // >15% beyond standard bounds = urgent (genuinely out of range, not borderline)
+  if (value < stdLow - stdRange * 0.15 || value > stdHigh + stdRange * 0.15) return 'urgent';
+  // Outside standard range but not dramatically so = address
+  if (value < stdLow || value > stdHigh) return 'address';
+  // Within standard but outside optimal = monitor
+  return 'monitor';
+}
+
 /* ── Server-side ratio computation ── */
 function computeRatios(
   panelValues: Record<string, { value: number | string; unit: string }>,
@@ -79,9 +100,9 @@ async function callGemini(
         body: JSON.stringify({
           contents: [{ parts: [{ text: prompt }] }],
           generationConfig: {
+            thinkingConfig: { thinkingBudget: 8192 },
             maxOutputTokens: maxTokens,
-            temperature: 0.1,
-            topP: 0.2,
+            temperature: 1,
             responseMimeType: 'application/json',
           },
         }),
@@ -170,6 +191,14 @@ export async function POST(req: NextRequest) {
 
     // Merge both passes into final response
     const analysis = { ...pass1.parsed, ...pass2.parsed };
+
+    // Override concern severity with server-computed values for biomarkers
+    if (Array.isArray(analysis.concerns)) {
+      analysis.concerns = analysis.concerns.map((c: { marker: string; severity: string; explanation: string }) => {
+        const computed = computeConcernSeverity(c.marker, panelValues);
+        return computed ? { ...c, severity: computed } : c;
+      });
+    }
 
     return NextResponse.json({ ...analysis, _model: pass1.model });
   } catch (e: unknown) {

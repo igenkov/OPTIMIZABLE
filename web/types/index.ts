@@ -78,7 +78,7 @@ export interface BloodworkPanel {
   created_at: string;
 }
 
-export type MarkerStatus = 'optimal' | 'suboptimal' | 'attention';
+export type MarkerStatus = 'optimal' | 'suboptimal' | 'out_of_range';
 
 export interface MarkerAnalysis {
   marker: string;
@@ -111,7 +111,7 @@ export interface AnalysisReport {
   marker_analysis: MarkerAnalysis[];
   key_ratios: KeyRatio[];
   report_summary: string | ReportSummaryStructured;
-  concerns: { marker: string; severity: 'low' | 'medium' | 'high'; explanation: string }[];
+  concerns: { marker: string; severity: 'monitor' | 'address' | 'urgent'; explanation: string }[];
   medical_referral_needed: boolean;
   medical_referral_reason?: string;
   created_at: string;

@@ -202,7 +202,7 @@ export default async function LabPage() {
           {latest.concerns.map((c, i) => (
             <div key={i} className="flex items-start gap-3 py-2.5 border-b border-[rgba(255,255,255,0.04)] last:border-0">
               <div className="w-1.5 h-1.5 rounded-full shrink-0 mt-[5px]"
-                style={{ background: c.severity === 'high' ? '#E88080' : c.severity === 'medium' ? '#E8C470' : '#C8A2C8' }} />
+                style={{ background: c.severity === 'urgent' ? '#E88080' : c.severity === 'address' ? '#E8C470' : '#C8A2C8' }} />
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] font-bold text-white tracking-widest uppercase mb-0.5">
                   {c.marker.replace(/_/g, ' ')}
@@ -211,10 +211,10 @@ export default async function LabPage() {
               </div>
               <span className="text-[10px] font-bold uppercase px-2 py-0.5 shrink-0"
                 style={{
-                  color: c.severity === 'high' ? '#E88080' : c.severity === 'medium' ? '#E8C470' : '#C8A2C8',
-                  background: c.severity === 'high' ? 'rgba(232,128,128,0.1)' : c.severity === 'medium' ? 'rgba(232,196,112,0.1)' : 'rgba(200,162,200,0.1)',
+                  color: c.severity === 'urgent' ? '#E88080' : c.severity === 'address' ? '#E8C470' : '#C8A2C8',
+                  background: c.severity === 'urgent' ? 'rgba(232,128,128,0.1)' : c.severity === 'address' ? 'rgba(232,196,112,0.1)' : 'rgba(200,162,200,0.1)',
                 }}>
-                {c.severity}
+                {c.severity === 'urgent' ? 'Out of Range' : c.severity === 'address' ? 'Suboptimal' : 'Monitor'}
               </span>
             </div>
           ))}
