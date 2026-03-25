@@ -28,29 +28,23 @@ export async function POST(req: NextRequest) {
       analysisJson: JSON.stringify(analysis, null, 2),
     });
 
-    const models = ['gemini-2.5-pro', 'gemini-2.5-flash'];
-    let response!: Response;
-    let usedModel = models[0];
-    for (const model of models) {
-      usedModel = model;
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              maxOutputTokens: 4096,
-              temperature: 0.1,
-              topP: 0.2,
-              responseMimeType: 'application/json',
-            },
-          }),
-        },
-      );
-      if (response.status !== 503) break;
-    }
+    const model = 'gemini-2.5-pro';
+    const response = await fetch(
+      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+      {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: prompt }] }],
+          generationConfig: {
+            maxOutputTokens: 4096,
+            temperature: 0.1,
+            topP: 0.2,
+            responseMimeType: 'application/json',
+          },
+        }),
+      },
+    );
 
     if (!response.ok) {
       const err = await response.text();
@@ -62,7 +56,7 @@ export async function POST(req: NextRequest) {
     const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const protocol = JSON.parse(text);
 
-    return NextResponse.json({ ...protocol, _model: usedModel });
+    return NextResponse.json({ ...protocol, _model: model });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: msg }, { status: 500 });

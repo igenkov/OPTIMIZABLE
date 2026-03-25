@@ -65,40 +65,33 @@ async function callGemini(
   apiKey: string,
   maxTokens = 12288,
 ): Promise<{ parsed: Record<string, unknown>; model: string }> {
-  const models = ['gemini-2.5-pro', 'gemini-2.5-flash'];
-  let response!: Response;
-  let usedModel = models[0];
-
-  for (const model of models) {
-    usedModel = model;
-    response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            maxOutputTokens: maxTokens,
-            temperature: 0.1,
-            topP: 0.2,
-            responseMimeType: 'application/json',
-          },
-        }),
-      },
-    );
-    if (response.status !== 503) break;
-  }
+  const model = 'gemini-2.5-pro';
+  const response = await fetch(
+    `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
+    {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: prompt }] }],
+        generationConfig: {
+          maxOutputTokens: maxTokens,
+          temperature: 0.1,
+          topP: 0.2,
+          responseMimeType: 'application/json',
+        },
+      }),
+    },
+  );
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`Gemini API error (${usedModel}): ${err}`);
+    throw new Error(`Gemini API error (${model}): ${err}`);
   }
 
   const data = await response.json();
   const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
   const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-  return { parsed: JSON.parse(text), model: usedModel };
+  return { parsed: JSON.parse(text), model };
 }
 
 /* ── Main route ── */
