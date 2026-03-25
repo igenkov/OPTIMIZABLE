@@ -83,7 +83,8 @@ You are a Clinical Protocol Specialist translating a completed bloodwork analysi
 ${analysisJson}
 
 ### OUTPUT FORMAT
-Return ONLY valid JSON (no markdown, no code fences):
+Return ONLY valid JSON (no markdown, no code fences).
+CRITICAL: "eating", "exercise", "sleep", "stress", and "habits" MUST be arrays of plain strings — NOT objects, NOT {directive: ...}, NOT {action: ...}. Each element is a single string sentence. Only "supplements" contains objects.
 {
   "supplements": [
     {
@@ -93,10 +94,10 @@ Return ONLY valid JSON (no markdown, no code fences):
       "reason": "<references the specific analysis finding it addresses, with actual biomarker values>"
     }
   ],
-  "eating": ["<specific dietary directive with quantities, referencing current intake and analysis findings>"],
-  "exercise": ["<specific directive referencing current routine and analysis findings>"],
-  "sleep": ["<directive referencing current sleep data — brief if already optimal>"],
-  "stress": ["<directive referencing current stress level — brief if already low>"],
-  "habits": ["<FIRST item is medical referral if needed, then specific habit changes referencing analysis findings>"]
+  "eating": ["<plain string directive>", "<plain string directive>"],
+  "exercise": ["<plain string directive>", "<plain string directive>"],
+  "sleep": ["<plain string directive>"],
+  "stress": ["<plain string directive>"],
+  "habits": ["<plain string directive>", "<plain string directive>"]
 }`;
 }

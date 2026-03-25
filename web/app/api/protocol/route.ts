@@ -62,7 +62,33 @@ export async function POST(req: NextRequest) {
     const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
     const protocol = JSON.parse(text);
 
-    return NextResponse.json({ ...protocol, _model: model });
+    // Normalize string array fields — LLM occasionally returns objects instead
+    // of plain strings (e.g. {directive: "...", reason: "..."}) which crashes React
+    const toStringArray = (val: unknown): string[] => {
+      if (!Array.isArray(val)) return [];
+      return val.map(item => {
+        if (typeof item === 'string') return item;
+        if (item && typeof item === 'object') {
+          const o = item as Record<string, unknown>;
+          // Try common keys the model uses when it returns objects
+          const str = o.directive ?? o.text ?? o.action ?? o.recommendation ?? o.habit ?? o.content;
+          if (typeof str === 'string') return str;
+          return Object.values(o).filter(v => typeof v === 'string').join(' — ');
+        }
+        return String(item);
+      }).filter(Boolean);
+    };
+
+    const normalized = {
+      ...protocol,
+      eating:   toStringArray(protocol.eating),
+      exercise: toStringArray(protocol.exercise),
+      sleep:    toStringArray(protocol.sleep),
+      stress:   toStringArray(protocol.stress),
+      habits:   toStringArray(protocol.habits),
+    };
+
+    return NextResponse.json({ ...normalized, _model: model });
   } catch (e: unknown) {
     const msg = e instanceof Error ? e.message : 'Unknown error';
     return NextResponse.json({ error: msg }, { status: 500 });
