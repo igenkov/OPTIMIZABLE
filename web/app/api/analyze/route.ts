@@ -162,7 +162,7 @@ export async function POST(req: NextRequest) {
     const biomarkerContext = BIOMARKERS.map(b => {
       const val = panelValues[b.id];
       if (!val) return null;
-      return `${b.name}: ${val.value} ${val.unit} (standard: ${b.standard_range_low}–${b.standard_range_high}, optimal: ${b.optimal_range_low}–${b.optimal_range_high})`;
+      return `[${b.id}] ${b.name}: ${val.value} ${val.unit} (standard: ${b.standard_range_low}–${b.standard_range_high}, optimal: ${b.optimal_range_low}–${b.optimal_range_high})`;
     }).filter(Boolean).join('\n');
 
     // Pre-compute ratios server-side — LLM must not recalculate these
