@@ -4,7 +4,8 @@ export function getStatusColor(status: MarkerStatus): string {
   switch (status) {
     case 'optimal': return '#4ADE80';
     case 'suboptimal': return '#E8C470';
-    case 'out_of_range': return '#E88080';
+    case 'out_of_range':
+    default: return '#E88080';
   }
 }
 

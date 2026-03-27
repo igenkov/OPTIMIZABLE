@@ -228,7 +228,7 @@ export default async function LabPage() {
           <span className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[4px]">Categorized Deep-Dive</span>
         </div>
 
-        <div className="grid grid-cols-1 xl:grid-cols-2 gap-5">
+        <div className="grid grid-cols-1 gap-5">
           {CATEGORY_ORDER.filter(cat => grouped[cat]?.length > 0).map(cat => {
             const meta = CATEGORY_META[cat] ?? { label: cat, color: '#9A9A9A', Icon: Activity };
             const markers = grouped[cat];
