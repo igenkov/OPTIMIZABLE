@@ -233,7 +233,7 @@ export async function POST(req: NextRequest) {
 
     // ── Pass 1: Thinking model ──
     const pass1Prompt = buildPass1Prompt(promptParams);
-    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4', 3500);
+    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4', 5000);
     if (!isValidOutput(JSON.stringify(pass1.parsed))) {
       pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-pro', 2500);
     }
