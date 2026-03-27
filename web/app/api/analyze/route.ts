@@ -140,12 +140,9 @@ async function callOpenAI(
     model,
     input: prompt,
     max_output_tokens: maxTokens,
-    temperature: model.includes('thinking') ? 0.2 : 0.1,
+    temperature: 0.2,
     text: { format: { type: 'json_object' } },
   };
-  if (model.includes('thinking')) {
-    body.reasoning = { effort: 'high' };
-  }
 
   const response = await fetch('https://api.openai.com/v1/responses', {
     method: 'POST',
@@ -236,7 +233,7 @@ export async function POST(req: NextRequest) {
 
     // ── Pass 1: Thinking model ──
     const pass1Prompt = buildPass1Prompt(promptParams);
-    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-thinking', 3500);
+    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4', 3500);
     if (!isValidOutput(JSON.stringify(pass1.parsed))) {
       pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-pro', 2500);
     }
