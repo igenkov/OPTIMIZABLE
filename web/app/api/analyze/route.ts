@@ -141,7 +141,7 @@ async function callOpenAI(
     input: prompt,
     max_output_tokens: maxTokens,
     temperature: model.includes('thinking') ? 0.2 : 0.1,
-    response_format: { type: 'json_object' },
+    text: { format: { type: 'json_object' } },
   };
   if (model.includes('thinking')) {
     body.reasoning = { effort: 'high' };
