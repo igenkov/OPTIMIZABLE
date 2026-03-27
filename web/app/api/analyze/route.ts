@@ -141,6 +141,7 @@ async function callOpenAI(
     input: prompt,
     max_output_tokens: maxTokens,
     temperature: model.includes('thinking') ? 0.2 : 0.1,
+    response_format: { type: 'json_object' },
   };
   if (model.includes('thinking')) {
     body.reasoning = { effort: 'high' };
@@ -161,8 +162,7 @@ async function callOpenAI(
   }
 
   const data = await response.json();
-  const messageOutput = data.output?.find((o: { type: string }) => o.type === 'message');
-  const raw = messageOutput?.content?.[0]?.text ?? data.output_text ?? '';
+  const raw = data.output_text ?? data.output?.find((o: { type: string }) => o.type === 'message')?.content?.[0]?.text ?? '';
   const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
   return { parsed: JSON.parse(text), model };
 }
@@ -236,7 +236,7 @@ export async function POST(req: NextRequest) {
 
     // ── Pass 1: Thinking model ──
     const pass1Prompt = buildPass1Prompt(promptParams);
-    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-thinking', 2500);
+    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-thinking', 3500);
     if (!isValidOutput(JSON.stringify(pass1.parsed))) {
       pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-pro', 2500);
     }
