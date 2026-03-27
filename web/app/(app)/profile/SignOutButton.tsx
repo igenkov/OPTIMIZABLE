@@ -8,6 +8,10 @@ export function SignOutButton() {
   async function handleSignOut() {
     const supabase = createClient();
     await supabase.auth.signOut();
+    localStorage.removeItem('phase1');
+    localStorage.removeItem('phase2');
+    localStorage.removeItem('phase3');
+    localStorage.removeItem('symptoms');
     router.push('/login');
   }
 

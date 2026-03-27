@@ -77,6 +77,10 @@ export default function LoginPage() {
         p3?.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
         sym?.symptoms_selected && supabase.from('symptom_assessments').upsert({ user_id: userId, ...sym }),
       ]);
+      localStorage.removeItem('phase1');
+      localStorage.removeItem('phase2');
+      localStorage.removeItem('phase3');
+      localStorage.removeItem('symptoms');
       router.push('/dashboard');
     } else {
       const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', userId).single();

@@ -86,6 +86,10 @@ export default function SignupPage() {
           p3?.steroid_history ? supabase.from('medical_history').upsert({ user_id: userId, ...p3 }) : null,
           sym?.symptoms_selected ? supabase.from('symptom_assessments').upsert({ user_id: userId, ...sym }) : null,
         ]);
+        localStorage.removeItem('phase1');
+        localStorage.removeItem('phase2');
+        localStorage.removeItem('phase3');
+        localStorage.removeItem('symptoms');
         router.push('/dashboard');
       } else {
         router.push('/onboarding/phase1');
