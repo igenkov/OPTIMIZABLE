@@ -129,46 +129,53 @@ function computeRatios(
   return lines.join('\n');
 }
 
-/* ── Gemini call helper with model fallback ── */
-async function callGemini(
+/* ── OpenAI Responses API call helper ── */
+async function callOpenAI(
   prompt: string,
   apiKey: string,
-  maxTokens = 12288,
+  model: string,
+  maxTokens = 4096,
 ): Promise<{ parsed: Record<string, unknown>; model: string }> {
-  const models = ['gemini-2.5-pro', 'gemini-2.5-flash'] as const;
-  let response!: Response;
-  let usedModel: string = models[0];
-
-  for (const model of models) {
-    usedModel = model;
-    response = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({
-          contents: [{ parts: [{ text: prompt }] }],
-          generationConfig: {
-            thinkingConfig: { thinkingBudget: 8192 },
-            maxOutputTokens: maxTokens,
-            temperature: 1,
-            responseMimeType: 'application/json',
-          },
-        }),
-      },
-    );
-    if (response.status !== 503) break;
+  const body: Record<string, unknown> = {
+    model,
+    input: prompt,
+    max_output_tokens: maxTokens,
+    temperature: model.includes('thinking') ? 0.2 : 0.1,
+  };
+  if (model.includes('thinking')) {
+    body.reasoning = { effort: 'high' };
   }
+
+  const response = await fetch('https://api.openai.com/v1/responses', {
+    method: 'POST',
+    headers: {
+      'content-type': 'application/json',
+      'authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify(body),
+  });
 
   if (!response.ok) {
     const err = await response.text();
-    throw new Error(`Gemini API error (${usedModel}): ${err}`);
+    throw new Error(`OpenAI API error (${model}): ${err}`);
   }
 
   const data = await response.json();
-  const raw = data.candidates?.[0]?.content?.parts?.[0]?.text ?? '';
+  const messageOutput = data.output?.find((o: { type: string }) => o.type === 'message');
+  const raw = messageOutput?.content?.[0]?.text ?? data.output_text ?? '';
   const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-  return { parsed: JSON.parse(text), model: usedModel };
+  return { parsed: JSON.parse(text), model };
+}
+
+/* ── Output validation — triggers Pro fallback ── */
+const FORBIDDEN = [
+  'aggressive', 'severe', 'severely', 'critical', 'bottlenecked',
+  'disastrous', 'working harder', 'working overtime',
+  'biological narrative', 'wellness strategist', 'warrior',
+];
+function isValidOutput(text: string): boolean {
+  const lower = text.toLowerCase();
+  return !FORBIDDEN.some(w => lower.includes(w));
 }
 
 /* ── Main route ── */
@@ -191,8 +198,8 @@ export async function POST(req: NextRequest) {
       .map(id => SYMPTOMS.find(s => s.id === id)?.name ?? id)
       .join(', ') || 'none';
 
-    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
-    if (!apiKey) return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) return NextResponse.json({ error: 'OpenAI API key not configured' }, { status: 500 });
 
     // Vermeulen fallback — MUST run before biomarkerContext is built
     let vermeulenNote = '';
@@ -227,16 +234,22 @@ export async function POST(req: NextRequest) {
       symptomNames, biomarkerContext, vermeulenNote, computedRatiosContext,
     };
 
-    // ── Pass 1: Detailed marker analysis ──
+    // ── Pass 1: Thinking model ──
     const pass1Prompt = buildPass1Prompt(promptParams);
-    const pass1 = await callGemini(pass1Prompt, apiKey, 12288);
+    let pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-thinking', 2500);
+    if (!isValidOutput(JSON.stringify(pass1.parsed))) {
+      pass1 = await callOpenAI(pass1Prompt, apiKey, 'gpt-5.4-pro', 2500);
+    }
 
-    // ── Pass 2: Executive summary + health score ──
+    // ── Pass 2: Standard model ──
     const pass2Prompt = buildSynthesisPrompt({
       ...promptParams,
       pass1Result: JSON.stringify(pass1.parsed),
     });
-    const pass2 = await callGemini(pass2Prompt, apiKey, 4096);
+    let pass2 = await callOpenAI(pass2Prompt, apiKey, 'gpt-5.4', 600);
+    if (!isValidOutput(JSON.stringify(pass2.parsed))) {
+      pass2 = await callOpenAI(pass2Prompt, apiKey, 'gpt-5.4-pro', 600);
+    }
 
     // Merge both passes into final response
     const analysis = { ...pass1.parsed, ...pass2.parsed };
