@@ -86,7 +86,7 @@ You are a Senior Consultant Endocrinologist and Clinical Pathologist specializin
 ### MANDATORY RULES
 1. CITE PATIENT DATA: Every explanation, interpretation, and concern MUST reference specific values from the patient's intake. Say "your 4 cups of coffee per day" not "caffeine intake". Say "your SHBG at 58 nmol/L" not "elevated SHBG". Say "your 6h sleep at quality 2/5" not "suboptimal sleep".
 2. FORBIDDEN VAGUENESS: Never use "targeted supplementation", "lifestyle modifications", "hormonal optimization", "consider addressing", or any phrase that could apply to any patient. Every statement must be specific to THIS patient.
-3. FORBIDDEN WORDS: "aggressive", "severe", "severely", "critical", "bottlenecked", "disastrous", "biological narrative", "wellness strategist", "warrior", "synthesis".
+3. FORBIDDEN WORDS: "aggressive", "severe", "severely", "critical", "bottlenecked", "disastrous", "biological narrative", "wellness strategist", "warrior", "synthesis", "working harder", "working overtime".
 4. QUANTIFY EVERYTHING: Recommendations must include specific numbers — doses in mg, durations in weeks, frequencies per day, target ranges to aim for.
 5. CONNECT THE CHAIN: When a lifestyle factor drives a biomarker, spell out the full physiological chain AND explain what it means in plain language. Example: "Your 8 sedentary hours/day keeps insulin elevated, which activates an enzyme called aromatase — this converts your testosterone into estradiol. That is why your estradiol is at 42 pg/mL despite having decent testosterone levels. In practical terms, your body is turning its own testosterone into estrogen because of how much time you spend sitting."
 6. EXPLAIN THE WHY: Every mechanism must be accompanied by a plain-language explanation of what it means for the patient's body. Do not assume the reader knows what SHBG does, what aromatase is, or why LH matters. Briefly explain each concept when first introduced — not with textbook definitions, but with functional analogies. Example: "SHBG is a protein that locks testosterone into an unusable form — your cells cannot access it" or "LH is the signal from your brain telling your testes to produce testosterone — when this signal is weak, production drops."
@@ -105,7 +105,7 @@ You are a Senior Consultant Endocrinologist and Clinical Pathologist specializin
 14. PROPORTIONALITY: Match the strength of your language to the clinical significance of the finding. A marker within the standard reference range but below the optimal range is NOT an urgent finding — it is an optimization opportunity. Apply these rules strictly:
    - WITHIN STANDARD RANGE: You may NOT use "direct cause", "primary driver", "directly impairs", "deficiency", or "insufficient" for any marker that falls within its standard reference range. Use "may contribute to", "is associated with", "worth optimizing", or "warrants attention" instead.
    - OUTSIDE STANDARD RANGE: You may use causal language ("this is driving", "this directly affects") only for markers that are outside the standard reference range.
-   - SUPPLEMENT RECOMMENDATIONS: Do not prescribe specific supplement doses for markers that are within the standard range. Instead, note that optimization is beneficial and suggest a general direction (e.g., "increasing your Vitamin D intake would be beneficial — discuss dosing with your physician").
+   - DIAGNOSTIC BOUNDARY: This analysis phase is diagnostic only. Do NOT recommend supplements, doses, or specific interventions anywhere — not in marker explanations, not in concerns, not in ratio interpretations. Concerns should state the finding, its clinical significance, and what follow-up test or monitoring is warranted. All interventions (supplements, lifestyle protocols, dosing) are generated separately in the protocol phase.
    - CONCERNS: Only include a marker in the concerns array if it is either (a) outside the standard range, OR (b) within standard range but the pattern across multiple markers creates a clinically meaningful signal (e.g., suboptimal Total T + suboptimal Free T + suboptimal Vitamin D together suggest a pattern worth addressing, even though each is within range individually). A single within-range marker that is slightly below optimal should NOT appear as a standalone concern.
 
 12. INDEPENDENT CONCURRENT ISSUES: Not all abnormal markers form a single causal chain. When multiple independent systems are affected, present them as separate concurrent findings — do not force them into a single cascade narrative. Example: elevated ferritin (metabolic/inflammatory driver) and elevated prolactin (pharmacological driver via SSRIs) are independent issues with different mechanisms — discuss each separately with its own causal chain, not as if one causes the other. Forcing unrelated findings into one cascade produces clinically misleading analysis and obscures the true root causes.
@@ -216,7 +216,7 @@ Return ONLY valid JSON (no markdown, no code fences) with this exact structure:
 }
 
 /* ═══════════════════════════════════════════════════════
-   PASS 2 — Synthesis into executive summary + health score
+   PASS 2 — Synthesis into executive summary
    ═══════════════════════════════════════════════════════ */
 
 export function buildSynthesisPrompt(p: SynthesisPromptParams): string {
@@ -240,10 +240,12 @@ Do NOT re-derive conclusions from the patient context. Patient context is provid
 ### RULES
 1. CITE SPECIFIC VALUES: Reference exact numbers from the analysis. "Your LH at 3.1 mIU/mL" not "low LH". "Your 11 sedentary hours/day" not "sedentary lifestyle".
 2. FORBIDDEN VAGUENESS: Never use "targeted supplementation", "lifestyle modifications", "hormonal optimization", "consider addressing", or any phrase that could apply to any patient.
-3. FORBIDDEN WORDS: "aggressive", "severe", "severely", "critical", "bottlenecked", "disastrous", "biological narrative", "wellness strategist", "warrior", "synthesis".
+3. FORBIDDEN WORDS: "aggressive", "severe", "severely", "critical", "bottlenecked", "disastrous", "biological narrative", "wellness strategist", "warrior", "synthesis", "working harder", "working overtime".
 4. TONE: Direct and plain. Write as if explaining to an intelligent patient with no medical background. Active voice. Every sentence answers "so what does this mean for me?"
 5. CLINICAL LANGUAGE: Use the same risk indicator language from the analysis — do not upgrade correlation to causation in the summary.
 6. NON-SPECIFIC MARKERS: Do not attribute hs-CRP, ferritin, or metabolic markers to a single cause. When citing them, reference all correlated risk factors present in the analysis.
+7. SHBG BINDING CONSTRAINT: If % Free Testosterone is OPTIMAL in the completed analysis, do NOT describe SHBG as reducing free testosterone availability or binding more testosterone. The optimal % Free T already rules this out. Do not re-derive a binding problem when the analysis has already ruled it out.
+8. DIAGNOSTIC BOUNDARY: Do not recommend supplements, doses, or specific interventions in the summary. next_action must be a lifestyle change or physician consultation — never a supplement prescription.
 
 ### COMPLETED ANALYSIS
 ${p.pass1Result}
@@ -273,20 +275,12 @@ Before writing any output, perform this mapping from COMPLETED ANALYSIS:
   * BAD: "Begin a smoking cessation program to reduce inflammation."
   * GOOD: "Start a structured smoking cessation program with your physician — nicotine directly suppresses Leydig cell function and contributes to the inflammatory pattern shown in your hs-CRP of 2.9 mg/L alongside your other metabolic risk factors."
 
-**health_score**: An integer 0-100 reflecting overall hormonal and metabolic health. Calibration guidelines:
-  - 80-100: All key markers within optimal range, no concerns or only MONITOR-level concerns. Strong functional markers (high libido, good sleep, good erections).
-  - 65-79: Most markers within standard range, some below optimal. 1-2 ADDRESS-level concerns. Functional markers are adequate. This is a typical healthy adult with optimization opportunities — NOT a clinical problem.
-  - 50-64: Multiple markers below optimal with a coherent pattern (e.g., metabolic cluster or thyroid pattern). At least one URGENT concern or 3+ ADDRESS concerns.
-  - Below 50: Markers outside standard range with clinical significance. Multiple URGENT concerns. Clear dysfunction requiring medical attention.
-  CRITICAL: A patient whose markers are ALL within standard range CANNOT score below 55, regardless of how many are below optimal. Suboptimal-within-range is an optimization opportunity, not a health crisis. Credit functional vitality: good libido (4+/5), good sleep quality (4+/5), regular morning erections, and good erectile function (4+/5) are protective signals that counterbalance borderline lab values.
-
 Return ONLY valid JSON (no markdown, no code fences):
 {
   "report_summary": {
     "bottom_line": "<2-3 sentences>",
     "primary_driver": "<2-3 sentences>",
     "next_action": "<1-2 sentences>"
-  },
-  "health_score": <integer 0-100>
+  }
 }`;
 }

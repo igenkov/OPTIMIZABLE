@@ -6,25 +6,74 @@ import { SYMPTOMS } from '@/constants/symptoms';
 import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
 import { buildPass1Prompt, buildSynthesisPrompt } from '@/lib/prompts/analysis';
 
+/* ── Resolve marker display name → canonical ID ── */
+const _nameToId = new Map<string, string>();
+BIOMARKERS.forEach(b => {
+  _nameToId.set(b.name.toLowerCase(), b.id);
+  _nameToId.set(b.id.toLowerCase(), b.id);
+});
+function resolveMarkerId(marker: string): string {
+  return _nameToId.get(marker.toLowerCase()) ?? marker;
+}
+
+/* ── Server-side marker status computation ── */
+function computeMarkerStatus(
+  value: number,
+  stdLow: number, stdHigh: number,
+  optLow: number, optHigh: number,
+): 'optimal' | 'suboptimal' | 'out_of_range' {
+  if (value < stdLow || value > stdHigh) return 'out_of_range';
+  if (value >= optLow && value <= optHigh) return 'optimal';
+  return 'suboptimal';
+}
+
 /* ── Server-side concern severity computation ── */
 function computeConcernSeverity(
-  marker: string,
+  markerId: string,
   panelValues: Record<string, { value: number | string; unit: string }>,
 ): 'monitor' | 'address' | 'urgent' | null {
-  const pv = panelValues[marker];
+  const pv = panelValues[markerId];
   if (!pv) return null; // lifestyle concern or marker not in panel — keep LLM assessment
-  const bm = BIOMARKERS.find(b => b.id === marker);
+  const bm = BIOMARKERS.find(b => b.id === markerId);
   if (!bm) return null;
   const value = Number(pv.value);
   if (isNaN(value)) return null;
   const { standard_range_low: stdLow, standard_range_high: stdHigh } = bm;
   const stdRange = stdHigh - stdLow;
-  // >15% beyond standard bounds = urgent (genuinely out of range, not borderline)
+  // >15% beyond standard bounds = urgent
   if (value < stdLow - stdRange * 0.15 || value > stdHigh + stdRange * 0.15) return 'urgent';
-  // Outside standard range but not dramatically so = address
+  // Outside standard range but not dramatically = address
   if (value < stdLow || value > stdHigh) return 'address';
   // Within standard but outside optimal = monitor
   return 'monitor';
+}
+
+/* ── Server-side health score computation ── */
+function computeHealthScore(
+  markerStatuses: Array<{ status: string }>,
+  phase2: Record<string, unknown> | null,
+): number {
+  let score = 85;
+
+  for (const m of markerStatuses) {
+    if (m.status === 'out_of_range') score -= 8;
+    else if (m.status === 'suboptimal') score -= 2;
+  }
+
+  // Functional marker bonuses
+  if (phase2) {
+    if (Number(phase2.libido_rating) >= 4) score += 3;
+    if (Number(phase2.sleep_quality) >= 4) score += 3;
+    if (Number(phase2.erectile_rating) >= 4) score += 2;
+    const erections = String(phase2.morning_erection_frequency ?? '');
+    if (erections === 'most_days' || erections === 'every_day') score += 2;
+  }
+
+  // Floor: all markers within standard range = minimum 55
+  const anyOutOfRange = markerStatuses.some(m => m.status === 'out_of_range');
+  if (!anyOutOfRange) score = Math.max(score, 55);
+
+  return Math.max(20, Math.min(100, score));
 }
 
 /* ── Server-side ratio computation ── */
@@ -192,13 +241,55 @@ export async function POST(req: NextRequest) {
     // Merge both passes into final response
     const analysis = { ...pass1.parsed, ...pass2.parsed };
 
-    // Override concern severity with server-computed values for biomarkers
-    if (Array.isArray(analysis.concerns)) {
-      analysis.concerns = analysis.concerns.map((c: { marker: string; severity: string; explanation: string }) => {
-        const computed = computeConcernSeverity(c.marker, panelValues);
-        return computed ? { ...c, severity: computed } : c;
-      });
+    // ── Server-side overrides ──
+
+    // 1. Override marker statuses with server-computed values
+    if (Array.isArray(analysis.marker_analysis)) {
+      for (const m of analysis.marker_analysis as Array<Record<string, unknown>>) {
+        const id = resolveMarkerId(String(m.marker));
+        const pv = panelValues[id];
+        if (!pv) continue;
+        const bm = BIOMARKERS.find(b => b.id === id);
+        if (!bm) continue;
+        const value = Number(pv.value);
+        if (isNaN(value)) continue;
+        m.status = computeMarkerStatus(
+          value,
+          bm.standard_range_low, bm.standard_range_high,
+          bm.optimal_range_low, bm.optimal_range_high,
+        );
+      }
     }
+
+    // 2. Override concern severity + filter out optimal-status markers
+    if (Array.isArray(analysis.concerns)) {
+      analysis.concerns = (analysis.concerns as Array<Record<string, unknown>>)
+        .map(c => {
+          const id = resolveMarkerId(String(c.marker));
+          const computed = computeConcernSeverity(id, panelValues);
+          return computed ? { ...c, severity: computed } : c;
+        })
+        .filter(c => {
+          const id = resolveMarkerId(String(c.marker));
+          const pv = panelValues[id];
+          if (!pv) return true; // keep lifestyle concerns
+          const bm = BIOMARKERS.find(b => b.id === id);
+          if (!bm) return true;
+          const value = Number(pv.value);
+          if (isNaN(value)) return true;
+          return computeMarkerStatus(
+            value,
+            bm.standard_range_low, bm.standard_range_high,
+            bm.optimal_range_low, bm.optimal_range_high,
+          ) !== 'optimal';
+        });
+    }
+
+    // 3. Compute health score server-side (overrides model's score)
+    const markerStatuses = Array.isArray(analysis.marker_analysis)
+      ? (analysis.marker_analysis as Array<{ status: string }>)
+      : [];
+    analysis.health_score = computeHealthScore(markerStatuses, phase2);
 
     return NextResponse.json({ ...analysis, _model: pass1.model });
   } catch (e: unknown) {
