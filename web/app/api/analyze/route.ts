@@ -129,6 +129,54 @@ function computeRatios(
   return lines.join('\n');
 }
 
+/* ── Server-side ratio data (value + status) ── */
+type RatioData = { value: number; status: 'optimal' | 'suboptimal' | 'out_of_range' };
+
+function computeRatioData(
+  panelValues: Record<string, { value: number | string; unit: string }>,
+): Record<string, RatioData> {
+  const data: Record<string, RatioData> = {};
+
+  const insulin = panelValues.fasting_insulin ? Number(panelValues.fasting_insulin.value) : null;
+  const glucose = panelValues.glucose ? Number(panelValues.glucose.value) : null;
+  if (insulin != null && glucose != null && insulin > 0 && glucose > 0) {
+    const v = (insulin * glucose) / 405;
+    data['homa_ir'] = {
+      value: Math.round(v * 100) / 100,
+      status: v <= 1.5 ? 'optimal' : v <= 2.5 ? 'suboptimal' : 'out_of_range',
+    };
+  }
+
+  const totalT = panelValues.total_t ? Number(panelValues.total_t.value) : null;
+  const estradiol = panelValues.estradiol ? Number(panelValues.estradiol.value) : null;
+  if (totalT != null && estradiol != null && estradiol > 0) {
+    const v = totalT / estradiol;
+    data['te_ratio'] = {
+      value: Math.round(v * 10) / 10,
+      status: (v >= 10 && v <= 25) ? 'optimal' : 'out_of_range',
+    };
+  }
+
+  const freeT = panelValues.free_t ? Number(panelValues.free_t.value) : null;
+  if (freeT != null && totalT != null && totalT > 0) {
+    const v = (freeT / (totalT * 10)) * 100;
+    data['pct_free_t'] = {
+      value: Math.round(v * 100) / 100,
+      status: (v >= 0.8 && v <= 3.5) ? 'optimal' : 'out_of_range',
+    };
+  }
+
+  return data;
+}
+
+function getRatioKey(name: string): string | null {
+  const lower = name.toLowerCase();
+  if (lower.includes('homa')) return 'homa_ir';
+  if (lower.includes(':e2') || lower.includes('/e2') || lower.includes('te2')) return 'te_ratio';
+  if (lower.includes('free t') || lower.includes('free test')) return 'pct_free_t';
+  return null;
+}
+
 /* ── OpenAI Responses API call helper ── */
 async function callOpenAI(
   prompt: string,
@@ -300,6 +348,25 @@ export async function POST(req: NextRequest) {
       ? (analysis.marker_analysis as Array<{ status: string }>)
       : [];
     analysis.health_score = computeHealthScore(markerStatuses, phase2);
+
+    // 4. Override key_ratio value + status server-side; remove hallucinated uncalculable ratios
+    const ratioData = computeRatioData(panelValues);
+    if (Array.isArray(analysis.key_ratios)) {
+      analysis.key_ratios = (analysis.key_ratios as Array<Record<string, unknown>>)
+        .filter(r => {
+          const key = getRatioKey(String(r.name ?? ''));
+          // Known ratio but couldn't be computed → LLM hallucinated it, drop it
+          if (key && !ratioData[key]) return false;
+          return true;
+        })
+        .map(r => {
+          const key = getRatioKey(String(r.name ?? ''));
+          if (key && ratioData[key]) {
+            return { ...r, value: ratioData[key].value, status: ratioData[key].status };
+          }
+          return r;
+        });
+    }
 
     return NextResponse.json({ ...analysis, _model: pass1.model });
   } catch (e: unknown) {

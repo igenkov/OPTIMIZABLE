@@ -81,6 +81,8 @@ export default async function ProtocolPage() {
   const phaseDay      = currentDay > 0 ? ((currentDay - 1) % 45) + 1 : 1;
   const phaseProgress = Math.round(((phaseDay - 1) / 45) * 100);
   const daysRemaining = 45 - phaseDay;
+  const phase1Progress = currentDay === 0 ? 0 : currentPhase >= 2 ? 100 : phaseProgress;
+  const phase2Progress = currentDay === 0 ? 0 : currentPhase === 2 ? phaseProgress : 0;
 
   // Phase 1 → control bloodwork at day 45; Phase 2 → final bloodwork at day 90
   let nextLabDate: Date | null = null;
@@ -148,35 +150,104 @@ export default async function ProtocolPage() {
         </div>
       </div>
 
-      {/* ── Phase stepper ── */}
-      <div className="grid grid-cols-2 gap-4 mb-10 relative max-w-xs">
-        <div className="absolute top-5 left-0 right-0 h-px bg-[rgba(255,255,255,0.05)] z-0" />
-        {PHASES.map(p => {
-          const isActive = p.num === currentPhase;
-          const isDone   = p.num < currentPhase;
-          return (
-            <div key={p.num} className="relative z-10 flex flex-col items-center">
-              <div className={cn(
-                'w-10 h-10 rounded-full border-2 flex items-center justify-center mb-3 bg-[#141414] transition-all duration-300',
-                isActive ? 'border-[#C8A2C8] shadow-[0_0_20px_rgba(200,162,200,0.2)]'
-                         : isDone  ? 'border-[rgba(200,162,200,0.35)]'
-                                   : 'border-[rgba(255,255,255,0.06)]',
-              )}>
-                {isDone
-                  ? <ShieldCheck size={16} className="text-[#C8A2C8]" />
-                  : <span className={cn('text-xs font-black', isActive ? 'text-[#C8A2C8]' : 'text-[#3A3A3A]')}>{p.num}</span>
-                }
+      {/* ── Roadmap graphic ── */}
+      <div className="mb-10 overflow-x-auto pb-1 -mx-4 lg:-mx-8 px-4 lg:px-8">
+        <div className="min-w-[520px] flex flex-col gap-2">
+
+          {/* Icons + phase bars row */}
+          <div className="flex items-center gap-1.5">
+
+            {/* Node: Initial Bloodwork */}
+            <div className="shrink-0 w-14 flex justify-center">
+              <div className="w-9 h-9 border-2 border-[#4ADE80] bg-[rgba(74,222,128,0.06)] flex items-center justify-center">
+                <FlaskConical size={15} className="text-[#4ADE80]" />
               </div>
-              <span className={cn('text-[10px] font-black uppercase tracking-widest mb-0.5', isActive ? 'text-white' : 'text-[#3A3A3A]')}>
-                {p.label}
-              </span>
-              <span className="text-[9px] font-mono text-[#3A3A3A] uppercase">Days {p.days}</span>
-              {isActive && currentDay > 0 && (
-                <span className="text-[9px] font-bold text-[#C8A2C8] mt-0.5 tracking-widest">Day {currentDay}</span>
-              )}
             </div>
-          );
-        })}
+
+            {/* Phase 1: Foundation bar */}
+            <div className="flex-1 h-9 relative overflow-hidden border border-[rgba(200,162,200,0.2)]"
+              style={{ background: 'rgba(255,255,255,0.02)' }}>
+              <div className="absolute inset-y-0 left-0 bg-[rgba(200,162,200,0.1)] transition-all"
+                style={{ width: `${phase1Progress}%` }} />
+              {currentPhase === 1 && currentDay > 0 && (
+                <div className="absolute inset-y-0 w-px bg-[#C8A2C8]"
+                  style={{ left: `${phaseProgress}%` }} />
+              )}
+              <div className="absolute inset-0 flex items-center justify-between px-3">
+                <div>
+                  <span className="text-[9px] font-black text-white uppercase tracking-widest">Foundation</span>
+                  <span className="text-[8px] font-mono text-[#4A4A4A] ml-2">1–45</span>
+                </div>
+                {currentPhase === 1 && currentDay > 0 && (
+                  <span className="text-[8px] font-bold text-[#C8A2C8] tabular-nums">Day {currentDay}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Node: Control Bloodwork */}
+            <div className="shrink-0 w-14 flex justify-center">
+              <div className={cn('w-9 h-9 border-2 flex items-center justify-center',
+                currentPhase >= 2
+                  ? 'border-[#4ADE80] bg-[rgba(74,222,128,0.06)]'
+                  : 'border-[rgba(255,255,255,0.07)] bg-[rgba(255,255,255,0.02)]'
+              )}>
+                <FlaskConical size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
+              </div>
+            </div>
+
+            {/* Phase 2: Calibration bar */}
+            <div className={cn('flex-1 h-9 relative overflow-hidden border',
+              currentPhase >= 2 ? 'border-[rgba(200,162,200,0.2)]' : 'border-[rgba(255,255,255,0.04)]'
+            )} style={{ background: 'rgba(255,255,255,0.02)' }}>
+              <div className="absolute inset-y-0 left-0 bg-[rgba(200,162,200,0.1)] transition-all"
+                style={{ width: `${phase2Progress}%` }} />
+              {currentPhase === 2 && currentDay > 0 && (
+                <div className="absolute inset-y-0 w-px bg-[#C8A2C8]"
+                  style={{ left: `${phaseProgress}%` }} />
+              )}
+              <div className="absolute inset-0 flex items-center justify-between px-3">
+                <div>
+                  <span className={cn('text-[9px] font-black uppercase tracking-widest',
+                    currentPhase >= 2 ? 'text-white' : 'text-[#3A3A3A]'
+                  )}>Calibration</span>
+                  <span className="text-[8px] font-mono text-[#4A4A4A] ml-2">46–90</span>
+                </div>
+                {currentPhase === 2 && currentDay > 0 && (
+                  <span className="text-[8px] font-bold text-[#C8A2C8] tabular-nums">Day {currentDay}</span>
+                )}
+              </div>
+            </div>
+
+            {/* Node: Final Bloodwork */}
+            <div className="shrink-0 w-14 flex justify-center">
+              <div className="w-9 h-9 border-2 border-[rgba(255,255,255,0.05)] bg-[#141414] flex items-center justify-center">
+                <FlaskConical size={15} className="text-[#2A2A2A]" />
+              </div>
+            </div>
+
+          </div>
+
+          {/* Labels row */}
+          <div className="flex items-start gap-1.5">
+            <div className="shrink-0 w-14 text-center">
+              <div className="text-[8px] font-bold text-[#4ADE80] uppercase tracking-wide leading-tight">Initial BW</div>
+              <div className="text-[8px] font-mono text-[#3A3A3A]">Day 0</div>
+            </div>
+            <div className="flex-1" />
+            <div className="shrink-0 w-14 text-center">
+              <div className={cn('text-[8px] font-bold uppercase tracking-wide leading-tight',
+                currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#4A4A4A]'
+              )}>Control BW</div>
+              <div className="text-[8px] font-mono text-[#3A3A3A]">Day 45</div>
+            </div>
+            <div className="flex-1" />
+            <div className="shrink-0 w-14 text-center">
+              <div className="text-[8px] font-bold text-[#3A3A3A] uppercase tracking-wide leading-tight">Final BW</div>
+              <div className="text-[8px] font-mono text-[#3A3A3A]">Day 90</div>
+            </div>
+          </div>
+
+        </div>
       </div>
 
       {/* ── Main bento (8/4) ── */}
