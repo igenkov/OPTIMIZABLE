@@ -10,8 +10,8 @@ export async function POST(req: NextRequest) {
 
     const { phase1, phase2, phase3, symptoms, analysis } = await req.json();
 
-    const apiKey = process.env.GOOGLE_GEMINI_API_KEY;
-    if (!apiKey) return NextResponse.json({ error: 'Gemini API key not configured' }, { status: 500 });
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) return NextResponse.json({ error: 'OpenAI API key not configured' }, { status: 500 });
 
     const bmi = phase1?.weight_kg && phase1?.height_cm
       ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1)
@@ -28,43 +28,36 @@ export async function POST(req: NextRequest) {
       analysisJson: JSON.stringify(analysis, null, 2),
     });
 
-    const models = ['gemini-2.5-pro', 'gemini-2.5-flash'] as const;
-    let response!: Response;
-    let model: string = models[0];
-    for (const m of models) {
-      model = m;
-      response = await fetch(
-        `https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${apiKey}`,
-        {
-          method: 'POST',
-          headers: { 'content-type': 'application/json' },
-          body: JSON.stringify({
-            contents: [{ parts: [{ text: prompt }] }],
-            generationConfig: {
-              thinkingConfig: { thinkingBudget: 8192 },
-              maxOutputTokens: 8192,
-              temperature: 1,
-              responseMimeType: 'application/json',
-            },
-          }),
-        },
-      );
-      if (response.status !== 503) break;
+    const FORBIDDEN = ['aggressive', 'severe', 'bottlenecked', 'disastrous', 'warrior', 'biohack'];
+
+    async function callOpenAI(model: string): Promise<{ protocol: Record<string, unknown>; model: string }> {
+      const res = await fetch('https://api.openai.com/v1/responses', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json', 'authorization': `Bearer ${apiKey}` },
+        body: JSON.stringify({
+          model,
+          input: prompt,
+          max_output_tokens: 4000,
+          temperature: 0.3,
+          text: { format: { type: 'json_object' } },
+        }),
+      });
+      if (!res.ok) {
+        const err = await res.text();
+        throw new Error(`OpenAI API error (${model}): ${err}`);
+      }
+      const data = await res.json();
+      const raw = data.output_text ?? data.output?.find((o: { type: string }) => o.type === 'message')?.content?.[0]?.text ?? '';
+      const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+      return { protocol: JSON.parse(text), model };
     }
 
-    if (!response.ok) {
-      const err = await response.text();
-      return NextResponse.json({ error: `Gemini API error: ${err}` }, { status: 500 });
+    let result = await callOpenAI('gpt-5.4');
+    if (FORBIDDEN.some(w => JSON.stringify(result.protocol).toLowerCase().includes(w))) {
+      result = await callOpenAI('gpt-5.4-pro');
     }
 
-    const geminiData = await response.json();
-    const candidate = geminiData.candidates?.[0];
-    if (candidate?.finishReason === 'MAX_TOKENS') {
-      return NextResponse.json({ error: 'Protocol generation was truncated (output too long). Try again.' }, { status: 500 });
-    }
-    const raw = candidate?.content?.parts?.[0]?.text ?? '';
-    const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-    const protocol = JSON.parse(text);
+    const { protocol, model } = result;
 
     // Normalize string array fields — LLM occasionally returns objects instead
     // of plain strings (e.g. {directive: "...", reason: "..."}) which crashes React
