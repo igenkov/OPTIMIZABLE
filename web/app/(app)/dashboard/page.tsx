@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import {
-  Activity, ShieldAlert, Heart, Info,
+  Activity, ShieldAlert, ShieldCheck, Heart, Info,
   ArrowRight, CheckCircle2, Clipboard, User,
   Calendar, Flame, Droplets, Gauge
 } from 'lucide-react';
@@ -10,7 +10,7 @@ import { Card } from '@/components/ui/Card';
 import { ScoreRing } from '@/components/ui/ScoreRing';
 import {
   calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
-  getKeyFactors, getPersonalizedPanel, isExcluded,
+  getKeyFactors, getPersonalizedPanel, getProtectiveFactors, isExcluded,
 } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
@@ -47,6 +47,7 @@ export default async function DashboardPage() {
   const excluded = isExcluded(p3);
   const riskScore = excluded ? null : calculateRiskScore(p1, p2, p3, symptomIds);
   const keyFactors = excluded ? [] : getKeyFactors(p1, p2, p3, symptomIds);
+  const protectiveFactors = excluded ? [] : getProtectiveFactors(p1, p2);
 
   const level = riskScore !== null ? getRiskLevel(riskScore) : 'low';
   const color = getRiskColor(level);
@@ -275,6 +276,26 @@ export default async function DashboardPage() {
           </div>
         </Card>
       </div>
+
+      {/* BALANCING FACTORS */}
+      {!excluded && protectiveFactors.length > 0 && (
+        <div className="grid grid-cols-12 gap-4 lg:gap-6">
+          <Card className="col-span-12 p-8">
+            <div className="flex items-center gap-2 mb-6">
+              <ShieldCheck size={16} className="text-[#4ade80]" />
+              <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Balancing Factors</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {protectiveFactors.map((f, i) => (
+                <div key={i} className="border-l-2 border-[#4ade80]/30 pl-4">
+                  <h4 className="text-[11px] font-black text-[#4ade80] uppercase tracking-tight mb-1">{f.title}</h4>
+                  <p className="text-[11px] text-white/40 leading-relaxed">{f.explanation}</p>
+                </div>
+              ))}
+            </div>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }

@@ -9,6 +9,11 @@ export interface KeyFactor {
   explanation: string;
 }
 
+export interface ProtectiveFactor {
+  title: string;
+  explanation: string;
+}
+
 // --- Dynamic panel tiering types ---
 export type BiomarkerTier = 'essential' | 'recommended' | 'extended';
 
@@ -295,6 +300,13 @@ export function getKeyFactors(
   const symptoms = symptomIds.filter(id => id !== 'none');
   const conditions = phase1.medical_conditions || [];
 
+  // Protective context — used to qualify deterministic-sounding risk factors
+  const activeExercise = phase2.exercise_frequency === '3-4x' || phase2.exercise_frequency === '5-6x';
+  const protectedBodyComp = (phase1.body_fat_percent != null && phase1.body_fat_percent < 23) || !!phase1.high_muscle_override;
+  const metabolicallyProtected = activeExercise && protectedBodyComp;
+  const strongAndrogen = (phase2.libido_rating ?? 0) >= 4 &&
+    (phase2.morning_erection_frequency === 'daily' || phase2.morning_erection_frequency === '4-6x_week');
+
   // 1. Sleep
   const highCoffee = phase2.coffee_per_day === '4-5' || phase2.coffee_per_day === '6+';
   const highStress = (phase2.stress_level ?? 3) >= 4;
@@ -403,10 +415,12 @@ export function getKeyFactors(
   if (phase2.sedentary_hours >= 10) {
     let explanation = 'Prolonged sitting is independently associated with reduced testosterone and elevated insulin resistance — even in men who exercise.';
     if (highSugar) explanation += ` Combined with your high sugar intake, this creates a compounding insulin resistance loop: inactivity reduces glucose uptake, sugar spikes insulin further, and chronic high insulin directly suppresses testosterone synthesis and accelerates aromatization of T to estrogen.`;
+    if (metabolicallyProtected) explanation += ` Your exercise frequency and body composition reduce the probability of this cascade being fully engaged — though the independent circulatory effects of prolonged sitting still apply.`;
     factors.push({ title: `Highly sedentary lifestyle (${phase2.sedentary_hours}h/day)`, explanation });
   } else if (phase2.sedentary_hours >= 7) {
     let explanation = 'Extended daily sitting impairs circulation and metabolic health, reducing the effectiveness of testosterone synthesis.';
     if (highSugar) explanation += ` With frequent sugar consumption on top of this, insulin sensitivity is likely impaired — elevated insulin promotes fat storage and aromatase activity, converting more of your testosterone to estrogen.`;
+    if (metabolicallyProtected) explanation += ` Your exercise frequency and body composition reduce the probability of this being the primary driver — the risk is present but less likely to be fully engaged.`;
     factors.push({ title: `Moderately sedentary (${phase2.sedentary_hours}h/day)`, explanation });
   }
 
@@ -420,28 +434,24 @@ export function getKeyFactors(
 
   // 8. Sugar
   if (phase2.sugar_consumption === 'very_high') {
-    factors.push({
-      title: 'Very high sugar consumption',
-      explanation: 'Chronic high sugar intake drives insulin resistance, which directly suppresses testosterone synthesis and elevates SHBG — reducing both total and free testosterone.',
-    });
+    let explanation = 'Chronic high sugar intake drives insulin resistance, which directly suppresses testosterone synthesis and elevates SHBG — reducing both total and free testosterone.';
+    if (metabolicallyProtected) explanation += ' Your body composition and exercise frequency reduce the probability of the full insulin resistance cascade — but the SHBG-suppressing effect of high glycemic load is less body-composition-dependent and remains a consideration.';
+    factors.push({ title: 'Very high sugar consumption', explanation });
   } else if (phase2.sugar_consumption === 'frequent') {
-    factors.push({
-      title: 'Frequent sugar intake — glycemic load & SHBG disruption',
-      explanation: 'Frequent sugar consumption triggers repeated insulin spikes that suppress SHBG production. Low SHBG leads to "leaky" testosterone — free T is cleared from circulation before tissues can use it, or gets aromatized into estrogen. Even without a sedentary lifestyle, this pattern alone can measurably impair androgen availability.',
-    });
+    let explanation = 'Frequent sugar consumption triggers repeated insulin spikes that suppress SHBG production. Low SHBG leads to "leaky" testosterone — free T is cleared from circulation before tissues can use it, or gets aromatized into estrogen. Even without a sedentary lifestyle, this pattern alone can measurably impair androgen availability.';
+    if (metabolicallyProtected) explanation += ' Your exercise frequency and body composition reduce the probability of the full insulin resistance loop — the glycemic load effect on SHBG is the more likely active mechanism here.';
+    factors.push({ title: 'Frequent sugar intake — glycemic load & SHBG disruption', explanation });
   }
 
   // 9. Age
   if (phase1.age >= 45) {
-    factors.push({
-      title: `Age ${phase1.age} — accelerated decline phase`,
-      explanation: 'Testosterone declines 1–2% per year after 30. By your mid-40s this cumulative loss is clinically significant — making bloodwork essential to know where you stand.',
-    });
+    let explanation = 'Testosterone declines 1–2% per year after 30. By your mid-40s this cumulative loss is clinically significant — making bloodwork essential to know where you stand.';
+    if (strongAndrogen) explanation += ' Your libido and morning erection frequency suggest the axis is currently compensating well — the decline is real but may not yet be clinically significant at your individual baseline.';
+    factors.push({ title: `Age ${phase1.age} — accelerated decline phase`, explanation });
   } else if (phase1.age >= 35) {
-    factors.push({
-      title: `Age ${phase1.age} — natural decline has begun`,
-      explanation: 'Testosterone naturally begins declining in the mid-30s. Optimizing your lifestyle now can significantly slow this decline.',
-    });
+    let explanation = 'Testosterone naturally begins declining in the mid-30s. Optimizing your lifestyle now can significantly slow this decline.';
+    if (strongAndrogen) explanation += ' Your libido and morning erection frequency are encouraging signs that functional androgen status remains adequate at this stage.';
+    factors.push({ title: `Age ${phase1.age} — natural decline has begun`, explanation });
   }
 
   // 10. Body fat
@@ -704,7 +714,6 @@ export function getKeyFactors(
     { id: 'reduced_endurance', title: 'Reduced exercise endurance reported', explanation: 'Declining endurance is a primary signal of androgen deficiency — testosterone drives mitochondrial efficiency, red blood cell production, and muscular oxygen utilization. It also reflects a catabolic hormonal environment where cortisol is chronically elevated relative to testosterone, suppressing aerobic capacity and recovery simultaneously.' },
     { id: 'low_motivation', title: 'Loss of drive or motivation reported', explanation: 'Drive and motivation are jointly regulated by testosterone and dopamine, both of which are suppressed by elevated prolactin. Prolactin is raised by stress, sleep disruption, and medications like SSRIs — it directly suppresses GnRH, blunting LH output and reducing testosterone and dopamine production simultaneously. Prolactin is in your panel to assess this pathway.' },
     { id: 'poor_memory', title: 'Poor memory or recall reported', explanation: 'Memory and recall depend on testosterone, thyroid hormones, and cortisol balance. Poor memory is a hallmark early sign of thyroid dysfunction — subclinical hypothyroidism elevates SHBG and reduces free testosterone, while also independently impairing cognitive function. B12 deficiency is a common mimicker of low-testosterone cognitive decline. Thyroid markers and B12 are in your panel to distinguish hormonal from nutritional causes.' },
-    { id: 'sleep_apnea', title: 'Snoring or suspected sleep apnea reported', explanation: 'Obstructive sleep apnea fragments the REM and deep sleep stages that drive pulsatile LH release — the primary overnight testosterone production signal. Sleep apnea is both a cause and a consequence of low testosterone, creating a self-reinforcing cycle that requires diagnosis to break. Hematocrit and cortisol are in your panel to assess downstream hormonal impact; TSH rules out hypothyroidism as a contributing cause of airway muscle relaxation.' },
   ];
 
   for (const s of flaggedSymptoms) {
@@ -713,7 +722,80 @@ export function getKeyFactors(
     }
   }
 
+  // Sleep apnea — only flag when poor sleep quality corroborates it.
+  // Good reported quality largely rules out obstructive apnea as the active mechanism.
+  if (symptoms.includes('sleep_apnea') && (phase2.sleep_quality ?? 3) <= 2) {
+    factors.push({
+      title: 'Snoring or suspected sleep apnea — poor sleep quality corroborates',
+      explanation: 'Obstructive sleep apnea fragments the REM and deep sleep stages that drive pulsatile LH release — the primary overnight testosterone production signal. Sleep apnea is both a cause and a consequence of low testosterone, creating a self-reinforcing cycle that requires diagnosis to break. Hematocrit and cortisol are in your panel to assess downstream hormonal impact; TSH rules out hypothyroidism as a contributing cause.',
+    });
+  }
+
   return factors.slice(0, 6);
+}
+
+export function getProtectiveFactors(
+  phase1: Phase1Data,
+  phase2: Phase2Data,
+): ProtectiveFactor[] {
+  const factors: ProtectiveFactor[] = [];
+
+  // Strong sleep profile
+  if (phase2.avg_sleep_hours >= 7 && (phase2.sleep_quality ?? 3) >= 4) {
+    factors.push({
+      title: `Strong sleep profile (${phase2.avg_sleep_hours}h, quality ${phase2.sleep_quality}/5)`,
+      explanation: 'Sleep duration and quality at this level means testosterone production is occurring across the full nocturnal LH surge window. Sleep is removed as a likely driver of any hormonal suppression.',
+    });
+  }
+
+  // Strong libido
+  if ((phase2.libido_rating ?? 0) >= 4) {
+    factors.push({
+      title: `Strong libido (${phase2.libido_rating}/5) — androgen activation likely adequate`,
+      explanation: 'Libido is one of the most androgen-sensitive functions in the body. A score this high indicates androgen receptor activation in the brain is currently adequate — making profoundly low testosterone or a severely disrupted T:E2 ratio unlikely explanations for other reported symptoms.',
+    });
+  }
+
+  // Good morning erections
+  if (phase2.morning_erection_frequency === 'daily' || phase2.morning_erection_frequency === '4-6x_week') {
+    factors.push({
+      title: 'Nocturnal testosterone surge appears intact',
+      explanation: 'Frequent morning erections are a direct proxy for the overnight LH-driven testosterone pulse during REM sleep. Their presence at this frequency indicates the HPT axis is producing a meaningful nocturnal testosterone surge.',
+    });
+  }
+
+  // Good erectile function
+  if ((phase2.erectile_rating ?? 3) >= 4) {
+    factors.push({
+      title: 'Erectile function within normal range',
+      explanation: 'Erectile quality at this level indicates adequate nitric oxide signaling and vascular function — two systems that typically degrade early when testosterone or cardiovascular health are significantly compromised.',
+    });
+  }
+
+  // Regular anabolic exercise
+  if (phase2.exercise_frequency === '3-4x' || phase2.exercise_frequency === '5-6x') {
+    factors.push({
+      title: 'Regular training — anabolic and metabolic protection',
+      explanation: 'Exercising 3+ times per week increases androgen receptor density, stimulates acute testosterone and GH release, and significantly reduces insulin resistance independent of diet. This is a meaningful counter-weight to sedentary and glycemic risk factors.',
+    });
+  }
+
+  // Lean / muscular body composition
+  const isLean = phase1.body_fat_percent != null && phase1.body_fat_percent < 20;
+  const isMuscular = !!phase1.high_muscle_override;
+  if (isLean || isMuscular) {
+    const desc = isMuscular && isLean
+      ? 'Muscular build with low body fat'
+      : isMuscular
+      ? 'Muscular build (elevated lean mass)'
+      : `Lean body composition (${phase1.body_fat_percent}% body fat)`;
+    factors.push({
+      title: `${desc} — aromatization risk reduced`,
+      explanation: 'Adipose tissue is the primary site of aromatase activity — the enzyme that converts testosterone to estrogen. Lower body fat directly reduces this conversion. The insulin resistance cascade is also less likely to be fully engaged at this body composition.',
+    });
+  }
+
+  return factors;
 }
 
 // --- Weighted trigger accumulation for dynamic panel tiering ---

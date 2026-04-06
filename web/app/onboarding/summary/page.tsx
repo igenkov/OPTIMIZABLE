@@ -7,15 +7,15 @@ import { Card } from '@/components/ui/Card';
 import { createClient } from '@/lib/supabase/client';
 import {
   calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
-  getKeyFactors, getPersonalizedPanel, isExcluded,
+  getKeyFactors, getPersonalizedPanel, getProtectiveFactors, isExcluded,
 } from '@/lib/scoring';
-import type { KeyFactor, PersonalizedPanel } from '@/lib/scoring';
+import type { KeyFactor, PersonalizedPanel, ProtectiveFactor } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import {
   Activity, FlaskConical, ClipboardList,
   ChevronRight, AlertTriangle, Clock,
-  Lock, ArrowRight
+  Lock, ArrowRight, ShieldCheck
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -25,6 +25,7 @@ export default function SummaryPage() {
   const [excluded, setExcluded] = useState(false);
   const [excludedReason, setExcludedReason] = useState<'trt' | 'steroids' | 'both'>('trt');
   const [keyFactors, setKeyFactors] = useState<KeyFactor[]>([]);
+  const [protectiveFactors, setProtectiveFactors] = useState<ProtectiveFactor[]>([]);
   const [panel, setPanel] = useState<PersonalizedPanel | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -75,6 +76,7 @@ export default function SummaryPage() {
       } else {
         setRiskScore(calculateRiskScore(p1, p2, p3, symptomIds_));
         setKeyFactors(getKeyFactors(p1, p2, p3, symptomIds_));
+        setProtectiveFactors(getProtectiveFactors(p1, p2));
         setPanel(getPersonalizedPanel(p1, p2, p3, symptomIds_));
       }
     }
@@ -189,6 +191,24 @@ export default function SummaryPage() {
             {keyFactors.map((f, i) => (
               <div key={i} className="p-4 bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
                 <div className="text-xs font-bold text-white mb-1 uppercase tracking-tight">{f.title}</div>
+                <p className="text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {/* BALANCING FACTORS */}
+      {!excluded && protectiveFactors.length > 0 && (
+        <div className="mb-10 space-y-4">
+          <div className="flex items-center gap-2 text-white/40 px-1">
+            <ShieldCheck size={14} />
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
+          </div>
+          <div className="grid grid-cols-1 gap-3">
+            {protectiveFactors.map((f, i) => (
+              <div key={i} className="p-4 bg-[#4ade80]/[0.02] border border-[#4ade80]/10 hover:border-[#4ade80]/20 transition-all">
+                <div className="text-xs font-bold text-[#4ade80] mb-1 uppercase tracking-tight">{f.title}</div>
                 <p className="text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
               </div>
             ))}
