@@ -312,15 +312,15 @@ export function getKeyFactors(
   const highStress = (phase2.stress_level ?? 3) >= 4;
 
   if (phase2.avg_sleep_hours < 6) {
-    let explanation = `Sleeping less than 6 hours reduces testosterone by 10–15% within a single week. This is one of the most significant and reversible risk factors you have.`;
-    if (highCoffee && highStress) explanation += ` With ${phase2.coffee_per_day} coffees/day and high chronic stress, both late caffeine and elevated cortisol are likely compressing your sleep — addressing all three together will have a compounding effect.`;
-    else if (highCoffee) explanation += ` With ${phase2.coffee_per_day} coffees/day, late caffeine intake is likely a direct contributor — caffeine has a 5–6 hour half-life and significantly delays sleep onset and reduces deep sleep.`;
-    else if (highStress) explanation += ` Chronic stress at your reported level elevates cortisol into the evening, which actively suppresses melatonin and fragments deep sleep — making stress management a prerequisite for sleep improvement.`;
+    let explanation = `Studies show restricting sleep to 5 hours suppresses testosterone by roughly 10–15% within a week — one of the more consistent findings in sleep-hormone research. Whether that exact magnitude applies to you depends on your individual sleep architecture and baseline, but under 6 hours is reliably in the suppressive range for most men. It's also the most reversible variable in this profile.`;
+    if (highCoffee && highStress) explanation += ` With ${phase2.coffee_per_day} coffees/day and your reported stress level, both late caffeine and elevated evening cortisol are plausible contributors to why sleep is compressed — addressing all three together is likely more effective than targeting sleep in isolation.`;
+    else if (highCoffee) explanation += ` With ${phase2.coffee_per_day} coffees/day, late caffeine is a plausible contributor — caffeine has a 5–6 hour half-life and delays sleep onset and reduces deep sleep in most people, though sensitivity varies.`;
+    else if (highStress) explanation += ` At your reported stress level, elevated evening cortisol is a plausible reason sleep is fragmented or shortened — high cortisol suppresses melatonin and reduces the slow-wave stages where most testosterone is produced.`;
     factors.push({ title: `Sleep deprivation (${phase2.avg_sleep_hours}h average)`, explanation });
   } else if (phase2.avg_sleep_hours < 7) {
-    let explanation = `Most testosterone is produced during deep sleep stages. Consistently sleeping under 7 hours measurably suppresses your nocturnal T production surge.`;
-    if (highCoffee) explanation += ` Your coffee intake (${phase2.coffee_per_day}/day) may be reducing sleep quality even if it doesn't shorten duration — caffeine suppresses deep sleep stages where testosterone production peaks.`;
-    else if (highStress) explanation += ` High stress raises evening cortisol, which competes with the hormonal recovery that happens during deep sleep — reducing the actual quality of the hours you do get.`;
+    let explanation = `Most testosterone is produced during the deep sleep stages that occur in the latter half of the night. Consistently under 7 hours compresses this window — and population data shows measurable suppression at the group level. Whether it's a meaningful driver for you depends on your sleep architecture and what else in your profile is adding pressure. It rarely acts alone, but when multiple suppressive factors are present, it amplifies them.`;
+    if (highCoffee) explanation += ` Your coffee intake (${phase2.coffee_per_day}/day) is worth examining — caffeine's half-life means afternoon cups still reduce deep sleep architecture even if they don't keep you awake.`;
+    else if (highStress) explanation += ` At your reported stress level, evening cortisol is likely reducing the restorative quality of the hours you do get — the number on paper may be better than what's actually happening in your sleep stages.`;
     factors.push({ title: `Suboptimal sleep (${phase2.avg_sleep_hours}h average)`, explanation });
   }
 
@@ -328,7 +328,7 @@ export function getKeyFactors(
   if (phase2.sleep_quality <= 2 && phase2.avg_sleep_hours >= 7) {
     factors.push({
       title: 'Poor sleep quality — LH pulse fragmentation risk',
-      explanation: `Sleep architecture — specifically REM and deep sleep stages — drives the pulsatile release of Luteinizing Hormone that triggers testosterone production overnight. Fragmented or non-restorative sleep disrupts this signal even with adequate hours in bed, independently reducing morning testosterone by 15–20%. Consider screening for obstructive sleep apnea.`,
+      explanation: `Sleep architecture — specifically the REM and deep sleep stages — drives the pulsatile release of LH, which is the brain's overnight signal to the testes to produce testosterone. Fragmented or non-restorative sleep can disrupt this pulse even when total hours look adequate. The degree of hormonal impact varies: some men with disrupted sleep maintain normal testosterone, others don't. If your labs show suppressed LH alongside low-normal testosterone, sleep quality is a primary variable to investigate further.`,
     });
   }
 
@@ -336,12 +336,12 @@ export function getKeyFactors(
   if (phase2.beer_frequency === 'daily' || phase2.beer_frequency === '4-6x_week') {
     factors.push({
       title: `Heavy beer consumption (${phase2.beer_frequency.replace(/_/g, ' ')})`,
-      explanation: 'Beer contains phytoestrogens from hops that raise estrogen while suppressing testosterone. Daily or near-daily intake creates a significant hormonal imbalance.',
+      explanation: 'Hops contain 8-prenylnaringenin, one of the more potent dietary phytoestrogens. At this frequency, the accumulated estrogenic load is worth testing for — population-level data associates regular beer intake with elevated estradiol and suppressed testosterone, though the magnitude varies significantly by individual metabolism and total volume. Estradiol is in your panel to show whether this conversion is happening at a clinically relevant level for you.',
     });
   } else if (phase2.beer_frequency === '3x_week') {
     factors.push({
       title: 'Frequent beer use (3x/week)',
-      explanation: 'Regular beer intake introduces hops-derived phytoestrogens and alcohol, both of which suppress testosterone and elevate estrogen over time.',
+      explanation: 'At 3x per week, hops-derived phytoestrogens and alcohol are two overlapping inputs that can influence the testosterone-to-estrogen balance. The effect at this frequency is modest and individual — some men show no measurable hormonal impact, others do. It\'s a variable worth noting in the context of a full panel rather than treating as a confirmed driver.',
     });
   }
 
@@ -349,12 +349,12 @@ export function getKeyFactors(
   if (phase2.spirits_wine_frequency === 'daily' || phase2.spirits_wine_frequency === '4-6x_week') {
     factors.push({
       title: `High spirits/wine consumption (${phase2.spirits_wine_frequency.replace(/_/g, ' ')})`,
-      explanation: 'Frequent alcohol consumption disrupts sleep architecture, increases cortisol, and directly suppresses Leydig cell testosterone production.',
+      explanation: 'At this frequency, alcohol has three potential pathways to hormonal disruption: it fragments deep sleep (where most testosterone is produced), raises cortisol (which competes with testosterone for the same biosynthetic precursors), and at chronic doses can directly impair Leydig cell function. How much of this applies depends on total intake and liver metabolism. The liver panel in your extended markers is relevant context here.',
     });
   } else if (phase2.spirits_wine_frequency === '3x_week') {
     factors.push({
       title: 'Regular spirits/wine use (3x/week)',
-      explanation: 'Ethanol is a direct testicular toxin that suppresses the overnight LH pulse — the primary driver of testosterone production during sleep. Three units per week is sufficient to measurably impair recovery-phase testosterone synthesis and fragment sleep architecture.',
+      explanation: 'At 3x per week, the more consistently supported effect is on sleep architecture — alcohol compresses REM sleep, reducing the overnight testosterone production window. Direct testicular toxicity at this frequency is debated in the literature; it becomes more relevant at daily intake. The sleep effect is the more likely active mechanism here, particularly if sleep quality is already suboptimal.',
     });
   }
 
@@ -362,12 +362,12 @@ export function getKeyFactors(
   if (phase2.smoking_status === 'daily') {
     factors.push({
       title: 'Daily smoking',
-      explanation: 'Chronic nicotine exposure disrupts the HPT axis, elevates cortisol, and impairs Leydig cell function — measurably reducing testosterone over time.',
+      explanation: 'The research on smoking and testosterone is mixed — some studies show lower total testosterone in smokers, others find no significant difference or slight elevation via SHBG lowering. What is more consistent is smoking\'s effect on cortisol, vascular endothelial function, and systemic inflammation. The more reliable concern here is the vascular side: smoking is an independent endothelial toxin that affects the microvasculature, including penile blood flow. The net hormonal impact depends on whether the cortisol and vascular effects outweigh any SHBG-related changes — the panel will help characterize this.',
     });
   } else if (phase2.smoking_status === 'occasional') {
     factors.push({
       title: 'Occasional smoking',
-      explanation: 'Even intermittent smoking introduces oxidative stress and cortisol spikes that affect testosterone production and androgen receptor sensitivity.',
+      explanation: 'At occasional frequency, the effect on testosterone production is likely modest. The more relevant concerns are cortisol spikes from nicotine and the cumulative vascular impact — particularly relevant if erectile function is also suboptimal.',
     });
   }
 
@@ -375,12 +375,12 @@ export function getKeyFactors(
   if (phase2.coffee_per_day === '6+') {
     factors.push({
       title: 'Very high caffeine (6+ units/day) — cortisol competition',
-      explanation: 'Chronic high caffeine intake raises cortisol, which directly competes with testosterone for the same biosynthetic precursor (pregnenolone). At 6+ units daily, caffeine also disrupts deep sleep architecture regardless of timing — suppressing the nocturnal LH and testosterone surge.',
+      explanation: 'At 6+ units daily, caffeine chronically elevates cortisol — and cortisol and testosterone share the same upstream precursor (pregnenolone). When cortisol demand is persistently high, pregnenolone is preferentially routed toward cortisol. How much testosterone synthesis is affected depends on adrenal reserve and stress load. The compounding effect on sleep architecture is arguably the more consistent concern at this intake: caffeine\'s half-life means the last cup of the day is still active well into the night, suppressing the deep sleep stages where testosterone is produced.',
     });
   } else if (phase2.coffee_per_day === '4-5') {
     factors.push({
       title: 'High caffeine intake (4-5 units/day)',
-      explanation: 'Four to five coffees daily raises cortisol and compresses the effective deep sleep window — the primary period of testosterone synthesis. Late consumption particularly delays sleep onset and fragments REM stages critical for LH pulsatility.',
+      explanation: 'At 4–5 units daily, caffeine\'s half-life means afternoon consumption is still affecting sleep architecture hours later — compressing the testosterone production window overnight. The cortisol-pregnenolone competition is a secondary concern at this level. The main variable is how late the last cup lands relative to your sleep time.',
     });
   }
 
@@ -388,12 +388,12 @@ export function getKeyFactors(
   if (phase2.morning_erection_frequency === 'never') {
     factors.push({
       title: 'Absent morning erections',
-      explanation: 'Morning erections are driven by the nocturnal testosterone surge during REM sleep. Their complete absence is one of the most objective clinical indicators of suppressed androgen levels and warrants investigation.',
+      explanation: 'Morning erections are driven by the nocturnal testosterone surge during REM sleep — their presence or absence is one of the more reliable functional proxies for what\'s happening hormonally overnight. Complete absence is consistently associated with suppressed androgen levels in the literature, though some men with normal testosterone lose morning erections due to age-related changes in sleep architecture or vascular factors. It\'s one of the stronger signals in this profile — the labs will clarify whether the cause is hormonal, vascular, or both.',
     });
   } else if (phase2.morning_erection_frequency === 'rarely') {
     factors.push({
       title: 'Rare morning erections',
-      explanation: 'Morning erections reflect the quality of your testosterone surge during sleep. Occurring rarely (less than once a week) is a strong signal of suboptimal androgen production.',
+      explanation: 'Morning erections occurring less than once a week are associated with suboptimal androgen production in population data — but the same pattern also appears in disrupted REM sleep and vascular dysfunction. Distinguishing the cause is what LH, FSH, and the vascular-related markers in your panel are designed to do.',
     });
   }
 
@@ -413,14 +413,14 @@ export function getKeyFactors(
   // 6. Sedentary
   const highSugar = phase2.sugar_consumption === 'very_high' || phase2.sugar_consumption === 'frequent';
   if (phase2.sedentary_hours >= 10) {
-    let explanation = 'Prolonged sitting is independently associated with reduced testosterone and elevated insulin resistance — even in men who exercise.';
-    if (highSugar) explanation += ` Combined with your high sugar intake, this creates a compounding insulin resistance loop: inactivity reduces glucose uptake, sugar spikes insulin further, and chronic high insulin directly suppresses testosterone synthesis and accelerates aromatization of T to estrogen.`;
-    if (metabolicallyProtected) explanation += ` Your exercise frequency and body composition reduce the probability of this cascade being fully engaged — though the independent circulatory effects of prolonged sitting still apply.`;
+    let explanation = 'Prolonged sitting is independently associated with reduced testosterone and markers of insulin resistance — even in men who exercise regularly. The mechanisms are partly circulatory (reduced blood flow) and partly metabolic (sustained insulin elevation from inactivity).';
+    if (highSugar) explanation += ` Combined with high sugar intake, this raises the probability of an insulin resistance pattern: inactivity reduces glucose uptake, sugar spikes insulin further, and chronically elevated insulin can suppress testosterone synthesis and increase aromatase activity. Whether this cascade is active in your case depends on your metabolic phenotype — fasting insulin and glucose in your panel will answer that directly.`;
+    if (metabolicallyProtected) explanation += ` Your exercise frequency and body composition reduce the probability of this cascade being fully engaged — the independent circulatory effects of prolonged sitting still apply, but the metabolic component is less likely to be the primary driver.`;
     factors.push({ title: `Highly sedentary lifestyle (${phase2.sedentary_hours}h/day)`, explanation });
   } else if (phase2.sedentary_hours >= 7) {
-    let explanation = 'Extended daily sitting impairs circulation and metabolic health, reducing the effectiveness of testosterone synthesis.';
-    if (highSugar) explanation += ` With frequent sugar consumption on top of this, insulin sensitivity is likely impaired — elevated insulin promotes fat storage and aromatase activity, converting more of your testosterone to estrogen.`;
-    if (metabolicallyProtected) explanation += ` Your exercise frequency and body composition reduce the probability of this being the primary driver — the risk is present but less likely to be fully engaged.`;
+    let explanation = 'Extended daily sitting is associated with impaired circulation and modestly elevated insulin, both of which can reduce the efficiency of testosterone synthesis. The effect at this level is real but typically modest — it becomes more significant when combined with other suppressive inputs.';
+    if (highSugar) explanation += ` With frequent sugar consumption on top of this, the probability of elevated baseline insulin increases — which over time can suppress SHBG and increase aromatase activity. Whether that loop is engaged is what fasting insulin in your panel is designed to show.`;
+    if (metabolicallyProtected) explanation += ` Your exercise frequency and body composition reduce the probability of this being a primary driver — the risk is present but less likely to be fully engaged at this combination.`;
     factors.push({ title: `Moderately sedentary (${phase2.sedentary_hours}h/day)`, explanation });
   }
 
@@ -428,29 +428,29 @@ export function getKeyFactors(
   if (phase2.exercise_frequency === 'none') {
     factors.push({
       title: 'No regular exercise',
-      explanation: 'Physical activity is one of the most powerful natural testosterone stimulators. Men who do not exercise have significantly lower baseline testosterone than those who train consistently.',
+      explanation: 'Population studies consistently show lower testosterone in sedentary men compared to those who train regularly — the association is strong and the mechanism is well-understood: exercise increases androgen receptor density, improves insulin sensitivity, and stimulates acute testosterone and GH release. The magnitude of effect depends on exercise type and intensity. In your profile, the absence of exercise removes one of the most modifiable inputs for hormonal support.',
     });
   }
 
   // 8. Sugar
   if (phase2.sugar_consumption === 'very_high') {
-    let explanation = 'Chronic high sugar intake drives insulin resistance, which directly suppresses testosterone synthesis and elevates SHBG — reducing both total and free testosterone.';
-    if (metabolicallyProtected) explanation += ' Your body composition and exercise frequency reduce the probability of the full insulin resistance cascade — but the SHBG-suppressing effect of high glycemic load is less body-composition-dependent and remains a consideration.';
+    let explanation = 'Chronic high sugar intake is associated with insulin resistance at a population level — and when insulin resistance is present, it can suppress testosterone synthesis, elevate SHBG, and increase aromatase activity. The full chain from high sugar to measurably lower testosterone is real but not universal. It depends on individual insulin sensitivity, metabolic phenotype, and how the sugar is distributed through the day. Fasting insulin and glucose in your panel will tell you whether the metabolic component is currently active.';
+    if (metabolicallyProtected) explanation += ' Your body composition and exercise frequency reduce the probability of the full cascade being engaged — but the glycemic load effect on SHBG is less body-composition-dependent and worth monitoring regardless.';
     factors.push({ title: 'Very high sugar consumption', explanation });
   } else if (phase2.sugar_consumption === 'frequent') {
-    let explanation = 'Frequent sugar consumption triggers repeated insulin spikes that suppress SHBG production. Low SHBG leads to "leaky" testosterone — free T is cleared from circulation before tissues can use it, or gets aromatized into estrogen. Even without a sedentary lifestyle, this pattern alone can measurably impair androgen availability.';
-    if (metabolicallyProtected) explanation += ' Your exercise frequency and body composition reduce the probability of the full insulin resistance loop — the glycemic load effect on SHBG is the more likely active mechanism here.';
+    let explanation = 'Frequent sugar consumption triggers repeated insulin spikes that can suppress SHBG production over time. When SHBG is low, free testosterone increases momentarily but is also metabolized more rapidly — in some men this faster turnover means tissues receive less sustained androgen exposure, producing symptoms resembling low testosterone even when total levels appear normal. In others, the higher moment-to-moment free testosterone is sufficient and no symptoms arise. Measuring total T, free T, and SHBG together is what distinguishes these scenarios.';
+    if (metabolicallyProtected) explanation += ' Your exercise frequency and body composition reduce the probability of the full insulin resistance loop — the SHBG-suppressing effect of glycemic load is the more likely active mechanism here.';
     factors.push({ title: 'Frequent sugar intake — glycemic load & SHBG disruption', explanation });
   }
 
   // 9. Age
   if (phase1.age >= 45) {
-    let explanation = 'Testosterone declines 1–2% per year after 30. By your mid-40s this cumulative loss is clinically significant — making bloodwork essential to know where you stand.';
-    if (strongAndrogen) explanation += ' Your libido and morning erection frequency suggest the axis is currently compensating well — the decline is real but may not yet be clinically significant at your individual baseline.';
-    factors.push({ title: `Age ${phase1.age} — accelerated decline phase`, explanation });
+    let explanation = 'Population studies show average testosterone declining by roughly 1–2% per year from the mid-30s onward. By the mid-40s, the cumulative effect is statistically meaningful at the group level — but individual trajectories vary considerably. Some men maintain robust levels well into their 50s; others show earlier decline. What this age range does mean is that additional suppressive factors in your profile carry more weight than they would at 30, because the hormonal reserve is smaller. Bloodwork is the only way to know where your individual baseline actually sits.';
+    if (strongAndrogen) explanation += ' Your libido and morning erection frequency suggest functional androgen status is currently adequate — the age-related decline is a real trend but may not yet be clinically significant at your individual baseline.';
+    factors.push({ title: `Age ${phase1.age} — natural decline is a factor`, explanation });
   } else if (phase1.age >= 35) {
-    let explanation = 'Testosterone naturally begins declining in the mid-30s. Optimizing your lifestyle now can significantly slow this decline.';
-    if (strongAndrogen) explanation += ' Your libido and morning erection frequency are encouraging signs that functional androgen status remains adequate at this stage.';
+    let explanation = 'Population averages show testosterone beginning to decline in the mid-30s — roughly 1–2% per year. For most men at this age this isn\'t yet clinically significant on its own, but it does mean the hormonal environment is less forgiving of other suppressive factors than it was at 25. At 35–44, any additional inputs — poor sleep, prior steroid use, metabolic stress — are working against a baseline that is no longer at peak.';
+    if (strongAndrogen) explanation += ' Your libido and morning erection frequency are reassuring signs that functional androgen status remains intact at this stage.';
     factors.push({ title: `Age ${phase1.age} — natural decline has begun`, explanation });
   }
 
@@ -458,19 +458,19 @@ export function getKeyFactors(
   if (phase1.body_fat_percent && phase1.body_fat_percent >= 25) {
     factors.push({
       title: `Elevated body fat (${phase1.body_fat_percent}%) — aromatization risk`,
-      explanation: 'Fat tissue converts testosterone into estrogen via aromatase. At 25%+ body fat, this conversion is significant enough to measurably reduce both total and free testosterone.',
+      explanation: 'Adipose tissue contains aromatase — the enzyme that converts testosterone into estrogen. At elevated body fat levels, this conversion can meaningfully shift the testosterone-to-estrogen ratio. The clinical significance depends on fat distribution (visceral fat is more metabolically active than subcutaneous), total aromatase activity, and baseline hormone levels. Estradiol in your panel will show whether this conversion is already affecting your ratio — it\'s the direct measure of the output, not just a proxy.',
     });
   } else if (!phase1.body_fat_percent && phase1.height_cm && phase1.weight_kg) {
     const bmi = phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2);
     if (bmi >= 30) {
       factors.push({
         title: 'Elevated body weight — aromatization risk',
-        explanation: 'Fat tissue contains aromatase, which converts testosterone into estrogen. The more body fat you carry, the more testosterone is converted — reducing both total and free T.',
+        explanation: 'Without a direct body fat measurement, BMI at this level suggests excess adipose tissue is likely — though it can be misleading for muscular individuals. If fat mass is elevated, aromatase activity is worth testing for. Estradiol in your panel will show whether the conversion is happening at a clinically meaningful level.',
       });
     } else if (bmi >= 25) {
       factors.push({
         title: 'Slightly elevated BMI',
-        explanation: 'Even moderately elevated body fat increases aromatization. Reducing body fat is one of the most impactful testosterone interventions.',
+        explanation: 'At this BMI, aromatization risk is present but typically modest — and highly dependent on fat distribution and body composition. Without a direct body fat measurement, it\'s a variable worth tracking alongside actual hormone values rather than treating as a confirmed driver.',
       });
     }
   }
@@ -588,7 +588,7 @@ export function getKeyFactors(
   if (phase2.libido_rating <= 2) {
     factors.push({
       title: `Very low libido reported (${phase2.libido_rating}/5)`,
-      explanation: 'A libido score this low is a strong clinical signal of androgen insufficiency. Sexual drive is one of the most testosterone-sensitive functions in the male body.',
+      explanation: 'Libido is one of the most testosterone-sensitive functions in the body — men with genuinely suppressed androgens almost always report reduced drive. A score this low is a meaningful signal, though some men experience low libido with technically normal testosterone due to elevated prolactin, cortisol, or thyroid dysfunction. The panel is designed to distinguish these pathways.',
     });
   }
 
@@ -596,27 +596,27 @@ export function getKeyFactors(
   if ((phase2.erectile_rating ?? 3) <= 2) {
     factors.push({
       title: `Poor erectile quality reported (${phase2.erectile_rating ?? '?'}/5)`,
-      explanation: 'Erectile dysfunction at this severity implicates both androgen levels and vascular health. Testosterone, nitric oxide signaling, and cardiovascular status all contribute.',
+      explanation: 'Erectile function depends on testosterone, nitric oxide signaling, and vascular health — three systems that can fail independently. Dysfunction at this severity is a meaningful signal, but the root cause varies: in some men it\'s hormonal, in others vascular, in others both. The panel includes markers to assess each pathway.',
     });
   }
 
   // 15. Stress
   const poorSleep = phase2.avg_sleep_hours < 7;
   if ((phase2.stress_level ?? 3) >= 5) {
-    let explanation = 'At this stress level, your body is likely diverting pregnenolone — the shared precursor to both cortisol and testosterone — almost entirely toward cortisol production. This is one of the most underdiagnosed causes of hormonal suppression in otherwise healthy men.';
-    if (poorSleep) explanation += ` The interaction with your sleep deprivation creates a vicious cycle: high cortisol degrades sleep quality, and poor sleep raises cortisol further — continuously draining your testosterone precursor pool from both directions.`;
-    factors.push({ title: 'Severe chronic stress — pregnenolone steal', explanation });
+    let explanation = 'At high sustained stress levels, cortisol demand increases significantly. Cortisol and testosterone share the same upstream precursor — pregnenolone — and under chronic stress, pregnenolone is preferentially routed toward cortisol synthesis. How much testosterone production is affected depends on the duration of the stress, adrenal reserve, and whether the pattern is intermittent or constant. Morning cortisol in your panel will show whether HPA axis activation is at a level likely to be suppressing the testosterone pathway.';
+    if (poorSleep) explanation += ` The combination with sleep deprivation compounds this: high cortisol fragments sleep, and poor sleep raises cortisol — draining the precursor pool from both directions simultaneously.`;
+    factors.push({ title: 'High chronic stress — cortisol-testosterone competition', explanation });
   } else if ((phase2.stress_level ?? 3) >= 4) {
-    let explanation = 'Sustained high stress elevates cortisol, which competes with testosterone for the same biochemical precursors. Chronically elevated cortisol directly suppresses LH signaling and testosterone production.';
-    if (poorSleep) explanation += ` This is compounded by your sleep deficit — cortisol and poor sleep are mutually reinforcing, and breaking one often improves the other significantly.`;
-    factors.push({ title: 'High chronic stress — cortisol competition', explanation });
+    let explanation = 'Elevated chronic stress raises cortisol, which competes with testosterone for the same biosynthetic precursors. At moderate stress levels, many men compensate adequately — the degree of hormonal suppression depends on how sustained the stress is and how well the HPA axis is regulated. Morning cortisol in your panel provides direct evidence of whether activation is at a suppressive level.';
+    if (poorSleep) explanation += ` This is compounded by the sleep deficit — cortisol and poor sleep are mutually reinforcing, and addressing one typically improves the other.`;
+    factors.push({ title: 'Elevated chronic stress — cortisol competition', explanation });
   }
 
   // 16. Keto / low-carb diet (no points — SHBG warning only)
   if (phase2.keto_diet) {
     factors.push({
       title: 'Chronic low-carb / Keto diet — SHBG elevation risk',
-      explanation: 'Prolonged ketogenic dieting significantly raises SHBG — the protein that binds testosterone and makes it unavailable to tissues. Your total testosterone may appear normal while free (active) testosterone is suppressed. SHBG is in your core panel.',
+      explanation: 'Ketogenic and very low-carb diets have been associated with elevated SHBG in some studies — the mechanism involves carbohydrate restriction modulating insulin signaling, which regulates how much SHBG the liver produces. The evidence is real but the magnitude varies considerably between individuals. Some men on keto show no meaningful SHBG change; others do. SHBG is in your core panel — if it comes back elevated and you\'re restricting carbs significantly, that\'s one of the first variables to examine.',
     });
   }
 
@@ -626,35 +626,35 @@ export function getKeyFactors(
   if (medCats.includes('opioids')) {
     factors.push({
       title: 'Opioid medication — opioid-induced androgen deficiency (OPIAD)',
-      explanation: 'Opioids directly suppress the hypothalamic-pituitary-testicular axis, reducing LH and FSH output — the hormones that signal testosterone production. OPIAD affects the majority of men on long-term opioids and is severely underdiagnosed.',
+      explanation: 'Opioid medications suppress the hypothalamic-pituitary-testicular axis by reducing LH and FSH output — the signals the brain sends to the testes to produce testosterone. This condition (OPIAD) is well-documented and affects a meaningful proportion of men on long-term opioids, though severity depends on dose, duration, and the specific opioid. LH and FSH in your panel will show whether this suppression is currently active and to what degree.',
     });
   }
 
   if (medCats.includes('corticosteroids')) {
     factors.push({
       title: 'Corticosteroid medication — HPT axis suppression',
-      explanation: 'Corticosteroids like prednisone suppress LH and FSH secretion and compete with testosterone at the receptor level. Chronic use is one of the most reliable pharmacological causes of secondary hypogonadism.',
+      explanation: 'Corticosteroids suppress LH and FSH secretion and can compete with testosterone at the receptor level. The degree of suppression is dose- and duration-dependent — short courses at low doses typically have minimal lasting impact, while long-term or high-dose use is more consistently associated with secondary hypogonadism. LH and FSH in your panel will show whether HPT axis suppression is currently active.',
     });
   }
 
   if (medCats.includes('ssri_snri')) {
     factors.push({
       title: 'Antidepressant (SSRI/SNRI) — prolactin elevation risk',
-      explanation: 'SSRIs and SNRIs raise prolactin levels. Elevated prolactin suppresses GnRH and LH — the signals that drive testosterone production. This drug-hormone interaction is frequently missed in standard care.',
+      explanation: 'SSRIs and SNRIs raise prolactin in a subset of patients — the effect is drug- and dose-dependent, not universal. When prolactin is elevated, it suppresses GnRH and LH, reducing the downstream testosterone signal. Prolactin is in your panel specifically to determine whether this mechanism is active for you — the variation between individuals on the same medication is wide enough that you can\'t assume suppression without measuring it.',
     });
   }
 
   if (medCats.includes('statins')) {
     factors.push({
       title: 'Statin medication — CoQ10 depletion + testosterone precursor concern',
-      explanation: 'Statins lower cholesterol — the direct molecular precursor to testosterone — and deplete CoQ10, which powers the mitochondria in Leydig cells. Long-term statin use correlates with measurably lower testosterone in some men.',
+      explanation: 'Statins reduce cholesterol, which is the direct molecular precursor to all steroid hormones including testosterone. They also deplete CoQ10, which powers the mitochondria in the Leydig cells that produce testosterone. The clinical evidence for statins meaningfully reducing testosterone is mixed — some studies show a modest effect, others don\'t. Whether it\'s relevant depends on how aggressively your LDL is being managed and your baseline testosterone. It\'s a variable worth factoring into the interpretation of your results.',
     });
   }
 
   if (medCats.includes('androgen_blockers')) {
     factors.push({
       title: 'Androgen blocker / 5-ARI — DHT and androgen signalling impact',
-      explanation: 'Finasteride, dutasteride, and spironolactone reduce DHT or block androgen receptors directly. Their effect on libido, erectile function, and body composition can persist well beyond the treatment period in some men.',
+      explanation: 'Finasteride, dutasteride, and similar medications reduce DHT — the most potent androgen — by blocking the enzyme that converts testosterone into it. The effect on libido and erectile function varies considerably: some men tolerate these medications without notable symptoms, while others experience significant effects that can persist after stopping. DHT in your extended panel will quantify how much conversion is being suppressed.',
     });
   }
 
@@ -705,15 +705,15 @@ export function getKeyFactors(
     { id: 'insomnia', title: 'Insomnia or poor sleep onset reported', explanation: 'Difficulty initiating or maintaining sleep is frequently linked to elevated evening cortisol — which directly suppresses the testosterone production that occurs during deep sleep stages. This creates a compounding cycle: poor sleep raises cortisol, high cortisol worsens sleep.' },
     { id: 'non_restorative', title: 'Waking unrefreshed despite adequate sleep', explanation: 'Unrefreshing sleep despite sufficient hours suggests disrupted sleep architecture — typically from elevated cortisol or undiagnosed sleep apnea. Both suppress the nocturnal testosterone surge. You may be logging hours but not achieving the deep sleep stages where testosterone is produced.' },
     { id: 'anxiety', title: 'Increased anxiety or irritability reported', explanation: 'Chronic anxiety elevates cortisol, which competes with testosterone for the same biosynthetic precursors (pregnenolone steal). Low testosterone itself also worsens mood stability and stress tolerance — the relationship is bidirectional.' },
-    { id: 'afternoon_crash', title: 'Afternoon energy crashes reported', explanation: 'Afternoon energy drops often reflect cortisol dysregulation or blood glucose instability driven by insulin resistance — a frequent downstream effect of low testosterone and high sedentary time. Morning cortisol testing distinguishes HPA axis dysfunction from simple sleep debt.' },
+    { id: 'afternoon_crash', title: 'Afternoon energy crashes reported', explanation: 'Afternoon crashes have many potential causes. In someone with high sedentary time and elevated sugar intake, blood glucose instability is one plausible explanation. Cortisol rhythm disruption is another — the HPA axis can produce a sharp morning cortisol peak followed by a relative afternoon depletion, which lands as an energy crash. The most common causes in the general population are simpler though: poor sleep quality, normal postprandial physiology, or inadequate protein at lunch. Morning cortisol and fasting glucose in your panel are designed to rule in or rule out the hormonal and metabolic explanations — a normal result doesn\'t mean the symptom isn\'t real, it means the cause lies elsewhere.' },
     { id: 'slow_recovery', title: 'Slow recovery from exercise reported', explanation: 'Impaired recovery from training is a hallmark of testosterone deficiency and elevated cortisol — both of which reduce the anabolic signaling required for muscle repair. Vitamin D deficiency also independently impairs recovery and is frequently overlooked.' },
-    { id: 'low_energy', title: 'Persistent fatigue / low energy reported', explanation: 'Chronic low energy is one of the highest-sensitivity indicators of suboptimal testosterone and is frequently compounded by cortisol dysregulation, vitamin D deficiency, thyroid dysfunction, and disrupted sleep architecture. The combination with other reported symptoms determines the most likely root cause.' },
-    { id: 'depression', title: 'Low mood or depression reported', explanation: 'Testosterone and mood have a bidirectional relationship — low T impairs dopamine and serotonin signaling, while depression chronically elevates cortisol and prolactin, both of which suppress GnRH and reduce testosterone production. Morning cortisol and prolactin are key markers to assess in this context.' },
-    { id: 'brain_fog', title: 'Brain fog or poor concentration reported', explanation: 'Cognitive clarity depends on testosterone, thyroid hormones, and cortisol balance. Brain fog is one of the most reliable early indicators of thyroid dysfunction (TSH, Free T3) and is a hallmark of chronic cortisol elevation impairing neuronal androgen receptor signaling.' },
-    { id: 'reduced_strength', title: 'Significant strength reduction reported', explanation: 'Progressive strength loss despite consistent training is a primary anabolic deficiency signal. Testosterone drives myofibrillar protein synthesis and neuromuscular efficiency — declining strength often precedes visible muscle loss and reflects androgen insufficiency earlier than body composition changes.' },
-    { id: 'reduced_endurance', title: 'Reduced exercise endurance reported', explanation: 'Declining endurance is a primary signal of androgen deficiency — testosterone drives mitochondrial efficiency, red blood cell production, and muscular oxygen utilization. It also reflects a catabolic hormonal environment where cortisol is chronically elevated relative to testosterone, suppressing aerobic capacity and recovery simultaneously.' },
-    { id: 'low_motivation', title: 'Loss of drive or motivation reported', explanation: 'Drive and motivation are jointly regulated by testosterone and dopamine, both of which are suppressed by elevated prolactin. Prolactin is raised by stress, sleep disruption, and medications like SSRIs — it directly suppresses GnRH, blunting LH output and reducing testosterone and dopamine production simultaneously. Prolactin is in your panel to assess this pathway.' },
-    { id: 'poor_memory', title: 'Poor memory or recall reported', explanation: 'Memory and recall depend on testosterone, thyroid hormones, and cortisol balance. Poor memory is a hallmark early sign of thyroid dysfunction — subclinical hypothyroidism elevates SHBG and reduces free testosterone, while also independently impairing cognitive function. B12 deficiency is a common mimicker of low-testosterone cognitive decline. Thyroid markers and B12 are in your panel to distinguish hormonal from nutritional causes.' },
+    { id: 'low_energy', title: 'Persistent fatigue / low energy reported', explanation: 'Persistent low energy is reported across a wide range of conditions — low testosterone is one explanation, but thyroid dysfunction, cortisol dysregulation, vitamin D deficiency, poor sleep architecture, and B12 deficiency are equally common causes that can produce identical symptoms. The panel includes markers for each of these pathways. Until the results are in, the most accurate framing is that your energy symptoms indicate something in one or more of these systems is suboptimal — not that testosterone is the confirmed explanation.' },
+    { id: 'depression', title: 'Low mood or depression reported', explanation: 'Low testosterone and low mood have a bidirectional relationship — suppressed androgens impair dopamine and serotonin signaling, and depression simultaneously elevates cortisol and prolactin, both of which suppress the hormonal axis. The direction of causality is often unclear: is the hormonal suppression driving the mood symptoms, or the reverse? The panel includes cortisol and prolactin to assess the HPA axis contribution. What the results can establish is whether a hormonal component is present — which then determines whether addressing the hormones is part of the answer.' },
+    { id: 'brain_fog', title: 'Brain fog or poor concentration reported', explanation: 'Brain fog and cognitive dulling can reflect low testosterone — but they\'re also characteristic of subclinical thyroid dysfunction, elevated cortisol, B12 deficiency, and poor sleep architecture, any of which can produce identical symptoms at similar severity. The thyroid panel, cortisol, and B12 in your markers are there specifically because they\'re the most common non-hormonal mimickers. Identifying which system is responsible changes the intervention entirely.' },
+    { id: 'reduced_strength', title: 'Significant strength reduction reported', explanation: 'Progressive strength loss despite consistent training is associated with androgen deficiency — testosterone drives the protein synthesis and neuromuscular efficiency that sustain strength over time. That said, strength decline also occurs with inadequate recovery, caloric deficit, overtraining, or cortisol excess acting as a catabolic signal. In the context of your other inputs, it\'s a meaningful signal to investigate — not a confirmed diagnosis of low testosterone on its own.' },
+    { id: 'reduced_endurance', title: 'Reduced exercise endurance reported', explanation: 'Reduced endurance can reflect androgen deficiency — testosterone influences mitochondrial efficiency and red blood cell production, both of which affect aerobic capacity. It can equally reflect elevated cortisol suppressing aerobic recovery, iron deficiency, thyroid dysfunction, or accumulated fatigue. Cortisol is in your panel to assess the catabolic state; if cortisol and testosterone are both within range, the differential expands to non-hormonal causes.' },
+    { id: 'low_motivation', title: 'Loss of drive or motivation reported', explanation: 'Loss of motivation can reflect suppressed dopamine signaling — which testosterone supports — and elevated prolactin, which directly suppresses both the testosterone axis and dopamine production. It\'s also one of the most sensitive indicators of mood dysregulation, cortisol excess, and sleep architecture disruption, independent of any hormonal component. Prolactin is in your panel to determine whether the hormonal pathway is active.' },
+    { id: 'poor_memory', title: 'Poor memory or recall reported', explanation: 'Memory and recall difficulties have multiple potential drivers — testosterone, thyroid hormones, cortisol, B12, and ferritin all contribute to cognitive function through distinct mechanisms. Subclinical thyroid dysfunction is particularly worth ruling out: even mild hypothyroidism can impair working memory and word retrieval. B12 deficiency produces similar symptoms and is often overlooked in men who otherwise eat well. The thyroid panel and B12 in your markers are there to separate these causes from a testosterone-driven explanation — identifying which system is responsible changes the approach entirely.' },
   ];
 
   for (const s of flaggedSymptoms) {
