@@ -701,6 +701,10 @@ export function getKeyFactors(
     { id: 'depression', title: 'Low mood or depression reported', explanation: 'Testosterone and mood have a bidirectional relationship — low T impairs dopamine and serotonin signaling, while depression chronically elevates cortisol and prolactin, both of which suppress GnRH and reduce testosterone production. Morning cortisol and prolactin are key markers to assess in this context.' },
     { id: 'brain_fog', title: 'Brain fog or poor concentration reported', explanation: 'Cognitive clarity depends on testosterone, thyroid hormones, and cortisol balance. Brain fog is one of the most reliable early indicators of thyroid dysfunction (TSH, Free T3) and is a hallmark of chronic cortisol elevation impairing neuronal androgen receptor signaling.' },
     { id: 'reduced_strength', title: 'Significant strength reduction reported', explanation: 'Progressive strength loss despite consistent training is a primary anabolic deficiency signal. Testosterone drives myofibrillar protein synthesis and neuromuscular efficiency — declining strength often precedes visible muscle loss and reflects androgen insufficiency earlier than body composition changes.' },
+    { id: 'reduced_endurance', title: 'Reduced exercise endurance reported', explanation: 'Declining endurance is a primary signal of androgen deficiency — testosterone drives mitochondrial efficiency, red blood cell production, and muscular oxygen utilization. It also reflects a catabolic hormonal environment where cortisol is chronically elevated relative to testosterone, suppressing aerobic capacity and recovery simultaneously.' },
+    { id: 'low_motivation', title: 'Loss of drive or motivation reported', explanation: 'Drive and motivation are jointly regulated by testosterone and dopamine, both of which are suppressed by elevated prolactin. Prolactin is raised by stress, sleep disruption, and medications like SSRIs — it directly suppresses GnRH, blunting LH output and reducing testosterone and dopamine production simultaneously. Prolactin is in your panel to assess this pathway.' },
+    { id: 'poor_memory', title: 'Poor memory or recall reported', explanation: 'Memory and recall depend on testosterone, thyroid hormones, and cortisol balance. Poor memory is a hallmark early sign of thyroid dysfunction — subclinical hypothyroidism elevates SHBG and reduces free testosterone, while also independently impairing cognitive function. B12 deficiency is a common mimicker of low-testosterone cognitive decline. Thyroid markers and B12 are in your panel to distinguish hormonal from nutritional causes.' },
+    { id: 'sleep_apnea', title: 'Snoring or suspected sleep apnea reported', explanation: 'Obstructive sleep apnea fragments the REM and deep sleep stages that drive pulsatile LH release — the primary overnight testosterone production signal. Sleep apnea is both a cause and a consequence of low testosterone, creating a self-reinforcing cycle that requires diagnosis to break. Hematocrit and cortisol are in your panel to assess downstream hormonal impact; TSH rules out hypothyroidism as a contributing cause of airway muscle relaxation.' },
   ];
 
   for (const s of flaggedSymptoms) {
@@ -965,8 +969,13 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'cortisol_am', 1, 'Sleep disruption');
   }
   if (symptoms.includes('afternoon_crash')) {
-    addTrigger(triggers, 'cortisol_am', 1, 'Afternoon energy crashes');
+    addTrigger(triggers, 'cortisol_am', 2, 'Afternoon energy crashes (HPA axis depletion pattern)');
     addTrigger(triggers, ['glucose', 'fasting_insulin'], 1, 'Afternoon crashes (glycemic assessment)');
+  }
+
+  // Reduced endurance → cortisol (catabolic state)
+  if (symptoms.includes('reduced_endurance')) {
+    addTrigger(triggers, 'cortisol_am', 1, 'Reduced endurance (catabolic hormonal state)');
   }
 
   // Hair loss / finasteride → DHT
