@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Optimizable — Malemaxxing, Quantified.</title>
+  <title>Optimizable — Male Hormonal Health, Simplified.</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
@@ -15,19 +15,19 @@
       --bg-2:        #141414;
       --bg-3:        #1a1a1a;
       --bg-4:        #1f1f1f;
-      --green:       #00E676;
-      --green-dim:   rgba(0,230,118,0.12);
-      --green-glow:  rgba(0,230,118,0.35);
-      --gold:        #FFB300;
-      --gold-dim:    rgba(255,179,0,0.12);
-      --red:         #FF5252;
-      --amber:       #FFB300;
+      --green:       #C8A2C8;
+      --green-dim:   rgba(200,162,200,0.12);
+      --green-glow:  rgba(200,162,200,0.35);
+      --gold:        #E8C470;
+      --gold-dim:    rgba(232,196,112,0.12);
+      --red:         #E88080;
+      --amber:       #E8C470;
       --white:       #FFFFFF;
       --gray-1:      #E0E0E0;
       --gray-2:      #9A9A9A;
       --gray-3:      #4A4A4A;
       --border:      rgba(255,255,255,0.07);
-      --border-g:    rgba(0,230,118,0.25);
+      --border-g:    rgba(200,162,200,0.25);
     }
 
     html { scroll-behavior: smooth; }
@@ -48,7 +48,7 @@
     /* ─── SCROLLBAR ─── */
     ::-webkit-scrollbar { width: 4px; }
     ::-webkit-scrollbar-track { background: var(--bg); }
-    ::-webkit-scrollbar-thumb { background: var(--green); border-radius: 2px; }
+    ::-webkit-scrollbar-thumb { background: var(--gray-3); border-radius: 2px; }
 
     /* ─── NAV ─── */
     nav {
@@ -87,7 +87,7 @@
       transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     }
     .nav-cta:hover {
-      background: #1affa0;
+      background: #dfc0df;
       transform: translateY(-1px);
       box-shadow: 0 6px 24px var(--green-glow);
     }
@@ -102,12 +102,12 @@
     .hero-glow-top {
       position: absolute; top: -10%; right: -5%;
       width: 700px; height: 700px; pointer-events: none;
-      background: radial-gradient(circle, rgba(0,230,118,0.07) 0%, transparent 65%);
+      background: radial-gradient(circle, rgba(200,162,200,0.07) 0%, transparent 65%);
     }
     .hero-glow-bot {
       position: absolute; bottom: 0; left: -10%;
       width: 500px; height: 300px; pointer-events: none;
-      background: radial-gradient(ellipse, rgba(0,230,118,0.04) 0%, transparent 70%);
+      background: radial-gradient(ellipse, rgba(200,162,200,0.04) 0%, transparent 70%);
     }
     .hero-line {
       position: absolute; bottom: 0; left: 0; right: 0; height: 1px;
@@ -163,9 +163,9 @@
       pointer-events: none;
     }
     .btn-primary:hover {
-      background: #1affa0;
+      background: #dfc0df;
       transform: translateY(-3px);
-      box-shadow: 0 12px 36px rgba(0,230,118,0.45);
+      box-shadow: 0 12px 36px rgba(200,162,200,0.45);
     }
     .btn-arrow { font-size: 1.1rem; }
 
@@ -188,7 +188,7 @@
     .phone-wrapper { position: relative; }
     .phone-aura {
       position: absolute; inset: -50px;
-      background: radial-gradient(ellipse at center, rgba(0,230,118,0.1) 0%, transparent 65%);
+      background: radial-gradient(ellipse at center, rgba(200,162,200,0.1) 0%, transparent 65%);
       pointer-events: none;
     }
     .phone {
@@ -267,7 +267,7 @@
     .c-r { color: var(--red); }
 
     .app-plan {
-      background: rgba(0,230,118,0.07); border: 1px solid var(--border-g);
+      background: rgba(200,162,200,0.07); border: 1px solid var(--border-g);
       border-radius: 7px; padding: 0.55rem 0.65rem;
     }
     .app-plan-title {
@@ -326,8 +326,8 @@
       content: '';
       position: absolute; inset: 0;
       background:
-        radial-gradient(ellipse at 25% 60%, rgba(0,230,118,0.055) 0%, transparent 55%),
-        radial-gradient(ellipse at 75% 40%, rgba(0,230,118,0.04) 0%, transparent 55%);
+        radial-gradient(ellipse at 25% 60%, rgba(200,162,200,0.055) 0%, transparent 55%),
+        radial-gradient(ellipse at 75% 40%, rgba(200,162,200,0.04) 0%, transparent 55%);
       pointer-events: none;
     }
     .philosophy .section-inner { position: relative; z-index: 1; }
@@ -357,7 +357,7 @@
     }
     .track-line-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--green), rgba(0,230,118,0.3));
+      background: linear-gradient(90deg, var(--green), rgba(200,162,200,0.3));
       width: 100%;
     }
     .steps-row {
@@ -394,9 +394,8 @@
 
     /* ─── SECTION 5: LOOP ─── */
     .loop { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .loop-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 5rem; align-items: start; }
 
-    .loop-features { display: flex; flex-direction: column; gap: 1.75rem; }
+    .loop-features { display: flex; flex-direction: column; gap: 1.75rem; max-width: 620px; }
     .loop-feature { display: flex; gap: 1rem; align-items: flex-start; }
     .feature-icon {
       width: 42px; height: 42px; flex-shrink: 0;
@@ -410,50 +409,11 @@
     .chart-wrap {
       margin-top: 2.25rem; background: #0c0c0c;
       border: 1px solid var(--border); padding: 1.25rem;
+      max-width: 620px;
     }
     .chart-label-top { font-size: 0.65rem; letter-spacing: 0.14em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 1rem; }
     .chart-months { display: flex; justify-content: space-between; margin-top: 0.5rem; }
     .chart-month { font-size: 0.58rem; color: var(--gray-3); }
-
-    /* Impact card */
-    .impact-card {
-      background: var(--bg-3); border: 1px solid var(--border);
-      padding: 2rem; position: sticky; top: 6.5rem;
-    }
-    .impact-headline {
-      font-family: 'Oswald', sans-serif; font-size: 1rem; font-weight: 600;
-      color: var(--gold); letter-spacing: 0.04em;
-      padding-bottom: 1.25rem; border-bottom: 1px solid var(--border);
-      margin-bottom: 1.5rem;
-    }
-    .impact-list { list-style: none; display: flex; flex-direction: column; gap: 1rem; margin-bottom: 2rem; }
-    .impact-list li {
-      display: flex; align-items: flex-start; gap: 0.7rem;
-      font-size: 0.87rem; color: var(--gray-1); line-height: 1.55;
-    }
-    .impact-list li::before { content: '→'; color: var(--green); flex-shrink: 0; margin-top: 0.05rem; }
-
-    /* Pricing mini */
-    .price-divider { height: 1px; background: var(--border); margin-bottom: 1.5rem; }
-    .price-lbl { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 1rem; }
-    .price-cards { display: flex; gap: 0.75rem; }
-    .price-tier {
-      flex: 1; background: rgba(255,255,255,0.025); border: 1px solid var(--border);
-      padding: 0.85rem; position: relative;
-    }
-    .price-tier.featured {
-      background: var(--green-dim); border-color: var(--border-g);
-    }
-    .price-badge {
-      position: absolute; top: -1px; right: -1px;
-      background: var(--gold); color: #000;
-      font-size: 0.55rem; font-weight: 700; letter-spacing: 0.08em;
-      padding: 0.15rem 0.4rem;
-    }
-    .price-amount { font-family: 'Oswald', sans-serif; font-size: 1.1rem; margin-bottom: 0.25rem; }
-    .price-amount span { font-family: 'Inter', sans-serif; font-size: 0.7rem; color: var(--gray-2); }
-    .price-amount.highlighted { color: var(--green); }
-    .price-desc { font-size: 0.7rem; color: var(--gray-2); line-height: 1.55; }
 
     /* ─── SECTION 6: CTA ─── */
     .final-cta {
@@ -464,12 +424,12 @@
       content: '';
       position: absolute; bottom: -40%; left: 50%; transform: translateX(-50%);
       width: 900px; height: 450px; pointer-events: none;
-      background: radial-gradient(ellipse, rgba(0,230,118,0.07) 0%, transparent 65%);
+      background: radial-gradient(ellipse, rgba(200,162,200,0.07) 0%, transparent 65%);
     }
     .final-cta .section-inner { position: relative; z-index: 1; }
     .cta-title { font-size: clamp(2.2rem, 5vw, 3.75rem); font-weight: 700; line-height: 1.05; margin-bottom: 1.5rem; }
     .cta-title em { color: var(--green); font-style: normal; }
-    .cta-body { max-width: 580px; margin: 0 auto 3rem; font-size: 1rem; color: var(--gray-2); line-height: 1.75; }
+    .cta-body { max-width: 580px; margin: 0 auto 2rem; font-size: 1rem; color: var(--gray-2); line-height: 1.75; }
     .cta-micro-note { font-size: 0.8rem; color: var(--gray-3); margin-top: 1.25rem; }
     .cta-micro-note strong { color: var(--gray-2); }
     .cta-micro-note span { color: var(--gold); }
@@ -496,6 +456,56 @@
     .d4 { transition-delay: 0.4s; }
     .d5 { transition-delay: 0.5s; }
 
+    /* ─── SOCIAL PROOF ─── */
+    .proof-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 1.5rem; margin: 2.5rem 0; }
+    .proof-item { padding-top: 1.5rem; border-top: 2px solid var(--border-g); }
+    .proof-num { font-family: 'Oswald', sans-serif; font-size: 2.4rem; font-weight: 700; color: var(--green); line-height: 1; margin-bottom: 0.5rem; }
+    .proof-label { font-size: 0.82rem; color: var(--gray-2); line-height: 1.6; }
+    .proof-authority {
+      max-width: 700px; margin-top: 2.5rem; padding: 1.75rem 2rem;
+      background: rgba(255,255,255,0.02); border: 1px solid var(--border);
+      border-left: 3px solid var(--green);
+      font-size: 0.92rem; color: var(--gray-1); line-height: 1.8; font-style: italic;
+    }
+
+    /* ─── SUCCESS VISION ─── */
+    .success-vision { background: var(--bg); }
+    .success-body { font-size: 1.05rem; color: var(--gray-1); line-height: 1.9; max-width: 680px; }
+
+    /* ─── FAILURE STAKES ─── */
+    .failure-stakes {
+      background: #09080a;
+      border-top: 1px solid rgba(255,82,82,0.14);
+      border-bottom: 1px solid rgba(255,82,82,0.14);
+      padding: 6.5rem 2.5rem;
+      position: relative; overflow: hidden;
+    }
+    .failure-stakes::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 80% 50%, rgba(255,82,82,0.03) 0%, transparent 60%);
+      pointer-events: none;
+    }
+    .failure-stakes .section-inner { max-width: 1200px; margin: 0 auto; position: relative; z-index: 1; }
+    .failure-title {
+      font-family: 'Oswald', sans-serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700;
+      color: var(--white); margin-bottom: 1.5rem; max-width: 560px;
+    }
+    .failure-body { font-size: 0.97rem; color: var(--gray-2); line-height: 1.85; max-width: 640px; }
+
+    /* ─── PRICING STANDALONE ─── */
+    .pricing-section { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
+    .pricing-cards { display: flex; gap: 1.25rem; max-width: 560px; margin-top: 2.5rem; }
+    .pricing-card { flex: 1; background: var(--bg-3); border: 1px solid var(--border); padding: 2rem; position: relative; }
+    .pricing-card.featured { background: var(--green-dim); border-color: var(--border-g); }
+    .pricing-card-badge { position: absolute; top: -1px; right: -1px; background: var(--gold); color: #000; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.2rem 0.5rem; }
+    .pricing-card-label { font-size: 0.6rem; letter-spacing: 0.16em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 0.75rem; }
+    .pricing-card-amount { font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1; }
+    .pricing-card-amount.highlighted { color: var(--green); }
+    .pricing-card-amount span { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--gray-2); font-weight: 400; }
+    .pricing-card-desc { font-size: 0.82rem; color: var(--gray-2); line-height: 1.65; }
+
     /* ─── RESPONSIVE ─── */
     @media (max-width: 960px) {
       .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
@@ -505,18 +515,19 @@
       .persona-grid { grid-template-columns: 1fr; }
       .steps-row { grid-template-columns: 1fr 1fr; }
       .track-line { display: none; }
-      .loop-grid { grid-template-columns: 1fr; gap: 3rem; }
-      .impact-card { position: static; }
+      .proof-row { grid-template-columns: 1fr 1fr; }
+      .pricing-cards { flex-direction: column; max-width: 100%; }
     }
     @media (max-width: 600px) {
       nav { padding: 0.85rem 1.25rem; }
       .hero { padding: 7rem 1.25rem 4rem; }
       .section { padding: 4.5rem 1.25rem; }
       .philosophy, .final-cta { padding: 6rem 1.25rem; }
+      .failure-stakes { padding: 4.5rem 1.25rem; }
       .hero-stats { flex-wrap: wrap; gap: 1.25rem; }
       .steps-row { grid-template-columns: 1fr; }
       .range-legend { flex-wrap: wrap; gap: 1rem; }
-      .loop-grid { gap: 2.5rem; }
+      .proof-row { grid-template-columns: 1fr; }
       footer { flex-direction: column; }
     }
   </style>
@@ -526,24 +537,10 @@
 <!-- ═══ NAV ═══ -->
 <nav id="nav">
   <a href="#" class="nav-logo">
-    <!-- Logo SVG — segmented male symbol with upward arrow -->
-    <svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <defs>
-        <linearGradient id="lg" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stop-color="#00E676"/>
-          <stop offset="100%" stop-color="#007A3D"/>
-        </linearGradient>
-      </defs>
-      <path d="M17 4A13 13 0 0 1 30 17" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none"/>
-      <path d="M30 17A13 13 0 0 1 17 30" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.7"/>
-      <path d="M17 30A13 13 0 0 1 4 17" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.45"/>
-      <path d="M4 17A13 13 0 0 1 17 4" stroke="url(#lg)" stroke-width="3.5" stroke-linecap="round" fill="none" opacity="0.25"/>
-      <line x1="22" y1="12" x2="29" y2="5" stroke="#00E676" stroke-width="2.5" stroke-linecap="round"/>
-      <polyline points="23.5,5 29,5 29,11.5" stroke="#00E676" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
-    </svg>
+    <img src="logo_trsp.png" alt="Optimizable" width="36" height="36" style="object-fit:contain;" />
     <div>
       <div class="nav-wordmark">OPTIMIZABLE</div>
-      <span class="nav-sub">MALEMAXXING QUANTIFIED</span>
+      <span class="nav-sub">MALE HORMONAL HEALTH, SIMPLIFIED</span>
     </div>
   </a>
   <a href="#cta" class="nav-cta">START FREE →</a>
@@ -557,26 +554,26 @@
   <div class="hero-inner">
 
     <div class="hero-content">
-      <div class="hero-badge"><span class="badge-dot"></span>WORLD'S FIRST END-TO-END HORMONE PLATFORM</div>
-      <h1>YOUR VITALITY,<br><em>QUANTIFIED.</em></h1>
-      <p class="hero-sub">Stop guessing why you're tired, foggy, and lacking drive. Optimizable is the world's first end-to-end platform for men who refuse to settle for "normal" hormonal health. We analyze your bloodwork, track your daily habits, and give you an algorithmic protocol to reclaim your peak masculine baseline.</p>
+      <div class="hero-badge"><span class="badge-dot"></span>FREE ASSESSMENT · 3 MINUTES</div>
+      <h1>YOUR HORMONES AREN'T A MYSTERY.<br><em>STOP TREATING THEM LIKE ONE.</em></h1>
+      <p class="hero-sub">You're tired. Your focus is slipping. Your drive — in and out of the bedroom — isn't what it was. You've been told it's "normal for your age." It's not. It's identifiable, measurable, and fixable.<br><br>Optimizable gives you the full picture — from a 3-minute symptom assessment to real bloodwork analysis and a 90-day protocol built around your body, your habits, and your numbers.</p>
       <div class="cta-stack">
-        <a href="#cta" class="btn-primary">START YOUR PROTOCOL <span class="btn-arrow">→</span></a>
-        <span class="cta-micro">No prescription required. Takes 5 minutes.</span>
+        <a href="#cta" class="btn-primary">START FREE ASSESSMENT <span class="btn-arrow">→</span></a>
+        <span class="cta-micro">3 minutes. No account needed. No prescription required.</span>
       </div>
       <div class="hero-divider"></div>
       <div class="hero-stats">
         <div>
           <div class="stat-num">5-Phase</div>
-          <div class="stat-lbl">Optimization loop</div>
+          <div class="stat-lbl">from symptoms to protocol</div>
         </div>
         <div>
           <div class="stat-num">AI</div>
-          <div class="stat-lbl">Bloodwork analysis</div>
+          <div class="stat-lbl">bloodwork analysis</div>
         </div>
         <div>
           <div class="stat-num">90-Day</div>
-          <div class="stat-lbl">Re-test cycle</div>
+          <div class="stat-lbl">cycle — track, adjust, retest</div>
         </div>
       </div>
     </div>
@@ -588,8 +585,7 @@
           <div class="phone-notch"></div>
           <div class="phone-screen">
             <div class="app-topbar">
-              <span class="app-label">TESTOSTERONE HEALTH</span>
-              <span class="app-streak">🔥 14-day streak</span>
+              <span class="app-label">HORMONAL HEALTH DASHBOARD</span>
             </div>
             <div class="score-ring-wrap">
               <div class="score-ring">
@@ -600,12 +596,12 @@
             <div class="bm-list">
               <div class="bm-row">
                 <span class="bm-name">Total T</span>
-                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:78%;background:#00E676"></div></div>
+                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:78%;background:#C8A2C8"></div></div>
                 <span class="bm-val c-g">648 ng/dL</span>
               </div>
               <div class="bm-row">
                 <span class="bm-name">Free T</span>
-                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:61%;background:#00E676"></div></div>
+                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:61%;background:#C8A2C8"></div></div>
                 <span class="bm-val c-g">14.2 pg</span>
               </div>
               <div class="bm-row">
@@ -620,7 +616,7 @@
               </div>
               <div class="bm-row">
                 <span class="bm-name">Vitamin D</span>
-                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:70%;background:#00E676"></div></div>
+                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:70%;background:#C8A2C8"></div></div>
                 <span class="bm-val c-g">52 ng/mL</span>
               </div>
               <div class="bm-row">
@@ -643,61 +639,66 @@
   </div>
 </section>
 
-<!-- ═══ SECTION 2: INVISIBLE DECLINE ═══ -->
+<!-- ═══ SECTION 2: THE INVISIBLE DECLINE ═══ -->
 <section class="section decline">
   <div class="section-inner">
     <span class="tag fade-up">WHO IS THIS FOR</span>
     <h2 class="section-title fade-up">THE INVISIBLE DECLINE</h2>
-    <p class="section-intro fade-up">You felt it, but you didn't have a word for it. Waking up unrefreshed. That 3 PM crash. Difficulty maintaining lean muscle. That subtle shift in libido. You've googled it. Your doctor said you're <em>"in range"</em> for your age. We know you don't want to be "in range." You want to be at your absolute best.</p>
+    <div class="fade-up" style="font-size:0.97rem;color:var(--gray-2);max-width:760px;line-height:1.75;margin-bottom:3rem;">
+      <p>You've felt it. Something is just... off. Waking up already tired. The fog that rolls in by mid-afternoon. The drive that used to be there — at work, in the gym, in bed — quietly fading. You mentioned it to your doctor. He checked your total testosterone, said you're "still in range," and told you it's normal for your age.</p>
+      <p style="margin-top:1.1rem;">Here's what he didn't tell you: total testosterone is just a number. Like income. Earning 100K a month sounds great — until your expenses are 98K. What you actually live on is the 2K that's left. Your total testosterone is the gross income. Your free testosterone — the portion your body can actually use — is what you're living on. And that number is shaped far more by your lifestyle than your age.</p>
+      <p style="margin-top:1.1rem;">That's what Optimizable measures. Not just the number. The full picture.</p>
+    </div>
 
     <div class="persona-grid">
       <div class="persona-card fade-up d1">
         <span class="persona-icon">⚡</span>
         <div class="persona-age">Age 28–40</div>
-        <div class="persona-name">The Curious Optimizer</div>
-        <p class="persona-who">A biohacker, a high-performer. You're fine, but "fine" is an insult. You want data, not theories. You track sleep, macros, HRV — everything except what matters most.</p>
+        <div class="persona-name">The Early Signal</div>
+        <p class="persona-who">You're not in crisis. But things have shifted. Sleep doesn't recharge you the way it used to. You're a little softer around the middle despite not changing much. Your motivation comes and goes. You're not sure if this is just "getting older" or something you should actually look into.</p>
         <div class="problem-lbl">The Gap</div>
-        <p class="problem-text">You want to unlock that extra 10% of energy and focus, but you're just guessing with supplements and sleep protocols.</p>
+        <p class="problem-text">You don't know if your hormones are actually off, or if you're overthinking it. You need a clear, objective answer — not another internet rabbit hole.</p>
       </div>
       <div class="persona-card fade-up d2">
         <span class="persona-icon">🧭</span>
         <div class="persona-age">Age 35–50</div>
-        <div class="persona-name">The Concerned Googler</div>
-        <p class="persona-who">You've noticed a decline. Energy is down. Mood is volatile. Drive is slipping. You've searched everywhere but end up more overwhelmed than before you started.</p>
+        <div class="persona-name">The Dismissed Patient</div>
+        <p class="persona-who">You brought it up with your doctor. Low energy, reduced libido, brain fog. He ran a basic panel, told you your testosterone is "in range," and said it's probably just stress. But you know your own body. Something isn't right — and "in range" doesn't mean optimal.</p>
         <div class="problem-lbl">The Gap</div>
-        <p class="problem-text">Online forums are a mess. Doctors are dismissive. You need a structured, scientific path to clarity — not another rabbit hole.</p>
+        <p class="problem-text">The medical system uses reference ranges so wide they miss real problems. You need analysis that goes deeper — one that reads your bloodwork against your actual lifestyle, symptoms, and history.</p>
       </div>
       <div class="persona-card fade-up d3">
         <span class="persona-icon">🛡️</span>
-        <div class="persona-age">Age 30–60</div>
-        <div class="persona-name">The Post-Diagnosis Tracker</div>
-        <p class="persona-who">You know you have low T. Maybe you're on TRT, maybe going natural. You have a diagnosis but no real intelligence about what's actually driving your numbers.</p>
+        <div class="persona-age">Age 30–55</div>
+        <div class="persona-name">The Ready-to-Act Man</div>
+        <p class="persona-who">You're past the wondering phase. You know something is off. You've maybe even had bloodwork done on your own — but you don't know how to read it properly, or what to actually do with the numbers. You want a plan. A real one. Not generic advice from a forum.</p>
         <div class="problem-lbl">The Gap</div>
-        <p class="problem-text">Your clinic gives you numbers twice a year. You need to know how your daily habits are impacting your hormones right now.</p>
+        <p class="problem-text">You have data but no direction. You need something that takes your specific numbers, maps them to your specific situation, and tells you exactly what to change and for how long.</p>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SECTION 3: PHILOSOPHY ═══ -->
+<!-- ═══ SECTION 3: NOISE VS. THE SIGNAL ═══ -->
 <section class="philosophy">
   <div class="section-inner">
-    <p class="phil-opener fade-up">"The world tells you to accept the decline. We don't."</p>
-    <h2 class="phil-headline fade-up">WHAT YOU CANNOT MEASURE,<br>YOU CANNOT MASTER.</h2>
+    <p class="phil-opener fade-up">"The internet is full of advice for men who want to optimize. Almost none of it starts with your actual data."</p>
+    <h2 class="phil-headline fade-up">THE NOISE VS.<br>THE SIGNAL.</h2>
     <div class="phil-body fade-up">
-      <p>Malemaxxing is simply the act of taking radical ownership of your masculine biology. But motivation is temporary. <span class="phil-em">Data is forever.</span> We don't believe in motivation. We believe in algorithms.</p>
-      <p>Think about it: you track your bank accounts, your investments, your KPIs at work. Why are you treating your own endocrine system — the foundation of your energy, focus, and drive — like a black box?</p>
-      <p>Optimizable changes everything. We turn your bloodwork from a dead PDF into a <span class="phil-em">living, dynamic health score.</span> Every meal, every workout, every 10-minute meditation is quantified, addressed, and optimized. This isn't just about "health tracking." It's about <span class="phil-em">data-driven self-mastery.</span></p>
+      <p>Fitness apps. Biohacking protocols. Testosterone boosters with bold claims and no bloodwork behind them. <span class="phil-em">The noise is everywhere.</span> And almost none of it starts with your actual data.</p>
+      <p>Here's the thing: you track your finances, your fitness, your work performance. But your endocrine system — the engine behind your energy, your focus, your confidence, your sex drive — is still a black box.</p>
+      <p>Optimizable changes that. We take your bloodwork off a dead PDF and turn it into something you can actually understand and act on. <span class="phil-em">Mapped against your lifestyle. Tracked over time. Connected to a protocol that's built for your body</span> — not for a generic male in a textbook.</p>
+      <p>This isn't biohacking. <span class="phil-em">It's clarity.</span></p>
     </div>
   </div>
 </section>
 
-<!-- ═══ SECTION 4: PROTOCOL ═══ -->
+<!-- ═══ SECTION 4: HOW IT WORKS ═══ -->
 <section class="section protocol">
   <div class="section-inner">
     <span class="tag fade-up">THE SYSTEM</span>
-    <h2 class="section-title fade-up">THE OPTIMIZABLE PROTOCOL</h2>
-    <p class="section-intro fade-up">A five-phase, continuously repeating cycle that transforms your bloodwork, symptoms, and lifestyle into a compounding, longitudinal advantage.</p>
+    <h2 class="section-title fade-up">HOW IT WORKS — 5 PHASES TO CLARITY</h2>
+    <p class="section-intro fade-up">From your first symptom to your 90-day protocol — a complete, repeating cycle that gets more accurate with every pass.</p>
 
     <div class="protocol-track fade-up">
       <div class="track-line"><div class="track-line-fill"></div></div>
@@ -705,32 +706,32 @@
         <div class="step">
           <div class="step-num-wrap">01</div>
           <div class="step-tag-lbl">Profile</div>
-          <div class="step-name">Baseline Snapshot</div>
-          <p class="step-copy">5-minute onboarding captures every variable that directly impacts how your body produces and metabolizes testosterone. Immediate personalized baseline — no guesswork.</p>
+          <div class="step-name">Your Baseline</div>
+          <p class="step-copy">3-minute onboarding captures the details that actually matter — body composition, sleep quality, stress patterns, medications, symptoms. No generic questionnaire. Every question maps to a clinical factor.</p>
         </div>
         <div class="step">
           <div class="step-num-wrap">02</div>
           <div class="step-tag-lbl">Assessment</div>
-          <div class="step-name">Hormone Risk Score</div>
-          <p class="step-copy">We quantify your symptoms to generate a clinical risk score. This is clarity: exactly how severe your situation is, and which bloodwork markers are mandatory for you.</p>
+          <div class="step-name">Your Risk Score</div>
+          <p class="step-copy">Your inputs generate a Hormonal Risk Score from 0 to 100. You also get a breakdown of the key factors driving your score, and exactly which bloodwork markers you need to test.</p>
         </div>
         <div class="step">
           <div class="step-num-wrap">03</div>
           <div class="step-tag-lbl">Testing</div>
-          <div class="step-name">Personalized Diagnostics</div>
-          <p class="step-copy">Stop asking what to test. We generate a printable Doctor's Request Sheet with exact clinical codes and plain-language explanations of why each test matters for you specifically.</p>
+          <div class="step-name">Your Bloodwork Panel</div>
+          <p class="step-copy">No more guessing what to test. Optimizable generates a personalized panel — core hormonal markers every man should check, plus targeted tests based on your specific inputs. On SSRIs? Prolactin gets added. Past steroid use? LH and FSH.</p>
         </div>
         <div class="step">
           <div class="step-num-wrap">04</div>
-          <div class="step-tag-lbl">Analysis</div>
-          <div class="step-name">AI-Powered Diagnostics</div>
-          <p class="step-copy">Upload your lab PDF or photo. Our OCR extracts every biomarker, compares against both standard and optimal ranges, and returns a color-coded dashboard you can actually act on.</p>
+          <div class="step-tag-lbl" style="color:var(--gold)">Analysis · Premium</div>
+          <div class="step-name">Your Full Analysis</div>
+          <p class="step-copy">Upload your lab results — PDF or photo. The system extracts every biomarker, maps it against your profile, lifestyle, medications, and symptoms. Not just "in range" or "out of range" — what your numbers mean for you, specifically.</p>
         </div>
         <div class="step">
           <div class="step-num-wrap">05</div>
-          <div class="step-tag-lbl">Optimization</div>
-          <div class="step-name">Your Daily Protocol</div>
-          <p class="step-copy">An actionable daily and weekly tracker: sleep hacks, nutrition and supplement advice keyed to your labs, specific exercise programming, and stress protocols. Follow the plan. See the change.</p>
+          <div class="step-tag-lbl" style="color:var(--gold)">Protocol · Premium</div>
+          <div class="step-name">Your 90-Day Plan</div>
+          <p class="step-copy">A personalized daily and weekly plan across six categories: diet, exercise, sleep, stress, supplementation, and habits. Every recommendation is tied to your bloodwork — specific compounds, doses, timing, and the reason behind each one.</p>
         </div>
       </div>
     </div>
@@ -746,110 +747,148 @@
   </div>
 </section>
 
-<!-- ═══ SECTION 5: CLOSED LOOP ═══ -->
+<!-- ═══ SECTION 5: THE LONG GAME ═══ -->
 <section class="section loop">
   <div class="section-inner">
-    <div class="loop-grid">
-      <div>
-        <span class="tag fade-up">THE LONG GAME</span>
-        <h2 class="section-title fade-up">THE CLOSED-LOOP ADVANTAGE</h2>
-        <p class="section-intro fade-up">A single lab test is a snapshot. A longitudinal health record is a power move. Optimizable creates a continuous feedback loop between your body and your choices — month after month.</p>
+    <span class="tag fade-up">THE LONG GAME</span>
+    <h2 class="section-title fade-up">THE LONG GAME — WHY ONE TEST ISN'T ENOUGH</h2>
+    <p class="section-intro fade-up">A single blood test tells you where you are today. Tracking over time tells you what's actually working — and what isn't.</p>
 
-        <div class="loop-features fade-up">
-          <div class="loop-feature">
-            <div class="feature-icon">📓</div>
-            <div>
-              <div class="feature-title">Daily Journal — 60 Seconds</div>
-              <p class="feature-desc">Morning energy. End-of-day libido, mood, and plan adherence. This connects how you feel to what you did, automatically surfacing the patterns that move your numbers.</p>
-            </div>
-          </div>
-          <div class="loop-feature">
-            <div class="feature-icon">📈</div>
-            <div>
-              <div class="feature-title">Compounding Data</div>
-              <p class="feature-desc">See trend graphs correlating subjective wellbeing (energy 2.3 → 3.8) with objective changes — Vitamin D supplementation, sleep duration gains, alcohol reduction. The data tells the story.</p>
-            </div>
-          </div>
-          <div class="loop-feature">
-            <div class="feature-icon">🔄</div>
-            <div>
-              <div class="feature-title">Quarterly Re-Testing</div>
-              <p class="feature-desc">When it's time, re-test. Optimizable runs a side-by-side comparison of every biomarker. See precisely where you improved, where you declined, and receive an updated protocol for the next 90 days.</p>
-            </div>
-          </div>
-        </div>
-
-        <!-- Trend chart -->
-        <div class="chart-wrap fade-up">
-          <div class="chart-label-top">Wellbeing Score — 6-Month Trend</div>
-          <svg viewBox="0 0 300 70" preserveAspectRatio="none" height="70" style="width:100%;overflow:visible;">
-            <defs>
-              <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stop-color="#00E676" stop-opacity="0.25"/>
-                <stop offset="100%" stop-color="#00E676" stop-opacity="0"/>
-              </linearGradient>
-            </defs>
-            <path d="M0,65 C30,62 55,55 100,50 C145,45 155,36 200,26 C225,20 260,14 300,6"
-                  stroke="#00E676" stroke-width="2" fill="none" stroke-linecap="round"/>
-            <path d="M0,65 C30,62 55,55 100,50 C145,45 155,36 200,26 C225,20 260,14 300,6 L300,70 L0,70Z"
-                  fill="url(#chartGrad)"/>
-            <circle cx="0"   cy="65" r="3.5" fill="#00E676"/>
-            <circle cx="60"  cy="54" r="3.5" fill="#00E676"/>
-            <circle cx="120" cy="46" r="3.5" fill="#00E676"/>
-            <circle cx="180" cy="30" r="3.5" fill="#00E676"/>
-            <circle cx="240" cy="18" r="3.5" fill="#00E676"/>
-            <circle cx="300" cy="6"  r="3.5" fill="#00E676"/>
-          </svg>
-          <div class="chart-months">
-            <span class="chart-month">Month 1</span>
-            <span class="chart-month">Month 2</span>
-            <span class="chart-month">Month 3</span>
-            <span class="chart-month">Month 4</span>
-            <span class="chart-month">Month 5</span>
-            <span class="chart-month">Month 6</span>
-          </div>
+    <div class="loop-features fade-up">
+      <div class="loop-feature">
+        <div class="feature-icon">📓</div>
+        <div>
+          <div class="feature-title">Daily Check-in — 60 Seconds</div>
+          <p class="feature-desc">Rate your morning energy, end-of-day mood, libido, sleep quality, and plan adherence. Over weeks, this connects how you feel to what you did — automatically surfacing the habits that move your numbers.</p>
         </div>
       </div>
-
-      <div>
-        <div class="impact-card fade-up">
-          <div class="impact-headline">THE IMPACT? YOU FEEL LIKE YOURSELF AGAIN.</div>
-          <ul class="impact-list">
-            <li>Waking up with focus — not dread. Mornings feel like yours again.</li>
-            <li>All-day energy without the 3 PM crash that's been following you for years.</li>
-            <li>Reclaiming your confidence in every area of life — professional, physical, personal.</li>
-            <li>Knowing exactly why you feel the way you do, and exactly what to do about it.</li>
-            <li>A longitudinal health record that compounds in value — month after month, year after year.</li>
-          </ul>
-          <div class="price-divider"></div>
-          <div class="price-lbl">Pricing</div>
-          <div class="price-cards">
-            <div class="price-tier">
-              <div class="price-amount">FREE</div>
-              <p class="price-desc">Full onboarding, symptom assessment, core bloodwork recommendations, basic score.</p>
-            </div>
-            <div class="price-tier featured">
-              <div class="price-badge">PREMIUM</div>
-              <div class="price-amount highlighted">$9.99<span>/mo</span></div>
-              <p class="price-desc">OCR scanning, AI analysis, full protocol, unlimited panels, complete trend history.</p>
-            </div>
-          </div>
+      <div class="loop-feature">
+        <div class="feature-icon">📈</div>
+        <div>
+          <div class="feature-title">Trend Tracking</div>
+          <p class="feature-desc">See your subjective wellbeing — energy, focus, confidence — mapped against objective changes: sleep improvements, supplement effects, alcohol reduction. The data tells the story your body can't put into words.</p>
         </div>
+      </div>
+      <div class="loop-feature">
+        <div class="feature-icon">🔄</div>
+        <div>
+          <div class="feature-title">Quarterly Retest</div>
+          <p class="feature-desc">When it's time, retest your bloodwork. Optimizable runs a side-by-side comparison of every marker — what improved, what declined, and why. Then it updates your protocol for the next 90 days. The cycle repeats. The picture gets sharper every time.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="chart-wrap fade-up">
+      <div class="chart-label-top">Wellbeing Score — 6-Month Trend</div>
+      <svg viewBox="0 0 300 70" preserveAspectRatio="none" height="70" style="width:100%;overflow:visible;">
+        <defs>
+          <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#C8A2C8" stop-opacity="0.25"/>
+            <stop offset="100%" stop-color="#C8A2C8" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M0,65 C30,62 55,55 100,50 C145,45 155,36 200,26 C225,20 260,14 300,6"
+              stroke="#C8A2C8" stroke-width="2" fill="none" stroke-linecap="round"/>
+        <path d="M0,65 C30,62 55,55 100,50 C145,45 155,36 200,26 C225,20 260,14 300,6 L300,70 L0,70Z"
+              fill="url(#chartGrad)"/>
+        <circle cx="0"   cy="65" r="3.5" fill="#C8A2C8"/>
+        <circle cx="60"  cy="54" r="3.5" fill="#C8A2C8"/>
+        <circle cx="120" cy="46" r="3.5" fill="#C8A2C8"/>
+        <circle cx="180" cy="30" r="3.5" fill="#C8A2C8"/>
+        <circle cx="240" cy="18" r="3.5" fill="#C8A2C8"/>
+        <circle cx="300" cy="6"  r="3.5" fill="#C8A2C8"/>
+      </svg>
+      <div class="chart-months">
+        <span class="chart-month">Month 1</span>
+        <span class="chart-month">Month 2</span>
+        <span class="chart-month">Month 3</span>
+        <span class="chart-month">Month 4</span>
+        <span class="chart-month">Month 5</span>
+        <span class="chart-month">Month 6</span>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══ SECTION 6: FINAL CTA ═══ -->
+<!-- ═══ SECTION 6: BUILT ON CLINICAL ENDOCRINOLOGY ═══ -->
+<section class="section">
+  <div class="section-inner">
+    <span class="tag fade-up">WHY IT WORKS</span>
+    <h2 class="section-title fade-up">BUILT ON CLINICAL ENDOCRINOLOGY</h2>
+
+    <div class="proof-row fade-up">
+      <div class="proof-item">
+        <div class="proof-num">40+</div>
+        <div class="proof-label">hormonal and lifestyle risk variables factored into every assessment — not just a single testosterone number</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">6</div>
+        <div class="proof-label">lifestyle categories scored against endocrine research: sleep, diet, stress, exercise, substances, and medications</div>
+      </div>
+      <div class="proof-item">
+        <div class="proof-num">20+</div>
+        <div class="proof-label">prescription medication interactions identified and factored in — SSRIs, statins, corticosteroids, opioids, and more</div>
+      </div>
+    </div>
+
+    <div class="proof-authority fade-up">
+      "Built on clinical endocrinology research. Considers medication interactions, lifestyle correlations, and symptom weighting that standard panels ignore. Recommendations are tied to your specific inputs — not a generic male profile."
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 7: WHAT CHANGES ═══ -->
+<section class="section success-vision" style="background:var(--bg-2);border-top:1px solid var(--border);">
+  <div class="section-inner">
+    <span class="tag fade-up">THE OUTCOME</span>
+    <h2 class="section-title fade-up">WHAT CHANGES?<br>YOU FEEL LIKE YOURSELF AGAIN.</h2>
+    <p class="success-body fade-up">You wake up and the fog isn't there. The energy holds through the afternoon — no crash, no reaching for caffeine just to function. Your focus sharpens. Your drive — at work, in the gym, in the bedroom — comes back like something that was always yours and just went quiet for a while.</p>
+    <p class="success-body fade-up" style="margin-top:1.25rem;">You stop wondering what's wrong. You know. And more importantly — you know exactly what to do about it.</p>
+  </div>
+</section>
+
+<!-- ═══ FAILURE STAKES ═══ -->
+<section class="failure-stakes">
+  <div class="section-inner">
+    <h2 class="failure-title fade-up">THE COST OF WAITING</h2>
+    <p class="failure-body fade-up">Testosterone doesn't decline on a schedule you can plan around. It declines in response to the life you're living right now — the sleep you're losing, the stress you're carrying, the habits you haven't questioned. And the symptoms don't plateau. What starts as low energy becomes depression. What starts as reduced libido becomes erectile dysfunction. What starts as brain fog becomes the feeling that you've lost yourself.</p>
+    <p class="failure-body fade-up" style="margin-top:1.25rem;">The good news: when you catch the root causes early and address them specifically, natural optimization works. But the longer you wait, the more ground you have to recover.</p>
+  </div>
+</section>
+
+<!-- ═══ PRICING ═══ -->
+<section class="section pricing-section">
+  <div class="section-inner">
+    <span class="tag fade-up">PRICING</span>
+    <h2 class="section-title fade-up">START FREE. UPGRADE WHEN YOU'RE READY.</h2>
+    <p class="section-intro fade-up">The assessment, risk score, and bloodwork panel are completely free. Premium unlocks full bloodwork analysis and your 90-day protocol.</p>
+    <div class="pricing-cards fade-up">
+      <div class="pricing-card">
+        <div class="pricing-card-label">Free</div>
+        <div class="pricing-card-amount">FREE</div>
+        <p class="pricing-card-desc">Full onboarding, symptom assessment, Hormonal Risk Score, and personalized bloodwork panel recommendations.</p>
+      </div>
+      <div class="pricing-card featured">
+        <div class="pricing-card-badge">PREMIUM</div>
+        <div class="pricing-card-label">Premium</div>
+        <div class="pricing-card-amount highlighted">$9.99<span>/mo</span></div>
+        <p class="pricing-card-desc">Full bloodwork analysis, AI-powered health status, personalized 90-day protocol, progress tracking, and quarterly comparisons.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION: FINAL CTA ═══ -->
 <section class="final-cta" id="cta">
   <div class="section-inner">
     <span class="tag" style="display:block;margin-bottom:1rem;">YOUR MOVE</span>
-    <h2 class="cta-title fade-up">WHAT YOU ADDRESS,<br>YOU CAN <em>OPTIMIZE.</em></h2>
-    <p class="cta-body fade-up">Stop accepting "normal." Take radical ownership of your biology. Get the data. Get the protocol. Get your edge back. Your 90-day malemaxxing protocol starts right now.</p>
+    <h2 class="cta-title fade-up">YOUR HORMONES AREN'T DECLINING<br>BECAUSE YOU'RE GETTING OLDER.<br><em>NO ONE SHOWED YOU WHAT'S ACTUALLY GOING ON.</em></h2>
+    <p class="cta-body fade-up">Now someone is. Get your risk score. Get your bloodwork panel. Get a plan that's built for your body — not a generic checklist from the internet.</p>
+    <p class="cta-body fade-up">Your 90-day protocol starts here.</p>
     <a href="#" class="btn-primary fade-up" style="font-size:1.15rem;padding:1.15rem 2.5rem;">
-      START MY PROTOCOL <span class="btn-arrow">→</span>
+      START FREE ASSESSMENT <span class="btn-arrow">→</span>
     </a>
-    <p class="cta-micro-note fade-up">Basic onboarding is <strong>FREE.</strong> Premium (OCR, AI analysis, full protocol) is only <span>$9.99/mo</span> — less than the cost of one blood panel.</p>
+    <p class="cta-micro-note fade-up">The assessment is <strong>FREE.</strong> Premium is only <span>$9.99/mo</span> — less than one blood panel.</p>
   </div>
 </section>
 
