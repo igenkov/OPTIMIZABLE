@@ -11,6 +11,18 @@ const oswald = Oswald({
 export const metadata: Metadata = {
   title: "Optimizable — Malemaxxing, Quantified",
   description: "AI-powered testosterone health optimization",
+  openGraph: {
+    title: "Optimizable — Malemaxxing, Quantified",
+    description: "AI-powered testosterone health optimization",
+    url: "https://optimizable.vercel.app",
+    siteName: "Optimizable",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Optimizable — Malemaxxing, Quantified",
+    description: "AI-powered testosterone health optimization",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

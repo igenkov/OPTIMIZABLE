@@ -82,7 +82,7 @@
       background: var(--green); color: #000;
       font-family: 'Oswald', sans-serif; font-weight: 700;
       font-size: 0.8rem; letter-spacing: 0.1em;
-      padding: 0.55rem 1.25rem;
+      padding: 0.55rem 1.25rem; border-radius: 4px;
       text-decoration: none; border: none; cursor: pointer;
       transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     }
@@ -141,7 +141,8 @@
       background: var(--green); color: #000;
       font-family: 'Oswald', sans-serif; font-weight: 700;
       font-size: 1.05rem; letter-spacing: 0.1em;
-      padding: 1rem 2rem; text-decoration: none; border: none; cursor: pointer;
+      padding: 1rem 2rem; border-radius: 4px;
+      text-decoration: none; border: none; cursor: pointer;
       position: relative; overflow: hidden;
       transition: background 0.2s, transform 0.25s, box-shadow 0.25s;
     }
@@ -158,7 +159,7 @@
     }
     .btn-arrow { font-size: 1.1rem; }
 
-    .cta-micro { font-size: 0.75rem; color: var(--gray-3); }
+    .cta-micro { font-size: 0.78rem; color: var(--gray-2); }
 
     .hero-divider {
       height: 1px; background: var(--border);
@@ -166,8 +167,8 @@
     }
     .hero-badges { display: flex; gap: 0; flex-wrap: wrap; }
     .hero-badge-item {
-      font-size: 0.68rem; color: var(--gray-3); padding: 0 1rem 0 0;
-      letter-spacing: 0.06em;
+      font-size: 0.73rem; color: var(--gray-2); padding: 0 1rem 0 0;
+      letter-spacing: 0.08em;
     }
     .hero-badge-item + .hero-badge-item {
       padding-left: 1rem;
@@ -352,7 +353,7 @@
     }
     .step-tag-lbl { font-size: 0.62rem; letter-spacing: 0.16em; color: var(--green); text-transform: uppercase; font-weight: 600; margin-bottom: 0.3rem; }
     .step-name { font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.5rem; }
-    .step-copy { font-size: 0.78rem; color: var(--gray-2); line-height: 1.6; }
+    .step-copy { font-size: 0.82rem; color: var(--gray-2); line-height: 1.65; }
 
     .range-legend {
       display: flex; gap: 1.5rem; align-items: center; justify-content: center;
@@ -364,27 +365,30 @@
     /* ─── LOOP ─── */
     .loop { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
 
-    .loop-features { display: flex; flex-direction: column; gap: 1.75rem; max-width: 620px; }
-    .loop-feature { display: flex; gap: 1rem; align-items: flex-start; }
+    .loop-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+    .loop-feature { display: flex; flex-direction: column; gap: 0.75rem; align-items: flex-start; }
     .feature-icon {
-      width: 42px; height: 42px; flex-shrink: 0;
+      width: 44px; height: 44px; flex-shrink: 0;
       background: var(--green-dim); border: 1px solid var(--border-g);
-      display: flex; align-items: center; justify-content: center; font-size: 1rem;
+      border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      color: var(--green);
     }
+    .feature-icon svg { width: 20px; height: 20px; stroke-width: 1.5; }
     .feature-title { font-family: 'Oswald', sans-serif; font-size: 0.95rem; font-weight: 600; margin-bottom: 0.35rem; }
     .feature-desc { font-size: 0.82rem; color: var(--gray-2); line-height: 1.65; }
 
     .chart-wrap {
-      margin-top: 2.25rem; background: #0c0c0c;
-      border: 1px solid var(--border); padding: 1.25rem;
-      max-width: 620px;
+      margin-top: 3rem; background: #0c0c0c;
+      border: 1px solid var(--border); border-radius: 8px;
+      padding: 1.5rem;
     }
     .chart-label-top { font-size: 0.65rem; letter-spacing: 0.14em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 1rem; }
     .chart-months { display: flex; justify-content: space-between; margin-top: 0.5rem; }
     .chart-month { font-size: 0.58rem; color: var(--gray-3); }
 
     /* ─── SUCCESS VISION ─── */
-    .success-body { font-size: 1.05rem; color: var(--gray-1); line-height: 1.9; max-width: 700px; }
+    .success-body { font-size: 1rem; color: var(--gray-1); line-height: 1.85; max-width: 700px; }
     .success-body p { margin-bottom: 1.25rem; }
     .success-body p:last-child { margin-bottom: 0; }
 
@@ -408,21 +412,37 @@
       font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 700;
       color: var(--white); margin-bottom: 1.5rem; max-width: 560px;
     }
-    .failure-body { font-size: 0.97rem; color: var(--gray-2); line-height: 1.85; max-width: 660px; }
+    .failure-body { font-size: 1rem; color: var(--gray-2); line-height: 1.85; max-width: 680px; }
     .failure-body p { margin-bottom: 1.25rem; }
     .failure-body p:last-child { margin-bottom: 0; }
 
     /* ─── PRICING ─── */
     .pricing-section { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .pricing-cards { display: flex; gap: 1.25rem; max-width: 560px; margin-top: 2.5rem; }
-    .pricing-card { flex: 1; background: var(--bg-3); border: 1px solid var(--border); padding: 2rem; position: relative; }
-    .pricing-card.featured { background: var(--green-dim); border-color: var(--border-g); }
-    .pricing-card-badge { position: absolute; top: -1px; right: -1px; background: var(--gold); color: #000; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.2rem 0.5rem; }
+    .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; max-width: 680px; margin-top: 2.5rem; }
+    .pricing-card { background: var(--bg-3); border: 1px solid var(--border); border-radius: 8px; padding: 2rem; position: relative; }
+    .pricing-card.featured { background: var(--green-dim); border-color: var(--border-g); border-radius: 8px; }
+    .pricing-card-badge { position: absolute; top: -1px; right: -1px; background: var(--gold); color: #000; font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; padding: 0.25rem 0.6rem; border-radius: 0 7px 0 6px; }
     .pricing-card-label { font-size: 0.6rem; letter-spacing: 0.16em; color: var(--gray-2); text-transform: uppercase; margin-bottom: 0.75rem; }
     .pricing-card-amount { font-family: 'Oswald', sans-serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.75rem; line-height: 1; }
     .pricing-card-amount.highlighted { color: var(--green); }
     .pricing-card-amount span { font-family: 'Inter', sans-serif; font-size: 0.75rem; color: var(--gray-2); font-weight: 400; }
     .pricing-card-desc { font-size: 0.82rem; color: var(--gray-2); line-height: 1.65; }
+
+    .pricing-card-features {
+      list-style: none; font-size: 0.82rem; color: var(--gray-2);
+      display: flex; flex-direction: column; gap: 0.55rem;
+    }
+    .pricing-card-features li {
+      display: flex; align-items: center; gap: 0.55rem; line-height: 1.4;
+    }
+    .pricing-card-features li::before {
+      content: ''; width: 4px; height: 4px; border-radius: 50%;
+      background: var(--green); flex-shrink: 0;
+    }
+    .pricing-card.featured .pricing-card-features li::before {
+      background: var(--green);
+      box-shadow: 0 0 6px var(--green-glow);
+    }
 
     /* ─── FINAL CTA ─── */
     .final-cta {
@@ -473,7 +493,9 @@
       .phone-screen { min-height: 460px; }
       .steps-row { grid-template-columns: 1fr 1fr; }
       .track-line { display: none; }
-      .pricing-cards { flex-direction: column; max-width: 100%; }
+      .pricing-cards { grid-template-columns: 1fr; max-width: 100%; }
+      .loop-features { grid-template-columns: 1fr; max-width: 560px; }
+      .loop-feature { flex-direction: row; gap: 1rem; align-items: flex-start; }
     }
     @media (max-width: 600px) {
       nav { padding: 0.85rem 1.25rem; }
@@ -688,21 +710,21 @@
 
     <div class="loop-features fade-up" style="margin-top:3rem;">
       <div class="loop-feature">
-        <div class="feature-icon">📓</div>
+        <div class="feature-icon"><i data-lucide="clipboard-check"></i></div>
         <div>
           <div class="feature-title">Daily Check-in — 60 Seconds</div>
           <p class="feature-desc">Rate energy, mood, libido, sleep, adherence. Over weeks, the patterns surface — connecting how you feel to what you did.</p>
         </div>
       </div>
       <div class="loop-feature">
-        <div class="feature-icon">📈</div>
+        <div class="feature-icon"><i data-lucide="trending-up"></i></div>
         <div>
           <div class="feature-title">Trend Tracking</div>
           <p class="feature-desc">Your subjective wellbeing mapped against real changes — sleep gains, supplement effects, habit shifts. The data tells the story.</p>
         </div>
       </div>
       <div class="loop-feature">
-        <div class="feature-icon">🔄</div>
+        <div class="feature-icon"><i data-lucide="repeat-2"></i></div>
         <div>
           <div class="feature-title">Quarterly Retest</div>
           <p class="feature-desc">Side-by-side comparison of every biomarker. What improved. What didn't. Updated protocol for the next 90 days. Repeat.</p>
@@ -774,13 +796,25 @@
       <div class="pricing-card">
         <div class="pricing-card-label">Free</div>
         <div class="pricing-card-amount">FREE</div>
-        <p class="pricing-card-desc">Full assessment, risk score, personalized bloodwork panel.</p>
+        <ul class="pricing-card-features">
+          <li>Full lifestyle assessment</li>
+          <li>Hormonal risk score</li>
+          <li>Key factor breakdown</li>
+          <li>Personalized bloodwork panel</li>
+        </ul>
       </div>
       <div class="pricing-card featured">
         <div class="pricing-card-badge">PREMIUM</div>
         <div class="pricing-card-label">Premium</div>
         <div class="pricing-card-amount highlighted">$9.99<span>/mo</span></div>
-        <p class="pricing-card-desc">Lab analysis, full hormonal health status, 90-day protocol, progress tracking, quarterly comparisons.</p>
+        <ul class="pricing-card-features">
+          <li>Everything in Free</li>
+          <li>AI-powered lab analysis</li>
+          <li>Full hormonal health status</li>
+          <li>90-day optimization protocol</li>
+          <li>Daily progress tracking</li>
+          <li>Quarterly comparisons</li>
+        </ul>
       </div>
     </div>
   </div>
@@ -808,7 +842,10 @@
   </p>
 </footer>
 
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
 <script>
+  lucide.createIcons();
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('in'); });
   }, { threshold: 0.08 });
