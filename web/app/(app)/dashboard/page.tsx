@@ -4,7 +4,7 @@ import Link from 'next/link';
 import {
   Activity, ShieldAlert, ShieldCheck, Heart, Info,
   ArrowRight, CheckCircle2, Clipboard, User,
-  Calendar, Flame, Droplets, Gauge, LockKeyhole, FlaskConical
+  Calendar, Flame, Droplets, Gauge, FlaskConical
 } from 'lucide-react';
 import { ExpandableFactors } from '@/components/ui/ExpandableFactors';
 import { Card } from '@/components/ui/Card';
@@ -54,6 +54,14 @@ export default async function DashboardPage() {
   const color = getRiskColor(level);
   const label = getRiskLabel(level);
 
+  const labHealthScore = (reportRes.data?.health_score as number | null) ?? null;
+  const labColor = labHealthScore !== null
+    ? labHealthScore >= 70 ? '#4ade80' : labHealthScore >= 50 ? '#E8C470' : '#E88080'
+    : color;
+  const labLabel = labHealthScore !== null
+    ? labHealthScore >= 70 ? 'Optimal' : labHealthScore >= 50 ? 'Functional' : 'Suboptimal'
+    : '—';
+
   const personalizedPanel = excluded ? null : getPersonalizedPanel(p1, p2, p3, symptomIds);
   const essentialBio = excluded
     ? BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id))
@@ -101,18 +109,28 @@ export default async function DashboardPage() {
           className="col-span-12 lg:col-span-7 relative overflow-hidden"
           topAccent={level === 'critical' ? 'rgba(232,128,128,0.5)' : level === 'high' ? 'rgba(255,140,0,0.5)' : level === 'moderate' ? 'rgba(232,196,112,0.5)' : 'rgba(74,222,128,0.5)'}
         >
+          {/* Top CTA — free tier only, above both zones */}
+          {!isPremium && (
+            <div className="border-b border-white/[0.06] px-6 py-3 flex items-center justify-between gap-4 bg-white/[0.01]">
+              <span className="text-[10px] text-white/30 hidden sm:block">Upgrade to reveal your full hormonal health status</span>
+              <Link href="/upgrade"
+                className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all w-full sm:w-auto justify-center">
+                Unlock Lab Analysis <ArrowRight size={11} />
+              </Link>
+            </div>
+          )}
+
+          {/* Two zones */}
           <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-white/[0.06]">
 
             {/* Zone A — Risk Coefficient */}
-            <div className="flex-1 p-8 flex flex-col gap-6">
+            <div className="flex-1 p-8 flex flex-col gap-5">
               <div>
-                <div className="text-[9px] font-black uppercase tracking-[4px] text-white/30 mb-1">Risk Coefficient</div>
+                <div className="text-[9px] font-black uppercase tracking-[4px] text-[#C8A2C8] mb-1.5">Risk Coefficient</div>
                 <div className="text-[10px] text-white/40 leading-relaxed">
-                  Objective score derived from your profile, lifestyle inputs, and reported symptoms.
-                  A predictive indicator — not a clinical assessment.
+                  Objective score derived from your profile, lifestyle inputs, and reported symptoms. A predictive indicator — not a clinical assessment.
                 </div>
               </div>
-
               <div className="flex items-center gap-6">
                 <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
                 <div>
@@ -123,58 +141,60 @@ export default async function DashboardPage() {
                       <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.04] border border-white/[0.07] text-white/30">{src}</span>
                     ))}
                   </div>
+                  {excluded && (
+                    <p className="text-[9px] text-white/30 italic mt-2">TRT/Anabolic monitoring mode.</p>
+                  )}
                 </div>
               </div>
-
-              {excluded && (
-                <p className="text-[11px] text-white/40 italic">Assessment optimized for active TRT/Anabolic monitoring.</p>
-              )}
             </div>
 
             {/* Zone B — Hormonal Health Status */}
-            <div className="sm:w-[44%] p-8 flex flex-col gap-5">
+            <div className="flex-1 p-8 flex flex-col gap-5">
               <div>
-                <div className="text-[9px] font-black uppercase tracking-[4px] text-white/30 mb-1">Hormonal Health Status</div>
+                <div className="text-[9px] font-black uppercase tracking-[4px] text-[#C8A2C8] mb-1.5">Hormonal Health Status</div>
                 <div className="text-[10px] text-white/40 leading-relaxed">
-                  Actual hormonal status mapped against your risk profile. Requires lab results.
+                  Actual hormonal status, derived from your bloodwork results in correlation with your full profile.
                 </div>
               </div>
 
-              {hasReport ? (
-                <>
-                  <div className="flex items-center gap-2">
-                    <FlaskConical size={14} className="text-[#C8A2C8]" />
-                    <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-widest">Lab Results Available</span>
+              {/* Score section — blurred for free */}
+              <div style={!isPremium ? { filter: 'blur(7px)', pointerEvents: 'none', userSelect: 'none' } : undefined}>
+                <div className="flex items-center gap-6">
+                  <ScoreRing
+                    score={isPremium && hasReport && labHealthScore !== null ? labHealthScore : (riskScore ?? 0)}
+                    size={110}
+                    strokeWidth={11}
+                    color={isPremium && hasReport ? labColor : color}
+                  />
+                  <div>
+                    <div className="text-[9px] font-black uppercase tracking-[3px] mb-1 text-white/30">Health Status</div>
+                    <div className="text-2xl font-black uppercase tracking-tight mb-2"
+                      style={{ color: isPremium && hasReport ? labColor : color }}>
+                      {isPremium && hasReport ? labLabel : isPremium ? '—' : label}
+                    </div>
+                    <div className="flex flex-wrap gap-1.5">
+                      {['Bloodwork', 'Profile', 'Correlation'].map(src => (
+                        <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.04] border border-white/[0.07] text-white/30">{src}</span>
+                      ))}
+                    </div>
+                    {isPremium && !hasReport && (
+                      <p className="text-[9px] text-white/25 italic mt-2">Upload bloodwork to see your status.</p>
+                    )}
                   </div>
-                  <Link
-                    href="/lab"
-                    className="mt-auto flex items-center justify-center gap-2 px-5 py-3 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all"
-                  >
-                    View Lab Analysis <ArrowRight size={12} />
-                  </Link>
-                </>
-              ) : (
-                <>
-                  <div className="space-y-2">
-                    {['Free Testosterone', 'Estradiol / SHBG Ratio', 'Cortisol Pattern', 'LH / FSH Balance'].map((row) => (
-                      <div key={row} className="flex items-center gap-3 py-1.5 border-b border-white/[0.04]">
-                        <LockKeyhole size={10} className="text-white/15 shrink-0" />
-                        <span className="text-[10px] text-white/20">{row}</span>
-                      </div>
-                    ))}
-                    <div className="text-[9px] text-white/20 pt-1 italic">+ full analysis unlocked with bloodwork</div>
-                  </div>
-                  <Link
-                    href="/lab/upload"
-                    className="mt-auto flex items-center justify-center gap-2 px-5 py-3 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all"
-                  >
-                    Unlock Lab Analysis <ArrowRight size={12} />
-                  </Link>
-                </>
-              )}
+                </div>
+              </div>
             </div>
-
           </div>
+
+          {/* Bottom CTA — premium only */}
+          {isPremium && (
+            <div className="border-t border-white/[0.06] px-6 py-3">
+              <Link href="/lab"
+                className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all">
+                <FlaskConical size={13} /> LAB
+              </Link>
+            </div>
+          )}
         </Card>
 
         {/* Biometrics */}
