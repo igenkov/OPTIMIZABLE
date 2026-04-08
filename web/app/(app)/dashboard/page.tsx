@@ -6,6 +6,7 @@ import {
   ArrowRight, CheckCircle2, Clipboard, User,
   Calendar, Flame, Droplets, Gauge
 } from 'lucide-react';
+import { ExpandableFactors } from '@/components/ui/ExpandableFactors';
 import { Card } from '@/components/ui/Card';
 import { ScoreRing } from '@/components/ui/ScoreRing';
 import {
@@ -162,33 +163,55 @@ export default async function DashboardPage() {
         </Card>
       </div>
 
-      {/* ROW 2: Factors (4) + Panel (4) + Lab Prep (4) */}
+      {/* ROW 2: Critical Factors (6) + Balancing Factors (6) */}
       <div className="grid grid-cols-12 gap-4 lg:gap-6">
 
-        {/* Contributing Factors */}
-        <Card className="col-span-12 lg:col-span-4 p-8" topAccent="rgba(232,196,112,0.4)">
-          <div className="flex items-center gap-2 mb-6">
-            <ShieldAlert size={16} className="text-[#E8C470]" />
-            <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Critical Factors</span>
-          </div>
-
-          <div className="space-y-6">
-            {keyFactors.length > 0 ? keyFactors.slice(0, 4).map((f, i) => (
-              <div key={i} className="border-l border-white/10 pl-4 group">
-                <h4 className="text-[11px] font-black text-white uppercase tracking-tight mb-1 group-hover:text-[#E8C470] transition-colors">{f.title}</h4>
-                <p className="text-[11px] text-white/40 leading-relaxed">{f.explanation}</p>
-              </div>
-            )) : (
-              <div className="flex flex-col items-center justify-center py-10 opacity-20">
-                <CheckCircle2 size={32} className="mb-2" />
-                <span className="text-[10px] font-black uppercase tracking-widest">No Critical Risks</span>
-              </div>
+        {/* Critical Factors */}
+        <Card className="col-span-12 lg:col-span-6 p-8" topAccent="rgba(232,196,112,0.4)">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <ShieldAlert size={16} className="text-[#E8C470]" />
+              <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Critical Factors</span>
+            </div>
+            {keyFactors.length > 0 && (
+              <span className="text-[9px] font-bold text-[#E8C470]/60 bg-[#E8C470]/8 px-2 py-0.5">{keyFactors.length} factor{keyFactors.length !== 1 ? 's' : ''}</span>
             )}
           </div>
+          <ExpandableFactors
+            factors={keyFactors}
+            emptyIcon={<CheckCircle2 size={32} />}
+            emptyLabel="No Critical Risks"
+            accentColor="#E8C470"
+            borderColor="rgba(232,196,112,0.3)"
+          />
         </Card>
 
+        {/* Balancing Factors */}
+        <Card className="col-span-12 lg:col-span-6 p-8" topAccent="rgba(74,222,128,0.3)">
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={16} className="text-[#4ade80]" />
+              <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Balancing Factors</span>
+            </div>
+            {!excluded && protectiveFactors.length > 0 && (
+              <span className="text-[9px] font-bold text-[#4ade80]/60 bg-[#4ade80]/8 px-2 py-0.5">{protectiveFactors.length} factor{protectiveFactors.length !== 1 ? 's' : ''}</span>
+            )}
+          </div>
+          <ExpandableFactors
+            factors={excluded ? [] : protectiveFactors}
+            emptyIcon={<ShieldCheck size={32} />}
+            emptyLabel="No Protective Factors"
+            accentColor="#4ade80"
+            borderColor="rgba(74,222,128,0.3)"
+          />
+        </Card>
+      </div>
+
+      {/* ROW 3: Required Labs (8) + Pre-Draw Protocol (4) */}
+      <div className="grid grid-cols-12 gap-4 lg:gap-6">
+
         {/* Required Labs */}
-        <Card className="col-span-12 lg:col-span-4 p-8" accent>
+        <Card className="col-span-12 lg:col-span-8 p-8" accent>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
               <Droplets size={16} className="text-[#C8A2C8]" />
@@ -197,10 +220,10 @@ export default async function DashboardPage() {
             <span className="text-[9px] font-bold text-[#C8A2C8] bg-[#C8A2C8]/10 px-2 py-0.5">Sequence_01</span>
           </div>
 
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {essentialBio.length > 0 && (
               <div>
-                <div className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest mb-1.5">Essential</div>
+                <div className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest mb-2">Essential</div>
                 {essentialBio.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                     <span className="text-[11px] font-medium text-white/80 group-hover:text-white">{b.name}</span>
@@ -211,7 +234,7 @@ export default async function DashboardPage() {
             )}
             {recommendedBio.length > 0 && (
               <div>
-                <div className="text-[9px] font-black text-[#E8C470] uppercase tracking-widest mb-1.5">Recommended</div>
+                <div className="text-[9px] font-black text-[#E8C470] uppercase tracking-widest mb-2">Recommended</div>
                 {recommendedBio.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                     <span className="text-[11px] font-medium text-white/60 group-hover:text-white">{b.name}</span>
@@ -222,7 +245,7 @@ export default async function DashboardPage() {
             )}
             {extendedBio.length > 0 && (
               <div>
-                <div className="text-[9px] font-black text-white/25 uppercase tracking-widest mb-1.5">Extended</div>
+                <div className="text-[9px] font-black text-white/25 uppercase tracking-widest mb-2">Extended</div>
                 {extendedBio.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                     <span className="text-[11px] font-medium text-white/30 group-hover:text-white/60">{b.name}</span>
@@ -235,7 +258,7 @@ export default async function DashboardPage() {
 
           {!isPremium && (
             <Link href="/upgrade"
-              className="mt-4 block w-full py-2.5 border border-[rgba(200,162,200,0.35)] text-[#C8A2C8] font-bold text-[11px] tracking-[2px] uppercase text-center hover:bg-[rgba(200,162,200,0.07)] transition-colors">
+              className="mt-6 block w-full py-2.5 border border-[rgba(200,162,200,0.35)] text-[#C8A2C8] font-bold text-[11px] tracking-[2px] uppercase text-center hover:bg-[rgba(200,162,200,0.07)] transition-colors">
               UNLOCK LAB ACCESS →
             </Link>
           )}
@@ -276,26 +299,6 @@ export default async function DashboardPage() {
           </div>
         </Card>
       </div>
-
-      {/* BALANCING FACTORS */}
-      {!excluded && protectiveFactors.length > 0 && (
-        <div className="grid grid-cols-12 gap-4 lg:gap-6">
-          <Card className="col-span-12 p-8">
-            <div className="flex items-center gap-2 mb-6">
-              <ShieldCheck size={16} className="text-[#4ade80]" />
-              <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Balancing Factors</span>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {protectiveFactors.map((f, i) => (
-                <div key={i} className="border-l-2 border-[#4ade80]/30 pl-4">
-                  <h4 className="text-[11px] font-black text-[#4ade80] uppercase tracking-tight mb-1">{f.title}</h4>
-                  <p className="text-[11px] text-white/40 leading-relaxed">{f.explanation}</p>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
-      )}
     </div>
   );
 }
