@@ -38,7 +38,7 @@ export const BIOMARKERS: BiomarkerDef[] = [
   {
     id: 'estradiol', name: 'Estradiol (E2)', unit_primary: 'pg/mL',
     unit_alternatives: [{ unit: 'pmol/L', toCanonical: 0.2724 }],
-    standard_range_low: 10, standard_range_high: 40, optimal_range_low: 20, optimal_range_high: 30,
+    standard_range_low: 10, standard_range_high: 40, optimal_range_low: 20, optimal_range_high: 35,
     description: 'Primary estrogen; balance with testosterone is key', category: 'hormones',
   },
   {
