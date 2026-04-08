@@ -157,41 +157,63 @@ export default async function DashboardPage() {
                 </div>
               </div>
 
-              {/* Score section — blurred for free */}
-              <div style={!isPremium ? { filter: 'blur(7px)', pointerEvents: 'none', userSelect: 'none' } : undefined}>
+              {/* Free tier — blurred teaser using risk score */}
+              {!isPremium && (
+                <div style={{ filter: 'blur(7px)', pointerEvents: 'none', userSelect: 'none' }}>
+                  <div className="flex items-center gap-6">
+                    <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
+                    <div>
+                      <div className="text-[9px] font-black uppercase tracking-[3px] mb-1 text-white/30">Health Status</div>
+                      <div className="text-2xl font-black uppercase tracking-tight mb-2" style={{ color }}>{label}</div>
+                      <div className="flex flex-wrap gap-1.5">
+                        {['Bloodwork', 'Profile', 'Correlation'].map(src => (
+                          <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.04] border border-white/[0.07] text-white/30">{src}</span>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Premium + has report — real data */}
+              {isPremium && hasReport && (
                 <div className="flex items-center gap-6">
-                  <ScoreRing
-                    score={isPremium && hasReport && labHealthScore !== null ? labHealthScore : (riskScore ?? 0)}
-                    size={110}
-                    strokeWidth={11}
-                    color={isPremium && hasReport ? labColor : color}
-                  />
+                  <ScoreRing score={labHealthScore ?? 0} size={110} strokeWidth={11} color={labColor} />
                   <div>
                     <div className="text-[9px] font-black uppercase tracking-[3px] mb-1 text-white/30">Health Status</div>
-                    <div className="text-2xl font-black uppercase tracking-tight mb-2"
-                      style={{ color: isPremium && hasReport ? labColor : color }}>
-                      {isPremium && hasReport ? labLabel : isPremium ? '—' : label}
-                    </div>
+                    <div className="text-2xl font-black uppercase tracking-tight mb-2" style={{ color: labColor }}>{labLabel}</div>
                     <div className="flex flex-wrap gap-1.5">
                       {['Bloodwork', 'Profile', 'Correlation'].map(src => (
                         <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.04] border border-white/[0.07] text-white/30">{src}</span>
                       ))}
                     </div>
-                    {isPremium && !hasReport && (
-                      <p className="text-[9px] text-white/25 italic mt-2">Upload bloodwork to see your status.</p>
-                    )}
                   </div>
                 </div>
-              </div>
+              )}
+
+              {/* Premium + no report — awaiting state */}
+              {isPremium && !hasReport && (
+                <div className="flex-1 flex flex-col items-center justify-center gap-4 py-4">
+                  <div className="w-[110px] h-[110px] rounded-full border-[11px] border-white/[0.05] flex items-center justify-center shrink-0">
+                    <FlaskConical size={28} className="text-white/15" />
+                  </div>
+                  <div className="text-center">
+                    <div className="text-[11px] font-black text-white/30 uppercase tracking-widest mb-1">Awaiting Bloodwork</div>
+                    <div className="text-[10px] text-white/20 leading-relaxed max-w-[180px]">
+                      Upload your lab results to compute your actual hormonal health status.
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
 
           {/* Bottom CTA — premium only */}
           {isPremium && (
             <div className="border-t border-white/[0.06] px-6 py-3">
-              <Link href="/lab"
+              <Link href={hasReport ? '/lab' : '/lab/upload'}
                 className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all">
-                <FlaskConical size={13} /> LAB
+                <FlaskConical size={13} /> {hasReport ? 'LAB' : 'Upload Bloodwork'}
               </Link>
             </div>
           )}
