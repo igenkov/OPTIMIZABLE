@@ -84,21 +84,45 @@ export default function LabUploadPage() {
   const [panel, setPanel] = useState<PersonalizedPanel | null>(null);
 
   // Load onboarding data → personalized panel tiers
+  // Priority: localStorage (fast) → Supabase (fallback if localStorage missing/stale)
   useEffect(() => {
-    try {
-      const p1Raw = localStorage.getItem('phase1');
-      const p2Raw = localStorage.getItem('phase2');
-      const p3Raw = localStorage.getItem('phase3');
-      const symRaw = localStorage.getItem('symptoms');
-      if (p1Raw && p2Raw && p3Raw) {
-        const p1 = JSON.parse(p1Raw) as Phase1Data;
-        const p2 = JSON.parse(p2Raw) as Phase2Data;
-        const p3 = JSON.parse(p3Raw) as Phase3Data;
-        const sym = symRaw ? JSON.parse(symRaw) : {};
-        const symptomIds: string[] = sym.symptoms_selected || [];
+    async function loadPanel() {
+      try {
+        const p1Raw = localStorage.getItem('phase1');
+        const p2Raw = localStorage.getItem('phase2');
+        const p3Raw = localStorage.getItem('phase3');
+        const symRaw = localStorage.getItem('symptoms');
+        if (p1Raw && p2Raw && p3Raw) {
+          const p1 = JSON.parse(p1Raw) as Phase1Data;
+          const p2 = JSON.parse(p2Raw) as Phase2Data;
+          const p3 = JSON.parse(p3Raw) as Phase3Data;
+          const sym = symRaw ? JSON.parse(symRaw) : {};
+          const symptomIds: string[] = sym.symptoms_selected || [];
+          setPanel(getPersonalizedPanel(p1, p2, p3, symptomIds));
+          return;
+        }
+      } catch { /* localStorage corrupt — fall through to Supabase */ }
+
+      // Fallback: fetch from Supabase so tiers always match the dashboard
+      try {
+        const supabase = createClient();
+        const { data: { user } } = await supabase.auth.getUser();
+        if (!user) return;
+        const [profRes, lifRes, medRes, symRes] = await Promise.all([
+          supabase.from('profiles').select('*').eq('user_id', user.id).single(),
+          supabase.from('lifestyle').select('*').eq('user_id', user.id).single(),
+          supabase.from('medical_history').select('*').eq('user_id', user.id).single(),
+          supabase.from('symptom_assessments').select('symptoms_selected').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+        ]);
+        if (!profRes.data) return;
+        const p1 = profRes.data as unknown as Phase1Data;
+        const p2 = (lifRes.data ?? {}) as unknown as Phase2Data;
+        const p3 = (medRes.data ?? { steroid_history: 'never', trt_history: 'never' }) as unknown as Phase3Data;
+        const symptomIds: string[] = (symRes.data?.symptoms_selected as string[]) ?? [];
         setPanel(getPersonalizedPanel(p1, p2, p3, symptomIds));
-      }
-    } catch { /* missing/corrupt localStorage — fall back to static split */ }
+      } catch { /* silently fall back to static panel */ }
+    }
+    loadPanel();
   }, []);
 
   // Pre-populate form when editing an existing panel
