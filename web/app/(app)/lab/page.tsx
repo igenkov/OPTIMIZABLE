@@ -7,6 +7,7 @@ import { StatusBadge, getStatusColor } from '@/components/ui/StatusBadge';
 import {
   Activity, Zap, Droplets, FlaskConical,
   ArrowUpRight, ChevronRight, TestTube2, ClipboardCheck, Clock,
+  Info, Clipboard, ArrowRight,
 } from 'lucide-react';
 import { LabAIBriefing } from './LabAIBriefing';
 import { PanelActions } from './PanelActions';
@@ -74,36 +75,100 @@ export default async function LabPage() {
   // ── Empty state ──────────────────────────────────────────────────────────
   if (!latest) {
     return (
-      <div className="px-6 lg:px-8 py-6">
-        <div className="mb-6">
-          <div className="text-[11px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-1">Biomarker Analysis</div>
-          <h1 className="text-xl font-black tracking-[2px] uppercase text-white">LAB</h1>
+      <div className="px-4 lg:px-8 py-5 lg:py-6 space-y-5 lg:space-y-6">
+
+        {/* Header — matches non-empty state */}
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[rgba(255,255,255,0.05)]">
+          <div>
+            <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
+              <FlaskConical size={13} />
+              <span className="text-[10px] font-black uppercase tracking-[3px]">Biomarker Analysis · Panel_01</span>
+            </div>
+            <h1 className="text-3xl font-black text-white uppercase tracking-tighter">Biomarker Lab</h1>
+          </div>
+          <Link href="/lab/upload"
+            className="flex items-center gap-2 px-5 py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[2px] uppercase hover:bg-[#A882A8] transition-all">
+            <FlaskConical size={13} /> Submit First Panel
+          </Link>
         </div>
-        <div className="max-w-2xl space-y-3">
-          <Card className="text-center py-16">
-            <FlaskConical size={44} className="mx-auto mb-5 text-[rgba(255,255,255,0.1)]" />
-            <h2 className="text-lg font-black text-white uppercase tracking-tight mb-2">No Lab Data Detected</h2>
-            <p className="text-sm text-[#9A9A9A] mb-8 max-w-sm mx-auto leading-relaxed">
-              Initialize your optimization by uploading your first bloodwork panel.
-            </p>
-            <Link href="/lab/upload"
-              className="inline-block px-8 py-3 bg-[#C8A2C8] text-black font-black text-xs tracking-widest uppercase hover:bg-[#A882A8] transition-colors">
-              Upload Bloodwork →
-            </Link>
-          </Card>
-          <Card accent>
-            <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-3">Before Your Draw</div>
-            {[
-              'Schedule between 7:00–10:00 AM — testosterone peaks in early morning',
-              'Fast for 10–12 hours (water is fine)',
-              'No heavy exercise for 24 hours prior',
-              'No alcohol for 48 hours before the test',
-            ].map((t, i) => (
-              <div key={i} className="flex gap-3 mb-2">
-                <span className="text-[#C8A2C8] font-bold shrink-0">{i + 1}.</span>
-                <span className="text-[11px] text-[#9A9A9A]">{t}</span>
+
+        {/* Main grid */}
+        <div className="grid grid-cols-12 gap-5">
+
+          {/* Left — what you get + upload CTA */}
+          <div className="col-span-12 lg:col-span-7 flex flex-col gap-5">
+
+            {/* Upload prompt */}
+            <Card className="p-8" topAccent="rgba(200,162,200,0.3)">
+              <div className="flex items-center gap-2 mb-1">
+                <span className="text-[9px] font-black uppercase tracking-[4px] text-[#C8A2C8]">No Panel Submitted</span>
               </div>
-            ))}
+              <h2 className="text-xl font-black text-white uppercase tracking-tight mb-3">Your Lab Analysis Awaits</h2>
+              <p className="text-[12px] text-white/40 leading-relaxed mb-8 max-w-md">
+                Upload your bloodwork results to receive a full AI-powered analysis — every biomarker mapped against standard and optimal reference ranges, correlated with your personal profile.
+              </p>
+
+              {/* What you'll get */}
+              <div className="grid grid-cols-2 gap-3 mb-8">
+                {[
+                  { label: 'Hormonal Health Score', desc: 'Overall status 0–100' },
+                  { label: 'Biomarker Deep-Dive', desc: 'Per-marker range tracks' },
+                  { label: 'Areas of Concern', desc: 'Prioritized action items' },
+                  { label: 'Key Ratios', desc: 'T/E2, free T, SHBG patterns' },
+                  { label: 'AI Clinical Briefing', desc: 'Full profile correlation' },
+                  { label: '90-Day Protocol', desc: 'Based on your actual results' },
+                ].map(item => (
+                  <div key={item.label} className="flex items-start gap-2.5 p-3 bg-white/[0.02] border border-white/[0.05]">
+                    <div className="w-1 h-1 rounded-full bg-[#C8A2C8] mt-1.5 shrink-0" />
+                    <div>
+                      <div className="text-[10px] font-black text-white uppercase tracking-tight">{item.label}</div>
+                      <div className="text-[9px] text-white/30 mt-0.5">{item.desc}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <Link href="/lab/upload"
+                className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all">
+                Upload Bloodwork <ArrowRight size={13} />
+              </Link>
+              <p className="text-center text-[9px] text-white/20 mt-2">Accepts standard lab PDF or manual entry</p>
+            </Card>
+          </div>
+
+          {/* Right — Pre-Draw Protocol */}
+          <Card className="col-span-12 lg:col-span-5 p-8 relative overflow-hidden">
+            <div className="flex items-center gap-2 mb-6">
+              <Info size={16} className="text-white/40" />
+              <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Pre-Draw Protocol</span>
+            </div>
+
+            <div className="space-y-4">
+              {[
+                { t: '7AM–10AM Window', d: 'T-levels peak in early morning.' },
+                { t: '12H Fasting', d: 'Water only. Prevents glucose spikes.' },
+                { t: 'Rest Recovery', d: 'No heavy lifting 24h prior.' },
+                { t: 'Sexual Abstinence', d: 'No ejaculation 24h prior. Preserves baseline LH and testosterone levels.' },
+              ].map((step, i) => (
+                <div key={i} className="flex gap-4">
+                  <div className="text-[10px] font-black text-white/20 tabular-nums">0{i + 1}</div>
+                  <div>
+                    <div className="text-[11px] font-black text-white uppercase tracking-tight">{step.t}</div>
+                    <div className="text-[11px] text-white/40">{step.d}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="mt-8 pt-6 border-t border-white/5">
+              <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5">
+                <Clipboard size={20} className="text-[#C8A2C8]" />
+                <div>
+                  <span className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest block">Ready to start?</span>
+                  <span className="text-[10px] text-white/40">Download the lab requisition form in your profile.</span>
+                </div>
+              </div>
+            </div>
           </Card>
         </div>
       </div>
