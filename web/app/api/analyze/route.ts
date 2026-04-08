@@ -230,7 +230,27 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { panelValues, phase1, phase2, phase3, symptoms } = await req.json();
+    const { panelValues, phase1: p1Client, phase2: p2Client, phase3: p3Client, symptoms: symClient } = await req.json();
+
+    // Backfill empty/missing profile data from Supabase — never run the LLM blind
+    const isEmpty = (obj: unknown) => !obj || typeof obj !== 'object' || Object.keys(obj as object).length === 0;
+    let phase1 = p1Client;
+    let phase2 = p2Client;
+    let phase3 = p3Client;
+    let symptoms = symClient;
+
+    if (isEmpty(phase1) || isEmpty(phase2) || isEmpty(phase3) || isEmpty(symptoms)) {
+      const [profRes, lifRes, medRes, symRes] = await Promise.all([
+        isEmpty(phase1) ? supabase.from('profiles').select('*').eq('user_id', user.id).single() : null,
+        isEmpty(phase2) ? supabase.from('lifestyle').select('*').eq('user_id', user.id).single() : null,
+        isEmpty(phase3) ? supabase.from('medical_history').select('*').eq('user_id', user.id).single() : null,
+        isEmpty(symptoms) ? supabase.from('symptom_assessments').select('symptoms_selected').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single() : null,
+      ]);
+      if (isEmpty(phase1) && profRes?.data) phase1 = profRes.data;
+      if (isEmpty(phase2) && lifRes?.data) phase2 = lifRes.data;
+      if (isEmpty(phase3) && medRes?.data) phase3 = medRes.data;
+      if (isEmpty(symptoms) && symRes?.data) symptoms = symRes.data;
+    }
 
     const symptomIds: string[] = symptoms?.symptoms_selected ?? [];
     const riskScore = (phase1 && phase2 && phase3)
