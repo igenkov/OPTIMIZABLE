@@ -166,28 +166,28 @@ export default async function Home() {
     <div className="min-h-screen bg-[#0e0e0e] text-white flex flex-col">
 
       {/* NAV */}
-      <nav className="border-b border-[rgba(255,255,255,0.07)] px-6 lg:px-12 py-5 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Image src="/logo_trsp.png" alt="Optimizable" width={44} height={44} style={{ objectFit: 'contain' }}/>
-          <div>
-            <div className="text-white font-bold uppercase tracking-[0.14em]"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '1.15rem' }}>OPTIMIZABLE</div>
-            <div className="text-[#666666] uppercase tracking-[0.18em] mt-0.5"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '0.58rem' }}>MALEMAXXING QUANTIFIED</div>
+      <nav className="border-b border-[rgba(255,255,255,0.07)] px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-4">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <Image src="/logo_trsp.png" alt="Optimizable" width={36} height={36} style={{ objectFit: 'contain', flexShrink: 0 }}/>
+          <div className="min-w-0">
+            <div className="text-white font-bold uppercase tracking-[0.14em] truncate"
+              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '1rem' }}>OPTIMIZABLE</div>
+            <div className="text-[#666666] uppercase tracking-[0.14em] mt-0.5 truncate"
+              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '0.52rem' }}>MALEMAXXING QUANTIFIED</div>
           </div>
         </div>
-        <div className="flex items-center gap-6">
-          <Link href="/how-it-works" className="text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
+        <div className="flex items-center gap-3 sm:gap-6 shrink-0">
+          <Link href="/how-it-works" className="text-[10px] sm:text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase whitespace-nowrap">
             How It Works
           </Link>
-          <Link href="/login" className="text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase">
+          <Link href="/login" className="text-[10px] sm:text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase whitespace-nowrap">
             Sign In
           </Link>
         </div>
       </nav>
 
       {/* HERO */}
-      <div className="flex-1 flex items-center px-6 lg:px-12 py-12 max-w-7xl mx-auto w-full">
+      <div className="flex-1 flex items-center px-4 sm:px-6 lg:px-12 py-8 sm:py-12 max-w-7xl mx-auto w-full">
         <div className="grid grid-cols-12 gap-8 lg:gap-16 w-full items-stretch">
 
           {/* LEFT — text */}
@@ -210,7 +210,7 @@ export default async function Home() {
             <p className="text-[12px] text-[#5A5A5A] leading-relaxed mb-8">
               From a 3-minute assessment to a full clinical bloodwork analysis and 90-day optimization protocol.
             </p>
-            <div className="flex flex-col gap-2.5 mt-auto">
+            <div className="flex flex-col gap-2.5 mt-6 lg:mt-auto">
               <Link href="/onboarding/phase1"
                 className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[3px] uppercase hover:bg-[#A882A8] transition-colors">
                 Start Free Assessment <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform"/>
