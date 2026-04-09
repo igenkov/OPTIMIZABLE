@@ -303,14 +303,21 @@
       background: var(--bg-2);
       border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
     }
-    .reframe-body { max-width: 700px; font-size: 1rem; color: var(--gray-2); line-height: 1.9; }
+    .reframe-layout {
+      display: grid;
+      grid-template-columns: 1fr 1.6fr;
+      gap: clamp(2rem, 5vw, 5rem);
+      align-items: start;
+    }
+    .reframe-layout .section-title { margin-bottom: 0; }
+    .reframe-body { font-size: 1rem; color: var(--gray-2); line-height: 1.9; }
     .reframe-body p { margin-bottom: var(--sp-5); }
     .reframe-body p:last-child { margin-bottom: 0; }
     .reframe-em { color: var(--white); font-weight: 500; }
 
     /* ─── INTERNAL PROBLEM ─── */
     .internal {
-      background: var(--bg); padding: 7rem 2.5rem; position: relative; overflow: hidden;
+      background: var(--bg); padding: 9rem 2.5rem; position: relative; overflow: hidden;
     }
     .internal::before {
       content: '';
@@ -419,8 +426,9 @@
     .feature-desc { font-size: 0.85rem; color: var(--gray-2); line-height: 1.7; }
 
     /* ─── SUCCESS VISION ─── */
+    .success-section { padding-top: 8rem; padding-bottom: 8rem; }
     .success-body { font-size: 1rem; color: var(--gray-1); line-height: 1.9; max-width: 700px; }
-    .success-body p { margin-bottom: var(--sp-5); }
+    .success-body p { margin-bottom: var(--sp-6); }
     .success-body p:last-child { margin-bottom: 0; }
 
     /* ─── FAILURE STAKES ─── */
@@ -428,7 +436,7 @@
       background: oklch(7.5% 0.005 22);
       border-top: 1px solid oklch(68% 0.14 22 / 0.14);
       border-bottom: 1px solid oklch(68% 0.14 22 / 0.14);
-      padding: 6.5rem 2.5rem; position: relative; overflow: hidden;
+      padding: 5rem 2.5rem; position: relative; overflow: hidden;
     }
     .failure-stakes::before {
       content: ''; position: absolute; inset: 0;
@@ -447,7 +455,7 @@
 
     /* ─── PRICING ─── */
     .pricing-section { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: var(--sp-5); max-width: 700px; margin-top: var(--sp-7); }
+    .pricing-cards { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--sp-5); max-width: 720px; margin-top: var(--sp-7); }
 
     .pricing-card {
       background: var(--bg-3); border: 1px solid var(--border);
@@ -538,6 +546,8 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 960px) {
+      .reframe-layout { grid-template-columns: 1fr; gap: 2rem; }
+      .reframe-layout .section-title { margin-bottom: var(--sp-4); }
       .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
       .hero-visual { order: -1; }
       .phone { width: 240px; }
@@ -669,13 +679,15 @@
 <!-- ═══ SECTION 2 — PROBLEM + VILLAIN FRAME ═══ -->
 <section class="section reframe">
   <div class="section-inner">
-    <h2 class="section-title fade-up">YOU'VE BEEN LIED TO ABOUT &ldquo;NORMAL.&rdquo;</h2>
-    <div class="reframe-body fade-up">
-      <p>Here's what actually happened when your doctor said you're fine: he checked your total testosterone. It was technically in range. Case closed.</p>
-      <p>But total testosterone is like gross income. 100K a month sounds great &mdash; until your expenses are 98K. What you actually live on is the 2K that's left.</p>
-      <p>Your total testosterone is the 100K. Your free testosterone &mdash; the part your body can actually use &mdash; is what you're living on.</p>
-      <p>And that number isn't determined by age. <span class="reframe-em">It's determined by how you live.</span></p>
-      <p>You're not declining. You're uninformed. There's a difference. And it's a fixable one.</p>
+    <div class="reframe-layout">
+      <h2 class="section-title fade-up">YOU'VE BEEN LIED TO ABOUT &ldquo;NORMAL.&rdquo;</h2>
+      <div class="reframe-body fade-up">
+        <p>Here's what actually happened when your doctor said you're fine: he checked your total testosterone. It was technically in range. Case closed.</p>
+        <p>But total testosterone is like gross income. 100K a month sounds great &mdash; until your expenses are 98K. What you actually live on is the 2K that's left.</p>
+        <p>Your total testosterone is the 100K. Your free testosterone &mdash; the part your body can actually use &mdash; is what you're living on.</p>
+        <p>And that number isn't determined by age. <span class="reframe-em">It's determined by how you live.</span></p>
+        <p>You're not declining. You're uninformed. There's a difference. And it's a fixable one.</p>
+      </div>
     </div>
   </div>
 </section>
@@ -755,7 +767,7 @@
 </section>
 
 <!-- ═══ SECTION 7 — SUCCESS ═══ -->
-<section class="section" style="background:var(--bg);border-top:1px solid var(--border);">
+<section class="section success-section" style="background:var(--bg);border-top:1px solid var(--border);">
   <div class="section-inner">
     <h2 class="section-title fade-up">WHAT CHANGES?</h2>
     <div class="success-body fade-up" style="margin-top:1.5rem;">
