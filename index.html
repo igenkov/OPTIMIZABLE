@@ -182,97 +182,23 @@
       border-left: 1px solid var(--border);
     }
 
-    /* ─── PHONE MOCKUP ─── */
+    /* ─── MOCKUP IMAGE ─── */
     .hero-visual { display: flex; justify-content: center; align-items: center; }
     .phone-wrapper { position: relative; }
     .phone-aura {
       position: absolute; inset: -60px;
-      background: radial-gradient(ellipse at center, oklch(73% 0.088 310 / 0.09) 0%, transparent 65%);
+      background: radial-gradient(ellipse at center, oklch(73% 0.088 310 / 0.12) 0%, transparent 65%);
       pointer-events: none;
     }
-    .phone {
-      width: 272px;
-      background: oklch(5% 0.008 310);
-      border-radius: 44px;
-      border: 1.5px solid oklch(100% 0 0 / 0.1);
-      padding: 14px;
-      box-shadow:
-        0 50px 120px oklch(0% 0 0 / 0.9),
-        0 0 0 1px oklch(100% 0 0 / 0.04),
-        inset 0 0 0 1px oklch(100% 0 0 / 0.03);
+    .mockup-img {
+      display: block;
+      width: 340px;
+      max-width: 100%;
+      border-radius: 8px;
       position: relative;
+      -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
+      mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
     }
-    .phone-notch {
-      width: 72px; height: 22px;
-      background: oklch(5% 0.008 310);
-      border-radius: 0 0 14px 14px;
-      border: 1.5px solid oklch(100% 0 0 / 0.08);
-      border-top: none;
-      margin: 0 auto 10px;
-    }
-    .phone-screen {
-      background: oklch(8.5% 0.007 310);
-      border-radius: 32px; padding: 1.1rem;
-      overflow: hidden; min-height: 520px;
-    }
-
-    .app-topbar {
-      display: flex; justify-content: space-between; align-items: center;
-      margin-bottom: var(--sp-4);
-    }
-    .app-label {
-      font-size: 0.6rem; letter-spacing: 0.18em;
-      color: var(--gray-2); text-transform: uppercase;
-    }
-
-    .score-ring-wrap { display: flex; flex-direction: column; align-items: center; margin-bottom: var(--sp-4); }
-    .score-ring {
-      width: 88px; height: 88px; border-radius: 50%;
-      background: conic-gradient(var(--accent) 0% 72%, oklch(14% 0.005 310) 72% 100%);
-      display: flex; align-items: center; justify-content: center;
-      position: relative; margin-bottom: var(--sp-2);
-    }
-    .score-ring::before {
-      content: ''; position: absolute; inset: 8px;
-      background: oklch(8.5% 0.007 310); border-radius: 50%;
-    }
-    .score-ring-val {
-      position: relative; z-index: 1;
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 1.5rem; font-weight: 900;
-    }
-    .score-caption { font-size: 0.6rem; color: var(--accent); letter-spacing: 0.08em; }
-
-    .bm-list { display: flex; flex-direction: column; gap: 5px; margin-bottom: var(--sp-3); }
-    .bm-row {
-      display: flex; align-items: center; justify-content: space-between;
-      background: oklch(100% 0 0 / 0.03); border-radius: 4px;
-      padding: 0.35rem 0.5rem; font-size: 0.58rem;
-    }
-    .bm-name { color: var(--gray-2); flex-shrink: 0; width: 52px; }
-    .bm-bar-track {
-      flex: 1; margin: 0 var(--sp-2); height: 3px;
-      background: oklch(100% 0 0 / 0.07); border-radius: 2px; overflow: hidden;
-    }
-    .bm-bar { height: 100%; border-radius: 2px; }
-    .bm-val { font-family: 'Big Shoulders Display', sans-serif; font-size: 0.65rem; font-weight: 700; flex-shrink: 0; }
-    .c-g { color: var(--accent); }
-    .c-a { color: var(--gold); }
-    .c-r { color: var(--red); }
-
-    .app-plan {
-      background: oklch(73% 0.088 310 / 0.07); border: 1px solid var(--border-accent);
-      border-radius: 7px; padding: 0.55rem 0.65rem;
-    }
-    .app-plan-title {
-      font-family: 'Big Shoulders Display', sans-serif; font-size: 0.65rem; font-weight: 700;
-      color: var(--accent); letter-spacing: 0.1em; margin-bottom: var(--sp-2);
-    }
-    .app-plan-item {
-      font-size: 0.58rem; color: var(--gray-2);
-      display: flex; align-items: center; gap: var(--sp-2); padding: 0.15rem 0;
-    }
-    .app-plan-item::before { content: '✓'; color: var(--accent); font-size: 0.58rem; }
 
     /* ─── HERO BODY ─── */
     .hero-body {
@@ -550,8 +476,7 @@
       .reframe-layout .section-title { margin-bottom: var(--sp-4); }
       .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
       .hero-visual { order: -1; }
-      .phone { width: 240px; }
-      .phone-screen { min-height: 460px; }
+      .mockup-img { width: 280px; }
       .steps-row { grid-template-columns: 1fr; }
       .track-line { display: none; }
       .pricing-cards { grid-template-columns: 1fr; max-width: 100%; }
@@ -618,58 +543,7 @@
     <div class="hero-visual">
       <div class="phone-wrapper">
         <div class="phone-aura"></div>
-        <div class="phone">
-          <div class="phone-notch"></div>
-          <div class="phone-screen">
-            <div class="app-topbar">
-              <span class="app-label">HORMONAL HEALTH DASHBOARD</span>
-            </div>
-            <div class="score-ring-wrap">
-              <div class="score-ring">
-                <span class="score-ring-val">72</span>
-              </div>
-              <div class="score-caption">&uarr; +12 pts this quarter</div>
-            </div>
-            <div class="bm-list">
-              <div class="bm-row">
-                <span class="bm-name">Total T</span>
-                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:78%;background:oklch(73% 0.088 310)"></div></div>
-                <span class="bm-val c-g">648 ng/dL</span>
-              </div>
-              <div class="bm-row">
-                <span class="bm-name">Free T</span>
-                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:61%;background:oklch(73% 0.088 310)"></div></div>
-                <span class="bm-val c-g">14.2 pg</span>
-              </div>
-              <div class="bm-row">
-                <span class="bm-name">Estradiol</span>
-                <div class="bm-bar-track"><div class="bm-bar c-a" style="width:54%;background:oklch(83% 0.12 85)"></div></div>
-                <span class="bm-val c-a">31 pg/mL</span>
-              </div>
-              <div class="bm-row">
-                <span class="bm-name">SHBG</span>
-                <div class="bm-bar-track"><div class="bm-bar c-r" style="width:82%;background:oklch(68% 0.14 22)"></div></div>
-                <span class="bm-val c-r">58 nmol/L</span>
-              </div>
-              <div class="bm-row">
-                <span class="bm-name">Vitamin D</span>
-                <div class="bm-bar-track"><div class="bm-bar c-g" style="width:70%;background:oklch(73% 0.088 310)"></div></div>
-                <span class="bm-val c-g">52 ng/mL</span>
-              </div>
-              <div class="bm-row">
-                <span class="bm-name">Cortisol</span>
-                <div class="bm-bar-track"><div class="bm-bar c-a" style="width:67%;background:oklch(83% 0.12 85)"></div></div>
-                <span class="bm-val c-a">18 mcg/dL</span>
-              </div>
-            </div>
-            <div class="app-plan">
-              <div class="app-plan-title">TODAY'S PROTOCOL</div>
-              <div class="app-plan-item">Compound lifts &mdash; squats &amp; deadlifts</div>
-              <div class="app-plan-item">Zinc 30mg + Vitamin D3 5000 IU</div>
-              <div class="app-plan-item">Sleep target: 10:30 PM &middot; Cool room 18&deg;C</div>
-            </div>
-          </div>
-        </div>
+        <img src="web/public/mock.jpg" alt="Optimizable app dashboard" class="mockup-img" />
       </div>
     </div>
 
