@@ -293,6 +293,26 @@
     }
     .who-list li::before { content: '—'; color: var(--accent); flex-shrink: 0; margin-top: 0.05rem; }
 
+    /* ─── TRUST ─── */
+    .trust-section {
+      background: var(--bg);
+      border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);
+    }
+    .trust-grid { display: grid; grid-template-columns: repeat(3, 1fr); }
+    .trust-item {
+      padding: var(--sp-7) var(--sp-6);
+      border-right: 1px solid var(--border);
+    }
+    .trust-item:first-child { padding-left: 0; }
+    .trust-item:last-child { border-right: none; padding-right: 0; }
+    .trust-label {
+      display: block; font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em;
+      color: var(--accent); text-transform: uppercase; margin-bottom: var(--sp-4);
+    }
+    .trust-body { font-size: 0.95rem; color: var(--gray-2); line-height: 1.8; }
+    .trust-body strong { color: var(--white); font-weight: 500; display: block; margin-bottom: var(--sp-2); }
+
     /* ─── PROTOCOL ─── */
     .protocol { background: var(--bg); }
     .protocol-track { position: relative; }
@@ -471,6 +491,12 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 960px) {
+      .trust-grid { grid-template-columns: 1fr; }
+      .trust-item {
+        border-right: none; border-bottom: 1px solid var(--border);
+        padding: var(--sp-6) 0;
+      }
+      .trust-item:last-child { border-bottom: none; }
       .reframe-layout { grid-template-columns: 1fr; gap: 2rem; }
       .reframe-layout .section-title { margin-bottom: var(--sp-4); }
       .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
@@ -591,7 +617,19 @@
   </div>
 </section>
 
-<!-- ═══ SECTION 5 — THE PLAN (3 Steps) ═══ -->
+<!-- ═══ SECTION 5 — STAKES / FAILURE ═══ -->
+<section class="failure-stakes">
+  <div class="section-inner">
+    <h2 class="failure-title fade-up">THE DRIFT DOESN'T STOP ON ITS OWN.</h2>
+    <div class="failure-body fade-up">
+      <p>Nobody wakes up one morning and suddenly feels terrible. It happens one percent at a time. One year you're a little more tired. The next, the gym stops producing results. The next, the libido is something you remember more than experience.</p>
+      <p>The drift is quiet, but it's not neutral. It compounds. And the longer you go without measuring it, the more ground you have to recover.</p>
+      <p>The good news: when you know what's actually off and address it specifically, your body responds. But the window is wider today than it will be next year.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 6 — THE PLAN (3 Steps) ═══ -->
 <section class="section protocol" style="background:var(--bg-2);border-top:1px solid var(--border);">
   <div class="section-inner">
     <span class="tag fade-up">THE SYSTEM</span>
@@ -623,18 +661,6 @@
 
     <div style="text-align:center;margin-top:3rem;" class="fade-up">
       <a href="#cta" class="btn-primary">FIND OUT WHAT'S OFF &mdash; FREE <span class="btn-arrow">&rarr;</span></a>
-    </div>
-  </div>
-</section>
-
-<!-- ═══ SECTION 6 — STAKES / FAILURE ═══ -->
-<section class="failure-stakes">
-  <div class="section-inner">
-    <h2 class="failure-title fade-up">THE DRIFT DOESN'T STOP ON ITS OWN.</h2>
-    <div class="failure-body fade-up">
-      <p>Nobody wakes up one morning and suddenly feels terrible. It happens one percent at a time. One year you're a little more tired. The next, the gym stops producing results. The next, the libido is something you remember more than experience.</p>
-      <p>The drift is quiet, but it's not neutral. It compounds. And the longer you go without measuring it, the more ground you have to recover.</p>
-      <p>The good news: when you know what's actually off and address it specifically, your body responds. But the window is wider today than it will be next year.</p>
     </div>
   </div>
 </section>
@@ -679,7 +705,41 @@
   </div>
 </section>
 
-<!-- ═══ SECTION 9 — PRICING ═══ -->
+<!-- ═══ SECTION 9 — TRUST ═══ -->
+<section class="section trust-section">
+  <div class="section-inner">
+    <div class="trust-grid fade-up">
+      <div class="trust-item">
+        <span class="trust-label">Clinical Foundation</span>
+        <p class="trust-body"><strong>[Placeholder: clinical authority statement]</strong> Every risk factor and recommendation maps directly to peer-reviewed endocrinology research &mdash; not supplement marketing, not bro-science.</p>
+      </div>
+      <div class="trust-item">
+        <span class="trust-label">Your Data Stays Yours</span>
+        <p class="trust-body"><strong>[Placeholder: privacy statement]</strong> All health data is encrypted at rest and in transit. We do not sell, share, or monetize your information. Ever.</p>
+      </div>
+      <div class="trust-item">
+        <span class="trust-label">No Prescriptions. No Upsell.</span>
+        <p class="trust-body"><strong>[Placeholder: no-upsell statement]</strong> Optimizable gives you information and a protocol. We do not prescribe, recommend supplements for purchase, or push you toward any product.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ SECTION 10 — QUALIFIER ═══ -->
+<section class="section" style="background:var(--bg-2);border-top:1px solid var(--border);border-bottom:1px solid var(--border);">
+  <div class="section-inner">
+    <h2 class="section-title fade-up">THIS IS FOR YOU IF</h2>
+    <ul class="who-list fade-up" style="margin-top:1.5rem;">
+      <li>You noticed the energy isn't what it was.</li>
+      <li>Your doctor said &ldquo;you're fine&rdquo; &mdash; but it didn't feel fine.</li>
+      <li>You want to know your actual numbers, not guess.</li>
+      <li>You'd rather follow a clear protocol than scroll another thread.</li>
+      <li>You're not trying to become superhuman. Just... yourself again.</li>
+    </ul>
+  </div>
+</section>
+
+<!-- ═══ SECTION 11 — PRICING ═══ -->
 <section class="section pricing-section">
   <div class="section-inner">
     <span class="tag fade-up">PRICING</span>
@@ -709,20 +769,6 @@
         <p style="font-size:0.72rem;color:var(--gray-2);margin-top:1rem;font-style:italic;">Less than the cost of one blood panel.</p>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- ═══ SECTION 10 — QUALIFIER + FINAL CTA ═══ -->
-<section class="section" style="background:var(--bg);border-top:1px solid var(--border);">
-  <div class="section-inner">
-    <h2 class="section-title fade-up">THIS IS FOR YOU IF</h2>
-    <ul class="who-list fade-up" style="margin-top:1.5rem;">
-      <li>You noticed the energy isn't what it was.</li>
-      <li>Your doctor said &ldquo;you're fine&rdquo; &mdash; but it didn't feel fine.</li>
-      <li>You want to know your actual numbers, not guess.</li>
-      <li>You'd rather follow a clear protocol than scroll another thread.</li>
-      <li>You're not trying to become superhuman. Just... yourself again.</li>
-    </ul>
   </div>
 </section>
 
