@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -90,6 +89,18 @@
     }
     .nav-cta:hover { background: oklch(78% 0.078 310); transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
     .nav-cta:active { transform: scale(0.98); box-shadow: none; }
+
+    /* ─── READING PROGRESS ─── */
+    .reading-progress {
+      position: fixed;
+      top: 57px;
+      left: 0;
+      width: 0%;
+      height: 2px;
+      background: var(--accent);
+      z-index: 199;
+      transition: width 0.08s linear;
+    }
 
     /* ─── LAYOUT ─── */
     .page-wrap {
@@ -230,31 +241,17 @@
       margin-top: var(--sp-6);
     }
 
-    /* Category labels for the sub-headings */
-    .sub-category {
-      display: block;
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.58rem;
-      font-weight: 700;
-      letter-spacing: 0.2em;
-      color: var(--accent);
-      text-transform: uppercase;
-      margin-bottom: var(--sp-2);
-    }
-
-    /* Analogy/callout blocks */
+    /* Analogy pull-quotes */
     .analogy {
-      background: var(--bg-2);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: var(--sp-4) var(--sp-5);
-      margin: var(--sp-5) 0;
+      padding: var(--sp-4) 0 var(--sp-4) var(--sp-6);
+      margin: var(--sp-6) 0;
+      border-left: 1px solid var(--border-accent);
       font-size: 1rem;
       font-weight: 300;
       font-style: italic;
       color: var(--gray-2);
-      line-height: 1.75;
-      max-width: 68ch;
+      line-height: 1.8;
+      max-width: 62ch;
     }
 
     /* Intro callout (larger) */
@@ -281,44 +278,51 @@
       letter-spacing: 0.04em;
     }
 
-    /* Stat comparison block */
+    /* Stat comparison — asymmetric to make the contrast legible */
     .stat-compare {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: var(--sp-4);
-      margin: var(--sp-6) 0;
+      gap: 0;
+      margin: var(--sp-7) 0;
       max-width: 68ch;
-    }
-    .stat-item {
-      background: var(--bg-2);
       border: 1px solid var(--border-mid);
       border-radius: 3px;
-      padding: var(--sp-5) var(--sp-5);
+      overflow: hidden;
+    }
+    .stat-item {
+      padding: var(--sp-6) var(--sp-6);
+    }
+    .stat-item + .stat-item {
+      border-left: 1px solid var(--border-mid);
+      background: var(--bg-2);
     }
     .stat-num {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 2.6rem;
       font-weight: 900;
       line-height: 1;
       color: var(--accent);
       display: block;
       margin-bottom: var(--sp-2);
     }
+    .stat-item:first-child .stat-num { font-size: 1.8rem; color: var(--gray-3); }
+    .stat-item:last-child  .stat-num { font-size: 3.2rem; }
     .stat-per {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--gray-3);
+      display: block;
+      margin-bottom: var(--sp-2);
+    }
+    .stat-desc {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 700;
       letter-spacing: 0.08em;
       color: var(--gray-3);
-      display: block;
-      margin-bottom: var(--sp-1);
+      text-transform: uppercase;
     }
-    .stat-desc {
-      font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.06em;
-      color: var(--gray-3);
-    }
+    .stat-item:last-child .stat-desc { color: var(--gray-2); }
 
     /* Ordered/unordered lists */
     .article-body ol,
@@ -371,41 +375,29 @@
       padding-top: 0.3rem;
     }
 
-    /* Important note block */
+    /* Important note block — full-width band, breaks reading column */
     .note-block {
       background: var(--bg-2);
-      border: 1px solid var(--border-mid);
-      border-radius: 3px;
-      padding: var(--sp-6) var(--sp-6);
-      margin: var(--sp-8) 0;
-      max-width: 68ch;
+      margin: var(--sp-9) -2.5rem;
+      padding: var(--sp-7) 2.5rem;
     }
     .note-block-header {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 1.2rem;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
       font-weight: 900;
-      line-height: 1.0;
+      line-height: 1.05;
       color: var(--white);
       margin-bottom: var(--sp-5);
     }
-    .note-block p {
-      font-size: 0.975rem !important;
-    }
-    .note-block ul {
-      margin-top: var(--sp-4);
-    }
-    .note-block li {
-      font-size: 0.975rem !important;
-      margin-bottom: var(--sp-4) !important;
-    }
+    .note-block p { font-size: 0.975rem; }
+    .note-block ul { margin-top: var(--sp-4); }
+    .note-block li { font-size: 0.975rem; margin-bottom: var(--sp-4); }
 
-    /* Bottom line */
+    /* Bottom line — pure typography, no card */
     .bottom-line {
-      background: var(--bg-2);
-      border: 1px solid var(--border-mid);
-      border-radius: 3px;
-      padding: var(--sp-7) var(--sp-7);
+      padding-top: var(--sp-7);
       margin-top: var(--sp-8);
+      border-top: 1px solid var(--border-mid);
       max-width: 68ch;
     }
     .bottom-line-label {
@@ -416,40 +408,38 @@
       text-transform: uppercase;
       margin-bottom: var(--sp-4);
     }
-    .bottom-line p {
-      border: none !important;
-      background: transparent !important;
-      padding: 0 !important;
-    }
 
-    /* CTA section */
+    /* CTA section — left-aligned, grid layout */
     .article-cta {
-      text-align: center;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--sp-7);
+      align-items: end;
       padding: var(--sp-8) 0 var(--sp-6);
       border-top: 1px solid var(--border);
-      margin-top: var(--sp-7);
+      margin-top: var(--sp-9);
     }
     .article-cta-label {
       font-family: var(--mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.14em;
-      color: var(--gray-3);
-      margin-bottom: var(--sp-4);
+      font-size: 0.6rem;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: var(--sp-3);
     }
     .article-cta-heading {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-size: clamp(1.4rem, 2.8vw, 2rem);
       font-weight: 900;
-      line-height: 1.05;
+      line-height: 1.0;
       color: var(--white);
       margin-bottom: var(--sp-3);
     }
     .article-cta-sub {
-      font-size: 0.925rem;
+      font-size: 0.9rem;
       color: var(--gray-2);
       font-weight: 300;
-      max-width: 48ch;
-      margin: 0 auto var(--sp-6);
+      max-width: 52ch;
       line-height: 1.7;
     }
     .cta-btn {
@@ -459,12 +449,13 @@
       background: var(--accent);
       color: oklch(10% 0.01 310);
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 800;
       letter-spacing: 0.12em;
-      padding: 0.9rem 2rem;
+      padding: 0.85rem 1.75rem;
       border-radius: 3px;
       text-decoration: none;
+      white-space: nowrap;
       transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
     }
     .cta-btn:hover {
@@ -476,10 +467,11 @@
     .cta-btn-sub {
       display: block;
       font-family: var(--mono);
-      font-size: 0.6rem;
+      font-size: 0.58rem;
       letter-spacing: 0.1em;
       color: var(--gray-3);
-      margin-top: var(--sp-3);
+      margin-top: var(--sp-2);
+      text-align: right;
     }
 
     /* ─── FOOTER ─── */
@@ -522,12 +514,17 @@
       .page-wrap { padding: 0 1.25rem; }
       .article-header { padding-top: calc(var(--sp-9) + var(--sp-5)); }
       .stat-compare { grid-template-columns: 1fr; }
-      .note-block, .bottom-line { padding: var(--sp-5); }
+      .stat-item + .stat-item { border-left: none; border-top: 1px solid var(--border-mid); }
+      .note-block { margin: var(--sp-8) -1.25rem; padding: var(--sp-6) 1.25rem; }
+      .article-cta { grid-template-columns: 1fr; gap: var(--sp-5); }
+      .cta-btn-sub { text-align: left; }
       footer { flex-direction: column; gap: var(--sp-4); align-items: flex-start; }
     }
   </style>
 </head>
 <body>
+
+<div class="reading-progress" id="progress" role="progressbar" aria-label="Reading progress"></div>
 
 <!-- ═══ NAV ═══ -->
 <nav id="nav">
@@ -744,11 +741,15 @@
 
     <!-- ═══ CTA ═══ -->
     <div class="article-cta">
-      <div class="article-cta-label">Know what's actually off</div>
-      <h2 class="article-cta-heading">Stop guessing. Start with your numbers.</h2>
-      <p class="article-cta-sub">Optimizable builds a complete hormonal picture from your biomarkers - free testosterone, SHBG, metabolic indicators, and more. No supplement marketing. Just a clear read on where you stand.</p>
-      <a href="../index.html#cta" class="cta-btn">START YOUR FREE ASSESSMENT &rarr;</a>
-      <span class="cta-btn-sub">Takes 5 minutes. No account required to start.</span>
+      <div>
+        <div class="article-cta-label">Know what's actually off</div>
+        <h2 class="article-cta-heading">Stop guessing. Start with your numbers.</h2>
+        <p class="article-cta-sub">Optimizable builds a complete hormonal picture from your biomarkers - free testosterone, SHBG, metabolic indicators, and more. No supplement marketing. Just a clear read on where you stand.</p>
+      </div>
+      <div>
+        <a href="../index.html#cta" class="cta-btn">START FREE &rarr;</a>
+        <span class="cta-btn-sub">5 min. No account required.</span>
+      </div>
     </div>
 
   </article>
@@ -764,13 +765,24 @@
 <script>
   document.documentElement.classList.add('js');
 
-  // Nav scroll state
   const nav = document.getElementById('nav');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 20);
-  }, { passive: true });
+  const progress = document.getElementById('progress');
+  const article = document.querySelector('.article-body');
 
-  // Staggered fade-up
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+
+    if (article) {
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const height = article.offsetHeight;
+      const scrolled = window.scrollY - top;
+      const pct = Math.max(0, Math.min(100, (scrolled / height) * 100));
+      progress.style.width = pct + '%';
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
   const fadeEls = document.querySelectorAll('.fade-up');
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
