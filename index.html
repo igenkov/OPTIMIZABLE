@@ -7,6 +7,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -570,7 +571,7 @@
       color: var(--white); line-height: 1.2;
     }
     .faq-icon {
-      flex-shrink: 0; width: 20px; height: 20px;
+      flex-shrink: 0; font-size: 20px; line-height: 1;
       color: var(--accent); transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
     .faq-item.open .faq-icon { transform: rotate(45deg); }
@@ -925,7 +926,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">Is the assessment really free? What's the catch?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">No catch. The assessment, your hormonal risk score, the factors driving it, and your personalized bloodwork panel are completely free — no account required, no credit card, no trial period. <em>Premium</em> unlocks the bloodwork interpretation and 90-day protocol, and you only need that after you've done the bloodwork.</p>
@@ -935,7 +936,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">My doctor checked my testosterone and said I'm fine. Why should I trust this?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">Your doctor most likely checked <strong>total testosterone</strong> — which includes both bound and unbound hormone. The problem is that bound testosterone can't be used by your tissues. What matters is <strong>free testosterone</strong>: the fraction your body can actually act on. A man with "normal" total testosterone and high SHBG can be functionally deficient. Most standard panels don't measure this. Ours tells you exactly what to test and what the numbers mean.</p>
@@ -945,7 +946,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">What's SHBG, and why does it matter?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">SHBG (Sex Hormone-Binding Globulin) is a protein that binds to testosterone and makes it unavailable for use. Think of it as testosterone that's been locked up. High SHBG means less free testosterone — even if your total testosterone looks fine on paper. SHBG is heavily influenced by lifestyle factors: alcohol, sleep, body fat, thyroid function, and more. It's one of the most important and most commonly skipped markers.</p>
@@ -955,7 +956,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">Do I need a doctor's referral to get the bloodwork?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">In most countries, you can order a private blood test directly from a certified lab without a referral. We give you a specific panel to request — you take it to any lab of your choice. In some jurisdictions a GP referral may be required for certain markers. Either way, the panel we provide makes the conversation with your doctor straightforward if one is needed.</p>
@@ -965,7 +966,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">I'm in my late 20s. Can my hormones already be off?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">Yes. Hormonal imbalance isn't an age problem — it's a lifestyle problem. High stress, poor sleep, sedentary habits, alcohol, and poor diet all suppress free testosterone and disrupt the hormonal environment at any age. Men in their late 20s with high SHBG or elevated estradiol will experience the same symptoms as men in their 40s. The assessment doesn't filter by age.</p>
@@ -975,7 +976,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">How does the analysis work? Is it reliable?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">The risk score is generated by a deterministic scoring engine built on clinical endocrinology reference ranges — not a black box. Every symptom, lifestyle factor, and medication you report maps to a known hormonal mechanism. Your uploaded bloodwork is then interpreted through a clinical reasoning engine in the context of your full profile and delivered as a personalized narrative report. It does not replace clinical judgement, but it applies the same analytical framework a specialist would use in a fraction of the time.</p>
@@ -985,7 +986,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">What exactly is in the 90-day protocol?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">The protocol covers the five pillars that directly influence your hormonal environment: <strong>training</strong> (type, frequency, intensity), <strong>nutrition</strong> (macros, meal timing, foods that matter for your specific markers), <strong>sleep</strong> (targets, environment, habits), <strong>stress management</strong> (cortisol reduction strategies), and <strong>supplementation</strong> (evidence-based only, tied to your deficiencies). Every recommendation is specific to your bloodwork — not a generic template.</p>
@@ -995,7 +996,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">Is this medical advice?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">No. Optimizable is a wellness and information tool. It does not diagnose, prescribe, or treat medical conditions. The protocol covers lifestyle and nutrition — areas you have full control over without a prescription. If your bloodwork suggests a clinical issue, we will tell you clearly and recommend you consult a specialist. We are not a substitute for medical care.</p>
@@ -1005,7 +1006,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">What happens to my health data?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">Your data is encrypted at rest and in transit. We do not sell it, share it with third parties, or use it for advertising. It is used solely to generate your score, panel, and protocol. You can delete your account and all associated data at any time.</p>
@@ -1015,7 +1016,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">Is this a supplement company in disguise?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">No. We don't sell supplements, have affiliate deals with supplement brands, or recommend products for purchase. If your protocol includes supplementation, it will name the compound and the dose — you buy it wherever is cheapest. Our only revenue comes from the premium subscription. That's the model.</p>
@@ -1025,7 +1026,7 @@
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
           <span class="faq-q">Can I cancel the premium subscription anytime?</span>
-          <svg class="faq-icon" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="10" y1="2" x2="10" y2="18"/><line x1="2" y1="10" x2="18" y2="10"/></svg>
+          <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
           <p class="faq-a">Yes. No contracts, no cancellation fees. Cancel from your account settings at any time and you won't be charged again. Your data and protocol remain accessible until the end of your billing period.</p>
