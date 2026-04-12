@@ -363,16 +363,17 @@
     }
     .article-body ul { list-style: none; padding-left: 0; }
     .article-body ul li {
-      display: grid;
-      grid-template-columns: 1.5rem 1fr;
-      gap: var(--sp-3);
+      position: relative;
+      padding-left: 1.5rem;
     }
     .article-body ul li::before {
       content: '-';
       font-family: var(--mono);
       font-size: 0.8rem;
       color: var(--accent);
-      padding-top: 0.3rem;
+      position: absolute;
+      left: 0;
+      top: 0.3em;
     }
 
     /* Important note block — full-width band, breaks reading column */
