@@ -393,13 +393,13 @@
 
     /* ─── ANIMATIONS ─── */
     @media (prefers-reduced-motion: no-preference) {
-      .fade-up {
+      .js .fade-up {
         opacity: 0;
         transform: translateY(16px);
         transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
                     transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
       }
-      .fade-up.in { opacity: 1; transform: translateY(0); }
+      .js .fade-up.in { opacity: 1; transform: translateY(0); }
     }
 
     /* ─── RESPONSIVE ─── */
@@ -521,6 +521,8 @@
 </div>
 
 <script>
+  document.documentElement.classList.add('js');
+
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 20);
