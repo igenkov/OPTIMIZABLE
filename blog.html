@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Editorial - Optimizable</title>
+  <meta name="description" content="Clinical writing on male hormonal health. Testosterone, metabolic function, sleep, stress - evidence-based, without the supplement marketing." />
+  <meta property="og:title" content="Optimizable Editorial" />
+  <meta property="og:description" content="Clinical writing on male hormonal health. Evidence-based, without the supplement marketing." />
+  <meta property="og:type" content="website" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             oklch(8% 0.008 310);
+      --bg-2:           oklch(10.5% 0.007 310);
+      --bg-3:           oklch(13.5% 0.006 310);
+      --accent:         oklch(73% 0.088 310);
+      --accent-glow:    oklch(73% 0.088 310 / 0.30);
+      --white:          oklch(96.5% 0.005 310);
+      --gray-1:         oklch(87% 0.006 310);
+      --gray-2:         oklch(60% 0.007 310);
+      --gray-3:         oklch(34% 0.005 310);
+      --border:         oklch(100% 0 0 / 0.07);
+      --border-accent:  oklch(73% 0.088 310 / 0.22);
+      --mono:           ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+
+      --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px;
+      --sp-4: 16px; --sp-5: 24px;  --sp-6: 32px;
+      --sp-7: 48px; --sp-8: 64px;  --sp-9: 96px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Libre Franklin', sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+    h1, h2, h3, h4 {
+      font-family: 'Big Shoulders Display', sans-serif;
+      letter-spacing: 0.01em;
+      line-height: 1.0;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gray-3); border-radius: 2px; }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sp-4) 2.5rem;
+      background: oklch(8% 0.008 310 / 0.9);
+      backdrop-filter: blur(28px) saturate(1.2);
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--border-accent); }
+    .nav-logo { display: flex; align-items: center; gap: var(--sp-3); text-decoration: none; }
+    .nav-wordmark {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      letter-spacing: 0.14em; color: var(--white);
+    }
+    .nav-sub {
+      font-size: 0.55rem; letter-spacing: 0.2em;
+      color: var(--gray-2); font-weight: 400;
+      display: block; margin-top: -2px;
+    }
+    .nav-links { display: flex; align-items: center; gap: var(--sp-6); }
+    .nav-link {
+      font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
+      font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray-2); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--accent); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+      background: var(--accent); color: oklch(10% 0.01 310);
+      font-family: 'Big Shoulders Display', sans-serif; font-weight: 800;
+      font-size: 0.82rem; letter-spacing: 0.12em;
+      padding: 0.5rem 1.2rem; border-radius: 3px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .nav-cta:hover { background: oklch(78% 0.078 310); transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
+    .nav-cta:active { transform: scale(0.98); box-shadow: none; }
+
+    /* ─── LAYOUT ─── */
+    .page-wrap {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* ─── PAGE HEADER ─── */
+    .page-header {
+      padding-top: calc(var(--sp-9) + var(--sp-7));
+      padding-bottom: var(--sp-7);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: var(--sp-6);
+    }
+    .page-eyebrow {
+      display: block;
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.65rem; font-weight: 700;
+      letter-spacing: 0.24em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: var(--sp-3);
+    }
+    .page-title {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
+      font-weight: 900; line-height: 0.95;
+      color: var(--white);
+    }
+    .page-desc {
+      font-size: 0.9rem; color: var(--gray-2); line-height: 1.7;
+      max-width: 400px; margin-top: var(--sp-4);
+    }
+    .article-count {
+      font-family: var(--mono);
+      font-size: 0.7rem; color: var(--gray-3);
+      letter-spacing: 0.08em; white-space: nowrap;
+      padding-bottom: 4px;
+    }
+
+    /* ─── FEATURED ARTICLE ─── */
+    .featured-article {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: var(--sp-9);
+      align-items: end;
+      padding: var(--sp-8) 0 var(--sp-7);
+      border-bottom: 1px solid var(--border);
+      text-decoration: none;
+      color: inherit;
+    }
+    .featured-label {
+      font-family: var(--mono);
+      font-size: 0.6rem; letter-spacing: 0.14em;
+      color: var(--gray-3); text-transform: uppercase;
+      display: flex; align-items: center; gap: var(--sp-3);
+      margin-bottom: var(--sp-4);
+    }
+    .featured-label::before {
+      content: '';
+      display: inline-block;
+      width: 24px; height: 1px;
+      background: var(--gray-3);
+    }
+    .featured-eyebrow {
+      display: block;
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.2em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: var(--sp-4);
+    }
+    .featured-title {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(1.75rem, 3vw, 2.7rem);
+      font-weight: 900; line-height: 1.02;
+      color: var(--white);
+      transition: color 0.2s;
+    }
+    .featured-article:hover .featured-title { color: var(--accent); }
+    .featured-right {
+      display: flex; flex-direction: column;
+      justify-content: flex-end; gap: var(--sp-5);
+    }
+    .featured-excerpt {
+      font-size: 1rem; color: var(--gray-2);
+      line-height: 1.8; max-width: 52ch;
+    }
+    .featured-meta {
+      font-family: var(--mono);
+      font-size: 0.7rem; color: var(--gray-3);
+      letter-spacing: 0.06em;
+      display: flex; gap: var(--sp-4); align-items: center;
+    }
+    .featured-meta span + span::before {
+      content: '·';
+      margin-right: var(--sp-4);
+    }
+    .featured-read {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;
+      color: var(--accent); text-decoration: none;
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+      transition: gap 0.2s;
+    }
+    .featured-article:hover .featured-read { gap: var(--sp-3); }
+
+    /* ─── ARTICLE LIST ─── */
+    .article-list {
+      list-style: none;
+    }
+    .article-row {
+      display: grid;
+      grid-template-columns: 2.5rem 1fr auto;
+      gap: 0 var(--sp-5);
+      padding: var(--sp-6) 0;
+      border-bottom: 1px solid var(--border);
+      align-items: start;
+      text-decoration: none;
+      color: inherit;
+      background: transparent;
+      transition: background 0.15s;
+      position: relative;
+    }
+    .article-row::before {
+      content: '';
+      position: absolute;
+      inset: 0 -2.5rem;
+      background: var(--bg-2);
+      opacity: 0;
+      transition: opacity 0.15s;
+      z-index: 0;
+    }
+    .article-row:hover::before { opacity: 1; }
+    .article-row-num,
+    .article-row-body,
+    .article-row-meta { position: relative; z-index: 1; }
+    .article-row-num {
+      font-family: var(--mono);
+      font-size: 0.78rem;
+      color: var(--gray-3);
+      letter-spacing: 0.04em;
+      padding-top: 3px;
+      font-variant-numeric: tabular-nums;
+    }
+    .article-row-cat {
+      display: block;
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.58rem; font-weight: 700;
+      letter-spacing: 0.2em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: var(--sp-2);
+    }
+    .article-row-title {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 1rem; font-weight: 600;
+      color: var(--white); line-height: 1.35;
+      margin-bottom: var(--sp-2);
+      transition: color 0.15s;
+    }
+    .article-row:hover .article-row-title { color: var(--accent); }
+    .article-row-excerpt {
+      font-size: 0.875rem; color: var(--gray-2);
+      line-height: 1.6;
+      display: -webkit-box;
+      -webkit-line-clamp: 1;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .article-row-meta {
+      font-family: var(--mono);
+      font-size: 0.68rem; color: var(--gray-3);
+      letter-spacing: 0.05em;
+      text-align: right;
+      white-space: nowrap;
+      display: flex; flex-direction: column;
+      align-items: flex-end; gap: var(--sp-1);
+      padding-top: 3px;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: var(--sp-6) 0;
+      margin-top: var(--sp-9);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .footer-copy {
+      font-size: 0.75rem; color: var(--gray-3); letter-spacing: 0.04em;
+    }
+    .footer-back {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray-2); text-decoration: none;
+      transition: color 0.2s;
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+    }
+    .footer-back:hover { color: var(--accent); }
+
+    /* ─── ANIMATIONS ─── */
+    @media (prefers-reduced-motion: no-preference) {
+      .fade-up {
+        opacity: 0;
+        transform: translateY(16px);
+        transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .fade-up.in { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 960px) {
+      .featured-article { grid-template-columns: 1fr; gap: var(--sp-6); }
+      .featured-right { justify-content: flex-start; }
+    }
+
+    @media (max-width: 768px) {
+      nav { padding: var(--sp-4) 1.25rem; }
+      .nav-link { display: none; }
+      .page-wrap { padding: 0 1.25rem; }
+      .page-header {
+        flex-direction: column; align-items: flex-start;
+        padding-top: calc(var(--sp-9) + var(--sp-5));
+        padding-bottom: var(--sp-6);
+      }
+      .article-count { padding-bottom: 0; }
+      .article-row { grid-template-columns: 2rem 1fr; gap: 0 var(--sp-3); }
+      .article-row::before { inset: 0 -1.25rem; }
+      .article-row-meta { display: none; }
+      .article-row-excerpt { -webkit-line-clamp: 2; }
+      footer { flex-direction: column; gap: var(--sp-4); align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ═══ NAV ═══ -->
+<nav id="nav">
+  <a href="index.html" class="nav-logo">
+    <img src="logo_trsp.png" alt="Optimizable" width="36" height="36" style="object-fit:contain;" />
+    <div>
+      <div class="nav-wordmark">OPTIMIZABLE</div>
+      <span class="nav-sub">JUST A MAN. PROPERLY.</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="index.html#faq" class="nav-link">FAQ</a>
+    <a href="blog.html" class="nav-link active">Blog</a>
+    <a href="index.html#cta" class="nav-cta">START FREE &rarr;</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ═══ PAGE HEADER ═══ -->
+  <header class="page-header fade-up">
+    <div>
+      <span class="page-eyebrow">Optimizable Editorial</span>
+      <h1 class="page-title">THE BRIEF</h1>
+      <p class="page-desc">Clinical writing on male hormonal health. Evidence-based, without the supplement marketing.</p>
+    </div>
+    <span class="article-count">3 ARTICLES</span>
+  </header>
+
+  <!-- ═══ FEATURED ARTICLE ═══ -->
+  <a href="articles/total-vs-free-testosterone.html" class="featured-article fade-up" aria-label="Read: Total vs. Free Testosterone">
+    <div>
+      <span class="featured-label">Featured</span>
+      <span class="featured-eyebrow">Endocrinology</span>
+      <h2 class="featured-title">Total vs. Free Testosterone: Why the Number Your Doctor Checks Is Almost Meaningless</h2>
+    </div>
+    <div class="featured-right">
+      <p class="featured-excerpt">Most men have been assessed on a metric that doesn't reflect what their tissues actually experience. Here's the full picture of how testosterone is bound, transported, and used - and which markers you actually need to track.</p>
+      <div class="featured-meta">
+        <span>Apr 2026</span>
+        <span>8 min read</span>
+        <span>Hormonal Health Basics</span>
+      </div>
+      <span class="featured-read">READ ARTICLE &rarr;</span>
+    </div>
+  </a>
+
+  <!-- ═══ ARTICLE LIST ═══ -->
+  <ol class="article-list" aria-label="All articles">
+
+    <li>
+      <a href="articles/insulin-resistance-testosterone.html" class="article-row fade-up" aria-label="Read: How Insulin Resistance Suppresses Testosterone">
+        <span class="article-row-num">02</span>
+        <div class="article-row-body">
+          <span class="article-row-cat">Metabolic Health</span>
+          <div class="article-row-title">How Insulin Resistance Suppresses Testosterone - and What to Do About It</div>
+          <p class="article-row-excerpt">The link between blood sugar regulation and hormonal output is direct, measurable, and largely ignored in standard care.</p>
+        </div>
+        <div class="article-row-meta">
+          <span>Apr 2026</span>
+          <span>6 min</span>
+        </div>
+      </a>
+    </li>
+
+    <li>
+      <a href="articles/cortisol-testosterone-stress.html" class="article-row fade-up" aria-label="Read: The Cortisol-Testosterone Seesaw">
+        <span class="article-row-num">03</span>
+        <div class="article-row-body">
+          <span class="article-row-cat">Sleep &amp; Recovery</span>
+          <div class="article-row-title">The Cortisol-Testosterone Seesaw: Why Chronic Stress Tanks Your Levels</div>
+          <p class="article-row-excerpt">Cortisol and testosterone share a precursor. When your body prioritises stress response, hormone production pays the price.</p>
+        </div>
+        <div class="article-row-meta">
+          <span>Apr 2026</span>
+          <span>5 min</span>
+        </div>
+      </a>
+    </li>
+
+  </ol>
+
+  <!-- ═══ FOOTER ═══ -->
+  <footer>
+    <span class="footer-copy">&copy; 2026 Optimizable. All rights reserved.</span>
+    <a href="index.html" class="footer-back">&larr; Back to Optimizable</a>
+  </footer>
+
+</div>
+
+<script>
+  // Nav scroll state
+  const nav = document.getElementById('nav');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+  }, { passive: true });
+
+  // Staggered fade-up
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = `${i * 80}ms`;
+        entry.target.classList.add('in');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.08 });
+  fadeEls.forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
