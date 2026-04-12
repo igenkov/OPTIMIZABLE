@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Editorial - Optimizable</title>
+  <title>The Brief - Optimizable Editorial</title>
   <meta name="description" content="Clinical writing on male hormonal health. Testosterone, metabolic function, sleep, stress - evidence-based, without the supplement marketing." />
-  <meta property="og:title" content="Optimizable Editorial" />
+  <meta property="og:title" content="The Brief - Optimizable Editorial" />
   <meta property="og:description" content="Clinical writing on male hormonal health. Evidence-based, without the supplement marketing." />
   <meta property="og:type" content="website" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -20,12 +20,13 @@
       --bg-2:           oklch(10.5% 0.007 310);
       --bg-3:           oklch(13.5% 0.006 310);
       --accent:         oklch(73% 0.088 310);
-      --accent-glow:    oklch(73% 0.088 310 / 0.30);
+      --accent-glow:    oklch(73% 0.088 310 / 0.25);
       --white:          oklch(96.5% 0.005 310);
       --gray-1:         oklch(87% 0.006 310);
       --gray-2:         oklch(60% 0.007 310);
       --gray-3:         oklch(34% 0.005 310);
       --border:         oklch(100% 0 0 / 0.07);
+      --border-mid:     oklch(100% 0 0 / 0.12);
       --border-accent:  oklch(73% 0.088 310 / 0.22);
       --mono:           ui-monospace, 'Cascadia Code', 'Courier New', monospace;
 
@@ -57,7 +58,7 @@
       position: fixed; top: 0; left: 0; right: 0; z-index: 200;
       display: flex; align-items: center; justify-content: space-between;
       padding: var(--sp-4) 2.5rem;
-      background: oklch(8% 0.008 310 / 0.9);
+      background: oklch(8% 0.008 310 / 0.92);
       backdrop-filter: blur(28px) saturate(1.2);
       border-bottom: 1px solid var(--border);
       transition: border-color 0.3s;
@@ -102,110 +103,279 @@
       padding: 0 2.5rem;
     }
 
-    /* ─── PAGE HEADER ─── */
-    .page-header {
+    /* ─── PUBLICATION MASTHEAD ─── */
+    .pub-masthead {
       padding-top: calc(var(--sp-9) + var(--sp-7));
-      padding-bottom: var(--sp-7);
-      border-bottom: 1px solid var(--border);
+    }
+
+    .pub-infobar {
       display: flex;
-      align-items: flex-end;
+      align-items: center;
       justify-content: space-between;
-      gap: var(--sp-6);
+      padding-bottom: var(--sp-5);
+      border-bottom: 1px solid var(--border-mid);
     }
-    .page-eyebrow {
-      display: block;
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.65rem; font-weight: 700;
-      letter-spacing: 0.24em; color: var(--accent);
-      text-transform: uppercase; margin-bottom: var(--sp-3);
+    .pub-issue {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--gray-3);
     }
-    .page-title {
+    .pub-issue-vol { color: var(--accent); }
+    .pub-issue-sep { color: var(--gray-3); opacity: 0.4; }
+    .pub-tagline {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--gray-3);
+      font-style: italic;
+    }
+
+    .pub-title-block {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      align-items: end;
+      gap: var(--sp-8);
+      padding: var(--sp-7) 0;
+      border-bottom: 1px solid var(--border);
+    }
+    .pub-name {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(2.4rem, 4.5vw, 3.6rem);
-      font-weight: 900; line-height: 0.95;
+      font-size: clamp(3.5rem, 7vw, 6rem);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -0.01em;
       color: var(--white);
     }
-    .page-desc {
-      font-size: 0.9rem; color: var(--gray-2); line-height: 1.7;
-      max-width: 400px; margin-top: var(--sp-4);
+    .pub-desc {
+      font-size: 0.9rem;
+      color: var(--gray-2);
+      font-weight: 300;
+      line-height: 1.75;
+      max-width: 48ch;
+      margin-top: var(--sp-4);
     }
-    .article-count {
+    .pub-count-block {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--sp-1);
+      padding-bottom: var(--sp-1);
+    }
+    .pub-count-num {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(2.5rem, 4vw, 3.5rem);
+      font-weight: 900;
+      line-height: 1;
+      color: var(--white);
+    }
+    .pub-count-label {
       font-family: var(--mono);
-      font-size: 0.7rem; color: var(--gray-3);
-      letter-spacing: 0.08em; white-space: nowrap;
-      padding-bottom: 4px;
+      font-size: 0.6rem;
+      letter-spacing: 0.12em;
+      color: var(--gray-3);
+      text-align: right;
+    }
+
+    /* ─── FILTER STRIP ─── */
+    .filter-strip {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-2);
+      padding: var(--sp-4) 0;
+      border-bottom: 1px solid var(--border);
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-strip::-webkit-scrollbar { display: none; }
+    .filter-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: var(--gray-3);
+      white-space: nowrap;
+      padding-right: var(--sp-2);
+      flex-shrink: 0;
+    }
+    .filter-pill {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      background: transparent;
+      border: 1px solid var(--border);
+      border-radius: 2px;
+      padding: 0.28rem 0.72rem;
+      cursor: pointer;
+      white-space: nowrap;
+      flex-shrink: 0;
+      transition: color 0.15s, border-color 0.15s, background 0.15s;
+    }
+    .filter-pill:hover {
+      color: var(--white);
+      border-color: var(--border-mid);
+    }
+    .filter-pill.active {
+      color: oklch(10% 0.01 310);
+      background: var(--accent);
+      border-color: var(--accent);
     }
 
     /* ─── FEATURED ARTICLE ─── */
-    .featured-article {
-      display: grid;
-      grid-template-columns: 1.4fr 1fr;
-      gap: var(--sp-9);
-      align-items: end;
+    .featured-zone {
       padding: var(--sp-8) 0 var(--sp-7);
       border-bottom: 1px solid var(--border);
+    }
+    .featured-article {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: var(--sp-9);
+      align-items: end;
       text-decoration: none;
       color: inherit;
     }
-    .featured-label {
-      font-family: var(--mono);
-      font-size: 0.6rem; letter-spacing: 0.14em;
-      color: var(--gray-3); text-transform: uppercase;
-      display: flex; align-items: center; gap: var(--sp-3);
-      margin-bottom: var(--sp-4);
+    .featured-left { position: relative; }
+    .featured-ghost-num {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(9rem, 18vw, 16rem);
+      font-weight: 900;
+      color: var(--accent);
+      opacity: 0.05;
+      line-height: 1;
+      pointer-events: none;
+      user-select: none;
+      position: absolute;
+      bottom: -0.06em;
+      right: -0.04em;
+      letter-spacing: -0.02em;
+      transition: opacity 0.35s;
     }
-    .featured-label::before {
+    .featured-article:hover .featured-ghost-num { opacity: 0.09; }
+
+    .featured-flag {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      color: var(--gray-3);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-bottom: var(--sp-5);
+    }
+    .featured-flag::before {
       content: '';
       display: inline-block;
-      width: 24px; height: 1px;
+      width: 20px;
+      height: 1px;
       background: var(--gray-3);
     }
-    .featured-eyebrow {
+
+    .featured-category {
       display: block;
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.62rem; font-weight: 700;
-      letter-spacing: 0.2em; color: var(--accent);
-      text-transform: uppercase; margin-bottom: var(--sp-4);
+      font-size: 0.6rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: var(--sp-4);
     }
+
     .featured-title {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(1.75rem, 3vw, 2.7rem);
-      font-weight: 900; line-height: 1.02;
+      font-size: clamp(1.65rem, 2.8vw, 2.6rem);
+      font-weight: 900;
+      line-height: 1.06;
       color: var(--white);
+      max-width: 18ch;
+      position: relative;
+      z-index: 1;
       transition: color 0.2s;
     }
     .featured-article:hover .featured-title { color: var(--accent); }
+
     .featured-right {
-      display: flex; flex-direction: column;
-      justify-content: flex-end; gap: var(--sp-5);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      gap: var(--sp-5);
     }
     .featured-excerpt {
-      font-size: 1rem; color: var(--gray-2);
-      line-height: 1.8; max-width: 52ch;
+      font-size: 0.975rem;
+      color: var(--gray-2);
+      line-height: 1.8;
+      max-width: 50ch;
+      font-weight: 300;
+    }
+    .featured-bottom {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
     }
     .featured-meta {
-      font-family: var(--mono);
-      font-size: 0.7rem; color: var(--gray-3);
-      letter-spacing: 0.06em;
-      display: flex; gap: var(--sp-4); align-items: center;
+      display: flex;
+      align-items: center;
+      gap: var(--sp-4);
+      flex-wrap: wrap;
     }
-    .featured-meta span + span::before {
-      content: '·';
-      margin-right: var(--sp-4);
+    .featured-read-badge {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: oklch(10% 0.01 310);
+      background: var(--accent);
+      padding: 0.18rem 0.5rem;
+      border-radius: 2px;
+    }
+    .featured-meta-item {
+      font-family: var(--mono);
+      font-size: 0.63rem;
+      color: var(--gray-3);
+      letter-spacing: 0.06em;
     }
     .featured-read {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.82rem; font-weight: 700; letter-spacing: 0.1em;
-      color: var(--accent); text-decoration: none;
-      display: inline-flex; align-items: center; gap: var(--sp-2);
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: var(--accent);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
       transition: gap 0.2s;
     }
     .featured-article:hover .featured-read { gap: var(--sp-3); }
 
-    /* ─── ARTICLE LIST ─── */
-    .article-list {
-      list-style: none;
+    /* ─── SECTION RULE ─── */
+    .section-rule {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-5);
+      padding: var(--sp-6) 0 var(--sp-3);
     }
+    .section-rule-label {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.18em;
+      color: var(--gray-3);
+      white-space: nowrap;
+    }
+    .section-rule-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    /* ─── ARTICLE LIST ─── */
+    .article-list { list-style: none; }
+
     .article-row {
       display: grid;
       grid-template-columns: 2.5rem 1fr auto;
@@ -215,8 +385,6 @@
       align-items: start;
       text-decoration: none;
       color: inherit;
-      background: transparent;
-      transition: background 0.15s;
       position: relative;
     }
     .article-row::before {
@@ -229,9 +397,11 @@
       z-index: 0;
     }
     .article-row:hover::before { opacity: 1; }
+
     .article-row-num,
     .article-row-body,
     .article-row-meta { position: relative; z-index: 1; }
+
     .article-row-num {
       font-family: var(--mono);
       font-size: 0.78rem;
@@ -243,56 +413,175 @@
     .article-row-cat {
       display: block;
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.58rem; font-weight: 700;
-      letter-spacing: 0.2em; color: var(--accent);
-      text-transform: uppercase; margin-bottom: var(--sp-2);
+      font-size: 0.58rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: var(--sp-2);
     }
     .article-row-title {
       font-family: 'Libre Franklin', sans-serif;
-      font-size: 1rem; font-weight: 600;
-      color: var(--white); line-height: 1.35;
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--white);
+      line-height: 1.35;
       margin-bottom: var(--sp-2);
       transition: color 0.15s;
     }
     .article-row:hover .article-row-title { color: var(--accent); }
     .article-row-excerpt {
-      font-size: 0.875rem; color: var(--gray-2);
-      line-height: 1.6;
+      font-size: 0.875rem;
+      color: var(--gray-2);
+      font-weight: 300;
+      line-height: 1.65;
       display: -webkit-box;
-      -webkit-line-clamp: 1;
+      -webkit-line-clamp: 2;
       -webkit-box-orient: vertical;
       overflow: hidden;
+      max-width: 66ch;
     }
     .article-row-meta {
       font-family: var(--mono);
-      font-size: 0.68rem; color: var(--gray-3);
+      font-size: 0.65rem;
+      color: var(--gray-3);
       letter-spacing: 0.05em;
       text-align: right;
       white-space: nowrap;
-      display: flex; flex-direction: column;
-      align-items: flex-end; gap: var(--sp-1);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: var(--sp-2);
       padding-top: 3px;
     }
+    .article-row-time {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.08em;
+      color: var(--gray-3);
+      background: var(--bg-3);
+      border: 1px solid var(--border);
+      padding: 0.15rem 0.48rem;
+      border-radius: 2px;
+    }
+
+    /* ─── NEWSLETTER ─── */
+    .newsletter-section {
+      padding: var(--sp-8) 0;
+      border-top: 1px solid var(--border-mid);
+      margin-top: var(--sp-9);
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: var(--sp-8);
+      align-items: center;
+    }
+    .newsletter-eyebrow {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      text-transform: uppercase;
+      margin-bottom: var(--sp-3);
+    }
+    .newsletter-heading {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(1.3rem, 2.4vw, 1.9rem);
+      font-weight: 900;
+      line-height: 1.05;
+      color: var(--white);
+      margin-bottom: var(--sp-2);
+    }
+    .newsletter-sub {
+      font-size: 0.875rem;
+      color: var(--gray-2);
+      font-weight: 300;
+      max-width: 46ch;
+    }
+    .newsletter-form {
+      display: flex;
+      gap: var(--sp-2);
+      align-items: stretch;
+      min-width: 320px;
+    }
+    .newsletter-input {
+      flex: 1;
+      min-width: 0;
+      background: var(--bg-2);
+      border: 1px solid var(--border-mid);
+      border-radius: 3px;
+      padding: 0.65rem var(--sp-4);
+      color: var(--white);
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 0.875rem;
+      font-weight: 300;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .newsletter-input::placeholder { color: var(--gray-3); }
+    .newsletter-input:focus { border-color: var(--accent); }
+    .newsletter-btn {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      background: var(--accent);
+      color: oklch(10% 0.01 310);
+      border: none;
+      border-radius: 3px;
+      padding: 0.65rem 1.25rem;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .newsletter-btn:hover { background: oklch(78% 0.078 310); transform: translateY(-1px); }
+    .newsletter-btn:active { transform: scale(0.98); }
 
     /* ─── FOOTER ─── */
     footer {
       border-top: 1px solid var(--border);
       padding: var(--sp-6) 0;
-      margin-top: var(--sp-9);
+      margin-top: var(--sp-7);
       display: flex;
       align-items: center;
       justify-content: space-between;
     }
-    .footer-copy {
-      font-size: 0.75rem; color: var(--gray-3); letter-spacing: 0.04em;
+    .footer-left {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-2);
     }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--gray-3);
+      letter-spacing: 0.04em;
+    }
+    .footer-nav {
+      display: flex;
+      gap: var(--sp-4);
+    }
+    .footer-nav-link {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--gray-3);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-nav-link:hover { color: var(--accent); }
     .footer-back {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.75rem; font-weight: 700;
-      letter-spacing: 0.1em; text-transform: uppercase;
-      color: var(--gray-2); text-decoration: none;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      text-decoration: none;
       transition: color 0.2s;
-      display: inline-flex; align-items: center; gap: var(--sp-2);
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
     }
     .footer-back:hover { color: var(--accent); }
 
@@ -311,22 +600,22 @@
     @media (max-width: 960px) {
       .featured-article { grid-template-columns: 1fr; gap: var(--sp-6); }
       .featured-right { justify-content: flex-start; }
+      .pub-title-block { grid-template-columns: 1fr; gap: var(--sp-5); }
+      .pub-count-block { align-items: flex-start; flex-direction: row; align-items: baseline; gap: var(--sp-3); }
+      .newsletter-section { grid-template-columns: 1fr; }
+      .newsletter-form { min-width: auto; }
     }
 
     @media (max-width: 768px) {
       nav { padding: var(--sp-4) 1.25rem; }
       .nav-link { display: none; }
       .page-wrap { padding: 0 1.25rem; }
-      .page-header {
-        flex-direction: column; align-items: flex-start;
-        padding-top: calc(var(--sp-9) + var(--sp-5));
-        padding-bottom: var(--sp-6);
-      }
-      .article-count { padding-bottom: 0; }
+      .pub-masthead { padding-top: calc(var(--sp-9) + var(--sp-5)); }
+      .pub-tagline { display: none; }
       .article-row { grid-template-columns: 2rem 1fr; gap: 0 var(--sp-3); }
       .article-row::before { inset: 0 -1.25rem; }
       .article-row-meta { display: none; }
-      .article-row-excerpt { -webkit-line-clamp: 2; }
+      .newsletter-section { margin-top: var(--sp-7); padding: var(--sp-6) 0; }
       footer { flex-direction: column; gap: var(--sp-4); align-items: flex-start; }
     }
   </style>
@@ -351,38 +640,72 @@
 
 <div class="page-wrap">
 
-  <!-- ═══ PAGE HEADER ═══ -->
-  <header class="page-header fade-up">
-    <div>
-      <span class="page-eyebrow">Optimizable Editorial</span>
-      <h1 class="page-title">THE BRIEF</h1>
-      <p class="page-desc">Clinical writing on male hormonal health. Evidence-based, without the supplement marketing.</p>
+  <!-- ═══ PUBLICATION MASTHEAD ═══ -->
+  <div class="pub-masthead">
+    <div class="pub-infobar fade-up">
+      <div class="pub-issue">
+        <span class="pub-issue-vol">VOL. 1</span>
+        <span class="pub-issue-sep">/</span>
+        <span>APR 2026</span>
+        <span class="pub-issue-sep">/</span>
+        <span>OPTIMIZABLE EDITORIAL</span>
+      </div>
+      <span class="pub-tagline">Evidence-based. Without the supplement marketing.</span>
     </div>
-    <span class="article-count">3 ARTICLES</span>
-  </header>
+
+    <div class="pub-title-block fade-up">
+      <div>
+        <h1 class="pub-name">THE BRIEF</h1>
+        <p class="pub-desc">Clinical writing on male hormonal health. What your doctor didn't tell you, written plainly.</p>
+      </div>
+      <div class="pub-count-block">
+        <span class="pub-count-num">3</span>
+        <span class="pub-count-label">ARTICLES</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ FILTER STRIP ═══ -->
+  <div class="filter-strip fade-up" role="group" aria-label="Filter by category">
+    <span class="filter-label">FILTER:</span>
+    <button class="filter-pill active" data-filter="all">All</button>
+    <button class="filter-pill" data-filter="endocrinology">Endocrinology</button>
+    <button class="filter-pill" data-filter="metabolic">Metabolic Health</button>
+    <button class="filter-pill" data-filter="sleep">Sleep &amp; Recovery</button>
+  </div>
 
   <!-- ═══ FEATURED ARTICLE ═══ -->
-  <a href="articles/total-vs-free-testosterone.html" class="featured-article fade-up" aria-label="Read: Total vs. Free Testosterone">
-    <div>
-      <span class="featured-label">Featured</span>
-      <span class="featured-eyebrow">Endocrinology</span>
-      <h2 class="featured-title">Total vs. Free Testosterone: Why the Number Your Doctor Checks Is Almost Meaningless</h2>
-    </div>
-    <div class="featured-right">
-      <p class="featured-excerpt">Most men have been assessed on a metric that doesn't reflect what their tissues actually experience. Here's the full picture of how testosterone is bound, transported, and used - and which markers you actually need to track.</p>
-      <div class="featured-meta">
-        <span>Apr 2026</span>
-        <span>8 min read</span>
-        <span>Hormonal Health Basics</span>
+  <div class="featured-zone fade-up" data-category="endocrinology">
+    <a href="articles/total-vs-free-testosterone.html" class="featured-article" aria-label="Read: Total vs. Free Testosterone">
+      <div class="featured-left">
+        <span class="featured-ghost-num">01</span>
+        <span class="featured-flag">Featured</span>
+        <span class="featured-category">Endocrinology</span>
+        <h2 class="featured-title">Total vs. Free Testosterone: Why the Number Your Doctor Checks Is Almost Meaningless</h2>
       </div>
-      <span class="featured-read">READ ARTICLE &rarr;</span>
-    </div>
-  </a>
+      <div class="featured-right">
+        <p class="featured-excerpt">Most men have been assessed on a metric that doesn't reflect what their tissues actually experience. Here's the full picture of how testosterone is bound, transported, and used - and which markers you actually need to track.</p>
+        <div class="featured-bottom">
+          <div class="featured-meta">
+            <span class="featured-read-badge">8 MIN</span>
+            <span class="featured-meta-item">Apr 2026</span>
+            <span class="featured-meta-item">Hormonal Health Basics</span>
+          </div>
+          <span class="featured-read">READ ARTICLE &rarr;</span>
+        </div>
+      </div>
+    </a>
+  </div>
 
   <!-- ═══ ARTICLE LIST ═══ -->
+  <div class="section-rule">
+    <span class="section-rule-label">All Articles</span>
+    <div class="section-rule-line"></div>
+  </div>
+
   <ol class="article-list" aria-label="All articles">
 
-    <li>
+    <li data-category="metabolic">
       <a href="articles/insulin-resistance-testosterone.html" class="article-row fade-up" aria-label="Read: How Insulin Resistance Suppresses Testosterone">
         <span class="article-row-num">02</span>
         <div class="article-row-body">
@@ -392,12 +715,12 @@
         </div>
         <div class="article-row-meta">
           <span>Apr 2026</span>
-          <span>6 min</span>
+          <span class="article-row-time">6 MIN</span>
         </div>
       </a>
     </li>
 
-    <li>
+    <li data-category="sleep">
       <a href="articles/cortisol-testosterone-stress.html" class="article-row fade-up" aria-label="Read: The Cortisol-Testosterone Seesaw">
         <span class="article-row-num">03</span>
         <div class="article-row-body">
@@ -407,16 +730,35 @@
         </div>
         <div class="article-row-meta">
           <span>Apr 2026</span>
-          <span>5 min</span>
+          <span class="article-row-time">5 MIN</span>
         </div>
       </a>
     </li>
 
   </ol>
 
+  <!-- ═══ NEWSLETTER ═══ -->
+  <div class="newsletter-section fade-up">
+    <div>
+      <div class="newsletter-eyebrow">Field Notes</div>
+      <h3 class="newsletter-heading">When new research lands, we write it plainly.</h3>
+      <p class="newsletter-sub">No supplement shilling. No longevity hype. Just the endocrinology, when it matters.</p>
+    </div>
+    <form class="newsletter-form" onsubmit="return false;">
+      <input type="email" class="newsletter-input" placeholder="your@email.com" autocomplete="email" />
+      <button type="submit" class="newsletter-btn">SUBSCRIBE &rarr;</button>
+    </form>
+  </div>
+
   <!-- ═══ FOOTER ═══ -->
   <footer>
-    <span class="footer-copy">&copy; 2026 Optimizable. All rights reserved.</span>
+    <div class="footer-left">
+      <span class="footer-copy">&copy; 2026 Optimizable. All rights reserved.</span>
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="index.html" class="footer-nav-link">Home</a>
+        <a href="index.html#faq" class="footer-nav-link">FAQ</a>
+      </nav>
+    </div>
     <a href="index.html" class="footer-back">&larr; Back to Optimizable</a>
   </footer>
 
@@ -431,16 +773,34 @@
 
   // Staggered fade-up
   const fadeEls = document.querySelectorAll('.fade-up');
-  const observer = new IntersectionObserver((entries) => {
+  const io = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
       if (entry.isIntersecting) {
         entry.target.style.transitionDelay = `${i * 80}ms`;
         entry.target.classList.add('in');
-        observer.unobserve(entry.target);
+        io.unobserve(entry.target);
       }
     });
   }, { threshold: 0.08 });
-  fadeEls.forEach(el => observer.observe(el));
+  fadeEls.forEach(el => io.observe(el));
+
+  // Category filter
+  const pills = document.querySelectorAll('.filter-pill');
+  const featuredZone = document.querySelector('.featured-zone');
+  const articleItems = document.querySelectorAll('.article-list li');
+
+  pills.forEach(pill => {
+    pill.addEventListener('click', () => {
+      pills.forEach(p => p.classList.remove('active'));
+      pill.classList.add('active');
+      const f = pill.dataset.filter;
+
+      featuredZone.style.display = (f === 'all' || featuredZone.dataset.category === f) ? '' : 'none';
+      articleItems.forEach(item => {
+        item.style.display = (f === 'all' || item.dataset.category === f) ? '' : 'none';
+      });
+    });
+  });
 </script>
 
 </body>
