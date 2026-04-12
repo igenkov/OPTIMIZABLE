@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
-  <script src="https://unpkg.com/@phosphor-icons/web"></script>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -22,7 +21,6 @@
       --accent:         oklch(73% 0.088 310);
       --accent-glow:    oklch(73% 0.088 310 / 0.25);
       --white:          oklch(96.5% 0.005 310);
-      --gray-1:         oklch(87% 0.006 310);
       --gray-2:         oklch(60% 0.007 310);
       --gray-3:         oklch(34% 0.005 310);
       --border:         oklch(100% 0 0 / 0.07);
@@ -103,43 +101,10 @@
       padding: 0 2.5rem;
     }
 
-    /* ─── PUBLICATION MASTHEAD ─── */
-    .pub-masthead {
+    /* ─── PAGE HEADER ─── */
+    .pub-header {
       padding-top: calc(var(--sp-9) + var(--sp-7));
-    }
-
-    .pub-infobar {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-bottom: var(--sp-5);
-      border-bottom: 1px solid var(--border-mid);
-    }
-    .pub-issue {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-3);
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      color: var(--gray-3);
-    }
-    .pub-issue-vol { color: var(--accent); }
-    .pub-issue-sep { color: var(--gray-3); opacity: 0.4; }
-    .pub-tagline {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.1em;
-      color: var(--gray-3);
-      font-style: italic;
-    }
-
-    .pub-title-block {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      align-items: end;
-      gap: var(--sp-8);
-      padding: var(--sp-7) 0;
+      padding-bottom: var(--sp-7);
       border-bottom: 1px solid var(--border);
     }
     .pub-name {
@@ -157,73 +122,6 @@
       line-height: 1.75;
       max-width: 48ch;
       margin-top: var(--sp-4);
-    }
-    .pub-count-block {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: var(--sp-1);
-      padding-bottom: var(--sp-1);
-    }
-    .pub-count-num {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(2.5rem, 4vw, 3.5rem);
-      font-weight: 900;
-      line-height: 1;
-      color: var(--white);
-    }
-    .pub-count-label {
-      font-family: var(--mono);
-      font-size: 0.6rem;
-      letter-spacing: 0.12em;
-      color: var(--gray-3);
-      text-align: right;
-    }
-
-    /* ─── FILTER STRIP ─── */
-    .filter-strip {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-2);
-      padding: var(--sp-4) 0;
-      border-bottom: 1px solid var(--border);
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
-    .filter-strip::-webkit-scrollbar { display: none; }
-    .filter-label {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.14em;
-      color: var(--gray-3);
-      white-space: nowrap;
-      padding-right: var(--sp-2);
-      flex-shrink: 0;
-    }
-    .filter-pill {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.65rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--gray-2);
-      background: transparent;
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 0.28rem 0.72rem;
-      cursor: pointer;
-      white-space: nowrap;
-      flex-shrink: 0;
-      transition: color 0.15s, border-color 0.15s, background 0.15s;
-    }
-    .filter-pill:hover {
-      color: var(--white);
-      border-color: var(--border-mid);
-    }
-    .filter-pill.active {
-      color: oklch(10% 0.01 310);
-      background: var(--accent);
-      border-color: var(--accent);
     }
 
     /* ─── FEATURED ARTICLE ─── */
@@ -257,25 +155,6 @@
     }
     .featured-article:hover .featured-ghost-num { opacity: 0.09; }
 
-    .featured-flag {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.16em;
-      color: var(--gray-3);
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      gap: var(--sp-3);
-      margin-bottom: var(--sp-5);
-    }
-    .featured-flag::before {
-      content: '';
-      display: inline-block;
-      width: 20px;
-      height: 1px;
-      background: var(--gray-3);
-    }
-
     .featured-category {
       display: block;
       font-family: 'Big Shoulders Display', sans-serif;
@@ -286,7 +165,6 @@
       text-transform: uppercase;
       margin-bottom: var(--sp-4);
     }
-
     .featured-title {
       font-family: 'Big Shoulders Display', sans-serif;
       font-size: clamp(1.65rem, 2.8vw, 2.6rem);
@@ -299,7 +177,6 @@
       transition: color 0.2s;
     }
     .featured-article:hover .featured-title { color: var(--accent); }
-
     .featured-right {
       display: flex;
       flex-direction: column;
@@ -313,16 +190,10 @@
       max-width: 50ch;
       font-weight: 300;
     }
-    .featured-bottom {
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-3);
-    }
     .featured-meta {
       display: flex;
       align-items: center;
       gap: var(--sp-4);
-      flex-wrap: wrap;
     }
     .featured-read-badge {
       font-family: var(--mono);
@@ -352,26 +223,6 @@
       transition: gap 0.2s;
     }
     .featured-article:hover .featured-read { gap: var(--sp-3); }
-
-    /* ─── SECTION RULE ─── */
-    .section-rule {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-5);
-      padding: var(--sp-6) 0 var(--sp-3);
-    }
-    .section-rule-label {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.18em;
-      color: var(--gray-3);
-      white-space: nowrap;
-    }
-    .section-rule-line {
-      flex: 1;
-      height: 1px;
-      background: var(--border);
-    }
 
     /* ─── ARTICLE LIST ─── */
     .article-list { list-style: none; }
@@ -545,31 +396,11 @@
       align-items: center;
       justify-content: space-between;
     }
-    .footer-left {
-      display: flex;
-      flex-direction: column;
-      gap: var(--sp-2);
-    }
     .footer-copy {
       font-size: 0.72rem;
       color: var(--gray-3);
       letter-spacing: 0.04em;
     }
-    .footer-nav {
-      display: flex;
-      gap: var(--sp-4);
-    }
-    .footer-nav-link {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.7rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--gray-3);
-      text-decoration: none;
-      transition: color 0.2s;
-    }
-    .footer-nav-link:hover { color: var(--accent); }
     .footer-back {
       font-family: 'Big Shoulders Display', sans-serif;
       font-size: 0.75rem;
@@ -600,8 +431,6 @@
     @media (max-width: 960px) {
       .featured-article { grid-template-columns: 1fr; gap: var(--sp-6); }
       .featured-right { justify-content: flex-start; }
-      .pub-title-block { grid-template-columns: 1fr; gap: var(--sp-5); }
-      .pub-count-block { align-items: flex-start; flex-direction: row; align-items: baseline; gap: var(--sp-3); }
       .newsletter-section { grid-template-columns: 1fr; }
       .newsletter-form { min-width: auto; }
     }
@@ -610,8 +439,7 @@
       nav { padding: var(--sp-4) 1.25rem; }
       .nav-link { display: none; }
       .page-wrap { padding: 0 1.25rem; }
-      .pub-masthead { padding-top: calc(var(--sp-9) + var(--sp-5)); }
-      .pub-tagline { display: none; }
+      .pub-header { padding-top: calc(var(--sp-9) + var(--sp-5)); }
       .article-row { grid-template-columns: 2rem 1fr; gap: 0 var(--sp-3); }
       .article-row::before { inset: 0 -1.25rem; }
       .article-row-meta { display: none; }
@@ -640,72 +468,35 @@
 
 <div class="page-wrap">
 
-  <!-- ═══ PUBLICATION MASTHEAD ═══ -->
-  <div class="pub-masthead">
-    <div class="pub-infobar fade-up">
-      <div class="pub-issue">
-        <span class="pub-issue-vol">VOL. 1</span>
-        <span class="pub-issue-sep">/</span>
-        <span>APR 2026</span>
-        <span class="pub-issue-sep">/</span>
-        <span>OPTIMIZABLE EDITORIAL</span>
-      </div>
-      <span class="pub-tagline">Evidence-based. Without the supplement marketing.</span>
-    </div>
-
-    <div class="pub-title-block fade-up">
-      <div>
-        <h1 class="pub-name">THE BRIEF</h1>
-        <p class="pub-desc">Clinical writing on male hormonal health. What your doctor didn't tell you, written plainly.</p>
-      </div>
-      <div class="pub-count-block">
-        <span class="pub-count-num">3</span>
-        <span class="pub-count-label">ARTICLES</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══ FILTER STRIP ═══ -->
-  <div class="filter-strip fade-up" role="group" aria-label="Filter by category">
-    <span class="filter-label">FILTER:</span>
-    <button class="filter-pill active" data-filter="all">All</button>
-    <button class="filter-pill" data-filter="endocrinology">Endocrinology</button>
-    <button class="filter-pill" data-filter="metabolic">Metabolic Health</button>
-    <button class="filter-pill" data-filter="sleep">Sleep &amp; Recovery</button>
-  </div>
+  <!-- ═══ PAGE HEADER ═══ -->
+  <header class="pub-header fade-up">
+    <h1 class="pub-name">THE BRIEF</h1>
+    <p class="pub-desc">Clinical writing on male hormonal health. What your doctor didn't tell you, written plainly.</p>
+  </header>
 
   <!-- ═══ FEATURED ARTICLE ═══ -->
-  <div class="featured-zone fade-up" data-category="endocrinology">
+  <div class="featured-zone fade-up">
     <a href="articles/total-vs-free-testosterone.html" class="featured-article" aria-label="Read: Total vs. Free Testosterone">
       <div class="featured-left">
         <span class="featured-ghost-num">01</span>
-        <span class="featured-flag">Featured</span>
         <span class="featured-category">Endocrinology</span>
         <h2 class="featured-title">Total vs. Free Testosterone: Why Your Simple Blood Test Might Be Misleading You</h2>
       </div>
       <div class="featured-right">
         <p class="featured-excerpt">Your doctor checked your testosterone. It came back "normal." You still feel off. The problem isn't your body - it's that most blood tests only measure total testosterone, and total testosterone can be completely misleading.</p>
-        <div class="featured-bottom">
-          <div class="featured-meta">
-            <span class="featured-read-badge">8 MIN</span>
-            <span class="featured-meta-item">Apr 2026</span>
-            <span class="featured-meta-item">Hormonal Health Basics</span>
-          </div>
-          <span class="featured-read">READ ARTICLE &rarr;</span>
+        <div class="featured-meta">
+          <span class="featured-read-badge">8 MIN</span>
+          <span class="featured-meta-item">Apr 2026</span>
         </div>
+        <span class="featured-read">READ ARTICLE &rarr;</span>
       </div>
     </a>
   </div>
 
   <!-- ═══ ARTICLE LIST ═══ -->
-  <div class="section-rule">
-    <span class="section-rule-label">All Articles</span>
-    <div class="section-rule-line"></div>
-  </div>
-
   <ol class="article-list" aria-label="All articles">
 
-    <li data-category="metabolic">
+    <li>
       <a href="articles/insulin-resistance-testosterone.html" class="article-row fade-up" aria-label="Read: How Insulin Resistance Suppresses Testosterone">
         <span class="article-row-num">02</span>
         <div class="article-row-body">
@@ -720,7 +511,7 @@
       </a>
     </li>
 
-    <li data-category="sleep">
+    <li>
       <a href="articles/cortisol-testosterone-stress.html" class="article-row fade-up" aria-label="Read: The Cortisol-Testosterone Seesaw">
         <span class="article-row-num">03</span>
         <div class="article-row-body">
@@ -752,26 +543,18 @@
 
   <!-- ═══ FOOTER ═══ -->
   <footer>
-    <div class="footer-left">
-      <span class="footer-copy">&copy; 2026 Optimizable. All rights reserved.</span>
-      <nav class="footer-nav" aria-label="Footer navigation">
-        <a href="index.html" class="footer-nav-link">Home</a>
-        <a href="index.html#faq" class="footer-nav-link">FAQ</a>
-      </nav>
-    </div>
+    <span class="footer-copy">&copy; 2026 Optimizable. All rights reserved.</span>
     <a href="index.html" class="footer-back">&larr; Back to Optimizable</a>
   </footer>
 
 </div>
 
 <script>
-  // Nav scroll state
   const nav = document.getElementById('nav');
   window.addEventListener('scroll', () => {
     nav.classList.toggle('scrolled', window.scrollY > 20);
   }, { passive: true });
 
-  // Staggered fade-up
   const fadeEls = document.querySelectorAll('.fade-up');
   const io = new IntersectionObserver((entries) => {
     entries.forEach((entry, i) => {
@@ -783,24 +566,6 @@
     });
   }, { threshold: 0.08 });
   fadeEls.forEach(el => io.observe(el));
-
-  // Category filter
-  const pills = document.querySelectorAll('.filter-pill');
-  const featuredZone = document.querySelector('.featured-zone');
-  const articleItems = document.querySelectorAll('.article-list li');
-
-  pills.forEach(pill => {
-    pill.addEventListener('click', () => {
-      pills.forEach(p => p.classList.remove('active'));
-      pill.classList.add('active');
-      const f = pill.dataset.filter;
-
-      featuredZone.style.display = (f === 'all' || featuredZone.dataset.category === f) ? '' : 'none';
-      articleItems.forEach(item => {
-        item.style.display = (f === 'all' || item.dataset.category === f) ? '' : 'none';
-      });
-    });
-  });
 </script>
 
 </body>
