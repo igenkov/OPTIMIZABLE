@@ -138,22 +138,6 @@
       color: inherit;
     }
     .featured-left { position: relative; }
-    .featured-ghost-num {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(9rem, 18vw, 16rem);
-      font-weight: 900;
-      color: var(--accent);
-      opacity: 0.05;
-      line-height: 1;
-      pointer-events: none;
-      user-select: none;
-      position: absolute;
-      bottom: -0.06em;
-      right: -0.04em;
-      letter-spacing: -0.02em;
-      transition: opacity 0.35s;
-    }
-    .featured-article:hover .featured-ghost-num { opacity: 0.09; }
 
     .featured-category {
       display: block;
@@ -229,7 +213,7 @@
 
     .article-row {
       display: grid;
-      grid-template-columns: 2.5rem 1fr auto;
+      grid-template-columns: 1fr auto;
       gap: 0 var(--sp-5);
       padding: var(--sp-6) 0;
       border-bottom: 1px solid var(--border);
@@ -249,18 +233,9 @@
     }
     .article-row:hover::before { opacity: 1; }
 
-    .article-row-num,
     .article-row-body,
     .article-row-meta { position: relative; z-index: 1; }
 
-    .article-row-num {
-      font-family: var(--mono);
-      font-size: 0.78rem;
-      color: var(--gray-3);
-      letter-spacing: 0.04em;
-      padding-top: 3px;
-      font-variant-numeric: tabular-nums;
-    }
     .article-row-cat {
       display: block;
       font-family: 'Big Shoulders Display', sans-serif;
@@ -440,7 +415,6 @@
       .nav-link { display: none; }
       .page-wrap { padding: 0 1.25rem; }
       .pub-header { padding-top: calc(var(--sp-9) + var(--sp-5)); }
-      .article-row { grid-template-columns: 2rem 1fr; gap: 0 var(--sp-3); }
       .article-row::before { inset: 0 -1.25rem; }
       .article-row-meta { display: none; }
       .newsletter-section { margin-top: var(--sp-7); padding: var(--sp-6) 0; }
@@ -478,7 +452,6 @@
   <div class="featured-zone fade-up">
     <a href="articles/total-vs-free-testosterone.html" class="featured-article" aria-label="Read: Total vs. Free Testosterone">
       <div class="featured-left">
-        <span class="featured-ghost-num">01</span>
         <span class="featured-category">Endocrinology</span>
         <h2 class="featured-title">Total vs. Free Testosterone: Why Your Simple Blood Test Might Be Misleading You</h2>
       </div>
@@ -498,7 +471,6 @@
 
     <li>
       <a href="articles/insulin-resistance-testosterone.html" class="article-row fade-up" aria-label="Read: How Insulin Resistance Suppresses Testosterone">
-        <span class="article-row-num">02</span>
         <div class="article-row-body">
           <span class="article-row-cat">Metabolic Health</span>
           <div class="article-row-title">How Insulin Resistance Suppresses Testosterone - and What to Do About It</div>
@@ -513,7 +485,6 @@
 
     <li>
       <a href="articles/cortisol-testosterone-stress.html" class="article-row fade-up" aria-label="Read: The Cortisol-Testosterone Seesaw">
-        <span class="article-row-num">03</span>
         <div class="article-row-body">
           <span class="article-row-cat">Sleep &amp; Recovery</span>
           <div class="article-row-title">The Cortisol-Testosterone Seesaw: Why Chronic Stress Tanks Your Levels</div>
