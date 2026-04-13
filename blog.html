@@ -123,6 +123,27 @@
       max-width: 48ch;
       margin-top: var(--sp-4);
     }
+    .pub-strip {
+      display: flex;
+      align-items: center;
+      gap: var(--sp-3);
+      margin-top: var(--sp-6);
+      padding-top: var(--sp-5);
+      border-top: 1px solid var(--border);
+    }
+    .pub-strip-item {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.14em;
+      color: var(--gray-3);
+      text-transform: uppercase;
+    }
+    .pub-strip-sep {
+      font-family: var(--mono);
+      font-size: 0.58rem;
+      color: var(--gray-3);
+      opacity: 0.3;
+    }
 
     /* ─── FEATURED ARTICLE ─── */
     .featured-zone {
@@ -131,7 +152,7 @@
     }
     .featured-article {
       display: grid;
-      grid-template-columns: 1.35fr 1fr;
+      grid-template-columns: 1.6fr 1fr;
       gap: var(--sp-9);
       align-items: end;
       text-decoration: none;
@@ -147,15 +168,16 @@
       letter-spacing: 0.22em;
       color: var(--accent);
       text-transform: uppercase;
+      padding-top: var(--sp-5);
+      border-top: 1px solid var(--border-accent);
       margin-bottom: var(--sp-4);
     }
     .featured-title {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(1.65rem, 2.8vw, 2.6rem);
+      font-size: clamp(2rem, 3.8vw, 3.2rem);
       font-weight: 900;
-      line-height: 1.06;
+      line-height: 1.04;
       color: var(--white);
-      max-width: 18ch;
       position: relative;
       z-index: 1;
       transition: color 0.2s;
@@ -164,7 +186,7 @@
     .featured-right {
       display: flex;
       flex-direction: column;
-      justify-content: flex-end;
+      justify-content: space-between;
       gap: var(--sp-5);
     }
     .featured-excerpt {
@@ -194,19 +216,6 @@
       color: var(--gray-3);
       letter-spacing: 0.06em;
     }
-    .featured-read {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.82rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      color: var(--accent);
-      text-decoration: none;
-      display: inline-flex;
-      align-items: center;
-      gap: var(--sp-2);
-      transition: gap 0.2s;
-    }
-    .featured-article:hover .featured-read { gap: var(--sp-3); }
 
     /* ─── ARTICLE LIST ─── */
     .article-list { list-style: none; }
@@ -247,11 +256,12 @@
       margin-bottom: var(--sp-2);
     }
     .article-row-title {
-      font-family: 'Libre Franklin', sans-serif;
-      font-size: 1rem;
-      font-weight: 600;
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 800;
+      letter-spacing: 0.01em;
       color: var(--white);
-      line-height: 1.35;
+      line-height: 1.2;
       margin-bottom: var(--sp-2);
       transition: color 0.15s;
     }
@@ -446,6 +456,13 @@
   <header class="pub-header fade-up">
     <h1 class="pub-name">THE BRIEF</h1>
     <p class="pub-desc">Clinical writing on male hormonal health. What your doctor didn't tell you, written plainly.</p>
+    <div class="pub-strip">
+      <span class="pub-strip-item">Vol. I</span>
+      <span class="pub-strip-sep">/</span>
+      <span class="pub-strip-item">Apr 2026</span>
+      <span class="pub-strip-sep">/</span>
+      <span class="pub-strip-item">3 Articles</span>
+    </div>
   </header>
 
   <!-- ═══ FEATURED ARTICLE ═══ -->
@@ -461,7 +478,6 @@
           <span class="featured-read-badge">8 MIN</span>
           <span class="featured-meta-item">Apr 2026</span>
         </div>
-        <span class="featured-read">READ ARTICLE &rarr;</span>
       </div>
     </a>
   </div>
