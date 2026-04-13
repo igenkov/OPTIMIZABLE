@@ -123,100 +123,6 @@
       max-width: 48ch;
       margin-top: var(--sp-4);
     }
-    .pub-strip {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-3);
-      margin-top: var(--sp-6);
-      padding-top: var(--sp-5);
-      border-top: 1px solid var(--border);
-    }
-    .pub-strip-item {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.14em;
-      color: var(--gray-3);
-      text-transform: uppercase;
-    }
-    .pub-strip-sep {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      color: var(--gray-3);
-      opacity: 0.3;
-    }
-
-    /* ─── FEATURED ARTICLE ─── */
-    .featured-zone {
-      padding: var(--sp-8) 0 var(--sp-7);
-      border-bottom: 1px solid var(--border);
-    }
-    .featured-article {
-      display: grid;
-      grid-template-columns: 1.6fr 1fr;
-      gap: var(--sp-9);
-      align-items: end;
-      text-decoration: none;
-      color: inherit;
-    }
-    .featured-left { position: relative; }
-
-    .featured-category {
-      display: block;
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 0.6rem;
-      font-weight: 700;
-      letter-spacing: 0.22em;
-      color: var(--accent);
-      text-transform: uppercase;
-      padding-top: var(--sp-5);
-      border-top: 1px solid var(--border);
-      margin-bottom: var(--sp-4);
-    }
-    .featured-title {
-      font-family: 'Big Shoulders Display', sans-serif;
-      font-size: clamp(1.8rem, 3.2vw, 2.9rem);
-      font-weight: 700;
-      line-height: 1.06;
-      color: var(--white);
-      position: relative;
-      z-index: 1;
-      transition: color 0.2s;
-    }
-    .featured-article:hover .featured-title { color: var(--accent); }
-    .featured-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: var(--sp-5);
-    }
-    .featured-excerpt {
-      font-size: 0.975rem;
-      color: var(--gray-2);
-      line-height: 1.8;
-      max-width: 50ch;
-      font-weight: 300;
-    }
-    .featured-meta {
-      display: flex;
-      align-items: center;
-      gap: var(--sp-4);
-    }
-    .featured-read-badge {
-      font-family: var(--mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.1em;
-      color: oklch(10% 0.01 310);
-      background: var(--accent);
-      padding: 0.18rem 0.5rem;
-      border-radius: 2px;
-    }
-    .featured-meta-item {
-      font-family: var(--mono);
-      font-size: 0.63rem;
-      color: var(--gray-3);
-      letter-spacing: 0.06em;
-    }
-
     /* ─── ARTICLE LIST ─── */
     .article-list { list-style: none; }
 
@@ -280,7 +186,7 @@
     .article-row-meta {
       font-family: var(--mono);
       font-size: 0.65rem;
-      color: var(--gray-3);
+      color: var(--gray-2);
       letter-spacing: 0.05em;
       text-align: right;
       white-space: nowrap;
@@ -294,9 +200,9 @@
       font-family: var(--mono);
       font-size: 0.58rem;
       letter-spacing: 0.08em;
-      color: var(--gray-3);
+      color: var(--gray-2);
       background: var(--bg-3);
-      border: 1px solid var(--border);
+      border: 1px solid var(--border-mid);
       padding: 0.15rem 0.48rem;
       border-radius: 2px;
     }
@@ -414,8 +320,6 @@
 
     /* ─── RESPONSIVE ─── */
     @media (max-width: 960px) {
-      .featured-article { grid-template-columns: 1fr; gap: var(--sp-6); }
-      .featured-right { justify-content: flex-start; }
       .newsletter-section { grid-template-columns: 1fr; }
       .newsletter-form { min-width: auto; }
     }
@@ -456,34 +360,24 @@
   <header class="pub-header fade-up">
     <h1 class="pub-name">THE BRIEF</h1>
     <p class="pub-desc">Clinical writing on male hormonal health. What your doctor didn't tell you, written plainly.</p>
-    <div class="pub-strip">
-      <span class="pub-strip-item">Vol. I</span>
-      <span class="pub-strip-sep">/</span>
-      <span class="pub-strip-item">Apr 2026</span>
-      <span class="pub-strip-sep">/</span>
-      <span class="pub-strip-item">3 Articles</span>
-    </div>
   </header>
-
-  <!-- ═══ FEATURED ARTICLE ═══ -->
-  <div class="featured-zone fade-up">
-    <a href="articles/total-vs-free-testosterone.html" class="featured-article" aria-label="Read: Total vs. Free Testosterone">
-      <div class="featured-left">
-        <span class="featured-category">Endocrinology</span>
-        <h2 class="featured-title">Total vs. Free Testosterone: Why Your Simple Blood Test Might Be Misleading You</h2>
-      </div>
-      <div class="featured-right">
-        <p class="featured-excerpt">Your doctor checked your testosterone. It came back "normal." You still feel off. The problem isn't your body - it's that most blood tests only measure total testosterone, and total testosterone can be completely misleading.</p>
-        <div class="featured-meta">
-          <span class="featured-read-badge">8 MIN</span>
-          <span class="featured-meta-item">Apr 2026</span>
-        </div>
-      </div>
-    </a>
-  </div>
 
   <!-- ═══ ARTICLE LIST ═══ -->
   <ol class="article-list" aria-label="All articles">
+
+    <li>
+      <a href="articles/total-vs-free-testosterone.html" class="article-row fade-up" aria-label="Read: Total vs. Free Testosterone">
+        <div class="article-row-body">
+          <span class="article-row-cat">Endocrinology</span>
+          <div class="article-row-title">Total vs. Free Testosterone: Why Your Simple Blood Test Might Be Misleading You</div>
+          <p class="article-row-excerpt">Your doctor checked your testosterone. It came back "normal." You still feel off. The problem isn't your body - it's that most blood tests only measure total testosterone, and total testosterone can be completely misleading.</p>
+        </div>
+        <div class="article-row-meta">
+          <span>Apr 2026</span>
+          <span class="article-row-time">8 MIN</span>
+        </div>
+      </a>
+    </li>
 
     <li>
       <a href="articles/hpta-axis.html" class="article-row fade-up" aria-label="Read: Your Brain Is Running Your Hormones">
