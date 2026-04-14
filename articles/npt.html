@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nocturnal Penile Tumescence (NPT), or: If Morning Wood Had a LinkedIn Account - Optimizable Editorial</title>
+  <meta name="description" content="What happens in the first minutes of your morning is a status check running quietly across five systems - hormonal, vascular, neurological, metabolic, and sleep. Here's what it's actually measuring." />
+  <meta property="og:title" content="Nocturnal Penile Tumescence (NPT), or: If Morning Wood Had a LinkedIn Account" />
+  <meta property="og:description" content="Morning erections are not a locker room joke. They're a diagnostic. And they run whether you want them to or not." />
+  <meta property="og:type" content="article" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             oklch(8% 0.008 310);
+      --bg-2:           oklch(10.5% 0.007 310);
+      --bg-3:           oklch(13.5% 0.006 310);
+      --accent:         oklch(73% 0.088 310);
+      --accent-glow:    oklch(73% 0.088 310 / 0.25);
+      --white:          oklch(96.5% 0.005 310);
+      --gray-1:         oklch(87% 0.006 310);
+      --gray-2:         oklch(60% 0.007 310);
+      --gray-3:         oklch(34% 0.005 310);
+      --border:         oklch(100% 0 0 / 0.07);
+      --border-mid:     oklch(100% 0 0 / 0.12);
+      --border-accent:  oklch(73% 0.088 310 / 0.22);
+      --mono:           ui-monospace, 'Cascadia Code', 'Courier New', monospace;
+
+      --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px;
+      --sp-4: 16px; --sp-5: 24px;  --sp-6: 32px;
+      --sp-7: 48px; --sp-8: 64px;  --sp-9: 96px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Libre Franklin', sans-serif;
+      line-height: 1.65;
+      overflow-x: hidden;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gray-3); border-radius: 2px; }
+
+    /* --- NAV --- */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: var(--sp-4) 2.5rem;
+      background: oklch(8% 0.008 310 / 0.92);
+      backdrop-filter: blur(28px) saturate(1.2);
+      border-bottom: 1px solid var(--border);
+      transition: border-color 0.3s;
+    }
+    nav.scrolled { border-color: var(--border-accent); }
+    .nav-logo { display: flex; align-items: center; gap: var(--sp-3); text-decoration: none; }
+    .nav-wordmark {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.1rem; font-weight: 800;
+      letter-spacing: 0.14em; color: var(--white);
+    }
+    .nav-sub {
+      font-size: 0.55rem; letter-spacing: 0.2em;
+      color: var(--gray-2); font-weight: 400;
+      display: block; margin-top: -2px;
+    }
+    .nav-links { display: flex; align-items: center; gap: var(--sp-6); }
+    .nav-link {
+      font-family: 'Big Shoulders Display', sans-serif; font-weight: 700;
+      font-size: 0.82rem; letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray-2); text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-link:hover { color: var(--white); }
+    .nav-link.active { color: var(--accent); }
+    .nav-cta {
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+      background: var(--accent); color: oklch(10% 0.01 310);
+      font-family: 'Big Shoulders Display', sans-serif; font-weight: 800;
+      font-size: 0.82rem; letter-spacing: 0.12em;
+      padding: 0.5rem 1.2rem; border-radius: 3px;
+      text-decoration: none; border: none; cursor: pointer;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .nav-cta:hover { background: oklch(78% 0.078 310); transform: translateY(-1px); box-shadow: 0 6px 20px var(--accent-glow); }
+    .nav-cta:active { transform: scale(0.98); box-shadow: none; }
+
+    /* --- READING PROGRESS --- */
+    .reading-progress {
+      position: fixed;
+      top: 57px; left: 0;
+      width: 0%; height: 2px;
+      background: var(--accent);
+      z-index: 199;
+      transition: width 0.08s linear;
+    }
+
+    /* --- LAYOUT --- */
+    .page-wrap {
+      max-width: 780px;
+      margin: 0 auto;
+      padding: 0 2.5rem;
+    }
+
+    /* --- ARTICLE HEADER --- */
+    .article-header {
+      padding-top: calc(var(--sp-9) + var(--sp-7));
+      padding-bottom: var(--sp-7);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .breadcrumb {
+      display: flex; align-items: center; gap: var(--sp-2);
+      font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.12em; color: var(--gray-3);
+      margin-bottom: var(--sp-6);
+    }
+    .breadcrumb a { color: var(--gray-3); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb-sep { opacity: 0.4; }
+    .breadcrumb-current { color: var(--accent); }
+
+    .article-category {
+      display: block;
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.22em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: var(--sp-4);
+    }
+
+    .article-title {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(2rem, 4.5vw, 3.4rem);
+      font-weight: 900; line-height: 1.0;
+      letter-spacing: -0.01em; color: var(--white);
+      margin-bottom: var(--sp-4);
+    }
+
+    .article-subtitle {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 1.05rem; font-weight: 300;
+      color: var(--gray-2); line-height: 1.6;
+      margin-bottom: var(--sp-6); font-style: italic;
+    }
+
+    .article-meta {
+      display: flex; align-items: center;
+      gap: var(--sp-5); flex-wrap: wrap;
+    }
+    .article-meta-item {
+      font-family: var(--mono); font-size: 0.65rem;
+      letter-spacing: 0.08em; color: var(--gray-3);
+    }
+    .article-read-badge {
+      font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.1em; color: oklch(10% 0.01 310);
+      background: var(--accent); padding: 0.2rem 0.52rem; border-radius: 2px;
+    }
+
+    /* --- ARTICLE BODY --- */
+    .article-body { padding: var(--sp-8) 0 var(--sp-9); }
+
+    .article-body p {
+      font-size: 1.05rem; font-weight: 300;
+      line-height: 1.85; color: var(--gray-1);
+      margin-bottom: var(--sp-5); max-width: 68ch;
+    }
+    .article-body p strong { font-weight: 600; color: var(--white); }
+
+    .section-break {
+      border: none; height: 1px;
+      background: var(--border); margin: var(--sp-8) 0;
+    }
+
+    .section-heading {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(1.5rem, 3vw, 2.1rem);
+      font-weight: 900; line-height: 1.0;
+      color: var(--white);
+      margin-bottom: var(--sp-5); margin-top: var(--sp-7);
+    }
+    .section-heading:first-child { margin-top: 0; }
+
+    .sub-heading {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.15rem; font-weight: 800;
+      line-height: 1.1; color: var(--white);
+      margin-bottom: var(--sp-3); margin-top: var(--sp-6);
+    }
+
+    .intro-callout {
+      font-size: 1.1rem; font-weight: 400;
+      color: var(--gray-1); line-height: 1.8;
+      max-width: 68ch; margin-bottom: var(--sp-5);
+    }
+
+    /* Pull-quote / analogy */
+    .analogy {
+      padding: var(--sp-4) 0 var(--sp-4) var(--sp-6);
+      margin: var(--sp-6) 0;
+      border-left: 1px solid var(--border-accent);
+      font-size: 1rem; font-weight: 300; font-style: italic;
+      color: var(--gray-2); line-height: 1.8; max-width: 62ch;
+    }
+
+    /* Attribution block for opening quote */
+    .opening-quote {
+      background: var(--bg-2);
+      border-left: 2px solid var(--border-accent);
+      padding: var(--sp-5) var(--sp-6);
+      margin: 0 0 var(--sp-7);
+      max-width: 68ch;
+    }
+    .opening-quote p {
+      font-size: 0.95rem !important;
+      font-style: italic;
+      color: var(--gray-2) !important;
+      margin-bottom: var(--sp-3) !important;
+    }
+    .opening-quote-attr {
+      font-family: var(--mono);
+      font-size: 0.6rem;
+      letter-spacing: 0.1em;
+      color: var(--gray-3);
+    }
+
+    /* Lists */
+    .article-body ol,
+    .article-body ul { padding-left: 0; margin-bottom: var(--sp-5); max-width: 64ch; }
+    .article-body li {
+      font-size: 1.05rem; font-weight: 300;
+      line-height: 1.8; color: var(--gray-1);
+      margin-bottom: var(--sp-3);
+    }
+    .article-body li strong { font-weight: 600; color: var(--white); }
+    .article-body ol { list-style: none; counter-reset: seq; }
+    .article-body ol li {
+      display: grid; grid-template-columns: 2rem 1fr;
+      gap: var(--sp-3); counter-increment: seq;
+    }
+    .article-body ol li::before {
+      content: counter(seq) ".";
+      font-family: var(--mono); font-size: 0.72rem;
+      color: var(--accent); padding-top: 0.35rem; font-weight: 400;
+    }
+    .article-body ul { list-style: none; }
+    .article-body ul li { position: relative; padding-left: 1.5rem; }
+    .article-body ul li::before {
+      content: '-'; font-family: var(--mono);
+      font-size: 0.8rem; color: var(--accent);
+      position: absolute; left: 0; top: 0.3em;
+    }
+
+    /* Note block */
+    .note-block {
+      background: var(--bg-2);
+      margin: var(--sp-9) -2.5rem;
+      padding: var(--sp-7) 2.5rem;
+    }
+    .note-block-header {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(1.1rem, 2vw, 1.4rem);
+      font-weight: 900; line-height: 1.05;
+      color: var(--white); margin-bottom: var(--sp-5);
+    }
+    .note-block p { font-size: 0.975rem; }
+    .note-block ul { margin-top: var(--sp-4); }
+    .note-block li { font-size: 0.975rem; margin-bottom: var(--sp-4); }
+
+    /* Systems numbered grid */
+    .systems-number {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      background: var(--bg-3);
+      border: 1px solid var(--border-accent);
+      padding: 0.15rem 0.5rem;
+      border-radius: 2px;
+      margin-bottom: var(--sp-3);
+    }
+
+    /* Bottom line */
+    .bottom-line {
+      padding-top: var(--sp-7); margin-top: var(--sp-8);
+      border-top: 1px solid var(--border-mid); max-width: 68ch;
+    }
+    .bottom-line-label {
+      font-family: var(--mono); font-size: 0.58rem;
+      letter-spacing: 0.18em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: var(--sp-4);
+    }
+
+    /* Editor note */
+    .editor-note {
+      margin-top: var(--sp-7);
+      padding-top: var(--sp-5);
+      border-top: 1px solid var(--border);
+      max-width: 68ch;
+    }
+    .editor-note p {
+      font-size: 0.875rem !important;
+      color: var(--gray-3) !important;
+      font-style: italic;
+    }
+    .editor-note-label {
+      font-family: var(--mono);
+      font-size: 0.55rem;
+      letter-spacing: 0.16em;
+      color: var(--gray-3);
+      text-transform: uppercase;
+      margin-bottom: var(--sp-3);
+    }
+
+    /* CTA */
+    .article-cta {
+      display: grid; grid-template-columns: 1fr auto;
+      gap: var(--sp-7); align-items: end;
+      padding: var(--sp-8) 0 var(--sp-6);
+      border-top: 1px solid var(--border);
+      margin-top: var(--sp-9);
+    }
+    .article-cta-label {
+      font-family: var(--mono); font-size: 0.6rem;
+      letter-spacing: 0.16em; color: var(--accent);
+      text-transform: uppercase; margin-bottom: var(--sp-3);
+    }
+    .article-cta-heading {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(1.4rem, 2.8vw, 2rem);
+      font-weight: 900; line-height: 1.0;
+      color: var(--white); margin-bottom: var(--sp-3);
+    }
+    .article-cta-sub {
+      font-size: 0.9rem; color: var(--gray-2);
+      font-weight: 300; max-width: 52ch; line-height: 1.7;
+    }
+    .cta-btn {
+      display: inline-flex; align-items: center; gap: var(--sp-3);
+      background: var(--accent); color: oklch(10% 0.01 310);
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.9rem; font-weight: 800; letter-spacing: 0.12em;
+      padding: 0.85rem 1.75rem; border-radius: 3px;
+      text-decoration: none; white-space: nowrap;
+      transition: background 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .cta-btn:hover { background: oklch(78% 0.078 310); transform: translateY(-2px); box-shadow: 0 8px 28px var(--accent-glow); }
+    .cta-btn:active { transform: scale(0.98); box-shadow: none; }
+    .cta-btn-sub {
+      display: block; font-family: var(--mono);
+      font-size: 0.58rem; letter-spacing: 0.1em;
+      color: var(--gray-3); margin-top: var(--sp-2); text-align: right;
+    }
+
+    /* --- FOOTER --- */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: var(--sp-6) 0; margin-top: var(--sp-7);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .footer-copy { font-size: 0.72rem; color: var(--gray-3); letter-spacing: 0.04em; }
+    .footer-back {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.75rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--gray-2); text-decoration: none; transition: color 0.2s;
+      display: inline-flex; align-items: center; gap: var(--sp-2);
+    }
+    .footer-back:hover { color: var(--accent); }
+
+    /* --- ANIMATIONS --- */
+    @media (prefers-reduced-motion: no-preference) {
+      .js .fade-up {
+        opacity: 0; transform: translateY(16px);
+        transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+                    transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .js .fade-up.in { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 768px) {
+      nav { padding: var(--sp-4) 1.25rem; }
+      .nav-link { display: none; }
+      .page-wrap { padding: 0 1.25rem; }
+      .article-header { padding-top: calc(var(--sp-9) + var(--sp-5)); }
+      .note-block { margin: var(--sp-8) -1.25rem; padding: var(--sp-6) 1.25rem; }
+      .article-cta { grid-template-columns: 1fr; gap: var(--sp-5); }
+      .cta-btn-sub { text-align: left; }
+      footer { flex-direction: column; gap: var(--sp-4); align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="reading-progress" id="progress" role="progressbar" aria-label="Reading progress"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="../index.html" class="nav-logo">
+    <img src="../logo_trsp.png" alt="Optimizable" width="36" height="36" style="object-fit:contain;" />
+    <div>
+      <div class="nav-wordmark">OPTIMIZABLE</div>
+      <span class="nav-sub">JUST A MAN. PROPERLY.</span>
+    </div>
+  </a>
+  <div class="nav-links">
+    <a href="../index.html#faq" class="nav-link">FAQ</a>
+    <a href="../blog.html" class="nav-link active">Blog</a>
+    <a href="../index.html#cta" class="nav-cta">START FREE &rarr;</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <!-- ARTICLE HEADER -->
+  <header class="article-header fade-up">
+    <nav class="breadcrumb" aria-label="Breadcrumb">
+      <a href="../blog.html">The Brief</a>
+      <span class="breadcrumb-sep">/</span>
+      <span class="breadcrumb-current">Endocrinology</span>
+    </nav>
+
+    <span class="article-category">Endocrinology</span>
+    <h1 class="article-title">Nocturnal Penile Tumescence (NPT), or: If Morning Wood Had a LinkedIn Account</h1>
+    <p class="article-subtitle">What happens in the first minutes of your morning is a status check running quietly across five systems. Here's what it's actually measuring.</p>
+
+    <div class="article-meta">
+      <span class="article-read-badge">14 MIN READ</span>
+      <span class="article-meta-item">Apr 2026</span>
+      <span class="article-meta-item">Hormonal Health Basics</span>
+    </div>
+  </header>
+
+  <!-- ARTICLE BODY -->
+  <article class="article-body">
+
+    <div class="opening-quote fade-up">
+      <p>"You've written 13-minute articles explaining the nuanced HPTA axis, and your above-the-fold is a locker room joke. The first impression misrepresents the product's actual sophistication and will actively repel the 35-year-old VP who's just tired and foggy but not ready to click on something that sounds like an ED clinic."</p>
+      <div class="opening-quote-attr">- Cynical Sally, unsolicited landing page roast, 9:47 AM</div>
+    </div>
+
+    <p class="intro-callout">We were judged a bit too hastily and unfairly.</p>
+
+    <p>What was called a locker room joke is actually one of the best indicators for the proper functioning of your systems - and yeah, we mean systems, plural. Not just one. What happens in the first minutes of your morning (even before you check your phone) is a status check running quietly across your hormonal health, your vascular system, your nervous system, your sleep quality, and - in a way that'll become clear by the end of this - even your social life.</p>
+
+    <p>So let's give this indicator the LinkedIn profile it deserves: Nocturnal Penile Tumescence. Current position: Senior Diagnostic Biomarker, Systems Integration. Skills: endocrinology, cardiovascular screening, neurological signaling, metabolic assessment. Open to: being taken seriously.</p>
+
+    <hr class="section-break" />
+
+    <h2 class="section-heading">What Is NPT, Actually?</h2>
+
+    <p>Nocturnal Penile Tumescence - NPT - refers to the automatic, involuntary erections that occur during sleep and upon waking. Every healthy male, from infancy through old age, experiences them during REM sleep. They happen roughly three to five times per night. You're aware of maybe one of them - the one that greets you (hopefully) at 6:43 AM whether you wanted company or not.</p>
+
+    <p>Here's the critical thing that distinguishes NPT from every other type of erection: <strong>it has nothing to do with arousal, context, or desire.</strong> It's not triggered by a thought, a dream, a partner, or any external input. It's produced entirely by the body's internal systems running their overnight diagnostics. Which is exactly what makes it such a clean health signal. There's no confounding variable. It either happens or it doesn't - and whether it does tells you something real about the machinery underneath.</p>
+
+    <hr class="section-break" />
+
+    <h2 class="section-heading">The Five Systems Running Their Overnight Report</h2>
+
+    <h3 class="sub-heading">1. Hormonal: The HPTA Sends Its Morning Status Update</h3>
+
+    <p>Testosterone levels in men follow a predictable daily rhythm. They peak in the early morning hours - the same window when NPT occurs. This is not a coincidence. Morning erections are, in large part, the physical expression of that hormonal peak. They're the body's way of showing that the full chain of command - hypothalamus firing GnRH, pituitary releasing LH, Leydig cells producing testosterone - ran correctly overnight.</p>
+
+    <p>If you've read our previous articles on the HPTA axis and SHBG, you already know how that chain can erode. The hypothalamus sends weaker signals with age. SHBG rises and locks up free testosterone. Leydig cells become less responsive to stimulation. Morning erections don't care about your total testosterone number - they respond to what's actually free and available. Which is exactly why their disappearance is listed in clinical guidelines as a symptom "highly suggestive of hypogonadism" - even in men whose standard blood panel comes back "in range."</p>
+
+    <div class="analogy">The morning erection is a functional test of free testosterone, not a theoretical one. It's the system proving it can still perform under real conditions, not just looking acceptable on paper.</div>
+
+    <h3 class="sub-heading">2. Vascular: The Canary in the Coal Mine</h3>
+
+    <p>The penis is, among other things, a vascular organ. An erection requires healthy blood flow - arterial dilation, venous control, capillary integrity throughout very small blood vessels.</p>
+
+    <p>And here's the thing about small blood vessels: <strong>they show damage first.</strong></p>
+
+    <p>The arteries supplying penile tissue are significantly narrower than the coronary arteries feeding the heart. Atherosclerosis, endothelial dysfunction, and reduced arterial elasticity - the processes underlying cardiovascular disease - manifest in smaller vessels before they show up in larger ones. This is why clinicians describe erectile dysfunction as a "canary in the coal mine" for cardiovascular health. The warning arrives here before it arrives anywhere you'd think to check.</p>
+
+    <p>What this means practically: a man who loses his morning erections years before developing any other cardiac symptoms may be looking at an early vascular signal. And importantly, in men whose ED is primarily vascular in origin, testosterone treatment alone doesn't resolve it - because the problem isn't hormonal. The pipe is damaged, not the water pressure. Knowing which problem you're actually dealing with is the difference between effective intervention and years of barking up the wrong tree.</p>
+
+    <h3 class="sub-heading">3. Neurological: Is the Brain Actually Talking to the Body?</h3>
+
+    <p>An erection doesn't just require hormones and blood flow. It requires clear neural signaling - the brain has to issue the right instructions through the nervous system for the vascular response to happen at all.</p>
+
+    <p>Two neurological players deserve specific mention here.</p>
+
+    <p><strong>Dopamine acts as the brain's green light</strong> for erectile function. It's the neurotransmitter associated with motivation, reward, and - relevant here - sexual signaling. Healthy dopamine signaling is part of what gives the brain "permission" to initiate the cascade.</p>
+
+    <p><strong>Prolactin is the brake.</strong> Prolactin is secreted during sleep - levels peak between 4 AM and 7 AM, overlapping precisely with the NPT window. In normal amounts, this is fine. But elevated prolactin (hyperprolactinemia) suppresses GnRH at the hypothalamic level, which pulls down LH, which drops testosterone. The brain's brake overrides its accelerator. NPT disappears.</p>
+
+    <p>The prolactin-NPT connection matters because hyperprolactinemia is frequently missed in standard hormonal workups - most panels don't include it unless someone specifically requests it. Yet it can be driving the very symptoms that bring a man in: fatigue, low libido, brain fog, and absent morning erections - all with a testosterone number that "looks fine."</p>
+
+    <p>High cortisol adds another layer. The stress axis and the sex axis are mutually inhibitory. Chronic cortisol elevation directly suppresses Leydig cell function and reduces testosterone production. A man running hot on stress - whether it's psychological, metabolic, or both - is running his reproductive axis on low priority. The morning erection is often one of the first things to disappear when that suppression kicks in.</p>
+
+    <h3 class="sub-heading">4. Sleep Quality: The Overnight Test You Can't Fake</h3>
+
+    <p>NPT occurs during REM sleep. Not light sleep, not deep slow-wave sleep - specifically REM, the stage associated with memory consolidation, emotional processing, and the most vivid dreaming.</p>
+
+    <p>This means that consistent morning erections are, among other things, a proxy for sleep architecture. If you're getting insufficient total sleep, disrupted REM cycles, or suffering from sleep apnea - which causes repeated micro-arousals that fragment REM - NPT frequency and quality decline. The signal drops not because the hormonal system has failed, but because the overnight environment in which it operates has degraded.</p>
+
+    <p>Sleep apnea is worth calling out specifically because it creates a nasty loop: disrupted sleep reduces testosterone (the overnight peak depends on quality REM), reduced testosterone worsens body composition and increases visceral fat, and increased visceral fat worsens sleep apnea. Morning erections often disappear in this loop - and can return when the underlying sleep disorder is treated, even without any hormonal intervention.</p>
+
+    <div class="analogy">Regular NPT is indirect confirmation that your sleep architecture is intact - that your brain is successfully cycling through REM, that your overnight hormonal environment is running as designed.</div>
+
+    <h3 class="sub-heading">5. Metabolic: Insulin, Estrogen, and the Balance That Nobody Talks About</h3>
+
+    <p>Two metabolic factors that rarely come up in conversations about morning erections deserve more credit than they get.</p>
+
+    <p><strong>Insulin resistance and obesity</strong> suppress NPT through multiple simultaneous mechanisms: SHBG drops (leaving testosterone unprotected and prone to aromatization), estrogen rises from visceral fat aromatase activity, the HPTA axis gets suppressed by elevated estradiol, and vascular damage accumulates progressively. These aren't sequential steps - they happen in parallel, reinforcing each other. Metabolic syndrome doesn't attack morning erections from one angle. It attacks from all of them at once.</p>
+
+    <p><strong>Estradiol balance</strong> is the other under-discussed factor. Testosterone is commonly framed as the driver of male sexual function - and it is. But estradiol (estrogen) plays an independent and necessary role in the ability to have an erection. Too little estradiol, and the vascular and neural components of erectile function don't work properly. Too much - typically from excess aromatase activity in visceral fat - and the HPTA gets suppressed, testosterone production falls, and the hormonal environment that produces NPT collapses.</p>
+
+    <p>The target isn't zero estrogen. It's balance. Which is a subtler and more accurate target than most male health conversations acknowledge.</p>
+
+    <hr class="section-break" />
+
+    <h2 class="section-heading">At What Age Is It Normal to Lose Them?</h2>
+
+    <p class="intro-callout">Here's where we have to be direct, because the conventional wisdom on this gets it wrong.</p>
+
+    <p><strong>There is no age at which regular loss of morning erections is classified as a normal part of healthy aging.</strong> Clinical guidelines categorize "infrequent morning erections" and "reduced NPT" as symptoms of hypogonadism - a clinical disorder - not as standard features of getting older.</p>
+
+    <p>The data bears this out. Approximately 50% of men in their 80s are hypogonadal. Which means the other 50% - half of all men in their eighties - maintain sufficient testosterone levels and function. Men who preserve hormonal health, cardiovascular integrity, insulin sensitivity, and sleep quality well into their 70s and 80s continue to experience regular morning erections. Their systems are still running the overnight check. It's still coming back green.</p>
+
+    <p>What does change with age is the margin for error. The hormonal headroom shrinks - SHBG rises, production slows, the feedback loop gets less precise. Small metabolic insults that a 28-year-old system absorbs without blinking become meaningful at 55. The decline isn't inevitable, but it becomes easier to trigger, and harder to reverse once established.</p>
+
+    <p><strong>Absence at any age is a signal.</strong> It may point to different underlying causes at 40 than at 70 - hormonal, vascular, neurological, or some combination - but it points to something. It is not, at any age, simply the price of getting older.</p>
+
+    <hr class="section-break" />
+
+    <h2 class="section-heading">Why This Matters More Than You Think</h2>
+
+    <p>The morning erection is a status report. Five systems - hormonal, vascular, neurological, metabolic, and sleep - each contributing a data point to a single observable outcome every morning. No blood draw required. No appointment booked. Just a question: is the system still running correctly?</p>
+
+    <p>Its clinical utility is underused precisely because it's been culturally treated as a punchline - or at best, as a proxy for libido and nothing else. But libido is a psychological state. NPT is a physiological event. The distinction is not subtle. An erection driven by desire can be masked by stress, distraction, or circumstance. An erection produced by the body's overnight systems cannot be faked, suppressed by effort, or generated by wanting to have one. It either happens or it doesn't.</p>
+
+    <p>That's what makes it valuable. It's one of the few automatic, uncontrolled, daily signals a man's body generates that reflects genuine systemic function - rather than how he's feeling, how he slept that one night, or how well he performed at the gym last week.</p>
+
+    <p>So no, Cynical Sally - it's not a locker room joke. It's a morning diagnostic. And it runs whether you want it to or not.</p>
+
+    <hr class="section-break" />
+
+    <h2 class="section-heading">So What Do You Do With This?</h2>
+
+    <p>If the signal is consistent and strong - good. That's not a reason to stop paying attention. It's a baseline worth maintaining.</p>
+
+    <p>If it's changed - become less frequent, less reliable, noticeably different from what it used to be - that shift is worth investigating. Not panicking over. Investigating. The change doesn't tell you what's wrong. It tells you something in the system has shifted and deserves a closer look.</p>
+
+    <p>What that closer look requires is exactly the kind of multi-system evaluation that morning erections themselves are pointing at: hormonal profile (including free testosterone and SHBG, not just total), estradiol, prolactin, metabolic markers, sleep quality, vascular risk factors. The single signal points to a multi-variable answer.</p>
+
+    <div class="bottom-line">
+      <div class="bottom-line-label">The Bottom Line</div>
+      <p><strong>Morning erections are a morning diagnostic.</strong> Five systems contributing a data point to one observable outcome every day. Hormonal, vascular, neurological, metabolic, sleep - all of them visible in a single signal most men have been conditioned to ignore or joke about.</p>
+      <p>The signal has been trying to tell you something. The right response isn't embarrassment. It's measurement.</p>
+    </div>
+
+    <!-- CTA -->
+    <div class="article-cta">
+      <div>
+        <div class="article-cta-label">Start your full-system evaluation</div>
+        <h2 class="article-cta-heading">The morning signal points to a multi-variable answer.</h2>
+        <p class="article-cta-sub">OPTIMIZABLE evaluates your full hormonal picture - free testosterone, SHBG, estradiol, prolactin, metabolic inputs, sleep quality signals, and more. It tells you exactly what to test and why, based on your specific profile. Not a panel for the average man. A targeted list for you.</p>
+      </div>
+      <div>
+        <a href="../index.html#cta" class="cta-btn">START FREE &rarr;</a>
+        <span class="cta-btn-sub">5 min. No account required.</span>
+      </div>
+    </div>
+
+    <div class="editor-note">
+      <div class="editor-note-label">Editor's Note</div>
+      <p>Morning erection feels even better if you have who to share it with.</p>
+    </div>
+
+  </article>
+
+  <!-- FOOTER -->
+  <footer>
+    <span class="footer-copy">&copy; 2026 Optimizable. All rights reserved.</span>
+    <a href="../blog.html" class="footer-back">&larr; Back to The Brief</a>
+  </footer>
+
+</div>
+
+<script>
+  document.documentElement.classList.add('js');
+
+  const nav = document.getElementById('nav');
+  const progress = document.getElementById('progress');
+  const article = document.querySelector('.article-body');
+
+  function onScroll() {
+    nav.classList.toggle('scrolled', window.scrollY > 20);
+    if (article) {
+      const top = article.getBoundingClientRect().top + window.scrollY;
+      const height = article.offsetHeight;
+      const scrolled = window.scrollY - top;
+      const pct = Math.max(0, Math.min(100, (scrolled / height) * 100));
+      progress.style.width = pct + '%';
+    }
+  }
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  const fadeEls = document.querySelectorAll('.fade-up');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = `${i * 80}ms`;
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  fadeEls.forEach(el => io.observe(el));
+</script>
+
+</body>
+</html>
