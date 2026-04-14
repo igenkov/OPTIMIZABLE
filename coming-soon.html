@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Coming Soon — Optimizable</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:ital,wght@0,600;0,700;0,800;0,900;1,700&family=Libre+Franklin:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:             oklch(8% 0.008 310);
+      --bg-2:           oklch(10.5% 0.007 310);
+      --bg-3:           oklch(13.5% 0.006 310);
+      --accent:         oklch(73% 0.088 310);
+      --accent-glow:    oklch(73% 0.088 310 / 0.25);
+      --accent-dim:     oklch(73% 0.088 310 / 0.12);
+      --white:          oklch(96.5% 0.005 310);
+      --gray-1:         oklch(87% 0.006 310);
+      --gray-2:         oklch(60% 0.007 310);
+      --gray-3:         oklch(34% 0.005 310);
+      --border:         oklch(100% 0 0 / 0.07);
+      --border-mid:     oklch(100% 0 0 / 0.13);
+      --border-accent:  oklch(73% 0.088 310 / 0.22);
+      --mono:           'Courier New', Courier, monospace;
+
+      --sp-1: 4px;  --sp-2: 8px;   --sp-3: 12px;
+      --sp-4: 16px; --sp-5: 24px;  --sp-6: 32px;
+      --sp-7: 48px; --sp-8: 64px;  --sp-9: 96px;
+
+      --ease-out-quart: cubic-bezier(0.25, 1, 0.5, 1);
+    }
+
+    html { height: 100%; }
+
+    body {
+      background: var(--bg);
+      color: var(--white);
+      font-family: 'Libre Franklin', sans-serif;
+      line-height: 1.65;
+      min-height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    ::-webkit-scrollbar { width: 3px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--gray-3); }
+
+    /* ─── NAV ─── */
+    nav {
+      padding: var(--sp-5) 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .nav-wordmark {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.1rem;
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      color: var(--white);
+    }
+
+    .nav-sub {
+      font-size: 0.55rem;
+      letter-spacing: 0.2em;
+      color: var(--gray-2);
+      font-weight: 400;
+      margin-top: -2px;
+    }
+
+    .nav-back {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .nav-back:hover { color: var(--white); }
+
+    /* ─── MAIN ─── */
+    main {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: var(--sp-9) 2.5rem;
+    }
+
+    .content {
+      max-width: 580px;
+      width: 100%;
+    }
+
+    /* ─── ENTRANCE ANIMATIONS ─── */
+    .reveal {
+      opacity: 0;
+      transform: translateY(10px);
+      animation: reveal-up 550ms var(--ease-out-quart) forwards;
+    }
+    .reveal:nth-child(1) { animation-delay: 0ms; }
+    .reveal:nth-child(2) { animation-delay: 70ms; }
+    .reveal:nth-child(3) { animation-delay: 140ms; }
+    .reveal:nth-child(4) { animation-delay: 210ms; }
+    .reveal:nth-child(5) { animation-delay: 280ms; }
+    .reveal:nth-child(6) { animation-delay: 350ms; }
+    .reveal:nth-child(7) { animation-delay: 420ms; }
+
+    @keyframes reveal-up {
+      to { opacity: 1; transform: none; }
+    }
+
+    /* ─── STATUS BADGE ─── */
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--sp-2);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--gray-2);
+      margin-bottom: var(--sp-6);
+    }
+
+    .status-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background: var(--accent);
+      opacity: 0.8;
+      animation: pulse 3s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 0.8; }
+      50% { opacity: 0.2; }
+    }
+
+    /* ─── HEADLINE ─── */
+    h1 {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: clamp(2.8rem, 6vw, 4.8rem);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: 0.01em;
+      color: var(--white);
+      margin-bottom: var(--sp-6);
+    }
+
+    h1 em {
+      color: var(--accent);
+      font-style: normal;
+    }
+
+    /* ─── BODY ─── */
+    .body-text {
+      font-size: 1rem;
+      color: var(--gray-2);
+      line-height: 1.85;
+      max-width: 52ch;
+      margin-bottom: var(--sp-7);
+    }
+
+    /* ─── FORM ─── */
+    .form-group {
+      display: flex;
+      gap: 0;
+      margin-bottom: var(--sp-3);
+      max-width: 440px;
+    }
+
+    .email-input {
+      flex: 1;
+      background: var(--bg-2);
+      border: 1px solid var(--border-mid);
+      border-right: none;
+      color: var(--white);
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 0.9rem;
+      padding: var(--sp-4) var(--sp-5);
+      outline: none;
+      transition: border-color 0.2s;
+      min-width: 0;
+    }
+
+    .email-input::placeholder { color: var(--gray-3); }
+
+    .email-input:focus {
+      border-color: var(--accent);
+    }
+    .email-input:focus + .submit-btn {
+      border-color: var(--accent);
+    }
+
+    .email-input.error { border-color: oklch(68% 0.14 22); }
+
+    .submit-btn {
+      background: var(--accent);
+      color: oklch(10% 0.01 310);
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.82rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      border: 1px solid var(--accent);
+      padding: var(--sp-4) var(--sp-6);
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.18s;
+    }
+
+    .submit-btn:hover { background: oklch(78% 0.078 310); }
+    .submit-btn:active { transform: scale(0.98); }
+
+    .form-micro {
+      font-size: 0.73rem;
+      color: var(--gray-3);
+      letter-spacing: 0.04em;
+    }
+
+    /* ─── CONFIRMATION STATE ─── */
+    .confirm-state {
+      display: none;
+      max-width: 440px;
+    }
+
+    .confirm-state.visible { display: block; }
+    .form-state.hidden { display: none; }
+
+    .confirm-label {
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: var(--sp-3);
+    }
+
+    .confirm-title {
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 900;
+      letter-spacing: 0.04em;
+      color: var(--white);
+      margin-bottom: var(--sp-3);
+    }
+
+    .confirm-body {
+      font-size: 0.9rem;
+      color: var(--gray-2);
+      line-height: 1.7;
+    }
+
+    /* ─── DIVIDER ─── */
+    .rule {
+      width: 40px;
+      height: 1px;
+      background: var(--border-mid);
+      margin: var(--sp-7) 0;
+    }
+
+    /* ─── BLOG LINKS ─── */
+    .blog-note {
+      font-size: 0.78rem;
+      color: var(--gray-3);
+      letter-spacing: 0.04em;
+      margin-bottom: var(--sp-4);
+    }
+
+    .blog-links {
+      display: flex;
+      flex-direction: column;
+      gap: var(--sp-3);
+    }
+
+    .blog-link {
+      font-size: 0.87rem;
+      color: var(--gray-2);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: baseline;
+      gap: var(--sp-2);
+      transition: color 0.15s;
+      max-width: 50ch;
+      line-height: 1.5;
+    }
+
+    .blog-link:hover { color: var(--white); }
+
+    .blog-link-arrow {
+      color: var(--accent);
+      flex-shrink: 0;
+      font-size: 0.75rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      padding: var(--sp-5) 2.5rem;
+      border-top: 1px solid var(--border);
+      font-family: var(--mono);
+      font-size: 0.62rem;
+      color: var(--gray-3);
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 640px) {
+      nav { padding: var(--sp-4) 1.25rem; }
+      main { padding: var(--sp-8) 1.25rem var(--sp-7); align-items: flex-start; }
+      footer { padding: var(--sp-4) 1.25rem; }
+
+      .form-group { flex-direction: column; max-width: 100%; }
+      .email-input { border-right: 1px solid var(--border-mid); }
+      .email-input:focus { border-color: var(--accent); }
+      .submit-btn { border: none; width: 100%; }
+      .confirm-state { max-width: 100%; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .reveal { animation: none; opacity: 1; transform: none; }
+      .status-dot { animation: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <span class="nav-wordmark">OPTIMIZABLE</span>
+      <span class="nav-sub">HORMONAL HEALTH INTELLIGENCE</span>
+    </a>
+    <a href="index.html" class="nav-back">&larr; Back</a>
+  </nav>
+
+  <main>
+    <div class="content">
+
+      <div class="status-badge reveal">
+        <span class="status-dot"></span>
+        Assessment in development
+      </div>
+
+      <h1 class="reveal">THE TOOL<br>YOU CAME FOR<br>ISN'T <em>READY.</em></h1>
+
+      <p class="body-text reveal">
+        You found this page because you wanted your free risk score - the
+        3-minute assessment that maps your free testosterone, SHBG, and
+        lifestyle factors and gives you a specific protocol, not a range
+        and a shrug. We're still building it. Leave your email and you'll
+        be the first to know when it's live.
+      </p>
+
+      <div class="form-state reveal">
+        <div class="form-group">
+          <input
+            type="email"
+            class="email-input"
+            placeholder="your@email.com"
+            autocomplete="email"
+            aria-label="Email address for early access"
+          />
+          <button class="submit-btn" type="button">Notify me</button>
+        </div>
+        <p class="form-micro">No spam. One email when it launches.</p>
+      </div>
+
+      <div class="confirm-state" role="status" aria-live="polite">
+        <p class="confirm-label">Confirmed</p>
+        <p class="confirm-title">YOU'RE ON THE LIST.</p>
+        <p class="confirm-body">
+          We'll email you the moment the assessment is live.
+          In the meantime - read the blog below.
+        </p>
+      </div>
+
+      <div class="rule reveal"></div>
+
+      <div class="reveal">
+        <p class="blog-note">While you wait, these explain the system:</p>
+        <div class="blog-links">
+          <a href="articles/total-vs-free-testosterone.html" class="blog-link">
+            <span class="blog-link-arrow">→</span>
+            Why the testosterone number your doctor checks is almost meaningless
+          </a>
+          <a href="articles/hpta-axis.html" class="blog-link">
+            <span class="blog-link-arrow">→</span>
+            How your brain runs your hormones - and what breaks the loop
+          </a>
+          <a href="articles/shbg.html" class="blog-link">
+            <span class="blog-link-arrow">→</span>
+            SHBG: the good cop/bad cop situation
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer>
+    &copy; 2026 Optimizable
+  </footer>
+
+  <script>
+    const btn = document.querySelector('.submit-btn');
+    const input = document.querySelector('.email-input');
+    const formState = document.querySelector('.form-state');
+    const confirmState = document.querySelector('.confirm-state');
+
+    function submit() {
+      const email = input.value.trim();
+      const valid = email.length > 3 && email.includes('@') && email.includes('.');
+
+      if (!valid) {
+        input.classList.add('error');
+        input.focus();
+        return;
+      }
+
+      input.classList.remove('error');
+
+      // TODO: POST to email service (Mailchimp, Loops, Resend, etc.)
+      // fetch('/api/waitlist', { method: 'POST', body: JSON.stringify({ email }) })
+
+      formState.classList.add('hidden');
+      confirmState.classList.add('visible');
+    }
+
+    btn.addEventListener('click', submit);
+
+    input.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') submit();
+    });
+
+    input.addEventListener('input', function() {
+      input.classList.remove('error');
+    });
+  </script>
+
+</body>
+</html>
