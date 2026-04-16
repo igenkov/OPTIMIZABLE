@@ -417,36 +417,118 @@
 
     /* ─── PRICING ─── */
     .pricing-section { background: var(--bg-2); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); }
-    .pricing-cards { display: grid; grid-template-columns: 1fr 1.2fr; gap: var(--sp-5); max-width: 720px; margin-top: var(--sp-7); }
+    .pricing-cards {
+      display: grid;
+      grid-template-columns: 0.85fr 1fr 1.35fr;
+      gap: var(--sp-5);
+      max-width: 1080px;
+      margin-top: var(--sp-7);
+      align-items: stretch;
+    }
 
     .pricing-card {
       background: var(--bg-3); border: 1px solid var(--border);
       border-radius: 6px; padding: 2rem; position: relative;
+      display: flex; flex-direction: column;
     }
-    .pricing-card.featured { background: oklch(73% 0.088 310 / 0.18); border-color: var(--border-accent); }
+
+    /* MONTHLY — cool neutral with subtle lilac wash from top */
+    .pricing-card:not(.featured):not(.muted) {
+      background: linear-gradient(180deg,
+        color-mix(in oklch, var(--bg-3) 92%, var(--accent) 8%) 0%,
+        var(--bg-3) 55%);
+    }
+
+    /* FREE — warm honest tint with gold undertone */
+    .pricing-card.muted {
+      padding: 1.75rem;
+      background: linear-gradient(180deg,
+        color-mix(in oklch, var(--bg-3) 92%, var(--gold) 8%) 0%,
+        var(--bg-3) 55%);
+    }
+    .pricing-card.muted .pricing-card-amount { color: oklch(86% 0.018 75); }
+    .pricing-card.muted .pricing-card-label { color: oklch(60% 0.025 75); }
+    .pricing-card.muted .pricing-card-tagline { color: oklch(58% 0.018 75); }
+    .pricing-card.muted .pricing-card-features li::before {
+      background: var(--gold); opacity: 0.5; box-shadow: none;
+    }
+
+    /* ANNUAL — rich chromatic premium */
+    .pricing-card.featured {
+      background:
+        radial-gradient(ellipse 110% 80% at 50% 0%,
+          oklch(73% 0.088 310 / 0.22) 0%,
+          oklch(73% 0.088 310 / 0.10) 65%,
+          oklch(73% 0.088 310 / 0.06) 100%);
+      border: 1px solid var(--border-accent);
+      padding: 2.5rem 2.25rem;
+      box-shadow:
+        0 0 80px -28px var(--accent-glow),
+        inset 0 1px 0 oklch(73% 0.088 310 / 0.22);
+    }
+
+    /* BADGE — gold premium accent (medal-like) */
     .pricing-card-badge {
       position: absolute; top: -1px; right: -1px;
       background: var(--gold); color: oklch(15% 0.01 85);
-      font-family: 'Big Shoulders Display', sans-serif; font-size: 0.58rem; font-weight: 800;
-      letter-spacing: 0.1em; padding: 0.22rem 0.55rem; border-radius: 0 5px 0 5px;
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.6rem; font-weight: 800;
+      letter-spacing: 0.16em; padding: 0.32rem 0.7rem;
+      border-radius: 0 5px 0 5px;
+      overflow: hidden; z-index: 2;
     }
+
     .pricing-card-label {
-      font-family: 'Big Shoulders Display', sans-serif; font-size: 0.6rem; font-weight: 600;
-      letter-spacing: 0.18em; color: var(--gray-2); text-transform: uppercase; margin-bottom: var(--sp-4);
+      font-family: 'Big Shoulders Display', sans-serif;
+      font-size: 0.62rem; font-weight: 700;
+      letter-spacing: 0.2em; color: var(--gray-2);
+      text-transform: uppercase; margin-bottom: var(--sp-4);
     }
+    .pricing-card.featured .pricing-card-label { color: var(--accent); }
+
     .pricing-card-amount {
       font-family: 'Big Shoulders Display', sans-serif;
-      font-size: 2.25rem; font-weight: 900; margin-bottom: var(--sp-4); line-height: 1;
+      font-size: 2.25rem; font-weight: 900; line-height: 1;
     }
+    .pricing-card.featured .pricing-card-amount { font-size: 2.85rem; }
     .pricing-card-amount.highlighted { color: var(--accent); }
     .pricing-card-amount span {
       font-family: 'Libre Franklin', sans-serif;
-      font-size: 0.75rem; color: var(--gray-2); font-weight: 400;
+      font-size: 0.72rem; color: var(--gray-2);
+      font-weight: 400; letter-spacing: 0;
     }
+
+    .pricing-card-period {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 0.78rem; color: var(--gray-2);
+      margin-top: var(--sp-2); letter-spacing: 0.01em;
+    }
+    .pricing-card.featured .pricing-card-period strong {
+      color: var(--gold); font-weight: 700; font-style: normal;
+      letter-spacing: 0.02em;
+    }
+
+    .pricing-card-tagline {
+      font-family: 'Libre Franklin', sans-serif;
+      font-size: 0.78rem; color: var(--gray-2);
+      margin-top: var(--sp-5);
+      padding-top: var(--sp-4);
+      border-top: 1px solid var(--border);
+      font-style: italic;
+    }
+    .pricing-card.featured .pricing-card-tagline {
+      color: var(--accent);
+      border-top-color: var(--border-accent);
+      font-style: normal; font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
     .pricing-card-features {
       list-style: none; font-size: 0.85rem; color: var(--gray-2);
-      display: flex; flex-direction: column; gap: var(--sp-3); margin-top: var(--sp-5);
+      display: flex; flex-direction: column; gap: var(--sp-3);
+      margin-top: var(--sp-5); flex: 1;
     }
+    .pricing-card.muted .pricing-card-features { font-size: 0.8rem; }
     .pricing-card-features li {
       display: flex; align-items: flex-start; gap: var(--sp-3); line-height: 1.5;
     }
@@ -606,8 +688,59 @@
 
     /* ─── ANIMATIONS ─── */
     @media (prefers-reduced-motion: no-preference) {
-      .pricing-card { opacity: 0; transform: translateY(20px); transition: opacity 0.5s cubic-bezier(0.16,1,0.3,1), transform 0.5s cubic-bezier(0.16,1,0.3,1); transition-delay: calc(var(--i, 0) * 120ms); }
-      .pricing-cards.in .pricing-card { opacity: 1; transform: translateY(0); }
+      .pricing-card {
+        opacity: 0; transform: translateY(24px);
+        transition:
+          transform 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          box-shadow 0.4s cubic-bezier(0.16, 1, 0.3, 1),
+          border-color 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      }
+      .pricing-cards.in .pricing-card {
+        animation: priceCardEnter 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        animation-delay: calc(var(--i, 0) * 130ms);
+      }
+      @keyframes priceCardEnter {
+        from { opacity: 0; transform: translateY(24px); }
+        to   { opacity: 1; transform: translateY(0); }
+      }
+
+      /* Hover lift — feedback layer */
+      .pricing-cards.in .pricing-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 38px -20px oklch(0% 0 0 / 0.7);
+        border-color: oklch(100% 0 0 / 0.13);
+      }
+      .pricing-cards.in .pricing-card.featured:hover {
+        transform: translateY(-5px);
+        box-shadow:
+          0 18px 60px -22px oklch(73% 0.088 310 / 0.45),
+          0 0 100px -32px var(--accent-glow),
+          inset 0 1px 0 oklch(73% 0.088 310 / 0.30);
+        border-color: oklch(73% 0.088 310 / 0.45);
+      }
+      .pricing-card.featured .pricing-card-features li::before { transition: box-shadow 0.3s ease; }
+      .pricing-cards.in .pricing-card.featured:hover .pricing-card-features li::before {
+        box-shadow: 0 0 10px oklch(73% 0.088 310 / 0.55);
+      }
+
+      /* Signature: slow gold sheen sweeps the BEST VALUE badge ~once every 7s */
+      .pricing-card-badge::after {
+        content: '';
+        position: absolute; top: 0; left: -130%;
+        width: 70%; height: 100%;
+        background: linear-gradient(105deg,
+          transparent 0%,
+          oklch(100% 0 0 / 0.40) 50%,
+          transparent 100%);
+        animation: badgeShimmer 7s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+        animation-delay: 1.5s;
+        pointer-events: none;
+      }
+      @keyframes badgeShimmer {
+        0%, 82% { left: -130%; }
+        100%    { left: 220%; }
+      }
+
       .faq-item { opacity: 0; transform: translateY(12px); transition: opacity 0.45s cubic-bezier(0.16,1,0.3,1), transform 0.45s cubic-bezier(0.16,1,0.3,1); transition-delay: calc(var(--i, 0) * 50ms); }
       .faq-list.in .faq-item { opacity: 1; transform: translateY(0); }
     }
@@ -680,6 +813,7 @@
     </div>
   </a>
   <div class="nav-links">
+    <a href="#pricing" class="nav-link">Pricing</a>
     <a href="#faq" class="nav-link">FAQ</a>
     <a href="blog.html" class="nav-link">Blog</a>
     <a href="#cta" class="nav-cta">START FREE &rarr;</a>
@@ -796,7 +930,7 @@
         </div>
         <div class="step">
           <div class="step-num-wrap">03</div>
-          <div class="step-tag-lbl" style="color:var(--gold)">Protocol &middot; Premium</div>
+          <div class="step-tag-lbl" style="color:var(--gold)">Protocol &middot; LAB</div>
           <div class="step-name">Follow Your Protocol</div>
           <p class="step-copy">Upload your results. The system maps them against your full profile and returns your actual hormonal health status - plus a 90-day plan covering diet, exercise, sleep, stress, and supplements. Every recommendation is tied to your data. Specific. Timed. Trackable.</p>
         </div>
@@ -884,13 +1018,14 @@
 </section>
 
 <!-- ═══ SECTION 11 — PRICING ═══ -->
-<section class="section pricing-section">
+<section class="section pricing-section" id="pricing">
   <div class="section-inner">
     <span class="tag fade-up">PRICING</span>
     <h2 class="section-title fade-up">START FREE. UPGRADE WHEN YOU'RE READY.</h2>
     <div class="pricing-cards fade-up">
-      <div class="pricing-card">
-        <div class="pricing-card-label">Free</div>
+
+      <div class="pricing-card muted">
+        <div class="pricing-card-label">Free Tier</div>
         <div class="pricing-card-amount">FREE</div>
         <ul class="pricing-card-features">
           <li>Full lifestyle assessment</li>
@@ -898,11 +1033,13 @@
           <li>The key factors driving it</li>
           <li>A personalized bloodwork panel to take to any lab</li>
         </ul>
+        <div class="pricing-card-tagline">No account required</div>
       </div>
-      <div class="pricing-card featured">
-        <div class="pricing-card-badge">PREMIUM</div>
-        <div class="pricing-card-label">Premium</div>
-        <div class="pricing-card-amount highlighted">$9.99<span>/mo</span></div>
+
+      <div class="pricing-card">
+        <div class="pricing-card-label">LAB &middot; Monthly</div>
+        <div class="pricing-card-amount">$14.99<span> / month</span></div>
+        <div class="pricing-card-period">$0.49 a day</div>
         <ul class="pricing-card-features">
           <li>Know exactly what your bloodwork means - no guesswork</li>
           <li>See your full hormonal health status - not just &ldquo;in range&rdquo;</li>
@@ -910,8 +1047,24 @@
           <li>Track what's working week by week</li>
           <li>Compare your progress every quarter with updated protocols</li>
         </ul>
-        <p style="font-size:0.72rem;color:var(--gray-2);margin-top:1rem;font-style:italic;">Less than the cost of one blood panel.</p>
+        <div class="pricing-card-tagline">Flexible, cancel anytime</div>
       </div>
+
+      <div class="pricing-card featured">
+        <div class="pricing-card-badge">BEST VALUE</div>
+        <div class="pricing-card-label">LAB &middot; Annual</div>
+        <div class="pricing-card-amount highlighted">$119<span> / year</span></div>
+        <div class="pricing-card-period">$0.33 a day &middot; <strong>34% savings</strong></div>
+        <ul class="pricing-card-features">
+          <li>Know exactly what your bloodwork means - no guesswork</li>
+          <li>See your full hormonal health status - not just &ldquo;in range&rdquo;</li>
+          <li>Get a 90-day plan built for your body, not a generic template</li>
+          <li>Track what's working week by week</li>
+          <li>Compare your progress every quarter with updated protocols</li>
+        </ul>
+        <div class="pricing-card-tagline">Most popular</div>
+      </div>
+
     </div>
   </div>
 </section>
@@ -929,7 +1082,7 @@
           <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
-          <p class="faq-a">No catch. The assessment, your hormonal risk score, the factors driving it, and your personalized bloodwork panel are completely free — no account required, no credit card, no trial period. <em>Premium</em> unlocks the bloodwork interpretation and 90-day protocol, and you only need that after you've done the bloodwork.</p>
+          <p class="faq-a">No catch. The assessment, your hormonal risk score, the factors driving it, and your personalized bloodwork panel are completely free — no account required, no credit card, no trial period. <em>LAB</em> unlocks the bloodwork interpretation and 90-day protocol, and you only need that after you've done the bloodwork.</p>
         </div></div>
       </div>
 
@@ -1019,13 +1172,13 @@
           <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
-          <p class="faq-a">No. We don't sell supplements, have affiliate deals with supplement brands, or recommend products for purchase. If your protocol includes supplementation, it will name the compound and the dose — you buy it wherever is cheapest. Our only revenue comes from the premium subscription. That's the model.</p>
+          <p class="faq-a">No. We don't sell supplements, have affiliate deals with supplement brands, or recommend products for purchase. If your protocol includes supplementation, it will name the compound and the dose — you buy it wherever is cheapest. Our only revenue comes from the LAB subscription. That's the model.</p>
         </div></div>
       </div>
 
       <div class="faq-item">
         <button class="faq-trigger" aria-expanded="false">
-          <span class="faq-q">Can I cancel the premium subscription anytime?</span>
+          <span class="faq-q">Can I cancel the LAB subscription anytime?</span>
           <i class="ph-bold ph-plus faq-icon"></i>
         </button>
         <div class="faq-body"><div class="faq-body-inner">
@@ -1108,7 +1261,7 @@
     <a href="coming-soon.html" class="btn-primary fade-up" style="font-size:1.15rem;padding:1.15rem 2.5rem;">
       START YOUR FREE ASSESSMENT <span class="btn-arrow">&rarr;</span>
     </a>
-    <p class="cta-micro-note fade-up">Basic assessment is <strong>FREE.</strong> Premium is only <span>$9.99/mo</span> - less than one blood panel.</p>
+    <p class="cta-micro-note fade-up">Basic assessment is <strong>FREE.</strong> LAB starts at <span>$0.33/day</span> - less than one blood panel.</p>
   </div>
 </section>
 
