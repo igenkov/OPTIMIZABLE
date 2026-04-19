@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Cpu, FlaskConical, ShieldCheck, Zap, Loader2, Check } from 'lucide-react';
 
-const LOG_MESSAGES = [
+const FOUNDATION_LOGS = [
   'Loading analysis findings...',
   'Mapping root cause hierarchy...',
   'Evaluating lifestyle intervention priority...',
@@ -17,6 +17,17 @@ const LOG_MESSAGES = [
   'Finalizing 45-day Foundation protocol...',
 ];
 
+const CALIBRATION_LOGS = [
+  'Loading Foundation protocol baseline...',
+  'Importing 45-day inquiry responses...',
+  'Analysing wellbeing trend data...',
+  'Evaluating supplement adherence patterns...',
+  'Identifying directives to adjust...',
+  'Cross-referencing lifestyle changes...',
+  'Recalibrating supplement stack...',
+  'Finalizing 45-day Calibration protocol...',
+];
+
 export default function GenerateProtocolPage() {
   const router = useRouter();
   const [phase, setPhase] = useState<'loading' | 'error'>('loading');
@@ -24,7 +35,10 @@ export default function GenerateProtocolPage() {
   const [progress, setProgress] = useState(0);
   const [currentLog, setCurrentLog] = useState(0);
   const [completedLogs, setCompletedLogs] = useState<string[]>([]);
+  const [isCalibration, setIsCalibration] = useState(false);
   const doneRef = useRef(false);
+
+  const LOG_MESSAGES = isCalibration ? CALIBRATION_LOGS : FOUNDATION_LOGS;
 
   useEffect(() => {
     const progressTimer = setInterval(() => {
@@ -36,8 +50,9 @@ export default function GenerateProtocolPage() {
 
     const logTimer = setInterval(() => {
       setCurrentLog(prev => {
-        if (prev < LOG_MESSAGES.length - 1) {
-          setCompletedLogs(logs => [...logs, LOG_MESSAGES[prev]]);
+        const msgs = doneRef.current ? CALIBRATION_LOGS : FOUNDATION_LOGS;
+        if (prev < msgs.length - 1) {
+          setCompletedLogs(logs => [...logs, msgs[prev]]);
           return prev + 1;
         }
         return prev;
@@ -86,6 +101,52 @@ export default function GenerateProtocolPage() {
       .eq('id', reportData.bloodwork_panel_id)
       .single();
 
+    // Detect calibration mode: foundation report exists + inquiry submitted
+    const { data: foundationReport } = await supabase
+      .from('protocol_reports')
+      .select('*')
+      .eq('user_id', user.id)
+      .eq('phase', 'foundation')
+      .order('created_at', { ascending: false })
+      .limit(1)
+      .single();
+
+    const { data: cycleData } = await supabase
+      .from('optimization_cycles')
+      .select('id')
+      .eq('user_id', user.id)
+      .eq('status', 'active')
+      .single();
+
+    let inquiryData = null;
+    let wellbeingData = null;
+    const calibrationMode = !!foundationReport && !!cycleData;
+
+    if (calibrationMode) {
+      setIsCalibration(true);
+
+      // Fetch inquiry responses
+      const { data: inquiry } = await supabase
+        .from('cycle_inquiries')
+        .select('*')
+        .eq('cycle_id', cycleData.id)
+        .order('submitted_at', { ascending: false })
+        .limit(1)
+        .single();
+      inquiryData = inquiry;
+
+      // Fetch wellbeing trend data (30-day averages)
+      const { data: checkins } = await supabase
+        .from('daily_checkins')
+        .select('energy, mood, libido, sleep_quality, mental_clarity, stress')
+        .eq('user_id', user.id)
+        .order('date', { ascending: false })
+        .limit(30);
+      wellbeingData = checkins;
+    }
+
+    const protocolPhase = calibrationMode ? 'calibration' : 'foundation';
+
     try {
       const res = await fetch('/api/protocol', {
         method: 'POST',
@@ -97,13 +158,20 @@ export default function GenerateProtocolPage() {
           symptoms,
           panelValues: panelData?.values ?? {},
           analysis: reportData,
+          ...(calibrationMode && {
+            calibrationContext: {
+              foundationProtocol: foundationReport,
+              inquiryResponses: inquiryData,
+              wellbeingTrend: wellbeingData,
+            },
+          }),
         }),
       });
 
       if (!res.ok) throw new Error(await res.text());
       const protocolData = await res.json();
 
-      // Save to protocol_reports
+      // Save to protocol_reports with phase tag
       const { error: dbErr } = await supabase.from('protocol_reports').insert({
         user_id: user.id,
         analysis_report_id: reportData.id,
@@ -114,6 +182,7 @@ export default function GenerateProtocolPage() {
         stress: protocolData.stress ?? [],
         habits: protocolData.habits ?? [],
         model_used: protocolData._model ?? null,
+        phase: protocolPhase,
       });
 
       if (dbErr) throw dbErr;
@@ -169,10 +238,10 @@ export default function GenerateProtocolPage() {
             </div>
 
             <h2 className="text-xl font-black text-white uppercase tracking-[2px] mb-2 text-center">
-              Generating Your Protocol
+              {isCalibration ? 'Calibrating Your Protocol' : 'Generating Your Protocol'}
             </h2>
             <p className="text-[11px] text-white/40 uppercase tracking-widest mb-8 text-center">
-              45-Day Foundation Sequence
+              {isCalibration ? '45-Day Calibration Sequence' : '45-Day Foundation Sequence'}
             </p>
 
             <div className="w-full h-1 bg-white/5 rounded-full overflow-hidden mb-12">

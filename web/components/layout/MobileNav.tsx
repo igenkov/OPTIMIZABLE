@@ -17,9 +17,9 @@ const PREMIUM_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
   { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
-export function MobileNav({ tier }: { tier: 'free' | 'premium' | 'expert' }) {
+export function MobileNav({ tier }: { tier: 'free' | 'premium' | 'expert' | 'beta' }) {
   const pathname = usePathname();
-  const isPremium = tier === 'premium' || tier === 'expert';
+  const isPremium = tier === 'premium' || tier === 'expert' || tier === 'beta';
   const nav = isPremium ? PREMIUM_NAV : FREE_NAV;
 
   return (

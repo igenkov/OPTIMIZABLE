@@ -9,6 +9,26 @@ function sanArr(arr: unknown[] | null | undefined, maxLen = 80): string {
   return arr.map(v => san(v, maxLen)).filter(Boolean).join(', ') || 'none';
 }
 
+export interface CalibrationContext {
+  foundationProtocol: {
+    supplements: { name: string; dose: string; timing: string; reason: string }[];
+    eating: string[];
+    exercise: string[];
+    sleep: string[];
+    stress: string[];
+    habits: string[];
+  };
+  inquiryResponses: {
+    symptom_reassessment: Record<string, unknown>;
+    supplement_adherence: Record<string, unknown>;
+    directive_adherence: Record<string, unknown>;
+    subjective_scores: Record<string, number>;
+    new_symptoms?: string;
+    notes?: string;
+  } | null;
+  wellbeingTrend: { energy: number; mood: number; libido: number; sleep_quality: number; mental_clarity: number; stress: number }[] | null;
+}
+
 export interface ProtocolPromptParams {
   phase1: Phase1Data;
   phase2: Phase2Data;
@@ -16,13 +36,64 @@ export interface ProtocolPromptParams {
   symptomIds: string[];
   bmi: string;
   analysisJson: string;
+  calibrationContext?: CalibrationContext;
+}
+
+function buildCalibrationSection(ctx: CalibrationContext): string {
+  const parts: string[] = [];
+
+  parts.push(`### CALIBRATION MODE
+This is a CALIBRATION protocol (days 46-90), not a Foundation protocol. You are refining and adjusting an existing protocol based on 45 days of real-world data. Do NOT generate from scratch. Build on what worked, adjust what did not, and drop what was consistently skipped.`);
+
+  // Foundation protocol summary
+  const fp = ctx.foundationProtocol;
+  parts.push(`### FOUNDATION PROTOCOL (what was prescribed for days 1-45)
+Supplements: ${fp.supplements?.map(s => `${s.name} ${s.dose} (${s.timing})`).join('; ') || 'none'}
+Eating directives: ${fp.eating?.join('; ') || 'none'}
+Exercise directives: ${fp.exercise?.join('; ') || 'none'}
+Sleep directives: ${fp.sleep?.join('; ') || 'none'}
+Stress directives: ${fp.stress?.join('; ') || 'none'}
+Habit directives: ${fp.habits?.join('; ') || 'none'}`);
+
+  // Wellbeing trend
+  if (ctx.wellbeingTrend?.length) {
+    const avg = (key: string) => {
+      const vals = ctx.wellbeingTrend!.map(w => (w as Record<string, number>)[key]).filter(v => v != null);
+      return vals.length ? (vals.reduce((s, v) => s + v, 0) / vals.length).toFixed(1) : '?';
+    };
+    parts.push(`### WELLBEING TREND (30-day averages from daily check-ins during Foundation phase)
+Energy: ${avg('energy')}/10, Mood: ${avg('mood')}/10, Libido: ${avg('libido')}/10, Sleep quality: ${avg('sleep_quality')}/10, Mental clarity: ${avg('mental_clarity')}/10, Stress: ${avg('stress')}/10`);
+  }
+
+  // Inquiry responses
+  if (ctx.inquiryResponses) {
+    const ir = ctx.inquiryResponses;
+    parts.push(`### 45-DAY INQUIRY RESPONSES
+Symptom reassessment: ${JSON.stringify(ir.symptom_reassessment)}
+Supplement adherence: ${JSON.stringify(ir.supplement_adherence)}
+Directive adherence: ${JSON.stringify(ir.directive_adherence)}
+Subjective scores: ${JSON.stringify(ir.subjective_scores)}
+New symptoms: ${ir.new_symptoms || 'none'}
+Notes: ${ir.notes || 'none'}`);
+  }
+
+  parts.push(`### CALIBRATION RULES
+1. CARRY FORWARD what the patient followed consistently AND reported improvement on. Explicitly acknowledge: "Continuing [supplement/directive] - your data shows this is working."
+2. ADJUST doses or timing for items the patient followed but reported no improvement on. Explain the adjustment rationale.
+3. DROP items the patient consistently skipped. Replace with achievable alternatives. Acknowledge the skip: "Replacing [X] with [Y] since [X] proved impractical."
+4. ADD new interventions only if the inquiry reveals new symptoms or if wellbeing data shows a metric that declined during the Foundation phase.
+5. Frame the output as a refinement, not a restart. The opening line should reference the Foundation phase and what the data showed.`);
+
+  return parts.join('\n\n');
 }
 
 export function buildProtocolPrompt(p: ProtocolPromptParams): string {
-  const { phase1, phase2, phase3, symptomIds, bmi, analysisJson } = p;
+  const { phase1, phase2, phase3, symptomIds, bmi, analysisJson, calibrationContext } = p;
+
+  const isCalibration = !!calibrationContext?.foundationProtocol;
 
   return `### ROLE
-You are a Clinical Protocol Specialist translating a completed bloodwork analysis into a precise, personalised 45-day Foundation protocol. The full analysis — marker-by-marker interpretations, key ratios, concerns, and executive summary — is provided below. Your job is to convert these findings into specific, actionable interventions. Do NOT re-analyse the bloodwork. Build directly from the findings.
+You are a Clinical Protocol Specialist translating a completed bloodwork analysis into a precise, personalised 45-day ${isCalibration ? 'Calibration' : 'Foundation'} protocol. The full analysis - marker-by-marker interpretations, key ratios, concerns, and executive summary - is provided below. Your job is to convert these findings into specific, actionable interventions. Do NOT re-analyse the bloodwork. Build directly from the findings.${isCalibration ? ' This is a CALIBRATION pass - you are refining an existing protocol, not starting from scratch.' : ''}
 
 ### MANDATORY RULES
 
@@ -79,9 +150,10 @@ You are a Clinical Protocol Specialist translating a completed bloodwork analysi
 - Supplement categories: ${sanArr(phase3?.supplement_categories)}
 - Symptoms: ${symptomIds.join(', ') || 'none'}
 
-### COMPLETE ANALYSIS (build your protocol from this — do not re-derive findings)
+### COMPLETE ANALYSIS (build your protocol from this - do not re-derive findings)
 ${analysisJson}
 
+${isCalibration ? buildCalibrationSection(calibrationContext!) : ''}
 ### OUTPUT FORMAT
 Return ONLY valid JSON (no markdown, no code fences).
 CRITICAL: "eating", "exercise", "sleep", "stress", and "habits" MUST be arrays of plain strings — NOT objects, NOT {directive: ...}, NOT {action: ...}. Each element is a single string sentence. Only "supplements" contains objects.

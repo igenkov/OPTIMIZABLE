@@ -104,6 +104,68 @@ export default function LabAnalyzePage() {
       localStorage.removeItem('pending_panel_id');
       localStorage.removeItem('pending_panel_values');
 
+      // Cycle completion: if this panel is a 'final' panel, close the cycle
+      const { data: panelRow } = await supabase
+        .from('bloodwork_panels').select('phase_type, cycle_id')
+        .eq('id', panelId).single();
+
+      if (panelRow?.phase_type === 'final' && panelRow.cycle_id) {
+        // Fetch initial report for comparison
+        const { data: initialReport } = await supabase
+          .from('analysis_reports')
+          .select('health_score')
+          .eq('user_id', user.id)
+          .order('created_at', { ascending: true })
+          .limit(1)
+          .single();
+
+        const finalScore = analysisData.health_score ?? null;
+        const initialScore = initialReport?.health_score ?? 0;
+
+        // Build comparison snapshot
+        const snapshot = {
+          initial_score: initialScore,
+          final_score: finalScore,
+          wellbeing_start_avg: {},
+          wellbeing_end_avg: {},
+          top_improved: [] as { marker: string; delta: number }[],
+          top_unresolved: [] as { marker: string; delta: number }[],
+        };
+
+        // Compute top improved / unresolved markers if both panels exist
+        if (initialReport && analysisData.marker_analysis) {
+          const { data: initialAnalysis } = await supabase
+            .from('analysis_reports')
+            .select('marker_analysis')
+            .eq('user_id', user.id)
+            .order('created_at', { ascending: true })
+            .limit(1)
+            .single();
+
+          if (initialAnalysis?.marker_analysis) {
+            const initialMap: Record<string, number> = {};
+            for (const m of initialAnalysis.marker_analysis as { marker: string; value: number }[]) {
+              initialMap[m.marker] = m.value;
+            }
+            const deltas: { marker: string; delta: number }[] = [];
+            for (const m of analysisData.marker_analysis as { marker: string; value: number }[]) {
+              if (initialMap[m.marker] != null) {
+                deltas.push({ marker: m.marker, delta: m.value - initialMap[m.marker] });
+              }
+            }
+            deltas.sort((a, b) => b.delta - a.delta);
+            snapshot.top_improved = deltas.filter(d => d.delta > 0).slice(0, 5);
+            snapshot.top_unresolved = deltas.filter(d => d.delta <= 0).slice(0, 5);
+          }
+        }
+
+        await supabase.from('optimization_cycles').update({
+          status: 'complete',
+          comparison_snapshot: snapshot,
+          completed_at: new Date().toISOString(),
+        }).eq('id', panelRow.cycle_id);
+      }
+
       // Signal progress bar to complete, then redirect
       doneRef.current = true;
       setTimeout(() => router.push('/lab'), 800);

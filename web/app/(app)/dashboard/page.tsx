@@ -13,6 +13,7 @@ import {
   calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
   getKeyFactors, getPersonalizedPanel, getProtectiveFactors, isExcluded,
 } from '@/lib/scoring';
+import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
@@ -26,7 +27,7 @@ export default async function DashboardPage() {
     supabase.from('lifestyle').select('*').eq('user_id', user.id).single(),
     supabase.from('medical_history').select('*').eq('user_id', user.id).single(),
     supabase.from('symptom_assessments').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
-    supabase.from('analysis_reports').select('health_score,created_at').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('analysis_reports').select('health_score,created_at,marker_analysis').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
     supabase.from('users').select('subscription_tier').eq('id', user.id).single(),
   ]);
 
@@ -37,8 +38,8 @@ export default async function DashboardPage() {
   const medHistory = medHistRes.data as unknown as Phase3Data | null;
   const symptoms = symptomsRes.data as { symptoms_selected: string[] } | null;
   const hasReport = !!reportRes.data;
-  const tier = (userRes.data?.subscription_tier as 'free' | 'premium' | 'expert') ?? 'free';
-  const isPremium = tier === 'premium' || tier === 'expert';
+  const tier = (userRes.data?.subscription_tier as 'free' | 'premium' | 'expert' | 'beta') ?? 'free';
+  const isPremium = tier === 'premium' || tier === 'expert' || tier === 'beta';
 
   const p1 = profile;
   const p2 = lifestyle ?? {} as Phase2Data;
@@ -72,6 +73,9 @@ export default async function DashboardPage() {
   const extendedBio = excluded
     ? []
     : personalizedPanel!.extended.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean);
+
+  const dashRecommendedCount = essentialBio.length + recommendedBio.length;
+  const dashSubmittedCount = hasReport ? (Array.isArray(reportRes.data?.marker_analysis) ? (reportRes.data.marker_analysis as unknown[]).length : 0) : 0;
 
   const bmi = p1.weight_kg && p1.height_cm
     ? (p1.weight_kg / Math.pow(p1.height_cm / 100, 2)).toFixed(1)
@@ -246,6 +250,14 @@ export default async function DashboardPage() {
           </div>
         </Card>
       </div>
+
+      {/* Panel completeness note */}
+      {isPremium && hasReport && dashRecommendedCount > 0 && (
+        <PanelCompletenessNote
+          submittedCount={dashSubmittedCount}
+          recommendedCount={dashRecommendedCount}
+        />
+      )}
 
       {/* ROW 2: Critical Factors (6) + Balancing Factors (6) */}
       <div className="grid grid-cols-12 gap-4 lg:gap-6">

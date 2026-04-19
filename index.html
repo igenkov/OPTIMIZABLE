@@ -799,9 +799,123 @@
       .range-legend { flex-wrap: wrap; gap: var(--sp-4); }
       footer { flex-direction: column; }
     }
+
+  /* ── Beta period treatment ──────────────────────────────────────────────── */
+  /* Toggle beta mode by adding/removing data-beta="true" from <body>.        */
+  /* When beta is off: overlay hidden, pricing cards at full opacity.         */
+
+  .pricing-beta-wrapper { position: relative; }
+
+  /* Darken pricing cards during beta */
+  body[data-beta="true"] .pricing-cards { opacity: 0.45; pointer-events: none; user-select: none; filter: grayscale(0.25); }
+
+  /* Overlay */
+  .beta-overlay {
+    display: none;
+    position: absolute;
+    inset: -16px;
+    background: rgba(14,14,14,0.88);
+    backdrop-filter: blur(2px);
+    border: 1px solid rgba(74,222,128,0.15);
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    z-index: 10;
+  }
+  body[data-beta="true"] .beta-overlay { display: flex; flex-direction: column; gap: 1rem; }
+
+  .beta-overlay-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: #4ADE80;
+    padding: 6px 12px;
+    border: 1px solid rgba(74,222,128,0.3);
+    background: rgba(74,222,128,0.06);
+  }
+  .beta-overlay-tag::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ADE80;
+    animation: blink 1.5s ease infinite;
+  }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+
+  .beta-overlay-heading {
+    font-size: clamp(1.4rem,3vw,2rem);
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: -0.02em;
+    color: white;
+    margin: 0;
+    line-height: 1.1;
+  }
+  .beta-overlay-body {
+    font-size: 0.9rem;
+    color: rgba(255,255,255,0.5);
+    line-height: 1.6;
+    max-width: 380px;
+    margin: 0 auto;
+  }
+  .beta-overlay-cta {
+    display: inline-block;
+    padding: 14px 32px;
+    background: #4ADE80;
+    color: #000;
+    font-weight: 900;
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-top: 4px;
+    transition: background 0.2s;
+  }
+  .beta-overlay-cta:hover { background: #22c55e; }
+  .beta-overlay-note {
+    font-size: 0.72rem;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  /* Hero beta badge */
+  .beta-hero-badge {
+    display: none;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.65rem;
+    font-weight: 900;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: #4ADE80;
+    margin-bottom: 1rem;
+  }
+  body[data-beta="true"] .beta-hero-badge { display: inline-flex; }
+  .beta-hero-badge::before {
+    content: '';
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #4ADE80;
+    animation: blink 1.5s ease infinite;
+  }
+
+  /* Final CTA beta note */
+  .beta-cta-note { display: none; font-size: 0.82rem; color: #4ADE80; margin-top: 0.5rem; font-weight: 700; }
+  body[data-beta="true"] .beta-cta-note { display: block; }
+  body[data-beta="true"] .cta-micro-note { display: none; }
   </style>
 </head>
-<body>
+<body data-beta="true">
 
 <!-- ═══ NAV ═══ -->
 <nav id="nav">
@@ -828,6 +942,7 @@
   <div class="hero-inner">
 
     <div class="hero-content">
+      <span class="beta-hero-badge">Free Early Access - Beta Now Open</span>
       <h1>IF YOU DON'T <em>WAKE UP HARD,</em><br>SOMETHING IS OFF.</h1>
       <p class="hero-sub">Find it. Fix it. Optimize it.</p>
       <p class="hero-body"><em>&ldquo;You're not 20 anymore, what do you expect?&rdquo;</em> And then your doctor: <em>&ldquo;Your testosterone is still in range.&rdquo;</em> And again: <em>&ldquo;It's normal for your age&hellip;&rdquo;</em> Let me tell you something: <span style="color:var(--accent);font-weight:600;">it's not your age.</span> And it's not something you just accept. Optimize it.</p>
@@ -1022,7 +1137,8 @@
   <div class="section-inner">
     <span class="tag fade-up">PRICING</span>
     <h2 class="section-title fade-up">START FREE. UPGRADE WHEN YOU'RE READY.</h2>
-    <div class="pricing-cards fade-up">
+    <div class="pricing-beta-wrapper fade-up">
+    <div class="pricing-cards">
 
       <div class="pricing-card muted">
         <div class="pricing-card-label">Free Tier</div>
@@ -1065,7 +1181,18 @@
         <div class="pricing-card-tagline">Most popular</div>
       </div>
 
+    </div><!-- /pricing-cards -->
+
+    <!-- Beta overlay — visible when body[data-beta="true"] -->
+    <div class="beta-overlay">
+      <span class="beta-overlay-tag">Free Early Access</span>
+      <p class="beta-overlay-heading">Join Free<br>During Beta</p>
+      <p class="beta-overlay-body">Pricing above reflects what LAB will cost at launch. During beta, full access is free. Early members get a lifetime discount when paid plans go live.</p>
+      <a href="coming-soon.html" class="beta-overlay-cta">Claim Free Access &rarr;</a>
+      <p class="beta-overlay-note">No credit card - no catch</p>
     </div>
+
+    </div><!-- /pricing-beta-wrapper -->
   </div>
 </section>
 
@@ -1262,6 +1389,7 @@
       START YOUR FREE ASSESSMENT <span class="btn-arrow">&rarr;</span>
     </a>
     <p class="cta-micro-note fade-up">Basic assessment is <strong>FREE.</strong> LAB starts at <span>$0.33/day</span> - less than one blood panel.</p>
+    <p class="beta-cta-note fade-up">Beta is open - full LAB access is free right now.</p>
   </div>
 </section>
 

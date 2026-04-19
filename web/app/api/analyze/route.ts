@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
-import { BIOMARKERS } from '@/constants/biomarkers';
+import { BIOMARKERS, NEAR_OPTIMAL_ZONE, NEAR_OPTIMAL_DEFAULT, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import { calculateFreeTestosterone } from '@/lib/vermeulen';
 import { SYMPTOMS } from '@/constants/symptoms';
-import { calculateRiskScore, getRiskLevel } from '@/lib/scoring';
+import { calculateRiskScore, getRiskLevel, getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { buildPass1Prompt, buildSynthesisPrompt } from '@/lib/prompts/analysis';
 
 /* ── Resolve marker display name → canonical ID ── */
@@ -18,12 +18,17 @@ function resolveMarkerId(marker: string): string {
 
 /* ── Server-side marker status computation ── */
 function computeMarkerStatus(
+  markerId: string,
   value: number,
   stdLow: number, stdHigh: number,
   optLow: number, optHigh: number,
 ): 'optimal' | 'suboptimal' | 'out_of_range' {
   if (value < stdLow || value > stdHigh) return 'out_of_range';
-  if (value >= optLow && value <= optHigh) return 'optimal';
+  const optRange = optHigh - optLow;
+  const zone = NEAR_OPTIMAL_ZONE[markerId] ?? NEAR_OPTIMAL_DEFAULT;
+  const bufferedLow = optLow - optRange * zone.below;
+  const bufferedHigh = optHigh + optRange * zone.above;
+  if (value >= bufferedLow && value <= bufferedHigh) return 'optimal';
   return 'suboptimal';
 }
 
@@ -126,6 +131,79 @@ function computeRatios(
     lines.push('% Free Testosterone: not calculable (free testosterone and/or total testosterone not submitted)');
   }
 
+  // FAI (Free Androgen Index): (Total T nmol/L / SHBG nmol/L) × 100
+  // Total T is in ng/dL; convert to nmol/L by multiplying by 0.03467. SHBG is already in nmol/L.
+  const shbg = panelValues.shbg ? Number(panelValues.shbg.value) : null;
+  if (totalT != null && shbg != null && shbg > 0) {
+    const totalT_nmol = totalT * 0.03467;
+    const fai = (totalT_nmol / shbg) * 100;
+    let status: string;
+    if (fai < 20) status = 'LOW — significantly reduced androgen availability; SHBG is suppressing bioavailable testosterone';
+    else if (fai < 30) status = 'SUBOPTIMAL — below optimal male range; bioavailable androgen fraction is reduced';
+    else if (fai <= 150) status = 'OPTIMAL';
+    else status = 'HIGH — very low SHBG or elevated total testosterone; free androgen fraction elevated';
+    lines.push(`FAI (Free Androgen Index): ${fai.toFixed(1)}% [${status}]`);
+  } else {
+    lines.push('FAI (Free Androgen Index): not calculable (total testosterone and/or SHBG not submitted)');
+  }
+
+  // Non-HDL cholesterol: Total Cholesterol - HDL (both mg/dL)
+  const tc = panelValues.total_cholesterol ? Number(panelValues.total_cholesterol.value) : null;
+  const hdl = panelValues.hdl ? Number(panelValues.hdl.value) : null;
+  if (tc != null && hdl != null) {
+    const nonHdl = tc - hdl;
+    let status: string;
+    if (nonHdl < 130) status = 'OPTIMAL — atherogenic particle burden within low-risk range';
+    else if (nonHdl < 160) status = 'SUBOPTIMAL — borderline high atherogenic burden; warrants attention';
+    else if (nonHdl < 190) status = 'RISK INDICATOR — elevated atherogenic burden; consistent with increased cardiovascular risk; describe as such, not as a confirmed diagnosis';
+    else status = 'HIGH RISK — significantly elevated atherogenic burden; prioritise cardiovascular assessment';
+    lines.push(`Non-HDL Cholesterol: ${nonHdl.toFixed(0)} mg/dL [${status}]`);
+  } else {
+    lines.push('Non-HDL Cholesterol: not calculable (total cholesterol and/or HDL not submitted)');
+  }
+
+  // TC/HDL ratio
+  if (tc != null && hdl != null && hdl > 0) {
+    const tcHdl = tc / hdl;
+    let status: string;
+    if (tcHdl < 3.5) status = 'OPTIMAL — favourable lipid ratio';
+    else if (tcHdl < 4.5) status = 'SUBOPTIMAL — above optimal; warrants lifestyle optimisation';
+    else if (tcHdl < 6.0) status = 'RISK INDICATOR — elevated cardiovascular risk ratio; describe as such, not as a confirmed diagnosis';
+    else status = 'HIGH RISK — significantly elevated cardiovascular risk ratio; physician assessment warranted';
+    lines.push(`TC/HDL Ratio: ${tcHdl.toFixed(2)} [${status}]`);
+  } else {
+    lines.push('TC/HDL Ratio: not calculable (total cholesterol and/or HDL not submitted)');
+  }
+
+  // LDL/HDL ratio
+  const ldl = panelValues.ldl ? Number(panelValues.ldl.value) : null;
+  if (ldl != null && hdl != null && hdl > 0) {
+    const ldlHdl = ldl / hdl;
+    let status: string;
+    if (ldlHdl < 2.5) status = 'OPTIMAL';
+    else if (ldlHdl < 3.5) status = 'SUBOPTIMAL — above optimal atherogenic ratio';
+    else if (ldlHdl < 5.0) status = 'RISK INDICATOR — elevated atherogenic ratio; describe as such, not as a confirmed diagnosis';
+    else status = 'HIGH RISK — high atherogenic ratio; warrants cardiovascular assessment';
+    lines.push(`LDL/HDL Ratio: ${ldlHdl.toFixed(2)} [${status}]`);
+  } else {
+    lines.push('LDL/HDL Ratio: not calculable (LDL and/or HDL not submitted)');
+  }
+
+  // ApoB/ApoA1 ratio (both in mg/dL)
+  const apob_r = panelValues.apob ? Number(panelValues.apob.value) : null;
+  const apoa1_r = panelValues.apoa1 ? Number(panelValues.apoa1.value) : null;
+  if (apob_r != null && apoa1_r != null && apoa1_r > 0) {
+    const apobApoa1 = apob_r / apoa1_r;
+    let status: string;
+    if (apobApoa1 < 0.7) status = 'OPTIMAL — favourable atherogenic particle balance';
+    else if (apobApoa1 < 0.9) status = 'SUBOPTIMAL — ApoB particle burden elevated relative to protective ApoA1';
+    else if (apobApoa1 < 1.1) status = 'RISK INDICATOR — elevated atherogenic imbalance; one of the strongest CV risk predictors in the literature; describe as such, not as a confirmed diagnosis';
+    else status = 'HIGH RISK — significantly elevated atherogenic imbalance; warrants cardiovascular assessment';
+    lines.push(`ApoB/ApoA1 Ratio: ${apobApoa1.toFixed(2)} [${status}]`);
+  } else {
+    lines.push('ApoB/ApoA1 Ratio: not calculable (ApoB and/or ApoA1 not submitted)');
+  }
+
   return lines.join('\n');
 }
 
@@ -166,6 +244,57 @@ function computeRatioData(
     };
   }
 
+  // FAI
+  const shbg = panelValues.shbg ? Number(panelValues.shbg.value) : null;
+  if (totalT != null && shbg != null && shbg > 0) {
+    const totalT_nmol = totalT * 0.03467;
+    const v = (totalT_nmol / shbg) * 100;
+    data['fai'] = {
+      value: Math.round(v * 10) / 10,
+      status: v < 20 ? 'out_of_range' : v < 30 ? 'suboptimal' : v <= 150 ? 'optimal' : 'out_of_range',
+    };
+  }
+
+  // Non-HDL, TC/HDL, LDL/HDL
+  const tc = panelValues.total_cholesterol ? Number(panelValues.total_cholesterol.value) : null;
+  const hdl = panelValues.hdl ? Number(panelValues.hdl.value) : null;
+  const ldl = panelValues.ldl ? Number(panelValues.ldl.value) : null;
+
+  if (tc != null && hdl != null) {
+    const v = tc - hdl;
+    data['non_hdl'] = {
+      value: Math.round(v),
+      status: v < 130 ? 'optimal' : v < 160 ? 'suboptimal' : 'out_of_range',
+    };
+  }
+
+  if (tc != null && hdl != null && hdl > 0) {
+    const v = tc / hdl;
+    data['tc_hdl'] = {
+      value: Math.round(v * 100) / 100,
+      status: v < 3.5 ? 'optimal' : v < 4.5 ? 'suboptimal' : 'out_of_range',
+    };
+  }
+
+  if (ldl != null && hdl != null && hdl > 0) {
+    const v = ldl / hdl;
+    data['ldl_hdl'] = {
+      value: Math.round(v * 100) / 100,
+      status: v < 2.5 ? 'optimal' : v < 3.5 ? 'suboptimal' : 'out_of_range',
+    };
+  }
+
+  // ApoB/ApoA1
+  const apob_r = panelValues.apob ? Number(panelValues.apob.value) : null;
+  const apoa1_r = panelValues.apoa1 ? Number(panelValues.apoa1.value) : null;
+  if (apob_r != null && apoa1_r != null && apoa1_r > 0) {
+    const v = apob_r / apoa1_r;
+    data['apob_apoa1'] = {
+      value: Math.round(v * 100) / 100,
+      status: v < 0.7 ? 'optimal' : v < 0.9 ? 'suboptimal' : 'out_of_range',
+    };
+  }
+
   return data;
 }
 
@@ -173,6 +302,11 @@ function getRatioKey(name: string): string | null {
   const lower = name.toLowerCase();
   if (lower.includes('homa')) return 'homa_ir';
   if (lower.includes(':e2') || lower.includes('/e2') || lower.includes('te2')) return 'te_ratio';
+  if (lower.includes('free androgen') || lower.includes(' fai')) return 'fai';
+  if (lower.includes('non-hdl') || lower.includes('non hdl')) return 'non_hdl';
+  if (lower.includes('tc/hdl') || lower.includes('tc:hdl') || lower.includes('total cholesterol/hdl')) return 'tc_hdl';
+  if (lower.includes('ldl/hdl') || lower.includes('ldl:hdl')) return 'ldl_hdl';
+  if (lower.includes('apob/apoa') || lower.includes('apob:apoa') || lower.includes('apob apoa')) return 'apob_apoa1';
   if (lower.includes('free t') || lower.includes('free test')) return 'pct_free_t';
   return null;
 }
@@ -280,10 +414,12 @@ export async function POST(req: NextRequest) {
     }
 
     // Build biomarker context (after Vermeulen so calculated free_t is included)
+    // Round values to 1 decimal to avoid noisy conversion artifacts (e.g. 591.54942)
+    const round1 = (v: unknown) => { const n = Number(v); return isNaN(n) ? v : Math.round(n * 10) / 10; };
     const biomarkerContext = BIOMARKERS.map(b => {
       const val = panelValues[b.id];
       if (!val) return null;
-      return `[${b.id}] ${b.name}: ${val.value} ${val.unit} (standard: ${b.standard_range_low}–${b.standard_range_high}, optimal: ${b.optimal_range_low}–${b.optimal_range_high})`;
+      return `[${b.id}] ${b.name}: ${round1(val.value)} ${val.unit} (standard: ${b.standard_range_low}–${b.standard_range_high}, optimal: ${b.optimal_range_low}–${b.optimal_range_high})`;
     }).filter(Boolean).join('\n');
 
     // Pre-compute ratios server-side — LLM must not recalculate these
@@ -293,10 +429,33 @@ export async function POST(req: NextRequest) {
       ? (phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)).toFixed(1)
       : 'unknown';
 
+    // Compute panel completeness — identify missing recommended markers
+    let missingMarkerContext = '';
+    if (phase1 && phase2 && phase3) {
+      const p3Safe = phase3 ?? { steroid_history: 'never', trt_history: 'never' };
+      const excluded = isExcluded(p3Safe);
+      const recommendedIds = excluded
+        ? TRT_PANEL_IDS
+        : (() => {
+            const panel = getPersonalizedPanel(phase1, phase2, p3Safe, symptomIds);
+            return [...panel.essential, ...panel.recommended].map(m => m.id);
+          })();
+      const submittedIds = Object.keys(panelValues);
+      const missingIds = recommendedIds.filter(id => !submittedIds.includes(id));
+      if (missingIds.length > 0) {
+        const missingNames = missingIds.map(id => {
+          const b = BIOMARKERS.find(bm => bm.id === id);
+          return b ? `${b.name} [${b.id}]` : id;
+        }).join(', ');
+        missingMarkerContext = `\n\nPANEL COMPLETENESS:\nSubmitted ${submittedIds.length} of ${recommendedIds.length} recommended biomarkers.\nMissing from recommended panel: ${missingNames}\nWhen interpreting submitted markers, acknowledge clinically relevant gaps where a missing marker would have clarified or changed the interpretation (e.g. "Without SHBG data, we cannot determine how much of your total testosterone is bioavailable"). Do not add a generic disclaimer - mention each gap only in the specific clinical context where it matters.`;
+      }
+    }
+
     const promptParams = {
       riskScore, riskLevel, bmi,
       phase1, phase2, phase3,
       symptomNames, biomarkerContext, vermeulenNote, computedRatiosContext,
+      missingMarkerContext,
     };
 
     // ── Pass 1: Thinking model ──
@@ -332,7 +491,7 @@ export async function POST(req: NextRequest) {
         const value = Number(pv.value);
         if (isNaN(value)) continue;
         m.status = computeMarkerStatus(
-          value,
+          id, value,
           bm.standard_range_low, bm.standard_range_high,
           bm.optimal_range_low, bm.optimal_range_high,
         );
@@ -356,7 +515,7 @@ export async function POST(req: NextRequest) {
           const value = Number(pv.value);
           if (isNaN(value)) return true;
           return computeMarkerStatus(
-            value,
+            id, value,
             bm.standard_range_low, bm.standard_range_high,
             bm.optimal_range_low, bm.optimal_range_high,
           ) !== 'optimal';

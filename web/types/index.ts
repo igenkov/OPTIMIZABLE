@@ -1,7 +1,7 @@
 export interface User {
   id: string;
   email: string;
-  subscription_tier: 'free' | 'premium' | 'expert';
+  subscription_tier: 'free' | 'premium' | 'expert' | 'beta';
   subscription_status: 'active' | 'expired' | 'trial';
   created_at: string;
 }
@@ -75,6 +75,7 @@ export interface BloodworkPanel {
   values: Record<string, BloodworkValue>;
   collection_date: string;
   lab_name?: string;
+  phase_type?: 'initial' | 'final';
   created_at: string;
 }
 
@@ -128,6 +129,7 @@ export interface ProtocolReport {
   stress: string[];
   habits: string[];
   model_used?: string;
+  phase?: 'foundation' | 'calibration';
   created_at: string;
 }
 
@@ -152,16 +154,15 @@ export interface DailyCheckin {
   user_id: string;
   cycle_id: string;
   date: string;
-  mood: number;            // 1–10
-  energy: number;          // 1–10
-  sleep_quality: number;   // 1–10
+  mood: number;            // 1-10
+  energy: number;          // 1-10
+  sleep_quality: number;   // 1-10
   sleep_hours: number;
-  libido: number;          // 1–10
-  stress: number;          // 1–10
-  mental_clarity: number;  // 1–10
+  libido: number;          // 1-10
+  stress: number;          // 1-10
+  mental_clarity: number;  // 1-10
   morning_erection: boolean | null;
   exercised: boolean;
-  plan_adherence: 'fully' | 'mostly' | 'partially' | 'not_today';
   notes?: string;
   created_at: string;
 }
@@ -171,6 +172,42 @@ export interface OptimizationCycle {
   user_id: string;
   start_date: string;
   end_date: string;
-  status: 'active' | 'completed' | 'paused';
+  status: 'active' | 'complete';
   current_day: number;
+  comparison_snapshot?: ComparisonSnapshot;
+  completed_at?: string;
+}
+
+export interface ComparisonSnapshot {
+  initial_score: number;
+  final_score: number | null;
+  wellbeing_start_avg: Record<string, number>;
+  wellbeing_end_avg: Record<string, number>;
+  top_improved: { marker: string; delta: number }[];
+  top_unresolved: { marker: string; delta: number }[];
+}
+
+export interface ProtocolAdherence {
+  id: string;
+  user_id: string;
+  cycle_id: string;
+  protocol_report_id: string;
+  date: string;
+  adherence: 'fully' | 'mostly' | 'partially' | 'not_today';
+  notes?: string;
+  created_at: string;
+}
+
+export interface CycleInquiry {
+  id: string;
+  user_id: string;
+  cycle_id: string;
+  submitted_at: string;
+  symptom_reassessment: Record<string, unknown>;
+  supplement_adherence: Record<string, unknown>;
+  directive_adherence: Record<string, unknown>;
+  subjective_scores: Record<string, number>;
+  new_symptoms?: string;
+  notes?: string;
+  created_at: string;
 }

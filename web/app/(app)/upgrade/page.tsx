@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   Zap,
   ArrowLeft,
-  Lock,
   Cpu,
   Check
 } from 'lucide-react';
@@ -74,6 +73,26 @@ const PLANS = [
 
 export default function UpgradePage() {
   const [selectedPlan, setSelectedPlan] = useState<'monthly' | '90day'>('90day');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
+
+  async function handleCheckout() {
+    setLoading(true);
+    setError('');
+    try {
+      const res = await fetch('/api/checkout', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ planId: selectedPlan }),
+      });
+      const data = await res.json();
+      if (data.error) throw new Error(data.error);
+      window.location.href = data.url;
+    } catch (e) {
+      setError(e instanceof Error ? e.message : 'Checkout failed');
+      setLoading(false);
+    }
+  }
 
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white">
@@ -205,20 +224,22 @@ export default function UpgradePage() {
             </div>
 
             <div className="space-y-4">
-              <div className="p-4 bg-black/40 border border-white/5 flex items-center gap-4">
-                <Lock size={18} className="text-white/20 shrink-0" />
-                <p className="text-[10px] text-white/40 leading-relaxed uppercase font-medium">
-                  Payment gateway is currently in <span className="text-white">Secure Sandbox</span>.
-                  Request an initialization key via the priority channel below.
-                </p>
-              </div>
+              {error && (
+                <div className="p-4 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
+                  {error}
+                </div>
+              )}
 
-              <a
-                href={`mailto:support@optimizable.app?subject=LAB Access Request — ${selectedPlan === '90day' ? '90-Day ($49)' : 'Monthly ($19)'}`}
-                className="group flex items-center justify-center gap-3 w-full py-6 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-white transition-all duration-300 shadow-[0_10px_30px_rgba(200,162,200,0.2)]"
+              <button
+                type="button"
+                onClick={handleCheckout}
+                disabled={loading}
+                className="group flex items-center justify-center gap-3 w-full py-6 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-white transition-all duration-300 shadow-[0_10px_30px_rgba(200,162,200,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Request {selectedPlan === '90day' ? '90-Day' : 'Monthly'} Access <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" />
-              </a>
+                {loading ? 'Initializing...' : (
+                  <>Activate {selectedPlan === '90day' ? '90-Day' : 'Monthly'} Access <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" /></>
+                )}
+              </button>
             </div>
           </Card>
 

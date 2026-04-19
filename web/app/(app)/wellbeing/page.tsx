@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import {
   ResponsiveContainer, LineChart, Line, XAxis, YAxis,
-  CartesianGrid, Tooltip,
+  CartesianGrid, Tooltip, ReferenceLine,
 } from 'recharts';
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -21,7 +21,6 @@ interface CheckIn {
   mental_clarity: number;
   morning_erection: boolean | null;
   exercised: boolean;
-  plan_adherence: 'fully' | 'mostly' | 'partially' | 'not_today';
   notes: string;
 }
 
@@ -29,7 +28,7 @@ const BLANK: Omit<CheckIn, 'date'> = {
   sleep_hours: 7, sleep_quality: 7, mood: 7, energy: 7,
   libido: 6, stress: 5, mental_clarity: 7,
   morning_erection: null, exercised: false,
-  plan_adherence: 'fully', notes: '',
+  notes: '',
 };
 
 // ── Metric config ────────────────────────────────────────────────────────────
@@ -187,6 +186,7 @@ export default function WellbeingPage() {
   const [form, setForm]           = useState({ ...BLANK });
   const [checkins, setCheckins]   = useState<CheckIn[]>([]);
   const [cycleId, setCycleId]     = useState<string | null>(null);
+  const [protocolStartDate, setProtocolStartDate] = useState<string | null>(null);
   const [error, setError]         = useState('');
   const [hiddenLines, setHiddenLines] = useState<Set<string>>(new Set());
 
@@ -197,12 +197,16 @@ export default function WellbeingPage() {
       const supabase = createClient();
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
-      const [cycleRes, todayRes, historyRes] = await Promise.all([
+      const [cycleRes, todayRes, historyRes, protoRes] = await Promise.all([
         supabase.from('optimization_cycles').select('id').eq('user_id', user.id).eq('status', 'active').single(),
         supabase.from('daily_checkins').select('*').eq('user_id', user.id).eq('date', today).single(),
         supabase.from('daily_checkins').select('*').eq('user_id', user.id).order('date', { ascending: true }).limit(30),
+        supabase.from('protocol_reports').select('created_at').eq('user_id', user.id).order('created_at', { ascending: true }).limit(1).single(),
       ]);
       setCycleId(cycleRes.data?.id ?? null);
+      if (protoRes.data?.created_at) {
+        setProtocolStartDate(new Date(protoRes.data.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric' }));
+      }
       setCheckins((historyRes.data ?? []) as CheckIn[]);
       if (todayRes.data) { setTodayDone(true); setTodayData(todayRes.data as CheckIn); }
       setLoading(false);
@@ -221,7 +225,6 @@ export default function WellbeingPage() {
     form.sleep_quality !== BLANK.sleep_quality,
     form.mental_clarity !== BLANK.mental_clarity,
     form.exercised !== BLANK.exercised,
-    form.plan_adherence !== 'fully' || true, // always counts
   ].filter(Boolean).length;
   const formProgress = Math.round((answered / 5) * 100);
 
@@ -237,7 +240,7 @@ export default function WellbeingPage() {
       mood: form.mood, energy: form.energy, libido: form.libido,
       stress: form.stress, mental_clarity: form.mental_clarity,
       morning_erection: form.morning_erection, exercised: form.exercised,
-      plan_adherence: form.plan_adherence, notes: form.notes || null,
+      notes: form.notes || null,
     };
     const { data, error: err } = await supabase.from('daily_checkins').insert(payload).select().single();
     if (err) { setError(err.message); setSaving(false); return; }
@@ -468,29 +471,9 @@ export default function WellbeingPage() {
                 ))}
               </Card>
 
-              {/* Protocol Adherence + Notes */}
+              {/* Notes */}
               <Card>
-                <div className="text-[9px] font-bold tracking-[3px] text-[#9A9A9A] uppercase mb-4">Protocol</div>
-                <div className="mb-4">
-                  <div className="text-[11px] font-semibold text-[#E0E0E0] mb-2">Adherence</div>
-                  <div className="grid grid-cols-2 gap-2">
-                    {([
-                      { val: 'fully',    label: 'Fully' },
-                      { val: 'mostly',   label: 'Mostly' },
-                      { val: 'partially',label: 'Partially' },
-                      { val: 'not_today',label: 'Skipped' },
-                    ] as const).map(opt => (
-                      <button key={opt.val} type="button" onClick={() => set('plan_adherence', opt.val)}
-                        className={`py-2 text-[11px] font-bold border transition-all ${
-                          form.plan_adherence === opt.val
-                            ? 'border-[#C8A2C8] text-[#C8A2C8] bg-[rgba(200,162,200,0.08)]'
-                            : 'border-[rgba(255,255,255,0.07)] text-[#4A4A4A] hover:border-[rgba(255,255,255,0.12)]'
-                        }`}>
-                        {opt.label}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                <div className="text-[9px] font-bold tracking-[3px] text-[#9A9A9A] uppercase mb-4">Notes</div>
                 <div>
                   <div className="text-[11px] font-semibold text-[#E0E0E0] mb-2">Notes (optional)</div>
                   <textarea value={form.notes} onChange={e => set('notes', e.target.value)}
@@ -546,6 +529,10 @@ export default function WellbeingPage() {
                   <XAxis dataKey="date" tick={{ fill: '#3A3A3A', fontSize: 8 }} tickLine={false} axisLine={false} />
                   <YAxis domain={[0, 10]} tick={{ fill: '#3A3A3A', fontSize: 8 }} tickLine={false} axisLine={false} />
                   <Tooltip content={<CustomTooltip />} cursor={{ stroke: 'rgba(255,255,255,0.08)', strokeWidth: 1 }} />
+                  {protocolStartDate && (
+                    <ReferenceLine x={protocolStartDate} stroke="rgba(200,162,200,0.4)" strokeDasharray="4 4"
+                      label={{ value: 'Protocol Start', position: 'top', fill: 'rgba(200,162,200,0.5)', fontSize: 8 }} />
+                  )}
                   {METRICS.map(m => (
                     <Line
                       key={m.key}

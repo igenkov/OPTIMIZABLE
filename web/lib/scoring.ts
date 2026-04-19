@@ -865,25 +865,31 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'vitamin_d', 2, 'Chronic kidney disease (vitamin D activation)');
   }
 
-  // Hypothyroidism → thyroid panel tracking
+  // Hypothyroidism → thyroid panel + homocysteine (TSH suppresses folate metabolism)
   if (conditions.some(c => c.toLowerCase().includes('hypothyroidism'))) {
     addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 3, 'Hypothyroidism diagnosis');
+    addTrigger(triggers, 'homocysteine', 2, 'Hypothyroidism (impaired folate/B-vitamin metabolism)');
   }
 
-  // Diabetes → metabolic panel
+  // Diabetes → metabolic panel + atherogenic + homocysteine
   if (conditions.some(c => c.toLowerCase().includes('diabetes'))) {
     addTrigger(triggers, 'glucose', 2, 'Diabetes diagnosis');
     addTrigger(triggers, ['fasting_insulin', 'hba1c'], 2, 'Diabetes diagnosis');
+    addTrigger(triggers, 'apob', 1, 'Diabetes diagnosis (atherogenic particle risk)');
+    addTrigger(triggers, 'homocysteine', 1, 'Diabetes diagnosis (metformin-associated homocysteine risk)');
   }
 
-  // Insulin resistance → direct markers
+  // Insulin resistance → direct markers + atherogenic
   if (conditions.some(c => c.toLowerCase().includes('insulin resistance'))) {
     addTrigger(triggers, ['glucose', 'fasting_insulin'], 2, 'Insulin resistance diagnosis');
+    addTrigger(triggers, 'apob', 1, 'Insulin resistance diagnosis (atherogenic particle risk)');
   }
 
-  // Obesity → metabolic screening
+  // Obesity → metabolic screening + dyslipidemia + inflammation
   if (conditions.some(c => c.toLowerCase().includes('obesity'))) {
     addTrigger(triggers, ['fasting_insulin', 'hba1c'], 2, 'Obesity diagnosis');
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 1, 'Obesity diagnosis (dyslipidemia risk)');
+    addTrigger(triggers, 'hs_crp', 1, 'Obesity diagnosis (systemic inflammation)');
   }
 
   // Depression/Anxiety condition → cortisol + thyroid
@@ -892,9 +898,10 @@ export function getPersonalizedPanel(
     addTrigger(triggers, 'tsh', 2, 'Depression/anxiety diagnosis (thyroid differential)');
   }
 
-  // Hypertension / cardiovascular → lipid panel
+  // Hypertension / cardiovascular → lipid panel + atherogenic markers
   if (conditions.some(c => c.toLowerCase().includes('hypertension') || c.toLowerCase().includes('cardiovascular'))) {
     addTrigger(triggers, ['hdl', 'ldl', 'triglycerides'], 1, 'Cardiovascular/hypertension condition');
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 1, 'Cardiovascular/hypertension condition (atherogenic markers)');
   }
 
   // ── FERTILITY & SEXUAL FUNCTION (weight 2-3) ──────────────────────
@@ -914,9 +921,10 @@ export function getPersonalizedPanel(
     addTrigger(triggers, ['lh', 'fsh'], 2, 'Testicular discomfort');
   }
 
-  // Reduced ejaculate / hot flashes → HPT axis
+  // Reduced ejaculate / hot flashes → HPT axis + prostate
   if (symptoms.includes('reduced_ejaculate')) {
     addTrigger(triggers, ['lh', 'fsh'], 1, 'Reduced ejaculate volume');
+    addTrigger(triggers, 'psa', 1, 'Reduced ejaculate volume (prostate assessment)');
   }
   if (symptoms.includes('hot_flashes')) {
     addTrigger(triggers, ['lh', 'fsh'], 1, 'Hot flashes (HPT axis)');
@@ -928,6 +936,8 @@ export function getPersonalizedPanel(
   const morningErectionPoor = phase2.morning_erection_frequency === 'rarely' || phase2.morning_erection_frequency === 'never';
   if (phase2.libido_rating >= 4 && (erectileRating <= 2 || morningErectionPoor)) {
     addTrigger(triggers, ['hdl', 'ldl', 'triglycerides'], 2, 'Vascular ED pattern (lipid assessment)');
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 2, 'Vascular ED pattern (atherogenic assessment)');
+    addTrigger(triggers, 'apoa1', 1, 'Vascular ED pattern (ApoB/ApoA1 ratio)');
     addTrigger(triggers, 'prolactin', 1, 'Vascular ED pattern (prolactin differential)');
     if (phase2.smoking_status === 'daily' || phase2.smoking_status === 'occasional') {
       addTrigger(triggers, 'glucose', 1, 'Vascular ED + smoking (insulin sensitivity)');
@@ -969,7 +979,10 @@ export function getPersonalizedPanel(
 
   // Heavy beer → estradiol
   const heavyBeer = phase2.beer_frequency === '4-6x_week' || phase2.beer_frequency === 'daily';
-  if (heavyBeer) addTrigger(triggers, 'estradiol', 2, 'Heavy beer consumption (hops phytoestrogen)');
+  if (heavyBeer) {
+    addTrigger(triggers, 'estradiol', 2, 'Heavy beer consumption (hops phytoestrogen)');
+    addTrigger(triggers, 'homocysteine', 1, 'Heavy beer consumption (alcohol-related B-vitamin depletion)');
+  }
 
   // High body fat → estradiol
   if ((phase1.body_fat_percent ?? 0) > 25) addTrigger(triggers, 'estradiol', 2, 'Elevated body fat (aromatization risk)');
@@ -979,18 +992,25 @@ export function getPersonalizedPanel(
   if (heavySpirits) {
     addTrigger(triggers, ['alt', 'ast'], 2, 'Heavy alcohol consumption (liver stress)');
     addTrigger(triggers, ['hdl', 'ldl', 'triglycerides'], 1, 'Heavy alcohol consumption (lipid impact)');
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 1, 'Heavy alcohol consumption (atherogenic lipid impact)');
+    addTrigger(triggers, 'homocysteine', 1, 'Heavy alcohol consumption (B-vitamin depletion)');
   }
 
-  // High stress → cortisol
-  if ((phase2.stress_level ?? 3) >= 4) addTrigger(triggers, 'cortisol_am', 2, 'High chronic stress level');
+  // High stress → cortisol + ApoA1 (chronic cortisol depresses HDL/ApoA1)
+  if ((phase2.stress_level ?? 3) >= 4) {
+    addTrigger(triggers, 'cortisol_am', 2, 'High chronic stress level');
+    addTrigger(triggers, 'apoa1', 1, 'Chronic stress (cortisol-driven HDL/ApoA1 depression)');
+  }
 
-  // Smoking → cortisol, hematocrit, inflammation
+  // Smoking → cortisol, hematocrit, inflammation, homocysteine (endothelial damage)
   if (phase2.smoking_status === 'daily') {
     addTrigger(triggers, 'cortisol_am', 2, 'Daily smoking (HPT axis disruption via cortisol)');
     addTrigger(triggers, 'hematocrit', 1, 'Daily smoking (erythrocytosis risk)');
     addTrigger(triggers, 'hs_crp', 2, 'Daily smoking (systemic inflammation)');
+    addTrigger(triggers, 'homocysteine', 2, 'Daily smoking (vascular endothelial damage)');
   } else if (phase2.smoking_status === 'occasional') {
     addTrigger(triggers, 'cortisol_am', 1, 'Occasional smoking (cortisol spikes)');
+    addTrigger(triggers, 'homocysteine', 1, 'Occasional smoking (homocysteine risk)');
   }
 
   // High sugar → metabolic markers
@@ -1000,8 +1020,53 @@ export function getPersonalizedPanel(
   }
 
   // Sedentary → metabolic markers
+  // Glucose/insulin kept unconditional: insulin suppresses SHBG regardless of training volume
   if (phase2.sedentary_hours >= 8) {
     addTrigger(triggers, ['glucose', 'fasting_insulin'], 1, 'Sedentary lifestyle (>=8h/day)');
+  }
+  // Lipid/inflammation markers: regular training compensates for desk-job sitting hours
+  const regularTraining = phase2.exercise_frequency === '3-4x'
+    || phase2.exercise_frequency === '5-6x'
+    || phase2.exercise_frequency === 'daily';
+  if (phase2.sedentary_hours >= 8 && !regularTraining) {
+    addTrigger(triggers, ['hdl', 'triglycerides'], 1, 'Sedentary lifestyle (dyslipidemia risk)');
+    addTrigger(triggers, 'hs_crp', 1, 'Sedentary lifestyle (metabolic inflammation)');
+  }
+
+  // ── AGE-BASED ─────────────────────────────────────────────────────
+
+  if (phase1.age >= 50) {
+    addTrigger(triggers, 'lpa', 2, 'Age 50+ (Lp(a) screening — genetically fixed CV risk amplifier)');
+    addTrigger(triggers, 'psa', 2, 'Age 50+ (PSA prostate cancer screening standard)');
+  }
+  if (phase1.age >= 40) {
+    addTrigger(triggers, 'total_cholesterol', 1, 'Age 40+ (cardiovascular risk baseline)');
+    addTrigger(triggers, 'apob', 1, 'Age 40+ (atherogenic particle baseline)');
+    addTrigger(triggers, 'psa', 1, 'Age 40+ (PSA baseline screening)');
+  }
+
+  // ── BODY COMPOSITION ─────────────────────────────────────────────
+
+  const bmi = phase1.height_cm && phase1.weight_kg
+    ? phase1.weight_kg / Math.pow(phase1.height_cm / 100, 2)
+    : 0;
+  if ((phase1.body_fat_percent ?? 0) >= 25 || bmi >= 30) {
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 1, 'Elevated body fat/BMI (atherogenic lipid risk)');
+    addTrigger(triggers, 'hs_crp', 1, 'Elevated body fat/BMI (metabolic inflammation)');
+  }
+
+  // ── STEROID / AAS DYSLIPIDEMIA ───────────────────────────────────
+
+  if (phase3.steroid_history !== 'never') {
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 2, 'Steroid use history (AAS-induced dyslipidemia)');
+    addTrigger(triggers, 'apoa1', 1, 'Steroid use history (HDL/ApoA1 suppression by AAS)');
+  }
+
+  // ── ABSENT / RARE MORNING ERECTIONS — ATHEROGENIC PATTERN ────────
+
+  if (phase2.morning_erection_frequency === 'rarely' || phase2.morning_erection_frequency === 'never') {
+    addTrigger(triggers, ['total_cholesterol', 'apob'], 2, 'Absent/rare morning erections (atherogenic vascular pattern)');
+    addTrigger(triggers, 'apoa1', 1, 'Absent/rare morning erections (ApoB/ApoA1 ratio)');
   }
 
   // ── SYMPTOM-BASED ─────────────────────────────────────────────────
@@ -1012,11 +1077,13 @@ export function getPersonalizedPanel(
     addTrigger(triggers, ['vitamin_d', 'vitamin_b12'], 1, 'Depression (mimicker exclusion)');
   }
 
-  // Brain fog / poor memory → ferritin, thyroid, B12
+  // Brain fog / poor memory → ferritin, thyroid, B12, homocysteine, ApoB
   if (symptoms.includes('brain_fog') || symptoms.includes('poor_memory')) {
     addTrigger(triggers, 'ferritin', 1, 'Brain fog / poor memory (iron assessment)');
     addTrigger(triggers, ['tsh', 'free_t3', 'free_t4'], 2, 'Brain fog / poor memory (thyroid assessment)');
     addTrigger(triggers, 'vitamin_b12', 1, 'Brain fog / poor memory (B12 deficiency mimics low-T cognition)');
+    addTrigger(triggers, 'homocysteine', 1, 'Brain fog / poor memory (vascular and B-vitamin assessment)');
+    addTrigger(triggers, 'apob', 1, 'Brain fog / poor memory (metabolic syndrome marker)');
   }
 
   // Dry skin → thyroid

@@ -17,8 +17,8 @@ export default async function ProfilePage() {
     supabase.from('daily_checkins').select('date').eq('user_id', user.id).order('date', { ascending: false }).limit(30),
   ]);
 
-  const tier = (userRes.data?.subscription_tier as 'free' | 'premium' | 'expert') ?? 'free';
-  const isPremium = tier === 'premium' || tier === 'expert';
+  const tier = (userRes.data?.subscription_tier as 'free' | 'premium' | 'expert' | 'beta') ?? 'free';
+  const isPremium = tier === 'premium' || tier === 'expert' || tier === 'beta';
 
   // Cycle stats
   let cycleDay = 0;

@@ -12,8 +12,10 @@ import {
 import { LabAIBriefing } from './LabAIBriefing';
 import { PanelActions } from './PanelActions';
 import { cn } from '@/lib/utils';
-import { BIOMARKERS } from '@/constants/biomarkers';
-import type { AnalysisReport, MarkerAnalysis, MarkerStatus } from '@/types';
+import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
+import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
+import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
+import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
 // ── Category config ──────────────────────────────────────────────────────────
 const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
@@ -24,6 +26,7 @@ const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.
 };
 const CATEGORY_ORDER = ['hormones', 'thyroid', 'metabolic', 'lipids'];
 const BIOMARKER_CATEGORY = new Map(BIOMARKERS.map(b => [b.id, b.category]));
+const BIOMARKER_NAME = new Map(BIOMARKERS.map(b => [b.id, b.name]));
 
 // ── Range Track ──────────────────────────────────────────────────────────────
 function RangeTrack({ value, standardRange, optimalRange, status }: {
@@ -57,13 +60,36 @@ export default async function LabPage() {
   if (!user) redirect('/login');
 
   const { data: userData } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
-  if (userData?.subscription_tier === 'free') redirect('/dashboard');
+  if (!userData?.subscription_tier || userData.subscription_tier === 'free') redirect('/dashboard');
 
-  const { data: reports } = await supabase
-    .from('analysis_reports').select('*').eq('user_id', user.id)
-    .order('created_at', { ascending: true });
+  const [reportsRes, profileRes, lifestyleRes, medHistRes, symptomsRes, panelsRes] = await Promise.all([
+    supabase.from('analysis_reports').select('*').eq('user_id', user.id).order('created_at', { ascending: true }),
+    supabase.from('profiles').select('*').eq('user_id', user.id).single(),
+    supabase.from('lifestyle').select('*').eq('user_id', user.id).single(),
+    supabase.from('medical_history').select('*').eq('user_id', user.id).single(),
+    supabase.from('symptom_assessments').select('symptoms_selected').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('bloodwork_panels').select('id, phase_type').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+  ]);
+  const latestPanelPhase = (panelsRes.data?.phase_type as string | undefined) ?? 'initial';
 
-  const typedReports = (reports ?? []) as AnalysisReport[];
+  const typedReports = (reportsRes.data ?? []) as AnalysisReport[];
+
+  // Compute panel completeness + personalized panel for follow-up tiers
+  const labP1 = profileRes.data as unknown as Phase1Data | null;
+  const labP2 = (lifestyleRes.data ?? {}) as unknown as Phase2Data;
+  const labP3 = (medHistRes.data ?? { steroid_history: 'never', trt_history: 'never' }) as unknown as Phase3Data;
+  const labSymptomIds: string[] = (symptomsRes.data?.symptoms_selected as string[] | undefined) ?? [];
+  let labRecommendedCount = 0;
+  let labPanel: ReturnType<typeof getPersonalizedPanel> | null = null;
+  if (labP1) {
+    const excluded = isExcluded(labP3);
+    if (excluded) {
+      labRecommendedCount = TRT_PANEL_IDS.length;
+    } else {
+      labPanel = getPersonalizedPanel(labP1, labP2, labP3, labSymptomIds);
+      labRecommendedCount = labPanel.essential.length + labPanel.recommended.length;
+    }
+  }
   const latest   = typedReports[typedReports.length - 1] ?? null;
   const previous = typedReports.length > 1 ? typedReports[typedReports.length - 2] : null;
 
@@ -212,6 +238,14 @@ export default async function LabPage() {
         </div>
       )}
 
+      {/* Panel completeness note */}
+      {labRecommendedCount > 0 && (
+        <PanelCompletenessNote
+          submittedCount={latest.marker_analysis?.length ?? 0}
+          recommendedCount={labRecommendedCount}
+        />
+      )}
+
       {/* ── FOLD 1: Executive Bento ── */}
       <div className="grid grid-cols-12 gap-5">
 
@@ -286,6 +320,88 @@ export default async function LabPage() {
         </Card>
       )}
 
+      {/* ── Recommended Next Tests ── */}
+      {(() => {
+        if (!labPanel) return null;
+        const submitted = new Set(latest.marker_analysis?.map(m => m.marker) ?? []);
+        const essentialGaps = labPanel.essential.filter(m => !submitted.has(m.id));
+        const recommendedGaps = labPanel.recommended.filter(m => !submitted.has(m.id));
+        const extendedGaps = labPanel.extended.filter(m => !submitted.has(m.id)).slice(0, 5);
+        if (essentialGaps.length === 0 && recommendedGaps.length === 0 && extendedGaps.length === 0) return null;
+
+        const tiers = [
+          {
+            key: 'must',
+            label: 'Tier 1 - Must Do',
+            sublabel: 'Directly resolve open clinical questions from this analysis',
+            color: '#E88080',
+            bg: 'rgba(232,128,128,0.06)',
+            border: 'rgba(232,128,128,0.2)',
+            markers: essentialGaps,
+          },
+          {
+            key: 'rec',
+            label: 'Tier 2 - Strongly Recommended',
+            sublabel: 'Refine findings or rule out key differentials',
+            color: '#E8C470',
+            bg: 'rgba(232,196,112,0.06)',
+            border: 'rgba(232,196,112,0.2)',
+            markers: recommendedGaps,
+          },
+          {
+            key: 'ext',
+            label: 'Tier 3 - Optional',
+            sublabel: 'Add depth and specificity to the picture',
+            color: '#C8A2C8',
+            bg: 'rgba(200,162,200,0.04)',
+            border: 'rgba(200,162,200,0.12)',
+            markers: extendedGaps,
+          },
+        ].filter(t => t.markers.length > 0);
+
+        return (
+          <Card className="p-0 overflow-hidden">
+            <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center gap-3"
+              style={{ background: 'rgba(255,255,255,0.01)' }}>
+              <TestTube2 size={16} className="text-[#C8A2C8]" />
+              <div>
+                <div className="text-xs font-black text-white uppercase tracking-widest">Recommended Next Tests</div>
+                <div className="text-[9px] text-[#4A4A4A] uppercase tracking-wide">Based on your profile and current results</div>
+              </div>
+            </div>
+            <div className="divide-y divide-[rgba(255,255,255,0.04)]">
+              {tiers.map(tier => (
+                <div key={tier.key} className="px-5 py-4"
+                  style={{ background: tier.bg, borderLeft: `2px solid ${tier.color}20` }}>
+                  <div className="flex items-center gap-2 mb-3">
+                    <span className="text-[9px] font-black uppercase tracking-[2px] px-2 py-0.5"
+                      style={{ color: tier.color, background: `${tier.color}18`, border: `1px solid ${tier.color}30` }}>
+                      {tier.label}
+                    </span>
+                    <span className="text-[9px] text-[#4A4A4A]">{tier.sublabel}</span>
+                  </div>
+                  <div className="flex flex-col gap-2">
+                    {tier.markers.map(m => (
+                      <div key={m.id} className="flex items-start gap-2.5">
+                        <div className="w-1 h-1 rounded-full shrink-0 mt-[5px]" style={{ background: tier.color }} />
+                        <div>
+                          <span className="text-[11px] font-bold text-white">
+                            {BIOMARKER_NAME.get(m.id) ?? m.id.replace(/_/g, ' ')}
+                          </span>
+                          {m.reasons[0] && (
+                            <span className="text-[10px] text-[#4A4A4A] ml-2">{m.reasons[0]}</span>
+                          )}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Card>
+        );
+      })()}
+
       {/* ── FOLD 2: Biomarker Deep-Dive ── */}
       <div>
         <div className="flex items-center gap-2 mb-4">
@@ -348,7 +464,7 @@ export default async function LabPage() {
                                 {m.marker.replace(/_/g, ' ')}
                               </span>
                               <div className="flex items-center gap-2 mt-1">
-                                <span className="text-lg font-black text-white tabular-nums font-mono">{m.value}</span>
+                                <span className="text-lg font-black text-white tabular-nums font-mono">{Number.isFinite(m.value) ? Math.round(m.value * 10) / 10 : m.value}</span>
                                 <span className="text-[10px] font-bold text-[#4A4A4A] uppercase tracking-tight">{m.unit}</span>
                                 {diff !== null && diff !== 0 && (
                                   <span className={cn('text-[10px] font-mono font-bold', diff > 0 ? 'text-[#C8A2C8]' : 'text-[#E88080]')}>
@@ -391,14 +507,25 @@ export default async function LabPage() {
 
       {/* ── Protocol CTA ── */}
       <div className="pt-2 border-t border-[rgba(255,255,255,0.05)]">
-        <Link href="/lab/generate-protocol"
-          className="group flex items-center justify-between w-full p-6 bg-[#C8A2C8] text-black hover:bg-[#A882A8] transition-colors">
-          <div>
-            <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Next Sequence</div>
-            <div className="text-xl font-black uppercase tracking-tighter">Generate Personalised Protocol</div>
-          </div>
-          <ArrowUpRight size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
-        </Link>
+        {latestPanelPhase === 'final' ? (
+          <Link href="/protocol"
+            className="group flex items-center justify-between w-full p-6 bg-[#C8A2C8] text-black hover:bg-[#A882A8] transition-colors">
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Cycle Complete</div>
+              <div className="text-xl font-black uppercase tracking-tighter">View 90-Day Progress</div>
+            </div>
+            <ArrowUpRight size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+          </Link>
+        ) : (
+          <Link href="/lab/generate-protocol"
+            className="group flex items-center justify-between w-full p-6 bg-[#C8A2C8] text-black hover:bg-[#A882A8] transition-colors">
+            <div>
+              <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Next Sequence</div>
+              <div className="text-xl font-black uppercase tracking-tighter">Generate Foundation Protocol</div>
+            </div>
+            <ArrowUpRight size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+          </Link>
+        )}
       </div>
 
       {/* ── Panel History ── */}
@@ -408,7 +535,7 @@ export default async function LabPage() {
           {[...typedReports].reverse().map((r, i) => {
             const num = typedReports.length - i;
             const isLatest = i === 0;
-            const phaseLabel = num === 1 ? 'Initial' : num === 2 ? '30-Day' : num === 3 ? '60-Day' : `Panel ${num}`;
+            const phaseLabel = num === 1 ? 'Initial Panel' : 'Final Panel (90-Day)';
             return (
               <div key={r.id}
                 className={`flex items-center justify-between gap-3 px-4 py-3 border transition-all ${isLatest ? 'border-[#C8A2C8]' : 'border-[rgba(255,255,255,0.06)] opacity-60 hover:opacity-100'}`}

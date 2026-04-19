@@ -6,7 +6,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
   const supabase = await createClient();
   const { data: { user } } = await supabase.auth.getUser();
 
-  let tier: 'free' | 'premium' | 'expert' = 'free';
+  let tier: 'free' | 'premium' | 'expert' | 'beta' = 'free';
   let cycleInfo: { day: number; phase: 1 | 2 | 3 } | null = null;
 
   if (user) {
@@ -15,7 +15,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
       supabase.from('optimization_cycles').select('start_date').eq('user_id', user.id).eq('status', 'active').single(),
     ]);
 
-    tier = (userRes.data?.subscription_tier as typeof tier) ?? 'free';
+    tier = (userRes.data?.subscription_tier as typeof tier | null) ?? 'free';
 
     if (cycleRes.data) {
       const startDate = new Date(cycleRes.data.start_date);

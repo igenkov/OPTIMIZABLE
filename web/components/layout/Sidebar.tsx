@@ -23,10 +23,10 @@ const PREMIUM_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
   { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
-export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'expert'; cycleInfo: CycleInfo }) {
+export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'expert' | 'beta'; cycleInfo: CycleInfo }) {
   const pathname = usePathname();
   const router = useRouter();
-  const isPremium = tier === 'premium' || tier === 'expert';
+  const isPremium = tier === 'premium' || tier === 'expert' || tier === 'beta';
   const nav = isPremium ? PREMIUM_NAV : FREE_NAV;
 
   async function handleSignOut() {

@@ -7,9 +7,10 @@ import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import {
   Activity, TestTube2, Calendar, Cpu,
-  ShieldCheck, ArrowRight, AlertCircle, Info
+  ShieldCheck, ArrowRight, AlertCircle, Info, ChevronDown
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { BIOMARKERS, CORE_PANEL_IDS, EXTENDED_PANEL_IDS } from '@/constants/biomarkers';
 import type { UnitAlternative } from '@/constants/biomarkers';
 import { getPersonalizedPanel } from '@/lib/scoring';
@@ -82,6 +83,7 @@ export default function LabUploadPage() {
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState('');
   const [panel, setPanel] = useState<PersonalizedPanel | null>(null);
+  const [additionalExpanded, setAdditionalExpanded] = useState(false);
 
   // Load onboarding data → personalized panel tiers
   // Priority: localStorage (fast) → Supabase (fallback if localStorage missing/stale)
@@ -158,6 +160,10 @@ export default function LabUploadPage() {
     ? panel.extended.map(m => BIOMARKERS.find(b => b.id === m.id)!).filter(Boolean)
     : BIOMARKERS.filter(b => EXTENDED_PANEL_IDS.includes(b.id));
   const filled = Object.entries(values).filter(([, v]) => v.trim() !== '');
+  const recommendedCount = panel ? panel.essential.length + panel.recommended.length : 0;
+  const additionalBio = panel
+    ? BIOMARKERS.filter(b => !panel.allIds.includes(b.id))
+    : BIOMARKERS.filter(b => !CORE_PANEL_IDS.includes(b.id) && !EXTENDED_PANEL_IDS.includes(b.id));
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -225,10 +231,15 @@ export default function LabUploadPage() {
       cycleId = newCycle.data?.id ?? '';
     }
 
+    // Determine phase_type: if no panel exists for this cycle, 'initial'; otherwise 'final'
+    const existingPanels = await supabase.from('bloodwork_panels').select('id').eq('cycle_id', cycleId);
+    const phaseType = (existingPanels.data?.length ?? 0) === 0 ? 'initial' : 'final';
+
     const panelRes = await supabase.from('bloodwork_panels').insert({
       user_id: user.id, panel_number: panelNumber, cycle_id: cycleId,
       upload_type: 'manual', values: formattedValues,
       collection_date: collectionDate, lab_name: labName || null,
+      phase_type: phaseType,
     }).select().single();
 
     if (panelRes.error) { setError(panelRes.error.message); setUploading(false); return; }
@@ -348,6 +359,58 @@ export default function LabUploadPage() {
               </Card>
             </section>
           )}
+
+          {/* ADDITIONAL MARKERS — registry markers outside the personalized panel */}
+          {additionalBio.length > 0 && (
+            <section>
+              <button
+                type="button"
+                onClick={() => setAdditionalExpanded(v => !v)}
+                className="w-full flex items-center justify-between px-2 mb-4 group"
+              >
+                <div className="flex items-center gap-2">
+                  <TestTube2 size={16} className="text-white/15 group-hover:text-white/30 transition-colors" />
+                  <h2 className="text-[10px] font-black text-white/15 uppercase tracking-[3px] group-hover:text-white/30 transition-colors">
+                    Additional Markers
+                  </h2>
+                  <span className="text-[9px] font-mono text-white/10">({additionalBio.length})</span>
+                </div>
+                <ChevronDown
+                  size={14}
+                  className={cn(
+                    'text-white/15 transition-all group-hover:text-white/30',
+                    additionalExpanded && 'rotate-180'
+                  )}
+                />
+              </button>
+              {additionalExpanded && (
+                <>
+                  <p className="text-[9px] text-white/25 uppercase tracking-tighter px-2 mb-3 leading-relaxed">
+                    Markers outside your personalized panel. Enter any values your lab report includes - they will be factored into the analysis.
+                  </p>
+                  <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.005)', border: '1px solid rgba(255,255,255,0.04)' }}>
+                    <div>
+                      {additionalBio.map(b => (
+                        <BiomarkerRow
+                          key={b.id}
+                          id={b.id}
+                          name={b.name}
+                          unitPrimary={b.unit_primary}
+                          unitAlternatives={b.unit_alternatives ?? []}
+                          selectedUnit={selectedUnits[b.id] ?? b.unit_primary}
+                          value={values[b.id] ?? ''}
+                          rangeLow={b.standard_range_low}
+                          rangeHigh={b.standard_range_high}
+                          onChange={(id, val) => setValues(prev => ({ ...prev, [id]: val }))}
+                          onUnitChange={(id, unit) => setSelectedUnits(prev => ({ ...prev, [id]: unit }))}
+                        />
+                      ))}
+                    </div>
+                  </Card>
+                </>
+              )}
+            </section>
+          )}
         </div>
 
         {/* RIGHT: SIDEBAR CONTEXT */}
@@ -405,6 +468,14 @@ export default function LabUploadPage() {
               )}
             </div>
           </Card>
+
+          {recommendedCount > 0 && (
+            <PanelCompletenessNote
+              submittedCount={filled.length}
+              recommendedCount={recommendedCount}
+              context="upload"
+            />
+          )}
 
           <Button
             type="submit"

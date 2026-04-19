@@ -6,9 +6,13 @@ import { cn } from '@/lib/utils';
 import {
   Sun, Moon, Zap, Coffee, Clock, ShieldCheck,
   ChevronRight, Activity, Flame, Target,
-  FlaskConical, ArrowRight,
+  FlaskConical, ArrowRight, ClipboardCheck,
 } from 'lucide-react';
-import type { ProtocolReport, OptimizationPlan } from '@/types';
+import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
+import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
+import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
+import { ProgressTracker } from './ProgressTracker';
+import type { ProtocolReport, OptimizationPlan, Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
 // Normalize fields that the LLM occasionally returns as objects instead of strings
 function toStringArray(val: unknown): string[] {
@@ -27,8 +31,8 @@ function toStringArray(val: unknown): string[] {
 
 // ── Phase definitions ────────────────────────────────────────────────────────
 const PHASES = [
-  { num: 1 as const, label: 'Foundation',  days: '1–45',  desc: 'Establish your baseline protocol. Build the habits and supplementation stack your bloodwork demands.', goal: 'Build consistency — the first 45 days set the trajectory.' },
-  { num: 2 as const, label: 'Calibration', days: '46–90', desc: 'Adjusted protocol based on your 45-day control bloodwork. Fine-tune interventions to your biological response.', goal: 'Execute the calibration — your body has data, now act on it.' },
+  { num: 1 as const, label: 'Foundation',  days: '1-45',  desc: 'Establish your baseline protocol. Build the habits and supplementation stack your bloodwork demands.', goal: 'Build consistency - the first 45 days set the trajectory.' },
+  { num: 2 as const, label: 'Calibration', days: '46-90', desc: 'Refined protocol based on your 45-day inquiry. Adjustments calibrated to your subjective response and adherence patterns.', goal: 'Execute the calibration - your body has data, now act on it.' },
 ];
 
 // ── Icon engine ──────────────────────────────────────────────────────────────
@@ -58,17 +62,39 @@ export default async function ProtocolPage() {
   if (!user) redirect('/login');
 
   const { data: userData } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
-  if (userData?.subscription_tier === 'free') redirect('/dashboard');
+  if (!userData?.subscription_tier || userData.subscription_tier === 'free') redirect('/dashboard');
 
-  const { data: reports } = await supabase
-    .from('protocol_reports').select('*').eq('user_id', user.id)
-    .order('created_at', { ascending: true });
+  const [protoReportsRes, cycleRes, profileRes, lifestyleRes, medHistRes, symptomsRes, analysisRes, inquiryRes] = await Promise.all([
+    supabase.from('protocol_reports').select('*').eq('user_id', user.id).order('created_at', { ascending: true }),
+    supabase.from('optimization_cycles').select('id, start_date').eq('user_id', user.id).eq('status', 'active').single(),
+    supabase.from('profiles').select('*').eq('user_id', user.id).single(),
+    supabase.from('lifestyle').select('*').eq('user_id', user.id).single(),
+    supabase.from('medical_history').select('*').eq('user_id', user.id).single(),
+    supabase.from('symptom_assessments').select('symptoms_selected').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('analysis_reports').select('marker_analysis').eq('user_id', user.id).order('created_at', { ascending: false }).limit(1).single(),
+    supabase.from('cycle_inquiries').select('id').eq('user_id', user.id).order('submitted_at', { ascending: false }).limit(1).single(),
+  ]);
+  const inquirySubmitted = !!inquiryRes.data;
 
-  const typedReports = (reports ?? []) as ProtocolReport[];
+  const typedReports = (protoReportsRes.data ?? []) as ProtocolReport[];
+  const cycle = cycleRes.data;
 
-  const { data: cycle } = await supabase
-    .from('optimization_cycles').select('start_date').eq('user_id', user.id)
-    .eq('status', 'active').single();
+  // Compute panel completeness
+  const protoP1 = profileRes.data as unknown as Phase1Data | null;
+  const protoP2 = (lifestyleRes.data ?? {}) as unknown as Phase2Data;
+  const protoP3 = (medHistRes.data ?? { steroid_history: 'never', trt_history: 'never' }) as unknown as Phase3Data;
+  const protoSymptomIds: string[] = (symptomsRes.data?.symptoms_selected as string[] | undefined) ?? [];
+  let protoRecommendedCount = 0;
+  if (protoP1) {
+    const excluded = isExcluded(protoP3);
+    if (excluded) {
+      protoRecommendedCount = TRT_PANEL_IDS.length;
+    } else {
+      const panel = getPersonalizedPanel(protoP1, protoP2, protoP3, protoSymptomIds);
+      protoRecommendedCount = panel.essential.length + panel.recommended.length;
+    }
+  }
+  const protoSubmittedCount = Array.isArray(analysisRes.data?.marker_analysis) ? (analysisRes.data.marker_analysis as unknown[]).length : 0;
 
   let currentDay = 0;
   let currentPhase: 1 | 2 = 1;
@@ -84,21 +110,21 @@ export default async function ProtocolPage() {
   const phase1Progress = currentDay === 0 ? 0 : currentPhase >= 2 ? 100 : phaseProgress;
   const phase2Progress = currentDay === 0 ? 0 : currentPhase === 2 ? phaseProgress : 0;
 
-  // Phase 1 → control bloodwork at day 45; Phase 2 → final bloodwork at day 90
-  let nextLabDate: Date | null = null;
-  let nextLabDays = 0;
-  let nextLabLabel = '';
+  // Phase 1 -> day-45 inquiry; Phase 2 -> final bloodwork (optional) at day 90
+  let nextMilestoneDate: Date | null = null;
+  let nextMilestoneDays = 0;
+  let nextMilestoneLabel = '';
   if (cycle) {
     const start = new Date(cycle.start_date);
-    nextLabDate = new Date(start);
+    nextMilestoneDate = new Date(start);
     if (currentPhase === 1) {
-      nextLabDate.setDate(nextLabDate.getDate() + 45);
-      nextLabLabel = 'Control bloodwork — unlock Calibration protocol';
+      nextMilestoneDate.setDate(nextMilestoneDate.getDate() + 45);
+      nextMilestoneLabel = '45-day inquiry - unlock Calibration protocol';
     } else {
-      nextLabDate.setDate(nextLabDate.getDate() + 90);
-      nextLabLabel = 'Final bloodwork — complete the 90-day cycle';
+      nextMilestoneDate.setDate(nextMilestoneDate.getDate() + 90);
+      nextMilestoneLabel = 'Final bloodwork (optional) - complete the 90-day cycle';
     }
-    nextLabDays = Math.max(0, Math.ceil((nextLabDate.getTime() - Date.now()) / 86400000));
+    nextMilestoneDays = Math.max(0, Math.ceil((nextMilestoneDate.getTime() - Date.now()) / 86400000));
   }
 
   // ── Empty state ──────────────────────────────────────────────────────────
@@ -125,7 +151,10 @@ export default async function ProtocolPage() {
   }
 
   const currentPhaseData = PHASES[currentPhase - 1];
-  const currentReport    = typedReports[currentPhase - 1] ?? typedReports[typedReports.length - 1];
+  const phaseTag = currentPhase === 1 ? 'foundation' : 'calibration';
+  const currentReport    = typedReports.find(r => r.phase === phaseTag)
+    ?? typedReports[currentPhase - 1]
+    ?? typedReports[typedReports.length - 1];
   const recs: OptimizationPlan = currentReport ? {
     supplements: currentReport.supplements ?? [],
     eating:   toStringArray(currentReport.eating),
@@ -149,6 +178,16 @@ export default async function ProtocolPage() {
           <h1 className="text-3xl font-black text-white uppercase tracking-tighter">90-Day Cycle</h1>
         </div>
       </div>
+
+      {/* Panel completeness note */}
+      {protoRecommendedCount > 0 && protoSubmittedCount > 0 && (
+        <div className="mb-8">
+          <PanelCompletenessNote
+            submittedCount={protoSubmittedCount}
+            recommendedCount={protoRecommendedCount}
+          />
+        </div>
+      )}
 
       {/* ── Roadmap graphic ── */}
       <div className="mb-10 overflow-x-auto pb-1 -mx-4 lg:-mx-8 px-4 lg:px-8">
@@ -184,14 +223,14 @@ export default async function ProtocolPage() {
               </div>
             </div>
 
-            {/* Node: Control Bloodwork */}
+            {/* Node: 45-Day Inquiry */}
             <div className="shrink-0 w-14 flex justify-center">
               <div className={cn('w-9 h-9 border-2 flex items-center justify-center',
                 currentPhase >= 2
                   ? 'border-[#4ADE80] bg-[rgba(74,222,128,0.06)]'
                   : 'border-[rgba(255,255,255,0.07)] bg-[rgba(255,255,255,0.02)]'
               )}>
-                <FlaskConical size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
+                <ClipboardCheck size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
               </div>
             </div>
 
@@ -237,7 +276,7 @@ export default async function ProtocolPage() {
             <div className="shrink-0 w-14 text-center">
               <div className={cn('text-[8px] font-bold uppercase tracking-wide leading-tight',
                 currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#4A4A4A]'
-              )}>Control BW</div>
+              )}>Inquiry</div>
               <div className="text-[8px] font-mono text-[#3A3A3A]">Day 45</div>
             </div>
             <div className="flex-1" />
@@ -269,15 +308,15 @@ export default async function ProtocolPage() {
           {isLocked ? (
             <Card className="text-center py-12">
               <div className="w-12 h-12 rounded-full border border-[rgba(255,255,255,0.07)] flex items-center justify-center mx-auto mb-4">
-                <ShieldCheck size={20} className="text-[#3A3A3A]" />
+                <ClipboardCheck size={20} className="text-[#3A3A3A]" />
               </div>
               <div className="text-sm font-bold text-white mb-2">Phase {currentPhase}: {currentPhaseData.label}</div>
               <p className="text-[11px] text-[#9A9A9A] leading-relaxed mb-6 max-w-xs mx-auto">
-                Complete your 45-day control bloodwork panel to unlock the Calibration protocol.
+                Complete the 45-day inquiry to generate your Calibration protocol. This takes 5-10 minutes and captures how you responded to the Foundation phase.
               </p>
-              <Link href="/lab/upload"
+              <Link href="/inquiry"
                 className="inline-block px-6 py-2.5 border border-[#C8A2C8] text-[#C8A2C8] font-bold text-xs tracking-widest uppercase hover:bg-[rgba(200,162,200,0.08)] transition-colors">
-                Upload Bloodwork to Unlock →
+                Start 45-Day Inquiry
               </Link>
             </Card>
           ) : (
@@ -322,6 +361,17 @@ export default async function ProtocolPage() {
                     })}
                   </div>
                 </Card>
+              )}
+
+              {/* Progress Tracker */}
+              {cycle && currentReport && (
+                <ProgressTracker
+                  cycleId={cycle.id}
+                  protocolReportId={currentReport.id}
+                  currentDay={currentDay}
+                  currentPhase={currentPhase}
+                  inquirySubmitted={inquirySubmitted}
+                />
               )}
 
               {/* Lifestyle directives — 2-col expandable grid */}
@@ -389,27 +439,37 @@ export default async function ProtocolPage() {
             </Card>
           )}
 
-          {/* Next lab trigger */}
-          {nextLabDate && (
-            <Card topAccent={nextLabDays <= 7 ? 'rgba(232,128,128,0.6)' : 'rgba(232,196,112,0.5)'}>
+          {/* Next milestone */}
+          {nextMilestoneDate && (
+            <Card topAccent={nextMilestoneDays <= 7 ? 'rgba(232,128,128,0.6)' : 'rgba(232,196,112,0.5)'}>
               <div className="flex items-center gap-2 mb-4">
-                <FlaskConical size={13} style={{ color: nextLabDays <= 7 ? '#E88080' : '#E8C470' }} />
+                {currentPhase === 1
+                  ? <ClipboardCheck size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
+                  : <FlaskConical size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
+                }
                 <span className="text-[10px] font-black uppercase tracking-widest"
-                  style={{ color: nextLabDays <= 7 ? '#E88080' : '#E8C470' }}>
-                  {currentPhase === 1 ? 'Control Lab' : 'Final Lab'}
+                  style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }}>
+                  {currentPhase === 1 ? '45-Day Inquiry' : 'Final Lab'}
                 </span>
               </div>
-              <div className="text-4xl font-black text-white mb-1 tabular-nums">{nextLabDays}</div>
+              <div className="text-4xl font-black text-white mb-1 tabular-nums">{nextMilestoneDays}</div>
               <p className="text-[11px] text-[#4A4A4A] uppercase font-bold tracking-tight mb-4">
                 Days remaining
               </p>
               <div className="text-[11px] text-[#9A9A9A] mb-4">
-                {nextLabDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} — {nextLabLabel}
+                {nextMilestoneDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })} - {nextMilestoneLabel}
               </div>
-              <Link href="/lab/upload"
-                className="flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(255,255,255,0.08)] text-[#9A9A9A] font-bold text-[10px] tracking-widest uppercase hover:bg-[rgba(255,255,255,0.04)] hover:text-white transition-all">
-                Prepare Submission <ArrowRight size={11} />
-              </Link>
+              {currentPhase === 1 ? (
+                <Link href="/inquiry"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(255,255,255,0.08)] text-[#9A9A9A] font-bold text-[10px] tracking-widest uppercase hover:bg-[rgba(255,255,255,0.04)] hover:text-white transition-all">
+                  Begin Inquiry <ArrowRight size={11} />
+                </Link>
+              ) : (
+                <Link href="/lab/upload"
+                  className="flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(255,255,255,0.08)] text-[#9A9A9A] font-bold text-[10px] tracking-widest uppercase hover:bg-[rgba(255,255,255,0.04)] hover:text-white transition-all">
+                  Prepare Submission <ArrowRight size={11} />
+                </Link>
+              )}
             </Card>
           )}
 

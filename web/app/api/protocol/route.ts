@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
-    const { phase1: p1Client, phase2: p2Client, phase3: p3Client, symptoms: symClient, analysis } = await req.json();
+    const { phase1: p1Client, phase2: p2Client, phase3: p3Client, symptoms: symClient, analysis, calibrationContext } = await req.json();
 
     const isEmpty = (obj: unknown) => !obj || typeof obj !== 'object' || Object.keys(obj as object).length === 0;
     let phase1 = p1Client;
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       symptomIds: symptoms?.symptoms_selected ?? [],
       bmi,
       analysisJson: JSON.stringify(analysis, null, 2),
+      calibrationContext: calibrationContext ?? undefined,
     });
 
     const FORBIDDEN = ['aggressive', 'severe', 'bottlenecked', 'disastrous', 'warrior', 'biohack'];

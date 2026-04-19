@@ -360,40 +360,39 @@ export default function SummaryPage() {
         </div>
       </Card>
 
-      {/* CTA */}
-      {isLoggedIn ? (
-        <Button
-          onClick={() => router.push('/dashboard')}
-          fullWidth
-          className="py-5 flex items-center justify-center gap-2"
-        >
-          Access Command Dashboard <ArrowRight size={16} />
-        </Button>
-      ) : (
-        <div className="relative overflow-hidden p-8 border border-[#C8A2C8]/30" style={{ background: 'rgba(200,162,200,0.05)' }}>
-          <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-            <Lock size={80} />
-          </div>
+      {/* CTA — route to conversion screen */}
+      <div className="relative overflow-hidden p-8 border border-[#C8A2C8]/30" style={{ background: 'rgba(200,162,200,0.05)' }}>
+        <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
+          <Lock size={80} />
+        </div>
 
-          <div className="relative z-10">
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-2">Save Results to Profile</h2>
-            <p className="text-xs text-white/40 mb-8 max-w-sm uppercase font-bold leading-relaxed tracking-tighter">
-              Save your risk coefficient, laboratory recommendations, and unlock the 90-day optimization sequence.
-            </p>
+        <div className="relative z-10">
+          <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-2">
+            {isLoggedIn ? 'Unlock the Full Optimization Sequence' : 'What Happens Next'}
+          </h2>
+          <p className="text-xs text-white/40 mb-8 max-w-sm uppercase font-bold leading-relaxed tracking-tighter">
+            Start daily tracking now, upload bloodwork when ready, and get a personalized 90-day protocol built from your data.
+          </p>
 
-            <div className="space-y-3">
-              <Link href="/signup"
-                className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
-                Create Clinical Account <ChevronRight size={16} className="ml-1" />
+          <div className="space-y-3">
+            <Link href="/convert"
+              className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
+              See What&apos;s Included <ChevronRight size={16} className="ml-1" />
+            </Link>
+            {isLoggedIn ? (
+              <Link href="/dashboard"
+                className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
+                Go to Dashboard
               </Link>
+            ) : (
               <Link href="/login"
                 className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
                 Existing Member Sign In
               </Link>
-            </div>
+            )}
           </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }
