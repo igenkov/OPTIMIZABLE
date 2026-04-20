@@ -1,6 +1,6 @@
 import { NextResponse, type NextRequest } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
-import { resend, EMAIL_FROM } from '@/lib/resend';
+import { getResend, EMAIL_FROM } from '@/lib/resend';
 import {
   welcomeEmail,
   checkinReminderEmail,
@@ -86,7 +86,7 @@ export async function POST(req: NextRequest) {
       }
 
       // Send
-      const { error: sendErr } = await resend.emails.send({
+      const { error: sendErr } = await getResend().emails.send({
         from: EMAIL_FROM,
         to: user.email,
         subject: email.subject,

@@ -1,5 +1,5 @@
 import { NextResponse, type NextRequest } from 'next/server';
-import { stripe, LAB_PRICE_ID } from '@/lib/stripe';
+import { getStripe, LAB_PRICE_ID } from '@/lib/stripe';
 import { createClient } from '@/lib/supabase/server';
 
 export async function POST(req: NextRequest) {
@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     let customerId = userData?.stripe_customer_id;
 
     if (!customerId) {
-      const customer = await stripe.customers.create({
+      const customer = await getStripe().customers.create({
         email: user.email,
         metadata: { supabase_user_id: user.id },
       });
@@ -35,7 +35,7 @@ export async function POST(req: NextRequest) {
     const { planId } = await req.json();
     const priceId = planId === 'monthly' ? LAB_PRICE_ID : (process.env.STRIPE_LAB_90DAY_PRICE_ID ?? LAB_PRICE_ID);
 
-    const session = await stripe.checkout.sessions.create({
+    const session = await getStripe().checkout.sessions.create({
       customer: customerId,
       mode: 'subscription',
       line_items: [{ price: priceId, quantity: 1 }],

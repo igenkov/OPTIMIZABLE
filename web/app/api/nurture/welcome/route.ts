@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@/lib/supabase/server';
 import { createClient as createAdminClient } from '@supabase/supabase-js';
-import { resend, EMAIL_FROM } from '@/lib/resend';
+import { getResend, EMAIL_FROM } from '@/lib/resend';
 import { welcomeEmail } from '@/lib/emails/templates';
 
 // Sends welcome email immediately after premium signup.
@@ -34,7 +34,7 @@ export async function POST() {
     const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? '';
     const email = welcomeEmail(appUrl);
 
-    const { error: sendErr } = await resend.emails.send({
+    const { error: sendErr } = await getResend().emails.send({
       from: EMAIL_FROM,
       to: user.email,
       subject: email.subject,
