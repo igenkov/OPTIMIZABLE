@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { Pencil, Trash2 } from 'lucide-react';
+import { PencilSimple, Trash } from '@phosphor-icons/react';
 
 export function PanelActions({ panelId, reportId }: { panelId: string; reportId: string }) {
   const router = useRouter();
@@ -23,7 +23,7 @@ export function PanelActions({ panelId, reportId }: { panelId: string; reportId:
         onClick={() => router.push(`/lab/upload?edit=${panelId}&reportId=${reportId}`)}
         className="flex items-center gap-1 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest border border-white/10 text-white/30 hover:text-white hover:border-white/30 transition-all"
       >
-        <Pencil size={9} /> Edit
+        <PencilSimple size={9} /> Edit
       </button>
       {confirming ? (
         <div className="flex items-center gap-1.5">
@@ -46,7 +46,7 @@ export function PanelActions({ panelId, reportId }: { panelId: string; reportId:
           onClick={() => setConfirming(true)}
           className="flex items-center gap-1 px-2.5 py-1 text-[9px] font-black uppercase tracking-widest border border-white/10 text-white/30 hover:text-red-400 hover:border-red-500/30 transition-all"
         >
-          <Trash2 size={9} /> Delete
+          <Trash size={9} /> Delete
         </button>
       )}
     </div>

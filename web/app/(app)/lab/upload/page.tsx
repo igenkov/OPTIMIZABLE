@@ -6,9 +6,9 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import {
-  Activity, TestTube2, Calendar, Cpu,
-  ShieldCheck, ArrowRight, AlertCircle, Info, ChevronDown
-} from 'lucide-react';
+  Pulse, TestTube2, Calendar, Cpu,
+  ShieldCheck, ArrowRight, WarningCircle, Info, CaretDown
+} from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { BIOMARKERS, CORE_PANEL_IDS, EXTENDED_PANEL_IDS } from '@/constants/biomarkers';
@@ -276,7 +276,7 @@ export default function LabUploadPage() {
           <section>
             <div className="flex items-center justify-between mb-4 px-2">
               <div className="flex items-center gap-2">
-                <Activity size={16} className="text-[#C8A2C8]" />
+                <Pulse size={16} className="text-[#C8A2C8]" />
                 <h2 className="text-[10px] font-black text-white uppercase tracking-[3px]">Essential Biomarkers</h2>
               </div>
               <span className="text-[9px] font-mono text-white/20 uppercase">Placeholders = Ref Ranges</span>
@@ -375,7 +375,7 @@ export default function LabUploadPage() {
                   </h2>
                   <span className="text-[9px] font-mono text-white/10">({additionalBio.length})</span>
                 </div>
-                <ChevronDown
+                <CaretDown
                   size={14}
                   className={cn(
                     'text-white/15 transition-all group-hover:text-white/30',
@@ -462,7 +462,7 @@ export default function LabUploadPage() {
 
               {error && (
                 <div className="p-3 bg-red-500/10 border border-red-500/20 flex gap-2">
-                  <AlertCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
+                  <WarningCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
                   <p className="text-[10px] text-red-500 font-bold leading-tight uppercase tracking-tighter">{error}</p>
                 </div>
               )}

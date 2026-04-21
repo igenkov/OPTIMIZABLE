@@ -5,10 +5,10 @@ import { Card } from '@/components/ui/Card';
 import { ScoreRing } from '@/components/ui/ScoreRing';
 import { StatusBadge, getStatusColor } from '@/components/ui/StatusBadge';
 import {
-  Activity, Zap, Droplets, FlaskConical,
-  ArrowUpRight, ChevronRight, TestTube2, ClipboardCheck, Clock,
+  Pulse, Lightning, Drop, Flask,
+  ArrowUpRight, CaretRight, TestTube2, ClipboardText, Clock,
   Info, Clipboard, ArrowRight,
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 import { LabAIBriefing } from './LabAIBriefing';
 import { PanelActions } from './PanelActions';
 import { cn } from '@/lib/utils';
@@ -19,10 +19,10 @@ import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Da
 
 // ── Category config ──────────────────────────────────────────────────────────
 const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
-  hormones:  { label: 'Hormonal Axis',    color: '#C8A2C8', Icon: Activity  },
+  hormones:  { label: 'Hormonal Axis',    color: '#C8A2C8', Icon: Pulse  },
   thyroid:   { label: 'Thyroid Function', color: '#CE93D8', Icon: TestTube2 },
-  metabolic: { label: 'Metabolic Health', color: '#64B5F6', Icon: Zap       },
-  lipids:    { label: 'Lipid Panel',      color: '#E8C470', Icon: Droplets  },
+  metabolic: { label: 'Metabolic Health', color: '#64B5F6', Icon: Lightning       },
+  lipids:    { label: 'Lipid Panel',      color: '#E8C470', Icon: Drop  },
 };
 const CATEGORY_ORDER = ['hormones', 'thyroid', 'metabolic', 'lipids'];
 const BIOMARKER_CATEGORY = new Map(BIOMARKERS.map(b => [b.id, b.category]));
@@ -108,14 +108,14 @@ export default async function LabPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[rgba(255,255,255,0.05)]">
           <div>
             <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
-              <FlaskConical size={13} />
+              <Flask size={13} />
               <span className="text-[10px] font-black uppercase tracking-[3px]">Biomarker Analysis · Panel_01</span>
             </div>
             <h1 className="text-3xl font-black text-white uppercase tracking-tighter">Biomarker Lab</h1>
           </div>
           <Link href="/lab/upload"
             className="flex items-center gap-2 px-5 py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[2px] uppercase hover:bg-[#A882A8] transition-all">
-            <FlaskConical size={13} /> Submit First Panel
+            <Flask size={13} /> Submit First Panel
           </Link>
         </div>
 
@@ -227,7 +227,7 @@ export default async function LabPage() {
         </div>
         <Link href="/lab/upload"
           className="flex items-center gap-2 px-5 py-2.5 border border-[#C8A2C8] text-[#C8A2C8] font-black text-[10px] tracking-[2px] uppercase hover:bg-[rgba(200,162,200,0.08)] transition-all">
-          <FlaskConical size={13} /> New Panel Submission
+          <Flask size={13} /> New Panel Submission
         </Link>
       </div>
 
@@ -406,13 +406,13 @@ export default async function LabPage() {
       {/* ── FOLD 2: Biomarker Deep-Dive ── */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <ClipboardCheck size={14} className="text-[#4A4A4A]" />
+          <ClipboardText size={14} className="text-[#4A4A4A]" />
           <span className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[4px]">Categorized Deep-Dive</span>
         </div>
 
         <div className="grid grid-cols-1 gap-5">
           {CATEGORY_ORDER.filter(cat => grouped[cat]?.length > 0).map(cat => {
-            const meta = CATEGORY_META[cat] ?? { label: cat, color: '#9A9A9A', Icon: Activity };
+            const meta = CATEGORY_META[cat] ?? { label: cat, color: '#9A9A9A', Icon: Pulse };
             const markers = grouped[cat];
             const needsAttention = markers.filter(m => m.status !== 'optimal').length;
             const { Icon } = meta;
@@ -476,7 +476,7 @@ export default async function LabPage() {
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
                               <StatusBadge status={m.status} />
-                              <ChevronRight size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
+                              <CaretRight size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
                             </div>
                           </div>
                           <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={m.status} />

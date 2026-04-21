@@ -3,9 +3,9 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  ArrowRight, UserCircle, Activity, ClipboardList,
-  BarChart2, FlaskConical, TrendingUp,
-} from 'lucide-react';
+  ArrowRight, UserCircle, Pulse, ClipboardText,
+  ChartBar, Flask, TrendUp,
+} from '@phosphor-icons/react';
 
 // -- Step definitions ----------------------------------------------------------
 
@@ -15,27 +15,27 @@ const STEPS = [
     sub: 'Age, body composition, medical history',                       pro: false,
   },
   {
-    id: '02', icon: Activity,      label: 'Lifestyle Assessment',
+    id: '02', icon: Pulse,      label: 'Lifestyle Assessment',
     sub: 'Sleep, stress, bad habits, physical activity',                 pro: false,
   },
   {
-    id: '03', icon: ClipboardList, label: 'Symptoms Audit',
+    id: '03', icon: ClipboardText, label: 'Symptoms Audit',
     sub: 'Energy, libido, recovery, cognition',                          pro: false,
   },
   {
-    id: '04', icon: BarChart2,     label: 'Risk Score',
+    id: '04', icon: ChartBar,     label: 'Risk Score',
     sub: 'Hormonal coefficient + bloodwork panel recommendation',        pro: false, full: true,
   },
   {
-    id: '05', icon: FlaskConical,  label: 'Lab Analysis',
+    id: '05', icon: Flask,  label: 'Lab Analysis',
     sub: 'Deep AI analysis of bloodwork. Actual hormonal health status', pro: true, glow: true,
   },
   {
-    id: '06', icon: TrendingUp,    label: 'Optimization',
+    id: '06', icon: TrendUp,    label: 'Optimization',
     sub: '90-day optimization protocol',                                 pro: true,
   },
   {
-    id: '07', icon: Activity,      label: 'Progress Tracking',
+    id: '07', icon: Pulse,      label: 'Progress Tracking',
     sub: 'Daily progress assessment',                                    pro: true,
   },
 ];

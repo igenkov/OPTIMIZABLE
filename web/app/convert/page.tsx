@@ -14,11 +14,11 @@ import {
 import type { KeyFactor } from '@/lib/scoring';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import {
-  Activity, FlaskConical, Pill, TrendingUp,
-  ArrowRight, AlertTriangle, Lock, Mail,
-  ShieldCheck, Check, ChevronRight, AlertCircle,
-  Zap, Calendar, BarChart3,
-} from 'lucide-react';
+  Pulse, Flask, Pill, TrendUp,
+  ArrowRight, Warning, Lock, Mail,
+  ShieldCheck, Check, CaretRight, WarningCircle,
+  Lightning, Calendar, BarChart3,
+} from '@phosphor-icons/react';
 
 /* ──────────────────────────────────────────────
    TIMELINE STEPS — what the LAB package includes
@@ -27,14 +27,14 @@ const TIMELINE = [
   {
     phase: 'STARTS NOW',
     color: '#4ADE80',
-    Icon: Activity,
+    Icon: Pulse,
     title: 'Daily Wellbeing Tracking',
     desc: 'Track energy, mood, libido, sleep, and mental clarity daily. Establishes your subjective baseline before bloodwork arrives.',
   },
   {
     phase: 'WHEN BLOODWORK UPLOADED',
     color: '#C8A2C8',
-    Icon: FlaskConical,
+    Icon: Flask,
     title: 'Full Hormonal Analysis',
     desc: 'AI-powered interrogation of 40+ biomarkers against optimal ranges. Clinical narrative, health scoring, and metabolic risk flags.',
   },
@@ -55,7 +55,7 @@ const TIMELINE = [
   {
     phase: 'AT 90 DAYS',
     color: '#4ADE80',
-    Icon: TrendingUp,
+    Icon: TrendUp,
     title: 'Progress Comparison',
     desc: 'Optional follow-up bloodwork reveals exact biomarker shifts. See what changed and why.',
   },
@@ -253,7 +253,7 @@ export default function ConvertPage() {
 
   if (!loaded) return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-4 bg-[#0e0e0e]">
-      <Activity className="text-[#C8A2C8] animate-pulse" size={40} />
+      <Pulse className="text-[#C8A2C8] animate-pulse" size={40} />
     </div>
   );
 
@@ -358,7 +358,7 @@ export default function ConvertPage() {
 
               {error && (
                 <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
-                  <AlertCircle size={14} /> {error}
+                  <WarningCircle size={14} /> {error}
                 </div>
               )}
 
@@ -421,14 +421,14 @@ export default function ConvertPage() {
         {/* RISK SCORE SUMMARY */}
         <Card className="mb-10 p-8 relative overflow-hidden">
           <div className="absolute top-0 right-0 p-6 opacity-5">
-            <Activity size={100} />
+            <Pulse size={100} />
           </div>
           <div className="relative z-10">
             <div className="text-[9px] font-black uppercase tracking-[4px] text-white/40 mb-4">Your Assessment Results</div>
             <div className="flex items-center gap-6 mb-4">
               {excluded ? (
                 <div className="flex items-center gap-3">
-                  <AlertTriangle size={28} className="text-yellow-500" />
+                  <Warning size={28} className="text-yellow-500" />
                   <div>
                     <div className="text-2xl font-black text-yellow-500 uppercase tracking-tight">Monitoring Required</div>
                     <div className="text-[10px] text-white/40 uppercase tracking-widest">Exogenous Protocol Detected</div>
@@ -496,7 +496,7 @@ export default function ConvertPage() {
         {/* FEATURE HIGHLIGHTS */}
         <div className="grid grid-cols-3 gap-3 mb-12">
           {[
-            { Icon: Zap, label: 'AI-Powered', detail: '40+ biomarkers analyzed' },
+            { Icon: Lightning, label: 'AI-Powered', detail: '40+ biomarkers analyzed' },
             { Icon: Calendar, label: '90-Day Cycle', detail: 'Adaptive protocol phases' },
             { Icon: ShieldCheck, label: 'Clinical Grade', detail: 'Optimal range targeting' },
           ].map(({ Icon, label, detail }, i) => (
@@ -538,7 +538,7 @@ export default function ConvertPage() {
                   <>
                     {error && (
                       <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase">
-                        <AlertCircle size={14} /> {error}
+                        <WarningCircle size={14} /> {error}
                       </div>
                     )}
                     <Button onClick={handleLoggedInBetaSignup} loading={loading} fullWidth
@@ -576,7 +576,7 @@ export default function ConvertPage() {
                     </div>
                     {error && (
                       <div className="flex items-center gap-2 p-3 mb-4 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase">
-                        <AlertCircle size={14} /> {error}
+                        <WarningCircle size={14} /> {error}
                       </div>
                     )}
                     <Button onClick={handleLoggedInCheckout} loading={loading} fullWidth
@@ -598,14 +598,14 @@ export default function ConvertPage() {
                   /* Beta: single CTA */
                   <button type="button" onClick={() => setMode('signup-beta')}
                     className="flex items-center justify-center gap-3 w-full py-5 bg-[#4ADE80] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#22c55e] transition-all shadow-[0_10px_30px_rgba(74,222,128,0.15)]">
-                    Claim Free Early Access <ChevronRight size={16} />
+                    Claim Free Early Access <CaretRight size={16} />
                   </button>
                 ) : (
                   /* Paid: two CTAs */
                   <>
                     <button type="button" onClick={() => setMode('signup-premium')}
                       className="flex items-center justify-center gap-3 w-full py-5 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all shadow-[0_10px_30px_rgba(200,162,200,0.15)]">
-                      Get the LAB Package <ChevronRight size={16} />
+                      Get the LAB Package <CaretRight size={16} />
                     </button>
 
                     <button type="button" onClick={() => setMode('signup-free')}
@@ -637,7 +637,7 @@ export default function ConvertPage() {
         {/* TRUST FOOTER */}
         <div className="mt-8 p-4 bg-white/[0.02] border border-white/5">
           <div className="flex gap-3 items-start">
-            <Zap size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
+            <Lightning size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
             <p className="text-[9px] text-white/30 leading-relaxed uppercase font-bold tracking-tight">
               Your data is encrypted and used exclusively for your personalized optimization protocol. This is a wellness tool, not a medical device. Cancel anytime.
             </p>

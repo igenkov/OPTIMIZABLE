@@ -3,23 +3,23 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import {
-  FlaskConical,
+  Flask,
   CalendarDays,
-  Activity,
-  TrendingUp,
+  Pulse,
+  TrendUp,
   Pill,
-  ChevronRight,
+  CaretRight,
   ShieldCheck,
-  Zap,
+  Lightning,
   ArrowLeft,
   Cpu,
   Check
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 const FEATURES = [
   {
-    icon: FlaskConical,
+    icon: Flask,
     title: 'Clinical Bio-Analysis',
     label: 'Module: LAB',
     desc: 'Deep AI interrogation of 40+ biomarkers against optimal (not "normal") ranges. Includes health scoring and metabolic risk flags.',
@@ -31,13 +31,13 @@ const FEATURES = [
     desc: 'Foundation, Calibration, and Peak phases. A living roadmap that updates based on your physiological response.',
   },
   {
-    icon: Activity,
+    icon: Pulse,
     title: 'Bio-Telemetry Tracking',
     label: 'Module: VITALITY',
     desc: 'Daily quantitative tracking: cognitive load, libido, and morning vitality. Visualized against protocol adherence.',
   },
   {
-    icon: TrendingUp,
+    icon: TrendUp,
     title: 'Biomarker Delta Mapping',
     label: 'Module: PROGRESS',
     desc: 'Compare sequential blood panels. See exact percentage shifts in testosterone, cortisol, and inflammation markers.',
@@ -165,7 +165,7 @@ export default function UpgradePage() {
                 <p className="text-[10px] text-white/40 uppercase font-bold tracking-[2px]">Select your access duration</p>
               </div>
               <div className="flex items-center gap-2 px-3 py-1 bg-[#C8A2C8]/10 border border-[#C8A2C8]/20">
-                <Zap size={12} className="text-[#C8A2C8]" />
+                <Lightning size={12} className="text-[#C8A2C8]" />
                 <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-widest">Early Access Active</span>
               </div>
             </header>
@@ -237,7 +237,7 @@ export default function UpgradePage() {
                 className="group flex items-center justify-center gap-3 w-full py-6 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-white transition-all duration-300 shadow-[0_10px_30px_rgba(200,162,200,0.2)] disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {loading ? 'Initializing...' : (
-                  <>Activate {selectedPlan === '90day' ? '90-Day' : 'Monthly'} Access <ChevronRight size={16} className="group-hover:translate-x-1 transition-transform" /></>
+                  <>Activate {selectedPlan === '90day' ? '90-Day' : 'Monthly'} Access <CaretRight size={16} className="group-hover:translate-x-1 transition-transform" /></>
                 )}
               </button>
             </div>

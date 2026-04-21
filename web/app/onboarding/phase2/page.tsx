@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Moon, Wine, Dumbbell, Heart, ChevronRight, Info, Utensils } from 'lucide-react';
+import { Moon, Wine, Barbell, Heart, CaretRight, Info, ForkKnife } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 function SliderInput({ value, min, max, step, onChange, color = '#C8A2C8' }: {
@@ -213,7 +213,7 @@ export default function Phase2Page() {
               form.keto_diet ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-transparent border-white/5 opacity-40'
             )}>
             <div className="flex gap-4 items-center">
-              <Utensils size={18} className={form.keto_diet ? 'text-[#C8A2C8]' : 'text-white'} />
+              <ForkKnife size={18} className={form.keto_diet ? 'text-[#C8A2C8]' : 'text-white'} />
               <div>
                 <div className="text-[10px] font-black uppercase tracking-widest">Chronic Keto / Low-Carb</div>
                 <div className="text-[10px] text-white/40 uppercase font-bold tracking-tighter">Strict adherence for 3+ months</div>
@@ -226,8 +226,8 @@ export default function Phase2Page() {
         {/* ACTIVITY & STRESS */}
         <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
           <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
-            <Dumbbell size={16} />
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Activity & CNS Stress</h2>
+            <Barbell size={16} />
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pulse & CNS Stress</h2>
           </div>
 
           <SegmentedControl label="Training Frequency" value={form.exercise_frequency} onChange={v => set('exercise_frequency', v)}
@@ -292,7 +292,7 @@ export default function Phase2Page() {
             </div>
           )}
           <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
-            {!loading && <>Execute Phase 03 <ChevronRight size={16} /></>}
+            {!loading && <>Execute Phase 03 <CaretRight size={16} /></>}
           </Button>
         </div>
       </form>

@@ -13,10 +13,10 @@ import type { KeyFactor, PersonalizedPanel, ProtectiveFactor } from '@/lib/scori
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import {
-  Activity, FlaskConical, ClipboardList,
-  ChevronRight, AlertTriangle, Clock,
+  Pulse, Flask, ClipboardText,
+  CaretRight, Warning, Clock,
   Lock, ArrowRight, ShieldCheck
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 export default function SummaryPage() {
@@ -88,7 +88,7 @@ export default function SummaryPage() {
 
   if (!loaded) return (
     <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-      <Activity className="text-[#C8A2C8] animate-pulse" size={40} />
+      <Pulse className="text-[#C8A2C8] animate-pulse" size={40} />
       <div className="text-[10px] font-black uppercase tracking-[4px] text-white/40">Synthesizing Profile...</div>
     </div>
   );
@@ -96,7 +96,7 @@ export default function SummaryPage() {
   if (riskScore === null && !excluded) return (
     <div className="max-w-2xl mx-auto pb-32 text-center">
       <div className="flex items-center justify-center gap-3 text-yellow-500 mb-6 mt-20">
-        <AlertTriangle size={24} />
+        <Warning size={24} />
         <h2 className="text-lg font-black uppercase tracking-tight">Incomplete Profile Data</h2>
       </div>
       <p className="text-sm text-white/40 mb-8">Complete all four phases of the onboarding assessment to generate your diagnostic report.</p>
@@ -127,7 +127,7 @@ export default function SummaryPage() {
       {excluded ? (
         <Card className="mb-6 p-8" style={{ border: '1px solid rgba(234,179,8,0.2)', background: 'rgba(234,179,8,0.02)' }}>
           <div className="flex items-center gap-3 text-yellow-500 mb-6">
-            <AlertTriangle size={24} />
+            <Warning size={24} />
             <h2 className="text-lg font-black uppercase tracking-tight">Monitoring Protocol Required</h2>
           </div>
           <div className="p-4 bg-white/5 border border-white/5 mb-6">
@@ -143,7 +143,7 @@ export default function SummaryPage() {
       ) : (
         <Card className="mb-6 p-10 relative overflow-hidden text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)' }}>
           <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Activity size={120} />
+            <Pulse size={120} />
           </div>
 
           <div className="relative z-10">
@@ -152,7 +152,7 @@ export default function SummaryPage() {
             <div className="flex items-center justify-center mb-4">
               <div className="text-7xl md:text-9xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
               <div className="text-left ml-4">
-                <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">Scale</div>
+                <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">Scales</div>
                 <div className="text-xs font-mono text-white/40">0—100</div>
               </div>
             </div>
@@ -181,7 +181,7 @@ export default function SummaryPage() {
       {!excluded && keyFactors.length > 0 && (
         <div className="mb-10 space-y-4">
           <div className="flex items-center gap-2 text-white/40 px-1">
-            <ClipboardList size={14} />
+            <ClipboardText size={14} />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Telemetry Findings</h2>
           </div>
           <div className="grid grid-cols-1 gap-3">
@@ -216,7 +216,7 @@ export default function SummaryPage() {
       {/* BLOODWORK PANELS */}
       <div className="space-y-6 mb-12">
         <div className="flex items-center gap-2 text-white/40 px-1">
-          <FlaskConical size={14} />
+          <Flask size={14} />
           <h2 className="text-[10px] font-black tracking-[3px] uppercase">Recommended Laboratory Sequence</h2>
         </div>
 
@@ -346,7 +346,7 @@ export default function SummaryPage() {
             { label: 'Metabolic State', val: 'Fasted (10-12 HR)', detail: 'Water only' },
             { label: 'Physical State', val: 'Rest Day', detail: 'No heavy lifting 24hr prior' },
             { label: 'Sleep Hygiene', val: 'Normal Duration', detail: 'Aim for 7+ hours prior' },
-            { label: 'Sexual Activity', val: 'Abstain 24HR Prior', detail: 'Preserves baseline LH and testosterone levels' },
+            { label: 'Sexual Pulse', val: 'Abstain 24HR Prior', detail: 'Preserves baseline LH and testosterone levels' },
           ].map((item, i) => (
             <div key={i} className="p-3 bg-black/20 border border-white/5">
               <div className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">{item.label}</div>
@@ -374,7 +374,7 @@ export default function SummaryPage() {
           <div className="space-y-3">
             <Link href="/convert"
               className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
-              See What&apos;s Included <ChevronRight size={16} className="ml-1" />
+              See What&apos;s Included <CaretRight size={16} className="ml-1" />
             </Link>
             {isLoggedIn ? (
               <Link href="/dashboard"

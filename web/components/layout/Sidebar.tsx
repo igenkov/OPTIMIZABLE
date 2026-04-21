@@ -3,23 +3,23 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
-import { LayoutDashboard, FlaskConical, ClipboardList, HeartPulse, UserCircle, LogOut } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { SquaresFour, Flask, ClipboardText, Heartbeat, UserCircle, SignOut } from '@phosphor-icons/react';
+import type { Icon } from '@phosphor-icons/react';
 
 type CycleInfo = { day: number; phase: 1 | 2 | 3 } | null;
 
 const PHASE_LABELS = { 1: 'Foundation', 2: 'Calibration', 3: 'Peak' };
 
-const FREE_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
-  { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
+const FREE_NAV: { href: string; label: string; Icon: Icon }[] = [
+  { href: '/dashboard', label: 'Dashboard', Icon: SquaresFour },
   { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
-const PREMIUM_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
-  { href: '/dashboard', label: 'Dashboard', Icon: LayoutDashboard },
-  { href: '/lab', label: 'LAB', Icon: FlaskConical },
-  { href: '/protocol', label: 'Protocol', Icon: ClipboardList },
-  { href: '/wellbeing', label: 'Wellbeing', Icon: HeartPulse },
+const PREMIUM_NAV: { href: string; label: string; Icon: Icon }[] = [
+  { href: '/dashboard', label: 'Dashboard', Icon: SquaresFour },
+  { href: '/lab', label: 'LAB', Icon: Flask },
+  { href: '/protocol', label: 'Protocol', Icon: ClipboardText },
+  { href: '/wellbeing', label: 'Wellbeing', Icon: Heartbeat },
   { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
@@ -133,7 +133,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
           onClick={handleSignOut}
           className="w-full flex items-center gap-3 px-3 py-2 text-xs text-[#4A4A4A] hover:text-[#E88080] transition-colors tracking-widest uppercase"
         >
-          <LogOut size={14} className="shrink-0" />
+          <SignOut size={14} className="shrink-0" />
           Sign Out
         </button>
       </div>

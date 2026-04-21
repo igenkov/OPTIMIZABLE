@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Activity, ClipboardList, BarChart2, UserCircle, ShieldCheck } from 'lucide-react';
+import { ArrowRight, Pulse, ClipboardText, ChartBar, UserCircle, ShieldCheck } from '@phosphor-icons/react';
 
 export const metadata = {
   title: 'How It Works — Optimizable',
@@ -93,19 +93,19 @@ export default function HowItWorksPage() {
                 body: 'Age, height, weight, body composition, and pre-existing conditions. Testosterone declines at roughly 1% per year after 30. Conditions like sleep apnea, obesity, hypothyroidism, and hemochromatosis each suppress hormonal function through specific, well-documented mechanisms — all of which are factored into your risk profile.',
               },
               {
-                icon: Activity,
+                icon: Pulse,
                 step: '02',
                 title: 'Lifestyle Telemetry',
                 body: 'Not just "do you exercise" — but what type (resistance training stimulates androgen receptors differently than cardio), and not just "how much do you sleep" — but the quality. Seven hours of fragmented sleep suppresses pulsatile LH release just as severely as five hours of solid sleep. Beer and spirits are both alcohol, but hops contain 8-prenylnaringenin — one of the most potent dietary phytoestrogens known — a distinction standard assessments completely ignore.',
               },
               {
-                icon: ClipboardList,
+                icon: ClipboardText,
                 step: '03',
                 title: 'Medical & Pharmacological History',
                 body: 'Medications are frequently the hidden variable. Opioids suppress LH and FSH directly — opioid-induced androgen deficiency (OPIAD) affects most men on long-term pain management and is almost never diagnosed. SSRIs elevate prolactin, which acts as a stop signal at the hypothalamus. Statins deplete CoQ10, the fuel that powers testosterone synthesis in Leydig cells. Past steroid or TRT use leaves lasting HPT axis suppression that may never fully recover without intervention.',
               },
               {
-                icon: BarChart2,
+                icon: ChartBar,
                 step: '04',
                 title: 'Symptom Assessment',
                 body: "Symptoms are the body's self-reported signal — and they're weighted accordingly. Loss of morning erections is a direct proxy for the nocturnal testosterone surge. Low libido is one of the most testosterone-sensitive functions the body has. Preserved libido with poor erectile function suggests a vascular cause rather than hormonal. Gynecomastia is almost exclusively caused by an elevated estrogen-to-testosterone ratio. These distinctions determine what bloodwork gets recommended.",

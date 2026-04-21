@@ -1,19 +1,19 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { LayoutDashboard, FlaskConical, ClipboardList, HeartPulse, UserCircle } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { SquaresFour, Flask, ClipboardText, Heartbeat, UserCircle } from '@phosphor-icons/react';
+import type { Icon } from '@phosphor-icons/react';
 
-const FREE_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
-  { href: '/dashboard', label: 'Home', Icon: LayoutDashboard },
+const FREE_NAV: { href: string; label: string; Icon: Icon }[] = [
+  { href: '/dashboard', label: 'Home', Icon: SquaresFour },
   { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 
-const PREMIUM_NAV: { href: string; label: string; Icon: LucideIcon }[] = [
-  { href: '/dashboard', label: 'Home', Icon: LayoutDashboard },
-  { href: '/lab', label: 'Lab', Icon: FlaskConical },
-  { href: '/protocol', label: 'Protocol', Icon: ClipboardList },
-  { href: '/wellbeing', label: 'Vitality', Icon: HeartPulse },
+const PREMIUM_NAV: { href: string; label: string; Icon: Icon }[] = [
+  { href: '/dashboard', label: 'Home', Icon: SquaresFour },
+  { href: '/lab', label: 'Lab', Icon: Flask },
+  { href: '/protocol', label: 'Protocol', Icon: ClipboardText },
+  { href: '/wellbeing', label: 'Vitality', Icon: Heartbeat },
   { href: '/profile', label: 'Profile', Icon: UserCircle },
 ];
 

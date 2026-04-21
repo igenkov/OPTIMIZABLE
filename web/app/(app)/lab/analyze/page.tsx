@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Cpu, Dna, ShieldCheck, Zap, Loader2, Check } from 'lucide-react';
+import { Cpu, Dna, ShieldCheck, Lightning, CircleNotch, Check } from '@phosphor-icons/react';
 
 const LOG_MESSAGES = [
   'Initializing neural biomarker engine...',
@@ -245,7 +245,7 @@ export default function LabAnalyzePage() {
                 </div>
               ))}
               <div className="flex items-center gap-3 text-[#C8A2C8] animate-pulse">
-                <Loader2 size={10} className="animate-spin" />
+                <CircleNotch size={10} className="animate-spin" />
                 <span className="uppercase tracking-tighter">{LOG_MESSAGES[currentLog]}</span>
               </div>
             </div>
@@ -257,7 +257,7 @@ export default function LabAnalyzePage() {
           {[
             { label: 'Data Integrity', val: '99.9%', Icon: ShieldCheck },
             { label: 'Neural Load', val: '42.4 TFLOPS', Icon: Cpu },
-            { label: 'Bio-Sync', val: 'ACTIVE', Icon: Zap },
+            { label: 'Bio-Sync', val: 'ACTIVE', Icon: Lightning },
           ].map(({ label, val, Icon }, i) => (
             <div key={i} className="flex flex-col items-center p-4 bg-white/[0.02] border border-white/5">
               <Icon size={14} className="text-white/20 mb-2" />

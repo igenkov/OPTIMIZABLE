@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { Pill, Database, ShieldAlert, ChevronRight, Check, AlertTriangle } from 'lucide-react';
+import { Pill, Database, ShieldWarning, CaretRight, Check, Warning } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 const SUPP_CATEGORIES = [
@@ -326,7 +326,7 @@ export default function Phase3Page() {
             <div className="space-y-4">
               <div className="p-5 border border-[#E8C470]/30 bg-[#E8C470]/5 space-y-3">
                 <div className="flex items-center gap-2 text-[#E8C470]">
-                  <AlertTriangle size={16} />
+                  <Warning size={16} />
                   <span className="text-[10px] font-black uppercase tracking-[3px]">Evaluation Not Applicable</span>
                 </div>
                 <p className="text-[11px] text-white/60 leading-relaxed">
@@ -344,18 +344,18 @@ export default function Phase3Page() {
           ) : (
             <>
               <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
-                <ShieldAlert size={18} className="text-[#E8C470] shrink-0" />
+                <ShieldWarning size={18} className="text-[#E8C470] shrink-0" />
                 <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
                   Clinical accuracy: pharmacological data is essential for interpreting total vs. free testosterone and SHBG levels.
                 </p>
               </div>
               {error && (
                 <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[11px] font-bold uppercase tracking-widest">
-                  <ShieldAlert size={14} /> {error}
+                  <ShieldWarning size={14} /> {error}
                 </div>
               )}
               <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
-                {!loading && <>Execute Symptom Log <ChevronRight size={16} /></>}
+                {!loading && <>Execute Symptom Log <CaretRight size={16} /></>}
               </Button>
             </>
           )}

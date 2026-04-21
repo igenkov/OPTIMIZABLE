@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { ClipboardCheck, ChevronRight, ArrowRight, AlertCircle } from 'lucide-react';
+import { ClipboardText, CaretRight, ArrowRight, WarningCircle } from '@phosphor-icons/react';
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface SymptomScore { id: string; label: string; before: number; now: number }
@@ -197,7 +197,7 @@ export default function InquiryPage() {
       {/* Header */}
       <div className="mb-6 pb-5 border-b border-[rgba(255,255,255,0.05)]">
         <div className="flex items-center gap-2 mb-2">
-          <ClipboardCheck size={14} className="text-[#C8A2C8]" />
+          <ClipboardText size={14} className="text-[#C8A2C8]" />
           <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Day {currentDay} - 45-Day Inquiry</span>
         </div>
         <h1 className="text-2xl font-black text-white uppercase tracking-tight">Protocol Assessment</h1>
@@ -253,7 +253,7 @@ export default function InquiryPage() {
           )}
           <div className="mt-6 flex justify-end">
             <Button onClick={() => setStep(1)}>
-              <span className="flex items-center gap-2">Continue <ChevronRight size={14} /></span>
+              <span className="flex items-center gap-2">Continue <CaretRight size={14} /></span>
             </Button>
           </div>
         </Card>
@@ -302,7 +302,7 @@ export default function InquiryPage() {
           <div className="mt-6 flex justify-between">
             <Button variant="secondary" onClick={() => setStep(0)}>Back</Button>
             <Button onClick={() => setStep(2)}>
-              <span className="flex items-center gap-2">Continue <ChevronRight size={14} /></span>
+              <span className="flex items-center gap-2">Continue <CaretRight size={14} /></span>
             </Button>
           </div>
         </Card>
@@ -346,7 +346,7 @@ export default function InquiryPage() {
           <div className="mt-6 flex justify-between">
             <Button variant="secondary" onClick={() => setStep(1)}>Back</Button>
             <Button onClick={() => setStep(3)}>
-              <span className="flex items-center gap-2">Continue <ChevronRight size={14} /></span>
+              <span className="flex items-center gap-2">Continue <CaretRight size={14} /></span>
             </Button>
           </div>
         </Card>
@@ -383,7 +383,7 @@ export default function InquiryPage() {
           <div className="mt-6 flex justify-between">
             <Button variant="secondary" onClick={() => setStep(2)}>Back</Button>
             <Button onClick={() => setStep(4)}>
-              <span className="flex items-center gap-2">Continue <ChevronRight size={14} /></span>
+              <span className="flex items-center gap-2">Continue <CaretRight size={14} /></span>
             </Button>
           </div>
         </Card>
@@ -413,7 +413,7 @@ export default function InquiryPage() {
 
           {error && (
             <div className="p-3 bg-red-500/10 border border-red-500/20 flex gap-2 mb-4">
-              <AlertCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
+              <WarningCircle size={14} className="text-red-500 shrink-0 mt-0.5" />
               <p className="text-[10px] text-red-500 font-bold">{error}</p>
             </div>
           )}

@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { Check, Activity, ArrowRight, Loader2 } from 'lucide-react';
+import { Check, Pulse, ArrowRight, CircleNotch } from '@phosphor-icons/react';
 
 function CheckoutSuccessContent() {
   const router = useRouter();
@@ -59,7 +59,7 @@ function CheckoutSuccessContent() {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e]">
         <div className="text-center">
-          <Loader2 size={32} className="text-[#C8A2C8] animate-spin mx-auto mb-4" />
+          <CircleNotch size={32} className="text-[#C8A2C8] animate-spin mx-auto mb-4" />
           <div className="text-[10px] font-black uppercase tracking-[4px] text-white/40">Activating Subscription...</div>
         </div>
       </div>
@@ -106,7 +106,7 @@ function CheckoutSuccessContent() {
               'Your 90-day protocol begins after analysis',
             ].map((text, i) => (
               <div key={i} className="flex items-center gap-3 p-3 bg-white/[0.02] border border-white/5">
-                <Activity size={12} className="text-[#C8A2C8] shrink-0" />
+                <Pulse size={12} className="text-[#C8A2C8] shrink-0" />
                 <span className="text-[11px] text-white/60">{text}</span>
               </div>
             ))}
@@ -131,7 +131,7 @@ export default function CheckoutSuccessPage() {
   return (
     <Suspense fallback={
       <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e]">
-        <Loader2 size={32} className="text-[#C8A2C8] animate-spin" />
+        <CircleNotch size={32} className="text-[#C8A2C8] animate-spin" />
       </div>
     }>
       <CheckoutSuccessContent />

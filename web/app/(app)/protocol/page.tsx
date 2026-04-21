@@ -4,10 +4,10 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import { cn } from '@/lib/utils';
 import {
-  Sun, Moon, Zap, Coffee, Clock, ShieldCheck,
-  ChevronRight, Activity, Flame, Target,
-  FlaskConical, ArrowRight, ClipboardCheck,
-} from 'lucide-react';
+  Sun, Moon, Lightning, Coffee, Clock, ShieldCheck,
+  CaretRight, Pulse, Fire, Target,
+  Flask, ArrowRight, ClipboardText,
+} from '@phosphor-icons/react';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
@@ -43,15 +43,15 @@ function getTimingMeta(timing: string) {
   if (t.includes('evening') || t.includes('night') || t.includes('bed'))
     return { Icon: Moon,  color: '#CE93D8', bg: 'rgba(206,147,216,0.1)' };
   if (t.includes('workout') || t.includes('training') || t.includes('pre-'))
-    return { Icon: Zap,   color: '#C8A2C8', bg: 'rgba(200,162,200,0.1)' };
+    return { Icon: Lightning,   color: '#C8A2C8', bg: 'rgba(200,162,200,0.1)' };
   return   { Icon: Clock, color: '#64B5F6', bg: 'rgba(100,181,246,0.1)' };
 }
 
 const DIRECTIVE_META = {
   eating:   { title: 'Nutrition', Icon: Coffee,   color: '#64B5F6' },
-  exercise: { title: 'Training',  Icon: Zap,      color: '#C8A2C8' },
+  exercise: { title: 'Training',  Icon: Lightning,      color: '#C8A2C8' },
   sleep:    { title: 'Sleep',     Icon: Moon,     color: '#CE93D8' },
-  stress:   { title: 'Stress',    Icon: Activity, color: '#E8C470' },
+  stress:   { title: 'Stress',    Icon: Pulse, color: '#E8C470' },
   habits:   { title: 'Habits',    Icon: Target,   color: '#9A9A9A' },
 } as const;
 
@@ -137,7 +137,7 @@ export default async function ProtocolPage() {
           <h1 className="text-xl font-black tracking-[2px] uppercase text-white">90-Day Protocol</h1>
         </div>
         <Card className="text-center py-20">
-          <FlaskConical size={48} className="mx-auto mb-6 text-[rgba(255,255,255,0.1)]" />
+          <Flask size={48} className="mx-auto mb-6 text-[rgba(255,255,255,0.1)]" />
           <h2 className="text-xl font-black text-white uppercase tracking-tight mb-2">Protocol Offline</h2>
           <p className="text-sm text-[#9A9A9A] mb-8 max-w-sm mx-auto leading-relaxed">
             Upload your initial bloodwork to generate your personalized 90-day biological optimization roadmap.
@@ -200,7 +200,7 @@ export default async function ProtocolPage() {
             {/* Node: Initial Bloodwork */}
             <div className="shrink-0 w-14 flex justify-center">
               <div className="w-9 h-9 border-2 border-[#4ADE80] bg-[rgba(74,222,128,0.06)] flex items-center justify-center">
-                <FlaskConical size={15} className="text-[#4ADE80]" />
+                <Flask size={15} className="text-[#4ADE80]" />
               </div>
             </div>
 
@@ -231,7 +231,7 @@ export default async function ProtocolPage() {
                   ? 'border-[#4ADE80] bg-[rgba(74,222,128,0.06)]'
                   : 'border-[rgba(255,255,255,0.07)] bg-[rgba(255,255,255,0.02)]'
               )}>
-                <ClipboardCheck size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
+                <ClipboardText size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
               </div>
             </div>
 
@@ -261,7 +261,7 @@ export default async function ProtocolPage() {
             {/* Node: Final Bloodwork */}
             <div className="shrink-0 w-14 flex justify-center">
               <div className="w-9 h-9 border-2 border-[rgba(255,255,255,0.05)] bg-[#141414] flex items-center justify-center">
-                <FlaskConical size={15} className="text-[#2A2A2A]" />
+                <Flask size={15} className="text-[#2A2A2A]" />
               </div>
             </div>
 
@@ -309,7 +309,7 @@ export default async function ProtocolPage() {
           {isLocked ? (
             <Card className="text-center py-12">
               <div className="w-12 h-12 rounded-full border border-[rgba(255,255,255,0.07)] flex items-center justify-center mx-auto mb-4">
-                <ClipboardCheck size={20} className="text-[#3A3A3A]" />
+                <ClipboardText size={20} className="text-[#3A3A3A]" />
               </div>
               <div className="text-sm font-bold text-white mb-2">Phase {currentPhase}: {currentPhaseData.label}</div>
               <p className="text-[11px] text-[#9A9A9A] leading-relaxed mb-6 max-w-xs mx-auto">
@@ -327,7 +327,7 @@ export default async function ProtocolPage() {
                 <Card className="p-0 overflow-hidden">
                   <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Flame size={15} className="text-[#E88080]" />
+                      <Fire size={15} className="text-[#E88080]" />
                       <span className="text-xs font-black text-white uppercase tracking-[2px]">Chemical Foundation</span>
                     </div>
                   </div>
@@ -395,7 +395,7 @@ export default async function ProtocolPage() {
                             <div className="text-[9px] text-[#4A4A4A]">{items.length} directive{items.length > 1 ? 's' : ''}</div>
                           </div>
                         </div>
-                        <ChevronRight size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
+                        <CaretRight size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
                       </summary>
                       <div className="px-4 pb-4 pt-2 flex flex-col gap-2.5 border-t border-[rgba(255,255,255,0.04)]">
                         {items.map((text, idx) => (
@@ -445,8 +445,8 @@ export default async function ProtocolPage() {
             <Card topAccent={nextMilestoneDays <= 7 ? 'rgba(232,128,128,0.6)' : 'rgba(232,196,112,0.5)'}>
               <div className="flex items-center gap-2 mb-4">
                 {currentPhase === 1
-                  ? <ClipboardCheck size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
-                  : <FlaskConical size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
+                  ? <ClipboardText size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
+                  : <Flask size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
                 }
                 <span className="text-[10px] font-black uppercase tracking-widest"
                   style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }}>

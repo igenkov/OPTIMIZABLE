@@ -10,10 +10,10 @@ import {
   Fingerprint,
   Lock,
   ArrowRight,
-  AlertCircle,
+  WarningCircle,
   ShieldCheck,
   KeyRound
-} from 'lucide-react';
+} from '@phosphor-icons/react';
 
 function AuthModule({
   onClick,
@@ -197,7 +197,7 @@ export default function LoginPage() {
 
               {error && (
                 <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
-                  <AlertCircle size={14} />
+                  <WarningCircle size={14} />
                   Authentication Failed: {error}
                 </div>
               )}

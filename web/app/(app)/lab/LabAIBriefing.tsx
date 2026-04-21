@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { Zap, ChevronDown } from 'lucide-react';
+import { Lightning, CaretDown } from '@phosphor-icons/react';
 import { Card } from '@/components/ui/Card';
 import type { ReportSummaryStructured } from '@/types';
 
@@ -30,7 +30,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
       <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
         style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
         <div className="flex items-center gap-2 mb-5">
-          <Zap size={14} className="text-[#C8A2C8]" />
+          <Lightning size={14} className="text-[#C8A2C8]" />
           <span className="text-[10px] font-black text-white uppercase tracking-[4px]">Executive Briefing</span>
         </div>
         <div className="space-y-5">
@@ -49,7 +49,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
               <button onClick={() => setExpanded(v => !v)}
                 className="mt-3 flex items-center gap-1.5 text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest hover:text-white transition-colors">
                 {expanded ? 'Collapse' : `+${sentences.length - PREVIEW} more`}
-                <ChevronDown size={11} className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+                <CaretDown size={11} className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
               </button>
             )}
           </div>
@@ -79,7 +79,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
     <Card className="col-span-12 lg:col-span-8 border-l-4 border-l-[#C8A2C8]"
       style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, rgba(20,20,20,0) 50%), #141414' }}>
       <div className="flex items-center gap-2 mb-5">
-        <Zap size={14} className="text-[#C8A2C8]" />
+        <Lightning size={14} className="text-[#C8A2C8]" />
         <span className="text-[10px] font-black text-white uppercase tracking-[4px]">AI Assessment</span>
       </div>
       <div className="border-l border-[rgba(255,255,255,0.1)] pl-4">
@@ -98,7 +98,7 @@ export function LabAIBriefing({ summary }: { summary: string | ReportSummaryStru
           <button onClick={() => setExpanded(v => !v)}
             className="mt-3 flex items-center gap-1.5 text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest hover:text-white transition-colors">
             {expanded ? 'Collapse' : `+${rest.length - PREVIEW} more`}
-            <ChevronDown size={11} className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
+            <CaretDown size={11} className={`transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
           </button>
         )}
       </div>

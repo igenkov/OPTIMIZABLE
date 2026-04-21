@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { CaretDown } from '@phosphor-icons/react';
 
 interface Factor {
   title: string;
@@ -53,7 +53,7 @@ export function ExpandableFactors({
               >
                 {f.title}
               </span>
-              <ChevronDown
+              <CaretDown
                 size={13}
                 className="shrink-0 transition-transform duration-200"
                 style={{

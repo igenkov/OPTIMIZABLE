@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Cpu, FlaskConical, ShieldCheck, Zap, Loader2, Check } from 'lucide-react';
+import { Cpu, Flask, ShieldCheck, Lightning, CircleNotch, Check } from '@phosphor-icons/react';
 
 const FOUNDATION_LOGS = [
   'Loading analysis findings...',
@@ -231,7 +231,7 @@ export default function GenerateProtocolPage() {
             <div className="relative mb-10">
               <div className="absolute inset-0 bg-[#C8A2C8]/20 blur-[40px] rounded-full animate-pulse" />
               <div className="relative w-24 h-24 rounded-xl border border-[#C8A2C8]/30 flex items-center justify-center bg-black">
-                <FlaskConical className="text-[#C8A2C8] animate-bounce" size={40} />
+                <Flask className="text-[#C8A2C8] animate-bounce" size={40} />
                 <div className="absolute -inset-2 border border-[#C8A2C8]/10 rounded-xl rotate-45 animate-[spin_10s_linear_infinite]" />
                 <div className="absolute -inset-4 border border-[#C8A2C8]/5 rounded-xl -rotate-12 animate-[spin_15s_linear_infinite]" />
               </div>
@@ -259,7 +259,7 @@ export default function GenerateProtocolPage() {
                 </div>
               ))}
               <div className="flex items-center gap-3 text-[#C8A2C8] animate-pulse">
-                <Loader2 size={10} className="animate-spin" />
+                <CircleNotch size={10} className="animate-spin" />
                 <span className="uppercase tracking-tighter">{LOG_MESSAGES[currentLog]}</span>
               </div>
             </div>
@@ -270,7 +270,7 @@ export default function GenerateProtocolPage() {
           {[
             { label: 'Analysis Loaded', val: '✓', Icon: ShieldCheck },
             { label: 'Protocol Engine', val: 'ACTIVE', Icon: Cpu },
-            { label: 'Personalisation', val: '100%', Icon: Zap },
+            { label: 'Personalisation', val: '100%', Icon: Lightning },
           ].map(({ label, val, Icon }, i) => (
             <div key={i} className="flex flex-col items-center p-4 bg-white/[0.02] border border-white/5">
               <Icon size={14} className="text-white/20 mb-2" />

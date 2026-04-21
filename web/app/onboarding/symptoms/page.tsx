@@ -6,19 +6,19 @@ import { Button } from '@/components/ui/Button';
 import { SYMPTOMS, SYMPTOM_CATEGORIES } from '@/constants/symptoms';
 import { scoreSymptoms } from '@/lib/scoring';
 import {
-  Activity, Brain, Zap, Heart, Moon,
-  ShieldAlert, ChevronRight, Info, Check,
-  AlertCircle, Gauge
-} from 'lucide-react';
+  Pulse, Brain, Lightning, Heart, Moon,
+  ShieldWarning, CaretRight, Info, Check,
+  WarningCircle, Gauge
+} from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 const CATEGORY_ICONS: Record<string, any> = {
-  'Energy & Vitality': Zap,
-  'Body Composition': Activity,
+  'Energy & Vitality': Lightning,
+  'Body Composition': Pulse,
   'Sexual Health': Heart,
   'Mood & Cognition': Brain,
   'Sleep': Moon,
-  'Physical Signs': ShieldAlert,
+  'Physical Signs': ShieldWarning,
 };
 
 export default function SymptomsPage() {
@@ -106,7 +106,7 @@ export default function SymptomsPage() {
         </div>
         {activeSymptomCount > 5 && (
           <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20">
-            <AlertCircle size={12} className="text-red-500" />
+            <WarningCircle size={12} className="text-red-500" />
             <span className="text-[9px] font-black uppercase tracking-tighter text-red-500">High Symptom Load</span>
           </div>
         )}
@@ -116,7 +116,7 @@ export default function SymptomsPage() {
       <div className="space-y-10 mb-12">
         {SYMPTOM_CATEGORIES.map(cat => {
           const items = SYMPTOMS.filter(s => s.category === cat && s.id !== 'none');
-          const Icon = CATEGORY_ICONS[cat] || Activity;
+          const Icon = CATEGORY_ICONS[cat] || Pulse;
 
           return (
             <div key={cat} className="space-y-4">
@@ -207,7 +207,7 @@ export default function SymptomsPage() {
       <div className="pt-8 space-y-4">
         {error && (
           <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
-            <ShieldAlert size={14} />
+            <ShieldWarning size={14} />
             {error}
           </div>
         )}
@@ -225,7 +225,7 @@ export default function SymptomsPage() {
           fullWidth
           className="py-5 flex items-center justify-center gap-2"
         >
-          {!loading && <>Analyze Clinical Signals <ChevronRight size={16} /></>}
+          {!loading && <>Analyze Clinical Signals <CaretRight size={16} /></>}
         </Button>
       </div>
     </div>

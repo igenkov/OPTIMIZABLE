@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
-import { User, Droplets, Shield, Scale, Calendar, Activity, Flame, FlaskConical, ChevronRight } from 'lucide-react';
+import { User, Drop, Shield, Scales, Calendar, Pulse, Fire, Flask, CaretRight } from '@phosphor-icons/react';
 import Link from 'next/link';
 import { SignOutButton } from './SignOutButton';
 
@@ -55,19 +55,19 @@ export default async function ProfilePage() {
 
   const stats = [
     { label: 'Cycle Day',  value: cycleDay ? `Day ${cycleDay}` : '—',       icon: Calendar,     accent: '#C8A2C8' },
-    { label: 'Phase',      value: cycleDay ? PHASE_LABELS[phase] : '—',      icon: Activity,     accent: '#64B5F6' },
-    { label: 'Streak',     value: streak   ? `${streak} Days` : '—',         icon: Flame,        accent: '#E8C470' },
-    { label: 'Next Lab',   value: cycleDay ? `${nextLabDays}d` : '—',        icon: FlaskConical, accent: '#CE93D8' },
+    { label: 'Phase',      value: cycleDay ? PHASE_LABELS[phase] : '—',      icon: Pulse,     accent: '#64B5F6' },
+    { label: 'Streak',     value: streak   ? `${streak} Days` : '—',         icon: Fire,        accent: '#E8C470' },
+    { label: 'Next Lab',   value: cycleDay ? `${nextLabDays}d` : '—',        icon: Flask, accent: '#CE93D8' },
   ] as const;
 
   const menuSections = [
     { title: 'Account', items: [
       { icon: User,     label: 'Edit Personal Details',     href: '/onboarding/phase1' },
-      { icon: Droplets, label: 'Retake Symptom Assessment', href: '/onboarding/symptoms' },
+      { icon: Drop, label: 'Retake Symptom Assessment', href: '/onboarding/symptoms' },
     ]},
     { title: 'Legal', items: [
       { icon: Shield,   label: 'Medical Disclaimer',        href: '#disclaimer' },
-      { icon: Scale,    label: 'Privacy Policy',            href: '#privacy' },
+      { icon: Scales,    label: 'Privacy Policy',            href: '#privacy' },
     ]},
   ];
 
@@ -179,7 +179,7 @@ export default async function ProfilePage() {
                       <span className="flex-1 text-sm text-[#E0E0E0] group-hover:text-white transition-colors duration-200">
                         {item.label}
                       </span>
-                      <ChevronRight size={14} className="text-[#3A3A3A] group-hover:text-[#C8A2C8] group-hover:translate-x-1 transition-all duration-200" />
+                      <CaretRight size={14} className="text-[#3A3A3A] group-hover:text-[#C8A2C8] group-hover:translate-x-1 transition-all duration-200" />
                     </a>
                   );
                 })}

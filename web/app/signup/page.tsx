@@ -11,9 +11,9 @@ import {
   ArrowRight,
   Lock,
   Mail,
-  AlertCircle,
-  Zap
-} from 'lucide-react';
+  WarningCircle,
+  Lightning
+} from '@phosphor-icons/react';
 
 function SocialModule({
   onClick,
@@ -222,7 +222,7 @@ export default function SignupPage() {
 
               {error && (
                 <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
-                  <AlertCircle size={14} />
+                  <WarningCircle size={14} />
                   {error}
                 </div>
               )}
@@ -249,7 +249,7 @@ export default function SignupPage() {
 
           <div className="p-4 bg-white/[0.02] border border-white/5">
             <div className="flex gap-3 items-start">
-              <Zap size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
+              <Lightning size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
               <p className="text-[9px] text-white/30 leading-relaxed uppercase font-bold tracking-tight">
                 By initializing, you confirm this is a personal health dashboard. Data is encrypted and used only for your 90-day optimization protocol.
               </p>

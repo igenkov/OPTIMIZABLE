@@ -5,7 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card } from '@/components/ui/Card';
-import { User, Ruler, Scale, Dumbbell, Check, ChevronRight, Info } from 'lucide-react';
+import { User, Ruler, Scales, Barbell, Check, CaretRight, Info } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
 
 const CONDITIONS = [
@@ -172,7 +172,7 @@ export default function Phase1Page() {
             </div>
             <div className="space-y-2">
               <label className="text-[10px] font-bold text-white/40 uppercase tracking-widest flex items-center gap-2">
-                <Scale size={12} /> Weight ({form.unit_preference === 'metric' ? 'kg' : 'lbs'})
+                <Scales size={12} /> Weight ({form.unit_preference === 'metric' ? 'kg' : 'lbs'})
               </label>
               <Input type="number" value={form.weight_kg} onChange={e => setForm(p => ({ ...p, weight_kg: e.target.value }))} placeholder={form.unit_preference === 'metric' ? '85' : '187'} />
             </div>
@@ -230,7 +230,7 @@ export default function Phase1Page() {
               'p-2 border',
               form.high_muscle ? 'border-[#C8A2C8] text-[#C8A2C8]' : 'border-white/10 text-white/20'
             )}>
-              <Dumbbell size={20} />
+              <Barbell size={20} />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
@@ -294,7 +294,7 @@ export default function Phase1Page() {
             </div>
           )}
           <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
-            {!loading && <>Execute Phase 02 <ChevronRight size={16} /></>}
+            {!loading && <>Execute Phase 02 <CaretRight size={16} /></>}
           </Button>
           <p className="text-[9px] text-center text-white/20 uppercase tracking-[2px]">
             Data is used for wellness analysis only · Not medical advice

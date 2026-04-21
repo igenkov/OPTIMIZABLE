@@ -1,4 +1,4 @@
-import { Info, CheckCircle2 } from 'lucide-react';
+import { Info, CheckCircle } from '@phosphor-icons/react';
 
 interface PanelCompletenessNoteProps {
   submittedCount: number;
@@ -20,7 +20,7 @@ export function PanelCompletenessNote({
   if (context === 'upload' && isComplete) {
     return (
       <div className="flex items-start gap-3 px-4 py-3 bg-[rgba(74,222,128,0.04)] border border-[rgba(74,222,128,0.15)]">
-        <CheckCircle2 size={14} className="text-[#4ade80] shrink-0 mt-0.5" />
+        <CheckCircle size={14} className="text-[#4ade80] shrink-0 mt-0.5" />
         <div>
           <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-[2px]">
             Full Panel - {submittedCount} of {recommendedCount} markers

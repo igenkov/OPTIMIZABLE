@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { createClient } from '@/lib/supabase/client';
 import { Card } from '@/components/ui/Card';
-import { Activity, ClipboardCheck, FlaskConical, ArrowRight } from 'lucide-react';
+import { Pulse, ClipboardText, Flask, ArrowRight } from '@phosphor-icons/react';
 import Link from 'next/link';
 
 const ADHERENCE_OPTIONS = [
@@ -89,7 +89,7 @@ export function ProgressTracker({ cycleId, protocolReportId, currentDay, current
     <Card className="p-0 overflow-hidden">
       <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center gap-3"
         style={{ background: 'rgba(255,255,255,0.01)' }}>
-        <Activity size={15} className="text-[#C8A2C8]" />
+        <Pulse size={15} className="text-[#C8A2C8]" />
         <div>
           <div className="text-xs font-black text-white uppercase tracking-[2px]">Progress Tracker</div>
           <div className="text-[9px] text-[#4A4A4A] uppercase tracking-wide">Protocol adherence and milestones</div>
@@ -143,7 +143,7 @@ export function ProgressTracker({ cycleId, protocolReportId, currentDay, current
           <Link href="/inquiry"
             className="flex items-center justify-between p-4 border border-[#C8A2C8] bg-[rgba(200,162,200,0.06)] hover:bg-[rgba(200,162,200,0.1)] transition-colors group">
             <div className="flex items-center gap-3">
-              <ClipboardCheck size={16} className="text-[#C8A2C8]" />
+              <ClipboardText size={16} className="text-[#C8A2C8]" />
               <div>
                 <div className="text-[11px] font-black text-white uppercase tracking-tight">45-Day Inquiry Ready</div>
                 <div className="text-[10px] text-[#4A4A4A]">Complete to generate your Calibration protocol</div>
@@ -157,7 +157,7 @@ export function ProgressTracker({ cycleId, protocolReportId, currentDay, current
           <Link href="/lab/upload"
             className="flex items-center justify-between p-4 border border-[#E8C470] bg-[rgba(232,196,112,0.06)] hover:bg-[rgba(232,196,112,0.1)] transition-colors group">
             <div className="flex items-center gap-3">
-              <FlaskConical size={16} className="text-[#E8C470]" />
+              <Flask size={16} className="text-[#E8C470]" />
               <div>
                 <div className="text-[11px] font-black text-white uppercase tracking-tight">Final Bloodwork (Optional)</div>
                 <div className="text-[10px] text-[#4A4A4A]">Upload to see your 90-day progress comparison</div>
