@@ -17,6 +17,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 
     tier = (userRes.data?.subscription_tier as typeof tier | null) ?? 'free';
 
+    // During free beta: auto-upgrade free users so all DB-gated checks pass
+    if (process.env.NEXT_PUBLIC_BETA_PERIOD === 'true' && tier === 'free') {
+      tier = 'beta';
+      supabase.from('users').update({ subscription_tier: 'beta', beta_cohort_joined_at: new Date().toISOString() }).eq('id', user.id).then(() => {});
+    }
+
     if (cycleRes.data) {
       const startDate = new Date(cycleRes.data.start_date);
       const today = new Date();

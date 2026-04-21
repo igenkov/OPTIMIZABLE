@@ -60,7 +60,8 @@ export default async function LabPage() {
   if (!user) redirect('/login');
 
   const { data: userData } = await supabase.from('users').select('subscription_tier').eq('id', user.id).single();
-  if (!userData?.subscription_tier || userData.subscription_tier === 'free') redirect('/dashboard');
+  const BETA_PERIOD = process.env.NEXT_PUBLIC_BETA_PERIOD === 'true';
+  if (!BETA_PERIOD && (!userData?.subscription_tier || userData.subscription_tier === 'free')) redirect('/dashboard');
 
   const [reportsRes, profileRes, lifestyleRes, medHistRes, symptomsRes, panelsRes] = await Promise.all([
     supabase.from('analysis_reports').select('*').eq('user_id', user.id).order('created_at', { ascending: true }),

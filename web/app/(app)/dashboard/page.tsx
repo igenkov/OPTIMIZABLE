@@ -39,7 +39,8 @@ export default async function DashboardPage() {
   const symptoms = symptomsRes.data as { symptoms_selected: string[] } | null;
   const hasReport = !!reportRes.data;
   const tier = (userRes.data?.subscription_tier as 'free' | 'premium' | 'expert' | 'beta') ?? 'free';
-  const isPremium = tier === 'premium' || tier === 'expert' || tier === 'beta';
+  const BETA_PERIOD = process.env.NEXT_PUBLIC_BETA_PERIOD === 'true';
+  const isPremium = BETA_PERIOD || tier === 'premium' || tier === 'expert' || tier === 'beta';
 
   const p1 = profile;
   const p2 = lifestyle ?? {} as Phase2Data;

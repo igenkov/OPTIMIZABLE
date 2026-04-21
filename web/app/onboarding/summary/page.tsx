@@ -54,15 +54,12 @@ export default function SummaryPage() {
         try {
           const supabase = createClient();
           const userId = data.user!.id;
-          const { data: profile } = await supabase.from('profiles').select('age').eq('user_id', userId).single();
-          if (!profile?.age) {
-            await Promise.all([
-              supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
-              p2Raw && p2.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
-              p3Raw && p3.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
-              symRaw && sym.symptoms_selected && supabase.from('symptom_assessments').upsert({ user_id: userId, ...sym }),
-            ]);
-          }
+          await Promise.all([
+            supabase.from('profiles').upsert({ user_id: userId, ...p1 }),
+            p2Raw && p2.avg_sleep_hours !== undefined && supabase.from('lifestyle').upsert({ user_id: userId, ...p2 }),
+            p3Raw && p3.steroid_history && supabase.from('medical_history').upsert({ user_id: userId, ...p3 }),
+            symRaw && sym.symptoms_selected && supabase.from('symptom_assessments').upsert({ user_id: userId, ...sym }),
+          ]);
         } catch { /* DB write failed — data persists in localStorage, user can retry on next visit */ }
       }
     });
