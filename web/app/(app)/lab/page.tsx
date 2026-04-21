@@ -18,7 +18,7 @@ import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Data, Phase3Data } from '@/types';
 
 // ── Category config ──────────────────────────────────────────────────────────
-const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
+const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties; weight?: string }> }> = {
   hormones:  { label: 'Hormonal Axis',    color: '#C8A2C8', Icon: Pulse  },
   thyroid:   { label: 'Thyroid Function', color: '#CE93D8', Icon: TestTube },
   metabolic: { label: 'Metabolic Health', color: '#64B5F6', Icon: Lightning       },
