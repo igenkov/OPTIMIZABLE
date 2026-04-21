@@ -8,7 +8,7 @@ import {
   Pulse, Lightning, Drop, Flask,
   ArrowUpRight, CaretRight, TestTube, ClipboardText, Clock,
   Info, Clipboard, ArrowRight,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 import { LabAIBriefing } from './LabAIBriefing';
 import { PanelActions } from './PanelActions';
 import { cn } from '@/lib/utils';

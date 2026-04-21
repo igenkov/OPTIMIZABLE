@@ -7,7 +7,7 @@ import {
   Sun, Moon, Lightning, Coffee, Clock, ShieldCheck,
   CaretRight, Pulse, Fire, Target,
   Flask, ArrowRight, ClipboardText,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';

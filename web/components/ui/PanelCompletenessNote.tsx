@@ -1,4 +1,4 @@
-import { Info, CheckCircle } from '@phosphor-icons/react';
+import { Info, CheckCircle } from '@phosphor-icons/react/dist/ssr';
 
 interface PanelCompletenessNoteProps {
   submittedCount: number;

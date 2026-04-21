@@ -5,7 +5,7 @@ import {
   Pulse, ShieldWarning, ShieldCheck, Heart, Info,
   ArrowRight, CheckCircle, Clipboard, User,
   Calendar, Fire, Drop, Gauge, Flask
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 import { ExpandableFactors } from '@/components/ui/ExpandableFactors';
 import { Card } from '@/components/ui/Card';
 import { ScoreRing } from '@/components/ui/ScoreRing';

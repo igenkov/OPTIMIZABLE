@@ -2,7 +2,7 @@
 import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import { Card } from '@/components/ui/Card';
-import { User, Drop, Shield, Scales, Calendar, Pulse, Fire, Flask, CaretRight } from '@phosphor-icons/react';
+import { User, Drop, Shield, Scales, Calendar, Pulse, Fire, Flask, CaretRight } from '@phosphor-icons/react/dist/ssr';
 import Link from 'next/link';
 import { SignOutButton } from './SignOutButton';
 

@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Pulse, ClipboardText, ChartBar, UserCircle, ShieldCheck } from '@phosphor-icons/react';
+import { ArrowRight, Pulse, ClipboardText, ChartBar, UserCircle, ShieldCheck } from '@phosphor-icons/react/dist/ssr';
 
 export const metadata = {
   title: 'How It Works — Optimizable',

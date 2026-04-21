@@ -5,7 +5,7 @@ import Image from 'next/image';
 import {
   ArrowRight, UserCircle, Pulse, ClipboardText,
   ChartBar, Flask, TrendUp,
-} from '@phosphor-icons/react';
+} from '@phosphor-icons/react/dist/ssr';
 
 // -- Step definitions ----------------------------------------------------------
 
