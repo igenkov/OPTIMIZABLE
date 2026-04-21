@@ -137,7 +137,7 @@ export default async function ProtocolPage() {
           <h1 className="text-xl font-black tracking-[2px] uppercase text-white">90-Day Protocol</h1>
         </div>
         <Card className="text-center py-20">
-          <Flask size={48} className="mx-auto mb-6 text-[rgba(255,255,255,0.1)]" />
+          <Flask weight="duotone" size={48} className="mx-auto mb-6 text-[rgba(255,255,255,0.1)]" />
           <h2 className="text-xl font-black text-white uppercase tracking-tight mb-2">Protocol Offline</h2>
           <p className="text-sm text-[#9A9A9A] mb-8 max-w-sm mx-auto leading-relaxed">
             Upload your initial bloodwork to generate your personalized 90-day biological optimization roadmap.
@@ -200,7 +200,7 @@ export default async function ProtocolPage() {
             {/* Node: Initial Bloodwork */}
             <div className="shrink-0 w-14 flex justify-center">
               <div className="w-9 h-9 border-2 border-[#4ADE80] bg-[rgba(74,222,128,0.06)] flex items-center justify-center">
-                <Flask size={15} className="text-[#4ADE80]" />
+                <Flask weight="duotone" size={15} className="text-[#4ADE80]" />
               </div>
             </div>
 
@@ -231,7 +231,7 @@ export default async function ProtocolPage() {
                   ? 'border-[#4ADE80] bg-[rgba(74,222,128,0.06)]'
                   : 'border-[rgba(255,255,255,0.07)] bg-[rgba(255,255,255,0.02)]'
               )}>
-                <ClipboardText size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
+                <ClipboardText weight="duotone" size={15} className={currentPhase >= 2 ? 'text-[#4ADE80]' : 'text-[#3A3A3A]'} />
               </div>
             </div>
 
@@ -261,7 +261,7 @@ export default async function ProtocolPage() {
             {/* Node: Final Bloodwork */}
             <div className="shrink-0 w-14 flex justify-center">
               <div className="w-9 h-9 border-2 border-[rgba(255,255,255,0.05)] bg-[#141414] flex items-center justify-center">
-                <Flask size={15} className="text-[#2A2A2A]" />
+                <Flask weight="duotone" size={15} className="text-[#2A2A2A]" />
               </div>
             </div>
 
@@ -300,7 +300,7 @@ export default async function ProtocolPage() {
           <div className="border-l-4 border-[#C8A2C8] px-5 py-4"
             style={{ background: 'rgba(200,162,200,0.04)', borderRadius: '0 6px 6px 0' }}>
             <div className="flex items-center gap-2 mb-1.5">
-              <Target size={13} className="text-[#C8A2C8]" />
+              <Target weight="duotone" size={13} className="text-[#C8A2C8]" />
               <span className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-[3px]">Current Mission</span>
             </div>
             <p className="text-base font-bold text-[#E0E0E0] leading-snug">{currentPhaseData.goal}</p>
@@ -309,7 +309,7 @@ export default async function ProtocolPage() {
           {isLocked ? (
             <Card className="text-center py-12">
               <div className="w-12 h-12 rounded-full border border-[rgba(255,255,255,0.07)] flex items-center justify-center mx-auto mb-4">
-                <ClipboardText size={20} className="text-[#3A3A3A]" />
+                <ClipboardText weight="duotone" size={20} className="text-[#3A3A3A]" />
               </div>
               <div className="text-sm font-bold text-white mb-2">Phase {currentPhase}: {currentPhaseData.label}</div>
               <p className="text-[11px] text-[#9A9A9A] leading-relaxed mb-6 max-w-xs mx-auto">
@@ -327,7 +327,7 @@ export default async function ProtocolPage() {
                 <Card className="p-0 overflow-hidden">
                   <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center justify-between">
                     <div className="flex items-center gap-3">
-                      <Fire size={15} className="text-[#E88080]" />
+                      <Fire weight="duotone" size={15} className="text-[#E88080]" />
                       <span className="text-xs font-black text-white uppercase tracking-[2px]">Chemical Foundation</span>
                     </div>
                   </div>
@@ -338,7 +338,7 @@ export default async function ProtocolPage() {
                         <div key={i} className="px-5 py-4 flex items-start gap-4 hover:bg-[rgba(255,255,255,0.01)] transition-colors">
                           <div className="w-10 h-10 rounded flex items-center justify-center shrink-0 border border-[rgba(255,255,255,0.06)]"
                             style={{ background: bg, color }}>
-                            <Icon size={17} />
+                            <Icon weight="duotone" size={17} />
                           </div>
                           <div className="flex-1 min-w-0">
                             <div className="flex items-center justify-between mb-0.5 flex-wrap gap-2">
@@ -388,14 +388,14 @@ export default async function ProtocolPage() {
                         <div className="flex items-center gap-3">
                           <div className="w-8 h-8 rounded flex items-center justify-center"
                             style={{ background: `${meta.color}14`, color: meta.color }}>
-                            <Icon size={14} />
+                            <Icon weight="duotone" size={14} />
                           </div>
                           <div>
                             <div className="text-[11px] font-black text-white uppercase tracking-widest">{meta.title}</div>
                             <div className="text-[9px] text-[#4A4A4A]">{items.length} directive{items.length > 1 ? 's' : ''}</div>
                           </div>
                         </div>
-                        <CaretRight size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
+                        <CaretRight weight="duotone" size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
                       </summary>
                       <div className="px-4 pb-4 pt-2 flex flex-col gap-2.5 border-t border-[rgba(255,255,255,0.04)]">
                         {items.map((text, idx) => (
@@ -445,8 +445,8 @@ export default async function ProtocolPage() {
             <Card topAccent={nextMilestoneDays <= 7 ? 'rgba(232,128,128,0.6)' : 'rgba(232,196,112,0.5)'}>
               <div className="flex items-center gap-2 mb-4">
                 {currentPhase === 1
-                  ? <ClipboardText size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
-                  : <Flask size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
+                  ? <ClipboardText weight="duotone" size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
+                  : <Flask weight="duotone" size={13} style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }} />
                 }
                 <span className="text-[10px] font-black uppercase tracking-widest"
                   style={{ color: nextMilestoneDays <= 7 ? '#E88080' : '#E8C470' }}>
@@ -463,12 +463,12 @@ export default async function ProtocolPage() {
               {currentPhase === 1 ? (
                 <Link href="/inquiry"
                   className="flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(255,255,255,0.08)] text-[#9A9A9A] font-bold text-[10px] tracking-widest uppercase hover:bg-[rgba(255,255,255,0.04)] hover:text-white transition-all">
-                  Begin Inquiry <ArrowRight size={11} />
+                  Begin Inquiry <ArrowRight weight="duotone" size={11} />
                 </Link>
               ) : (
                 <Link href="/lab/upload"
                   className="flex items-center justify-center gap-2 w-full py-2.5 border border-[rgba(255,255,255,0.08)] text-[#9A9A9A] font-bold text-[10px] tracking-widest uppercase hover:bg-[rgba(255,255,255,0.04)] hover:text-white transition-all">
-                  Prepare Submission <ArrowRight size={11} />
+                  Prepare Submission <ArrowRight weight="duotone" size={11} />
                 </Link>
               )}
             </Card>
@@ -516,7 +516,7 @@ export default async function ProtocolPage() {
                 Phase {p.num}: {p.label}
               </div>
               <div className="flex items-center gap-1.5 text-[9px] text-[#3A3A3A]">
-                <ShieldCheck size={10} /> Days {p.days}
+                <ShieldCheck weight="duotone" size={10} /> Days {p.days}
               </div>
             </div>
           ))}

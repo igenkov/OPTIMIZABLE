@@ -114,7 +114,7 @@ export default function HowItWorksPage() {
               <div key={step} className="p-5 border border-white/5 bg-white/[0.02]">
                 <div className="flex items-center gap-3 mb-3">
                   <div className="w-8 h-8 bg-white/5 flex items-center justify-center shrink-0">
-                    <Icon size={15} className="text-[#666666]" />
+                    <Icon weight="duotone" size={15} className="text-[#666666]" />
                   </div>
                   <div>
                     <div className="text-[8px] font-black text-[#3A3A3A] uppercase tracking-[3px]">Step {step}</div>
@@ -224,7 +224,7 @@ export default function HowItWorksPage() {
         {/* SECTION 7 — PRIVACY */}
         <section className="mb-16">
           <div className="p-5 border border-white/5 bg-white/[0.02] flex items-start gap-4">
-            <ShieldCheck size={18} className="text-[#C8A2C8] shrink-0 mt-0.5" />
+            <ShieldCheck weight="duotone" size={18} className="text-[#C8A2C8] shrink-0 mt-0.5" />
             <div>
               <div className="text-[10px] font-black uppercase tracking-[2px] text-white mb-2">Privacy & Data</div>
               <p className="text-[12px] text-[#6A6A6A] leading-relaxed">
@@ -239,7 +239,7 @@ export default function HowItWorksPage() {
           <div className="text-[10px] font-black text-[#5A5A5A] uppercase tracking-[3px] mb-4">Start Free — No Bloodwork Required</div>
           <Link href="/onboarding/phase1"
             className="group inline-flex items-center justify-center gap-2 px-8 py-4 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[3px] uppercase hover:bg-[#A882A8] transition-colors">
-            Begin Assessment <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform" />
+            Begin Assessment <ArrowRight weight="duotone" size={13} className="group-hover:translate-x-1 transition-transform" />
           </Link>
           <p className="text-[10px] text-[#4A4A4A] mt-4 uppercase tracking-widest">3 minutes · Free · No account required to start</p>
         </div>

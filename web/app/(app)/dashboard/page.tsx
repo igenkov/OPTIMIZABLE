@@ -89,7 +89,7 @@ export default async function DashboardPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 border-b border-white/5 pb-8">
         <div>
           <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
-            <Pulse size={14} />
+            <Pulse weight="duotone" size={14} />
             <span className="text-[10px] font-black uppercase tracking-[3px]">Biological Baseline Assessment</span>
           </div>
           <h1 className="text-4xl font-black text-white uppercase tracking-tighter">Health Dashboard</h1>
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
           </span>
           {hasReport && (
             <Link href="/lab" className="group flex items-center gap-2 text-[10px] font-black text-[#C8A2C8] uppercase tracking-widest">
-              View Latest Lab Report <ArrowRight size={12} className="group-hover:translate-x-1 transition-transform" />
+              View Latest Lab Report <ArrowRight weight="duotone" size={12} className="group-hover:translate-x-1 transition-transform" />
             </Link>
           )}
         </div>
@@ -120,7 +120,7 @@ export default async function DashboardPage() {
               <span className="text-[10px] text-white/30 hidden sm:block">Upgrade to reveal your full hormonal health status</span>
               <Link href="/upgrade"
                 className="shrink-0 flex items-center gap-2 px-5 py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all w-full sm:w-auto justify-center">
-                Unlock Lab Analysis <ArrowRight size={11} />
+                Unlock Lab Analysis <ArrowRight weight="duotone" size={11} />
               </Link>
             </div>
           )}
@@ -200,7 +200,7 @@ export default async function DashboardPage() {
               {isPremium && !hasReport && (
                 <div className="flex-1 flex flex-col items-center justify-center gap-4 py-4">
                   <div className="w-[110px] h-[110px] rounded-full border-[11px] border-white/[0.05] flex items-center justify-center shrink-0">
-                    <Flask size={28} className="text-white/15" />
+                    <Flask weight="duotone" size={28} className="text-white/15" />
                   </div>
                   <div className="text-center">
                     <div className="text-[11px] font-black text-white/30 uppercase tracking-widest mb-1">Awaiting Bloodwork</div>
@@ -218,7 +218,7 @@ export default async function DashboardPage() {
             <div className="border-t border-white/[0.06] px-6 py-3">
               <Link href={hasReport ? '/lab' : '/lab/upload'}
                 className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all">
-                <Flask size={13} /> {hasReport ? 'LAB' : 'Upload Bloodwork'}
+                <Flask weight="duotone" size={13} /> {hasReport ? 'LAB' : 'Upload Bloodwork'}
               </Link>
             </div>
           )}
@@ -227,7 +227,7 @@ export default async function DashboardPage() {
         {/* Biometrics */}
         <Card className="col-span-12 lg:col-span-5 p-8" style={{ background: 'rgba(255,255,255,0.01)' }}>
           <div className="flex items-center gap-2 mb-8">
-            <User size={16} className="text-[#C8A2C8]" />
+            <User weight="duotone" size={16} className="text-[#C8A2C8]" />
             <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Biometrics</span>
           </div>
 
@@ -267,7 +267,7 @@ export default async function DashboardPage() {
         <Card className="col-span-12 lg:col-span-6 p-8" topAccent="rgba(232,196,112,0.4)">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <ShieldWarning size={16} className="text-[#E8C470]" />
+              <ShieldWarning weight="duotone" size={16} className="text-[#E8C470]" />
               <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Critical Factors</span>
             </div>
             {keyFactors.length > 0 && (
@@ -276,7 +276,7 @@ export default async function DashboardPage() {
           </div>
           <ExpandableFactors
             factors={keyFactors}
-            emptyIcon={<CheckCircle size={32} />}
+            emptyIcon={<CheckCircle weight="duotone" size={32} />}
             emptyLabel="No Critical Risks"
             accentColor="#E8C470"
             borderColor="rgba(232,196,112,0.3)"
@@ -287,7 +287,7 @@ export default async function DashboardPage() {
         <Card className="col-span-12 lg:col-span-6 p-8" topAccent="rgba(74,222,128,0.3)">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <ShieldCheck size={16} className="text-[#4ade80]" />
+              <ShieldCheck weight="duotone" size={16} className="text-[#4ade80]" />
               <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Balancing Factors</span>
             </div>
             {!excluded && protectiveFactors.length > 0 && (
@@ -296,7 +296,7 @@ export default async function DashboardPage() {
           </div>
           <ExpandableFactors
             factors={excluded ? [] : protectiveFactors}
-            emptyIcon={<ShieldCheck size={32} />}
+            emptyIcon={<ShieldCheck weight="duotone" size={32} />}
             emptyLabel="No Protective Factors"
             accentColor="#4ade80"
             borderColor="rgba(74,222,128,0.3)"
@@ -311,7 +311,7 @@ export default async function DashboardPage() {
         <Card className="col-span-12 lg:col-span-8 p-8" accent>
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-2">
-              <Drop size={16} className="text-[#C8A2C8]" />
+              <Drop weight="duotone" size={16} className="text-[#C8A2C8]" />
               <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Required Labs</span>
             </div>
             <span className="text-[9px] font-bold text-[#C8A2C8] bg-[#C8A2C8]/10 px-2 py-0.5">Sequence_01</span>
@@ -324,7 +324,7 @@ export default async function DashboardPage() {
                 {essentialBio.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                     <span className="text-[11px] font-medium text-white/80 group-hover:text-white">{b.name}</span>
-                    <CheckCircle size={12} className="text-[#C8A2C8]/30 group-hover:text-[#C8A2C8] transition-colors" />
+                    <CheckCircle weight="duotone" size={12} className="text-[#C8A2C8]/30 group-hover:text-[#C8A2C8] transition-colors" />
                   </div>
                 ))}
               </div>
@@ -335,7 +335,7 @@ export default async function DashboardPage() {
                 {recommendedBio.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                     <span className="text-[11px] font-medium text-white/60 group-hover:text-white">{b.name}</span>
-                    <CheckCircle size={12} className="text-white/10 group-hover:text-[#E8C470]/60 transition-colors" />
+                    <CheckCircle weight="duotone" size={12} className="text-white/10 group-hover:text-[#E8C470]/60 transition-colors" />
                   </div>
                 ))}
               </div>
@@ -346,7 +346,7 @@ export default async function DashboardPage() {
                 {extendedBio.map(b => (
                   <div key={b.id} className="flex items-center justify-between py-1.5 border-b border-white/[0.03] group hover:bg-white/[0.01] px-2 transition-all">
                     <span className="text-[11px] font-medium text-white/30 group-hover:text-white/60">{b.name}</span>
-                    <CheckCircle size={12} className="text-white/5 group-hover:text-white/20 transition-colors" />
+                    <CheckCircle weight="duotone" size={12} className="text-white/5 group-hover:text-white/20 transition-colors" />
                   </div>
                 ))}
               </div>
@@ -364,7 +364,7 @@ export default async function DashboardPage() {
         {/* Pre-Draw Protocol */}
         <Card className="col-span-12 lg:col-span-4 p-8 relative overflow-hidden">
           <div className="flex items-center gap-2 mb-6">
-            <Info size={16} className="text-white/40" />
+            <Info weight="duotone" size={16} className="text-white/40" />
             <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Pre-Draw Protocol</span>
           </div>
 
@@ -387,7 +387,7 @@ export default async function DashboardPage() {
 
           <div className="mt-8 pt-6 border-t border-white/5">
             <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5">
-              <Clipboard size={20} className="text-[#C8A2C8]" />
+              <Clipboard weight="duotone" size={20} className="text-[#C8A2C8]" />
               <div>
                 <span className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest block">Ready to start?</span>
                 <span className="text-[10px] text-white/40">Download the lab requisition form in your profile.</span>

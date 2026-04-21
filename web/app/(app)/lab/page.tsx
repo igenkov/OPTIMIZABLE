@@ -108,14 +108,14 @@ export default async function LabPage() {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[rgba(255,255,255,0.05)]">
           <div>
             <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
-              <Flask size={13} />
+              <Flask weight="duotone" size={13} />
               <span className="text-[10px] font-black uppercase tracking-[3px]">Biomarker Analysis · Panel_01</span>
             </div>
             <h1 className="text-3xl font-black text-white uppercase tracking-tighter">Biomarker Lab</h1>
           </div>
           <Link href="/lab/upload"
             className="flex items-center gap-2 px-5 py-2.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[2px] uppercase hover:bg-[#A882A8] transition-all">
-            <Flask size={13} /> Submit First Panel
+            <Flask weight="duotone" size={13} /> Submit First Panel
           </Link>
         </div>
 
@@ -157,7 +157,7 @@ export default async function LabPage() {
 
               <Link href="/lab/upload"
                 className="flex items-center justify-center gap-2 w-full py-3.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-widest uppercase hover:bg-[#A882A8] transition-all">
-                Upload Bloodwork <ArrowRight size={13} />
+                Upload Bloodwork <ArrowRight weight="duotone" size={13} />
               </Link>
               <p className="text-center text-[9px] text-white/20 mt-2">Accepts standard lab PDF or manual entry</p>
             </Card>
@@ -166,7 +166,7 @@ export default async function LabPage() {
           {/* Right — Pre-Draw Protocol */}
           <Card className="col-span-12 lg:col-span-5 p-8 relative overflow-hidden">
             <div className="flex items-center gap-2 mb-6">
-              <Info size={16} className="text-white/40" />
+              <Info weight="duotone" size={16} className="text-white/40" />
               <span className="text-[10px] font-black text-white uppercase tracking-[3px]">Pre-Draw Protocol</span>
             </div>
 
@@ -189,7 +189,7 @@ export default async function LabPage() {
 
             <div className="mt-8 pt-6 border-t border-white/5">
               <div className="flex items-center gap-3 p-4 bg-white/[0.02] border border-white/5">
-                <Clipboard size={20} className="text-[#C8A2C8]" />
+                <Clipboard weight="duotone" size={20} className="text-[#C8A2C8]" />
                 <div>
                   <span className="text-[9px] font-black text-[#C8A2C8] uppercase tracking-widest block">Ready to start?</span>
                   <span className="text-[10px] text-white/40">Download the lab requisition form in your profile.</span>
@@ -218,7 +218,7 @@ export default async function LabPage() {
       <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-[rgba(255,255,255,0.05)]">
         <div>
           <div className="flex items-center gap-2 mb-2 text-[#C8A2C8]">
-            <Clock size={13} />
+            <Clock weight="duotone" size={13} />
             <span className="text-[10px] font-black uppercase tracking-[3px]">
               Panel_{typedReports.length} · {new Date(latest.created_at).toLocaleDateString('en-US', { month: 'long', year: 'numeric' })}
             </span>
@@ -227,7 +227,7 @@ export default async function LabPage() {
         </div>
         <Link href="/lab/upload"
           className="flex items-center gap-2 px-5 py-2.5 border border-[#C8A2C8] text-[#C8A2C8] font-black text-[10px] tracking-[2px] uppercase hover:bg-[rgba(200,162,200,0.08)] transition-all">
-          <Flask size={13} /> New Panel Submission
+          <Flask weight="duotone" size={13} /> New Panel Submission
         </Link>
       </div>
 
@@ -364,7 +364,7 @@ export default async function LabPage() {
           <Card className="p-0 overflow-hidden">
             <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center gap-3"
               style={{ background: 'rgba(255,255,255,0.01)' }}>
-              <TestTube size={16} className="text-[#C8A2C8]" />
+              <TestTube weight="duotone" size={16} className="text-[#C8A2C8]" />
               <div>
                 <div className="text-xs font-black text-white uppercase tracking-widest">Recommended Next Tests</div>
                 <div className="text-[9px] text-[#4A4A4A] uppercase tracking-wide">Based on your profile and current results</div>
@@ -406,7 +406,7 @@ export default async function LabPage() {
       {/* ── FOLD 2: Biomarker Deep-Dive ── */}
       <div>
         <div className="flex items-center gap-2 mb-4">
-          <ClipboardText size={14} className="text-[#4A4A4A]" />
+          <ClipboardText weight="duotone" size={14} className="text-[#4A4A4A]" />
           <span className="text-[10px] font-black text-[#4A4A4A] uppercase tracking-[4px]">Categorized Deep-Dive</span>
         </div>
 
@@ -423,7 +423,7 @@ export default async function LabPage() {
                   style={{ background: 'rgba(255,255,255,0.01)' }}>
                   <div className="flex items-center gap-3">
                     <div className="p-2 rounded" style={{ background: `${meta.color}14`, color: meta.color }}>
-                      <Icon size={16} />
+                      <Icon weight="duotone" size={16} />
                     </div>
                     <div>
                       <div className="text-xs font-black text-white uppercase tracking-widest">{meta.label}</div>
@@ -476,7 +476,7 @@ export default async function LabPage() {
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
                               <StatusBadge status={m.status} />
-                              <CaretRight size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
+                              <CaretRight weight="duotone" size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
                             </div>
                           </div>
                           <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={m.status} />
@@ -515,7 +515,7 @@ export default async function LabPage() {
               <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Cycle Complete</div>
               <div className="text-xl font-black uppercase tracking-tighter">View 90-Day Progress</div>
             </div>
-            <ArrowUpRight size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <ArrowUpRight weight="duotone" size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </Link>
         ) : (
           <Link href="/lab/generate-protocol"
@@ -524,7 +524,7 @@ export default async function LabPage() {
               <div className="text-[10px] font-black uppercase tracking-[3px] opacity-60 mb-1">Next Sequence</div>
               <div className="text-xl font-black uppercase tracking-tighter">Generate Foundation Protocol</div>
             </div>
-            <ArrowUpRight size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
+            <ArrowUpRight weight="duotone" size={28} className="group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform" />
           </Link>
         )}
       </div>

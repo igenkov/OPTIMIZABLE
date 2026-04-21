@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Oswald } from "next/font/google";
+import { PhosphorProvider } from "@/components/PhosphorProvider";
 import "./globals.css";
 
 const oswald = Oswald({
@@ -28,7 +29,7 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en">
-      <body className={oswald.variable}>{children}</body>
+      <body className={oswald.variable}><PhosphorProvider>{children}</PhosphorProvider></body>
     </html>
   );
 }

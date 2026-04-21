@@ -61,7 +61,7 @@ function StepBento() {
             >
               <div className="flex items-start justify-between">
                 <div className="w-7 h-7 bg-white/[0.035] rounded-lg flex items-center justify-center">
-                  <Icon size={13} className="text-[#555]" />
+                  <Icon weight="duotone" size={13} className="text-[#555]" />
                 </div>
                 <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] uppercase tabular-nums">{step.id}</span>
               </div>
@@ -80,7 +80,7 @@ function StepBento() {
         return (
           <div className="bg-[#111111] border border-white/[0.07] rounded-2xl px-5 py-4 flex items-center gap-5">
             <div className="w-10 h-10 bg-white/[0.035] rounded-xl flex items-center justify-center shrink-0">
-              <Icon size={18} className="text-[#5A5A5A]" />
+              <Icon weight="duotone" size={18} className="text-[#5A5A5A]" />
             </div>
             <div className="flex-1 min-w-0">
               <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] uppercase block mb-0.5">{riskStep.id}</span>
@@ -114,7 +114,7 @@ function StepBento() {
               >
                 <div className="flex items-start justify-between">
                   <div className="w-7 h-7 bg-[#C8A2C8]/[0.09] rounded-lg flex items-center justify-center">
-                    <Icon size={13} className="text-[#C8A2C8]" />
+                    <Icon weight="duotone" size={13} className="text-[#C8A2C8]" />
                   </div>
                   <span className="text-[8px] font-bold tracking-[2px] text-[#C8A2C8]/35 uppercase tabular-nums">{step.id}</span>
                 </div>
@@ -146,7 +146,7 @@ function MobileStepList() {
               className="flex items-center gap-3.5 py-3 border-b border-white/[0.04] last:border-0"
             >
               <span className="text-[9px] font-bold text-[#2E2E2E] w-5 shrink-0 tabular-nums">{step.id}</span>
-              <Icon size={12} className={step.pro ? 'text-[#C8A2C8] shrink-0' : 'text-[#484848] shrink-0'} />
+              <Icon weight="duotone" size={12} className={step.pro ? 'text-[#C8A2C8] shrink-0' : 'text-[#484848] shrink-0'} />
               <span className="text-[11px] font-black uppercase tracking-wide text-white flex-1 leading-tight">{step.label}</span>
               {step.pro && (
                 <span className="text-[7px] font-black bg-[#C8A2C8] text-black px-1.5 py-0.5 rounded-sm uppercase tracking-wide shrink-0">

@@ -146,7 +146,7 @@ export default async function ProfilePage() {
                       style={{ background: 'linear-gradient(165deg, rgba(255,255,255,0.03) 0%, rgba(20,20,20,0) 60%), #141414',
                                borderTopColor: s.accent }}>
                       <div className="flex items-center gap-1.5 mb-2">
-                        <Icon size={10} style={{ color: s.accent }} />
+                        <Icon weight="duotone" size={10} style={{ color: s.accent }} />
                         <div className="text-[9px] text-[#4A4A4A] uppercase tracking-[2px]">{s.label}</div>
                       </div>
                       <div className="font-mono font-black text-sm tracking-widest text-white">{s.value}</div>
@@ -174,12 +174,12 @@ export default async function ProfilePage() {
                         ${i < section.items.length - 1 ? 'border-b border-[rgba(255,255,255,0.07)]' : ''}`}>
                       <div className="w-8 h-8 rounded-sm flex items-center justify-center shrink-0"
                         style={{ background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.07)' }}>
-                        <Icon size={14} className="text-[#9A9A9A] group-hover:text-[#C8A2C8] transition-colors duration-200" />
+                        <Icon weight="duotone" size={14} className="text-[#9A9A9A] group-hover:text-[#C8A2C8] transition-colors duration-200" />
                       </div>
                       <span className="flex-1 text-sm text-[#E0E0E0] group-hover:text-white transition-colors duration-200">
                         {item.label}
                       </span>
-                      <CaretRight size={14} className="text-[#3A3A3A] group-hover:text-[#C8A2C8] group-hover:translate-x-1 transition-all duration-200" />
+                      <CaretRight weight="duotone" size={14} className="text-[#3A3A3A] group-hover:text-[#C8A2C8] group-hover:translate-x-1 transition-all duration-200" />
                     </a>
                   );
                 })}

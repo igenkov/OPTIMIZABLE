@@ -20,7 +20,7 @@ export function PanelCompletenessNote({
   if (context === 'upload' && isComplete) {
     return (
       <div className="flex items-start gap-3 px-4 py-3 bg-[rgba(74,222,128,0.04)] border border-[rgba(74,222,128,0.15)]">
-        <CheckCircle size={14} className="text-[#4ade80] shrink-0 mt-0.5" />
+        <CheckCircle weight="duotone" size={14} className="text-[#4ade80] shrink-0 mt-0.5" />
         <div>
           <span className="text-[10px] font-black text-[#4ade80] uppercase tracking-[2px]">
             Full Panel - {submittedCount} of {recommendedCount} markers
@@ -35,7 +35,7 @@ export function PanelCompletenessNote({
 
   return (
     <div className="flex items-start gap-3 px-4 py-3 bg-[rgba(232,196,112,0.04)] border border-[rgba(232,196,112,0.15)]">
-      <Info size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
+      <Info weight="duotone" size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
       <div>
         <span className="text-[10px] font-black text-[#E8C470] uppercase tracking-[2px]">
           {context === 'upload'
