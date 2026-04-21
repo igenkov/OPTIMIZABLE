@@ -10,7 +10,7 @@ import {
   ShieldCheck,
   ArrowRight,
   Lock,
-  Mail,
+  Envelope,
   WarningCircle,
   Lightning
 } from '@phosphor-icons/react';
@@ -114,7 +114,7 @@ export default function SignupPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e] px-4">
         <div className="w-full max-w-sm text-center">
           <div className="w-20 h-20 bg-[#C8A2C8]/10 border border-[#C8A2C8]/20 flex items-center justify-center mx-auto mb-8 shadow-[0_0_30px_rgba(200,162,200,0.1)]">
-            <Mail className="text-[#C8A2C8]" size={32} />
+            <Envelope className="text-[#C8A2C8]" size={32} />
           </div>
           <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Verification Required</h1>
           <p className="text-sm text-white/40 leading-relaxed mb-8">

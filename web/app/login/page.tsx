@@ -12,7 +12,7 @@ import {
   ArrowRight,
   WarningCircle,
   ShieldCheck,
-  KeyRound
+  Key
 } from '@phosphor-icons/react';
 
 function AuthModule({
@@ -129,7 +129,7 @@ export default function LoginPage() {
             <header className="mb-10">
               <h1 className="text-lg font-black tracking-tight text-white uppercase mb-1">Authenticate Access</h1>
               <p className="text-[10px] text-white/40 uppercase font-bold tracking-widest flex items-center gap-2">
-                <KeyRound size={12} className="text-[#C8A2C8]" />
+                <Key size={12} className="text-[#C8A2C8]" />
                 Secure Session Authorization
               </p>
             </header>

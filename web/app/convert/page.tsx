@@ -15,9 +15,9 @@ import type { KeyFactor } from '@/lib/scoring';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import {
   Pulse, Flask, Pill, TrendUp,
-  ArrowRight, Warning, Lock, Mail,
+  ArrowRight, Warning, Lock, Envelope,
   ShieldCheck, Check, CaretRight, WarningCircle,
-  Lightning, Calendar, BarChart3,
+  Lightning, Calendar, ChartBar,
 } from '@phosphor-icons/react';
 
 /* ──────────────────────────────────────────────
@@ -48,7 +48,7 @@ const TIMELINE = [
   {
     phase: 'AT 45 DAYS',
     color: '#C8A2C8',
-    Icon: BarChart3,
+    Icon: ChartBar,
     title: 'Mid-Cycle Calibration',
     desc: 'Inquiry assessment refines your protocol based on real progress. Your plan adapts to what your body is telling you.',
   },
@@ -263,7 +263,7 @@ export default function ConvertPage() {
       <div className="min-h-screen flex items-center justify-center bg-[#0e0e0e] px-4">
         <div className="w-full max-w-sm text-center">
           <div className="w-20 h-20 bg-[#C8A2C8]/10 border border-[#C8A2C8]/20 flex items-center justify-center mx-auto mb-8">
-            <Mail className="text-[#C8A2C8]" size={32} />
+            <Envelope className="text-[#C8A2C8]" size={32} />
           </div>
           <h1 className="text-2xl font-black text-white uppercase tracking-tighter mb-4">Check Your Email</h1>
           <p className="text-sm text-white/40 leading-relaxed mb-8">

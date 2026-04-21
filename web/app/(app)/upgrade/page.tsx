@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { Card } from '@/components/ui/Card';
 import {
   Flask,
-  CalendarDays,
+  CalendarDots,
   Pulse,
   TrendUp,
   Pill,
@@ -25,7 +25,7 @@ const FEATURES = [
     desc: 'Deep AI interrogation of 40+ biomarkers against optimal (not "normal") ranges. Includes health scoring and metabolic risk flags.',
   },
   {
-    icon: CalendarDays,
+    icon: CalendarDots,
     title: 'Adaptive 90-Day Protocol',
     label: 'Module: STRATEGY',
     desc: 'Foundation, Calibration, and Peak phases. A living roadmap that updates based on your physiological response.',
