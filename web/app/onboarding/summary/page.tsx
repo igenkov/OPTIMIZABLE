@@ -14,7 +14,7 @@ import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
 import type { Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import {
   Pulse, Flask, ClipboardText,
-  CaretRight, Warning, Clock,
+  CaretRight, CaretDown, Warning, Clock,
   Lock, ArrowRight, ShieldCheck
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
@@ -29,6 +29,8 @@ export default function SummaryPage() {
   const [panel, setPanel] = useState<PersonalizedPanel | null>(null);
   const [loaded, setLoaded] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [keyFactorsExpanded, setKeyFactorsExpanded] = useState(false);
+  const [balancingExpanded, setBalancingExpanded] = useState(false);
 
   useEffect(() => {
     const p1Raw = localStorage.getItem('phase1');
@@ -180,36 +182,54 @@ export default function SummaryPage() {
       {/* KEY FACTORS */}
       {!excluded && keyFactors.length > 0 && (
         <div className="mb-10 space-y-4">
-          <div className="flex items-center gap-2 text-white/40 px-1">
-            <ClipboardText size={14} />
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Telemetry Findings</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {keyFactors.map((f, i) => (
-              <div key={i} className="p-4 bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
-                <div className="text-xs font-bold text-white mb-1 uppercase tracking-tight">{f.title}</div>
-                <p className="text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={() => setKeyFactorsExpanded(v => !v)}
+            className="flex items-center justify-between w-full text-white/40 px-1 hover:text-white/60 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <ClipboardText size={14} />
+              <h2 className="text-[10px] font-black tracking-[3px] uppercase">Telemetry Findings</h2>
+              <span className="text-[9px] font-bold text-white/20 tracking-widest">({keyFactors.length})</span>
+            </div>
+            <CaretDown size={12} className={`transition-transform duration-200 ${keyFactorsExpanded ? '' : '-rotate-90'}`} />
+          </button>
+          {keyFactorsExpanded && (
+            <div className="grid grid-cols-1 gap-3">
+              {keyFactors.map((f, i) => (
+                <div key={i} className="p-4 bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
+                  <div className="text-xs font-bold text-[#C8A2C8] mb-1 uppercase tracking-tight">{f.title}</div>
+                  <p className="text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
       {/* BALANCING FACTORS */}
       {!excluded && protectiveFactors.length > 0 && (
         <div className="mb-10 space-y-4">
-          <div className="flex items-center gap-2 text-white/40 px-1">
-            <ShieldCheck size={14} />
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {protectiveFactors.map((f, i) => (
-              <div key={i} className="p-4 bg-[#4ade80]/[0.02] border border-[#4ade80]/10 hover:border-[#4ade80]/20 transition-all">
-                <div className="text-xs font-bold text-[#4ade80] mb-1 uppercase tracking-tight">{f.title}</div>
-                <p className="text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
-              </div>
-            ))}
-          </div>
+          <button
+            onClick={() => setBalancingExpanded(v => !v)}
+            className="flex items-center justify-between w-full text-white/40 px-1 hover:text-white/60 transition-colors"
+          >
+            <div className="flex items-center gap-2">
+              <ShieldCheck size={14} />
+              <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
+              <span className="text-[9px] font-bold text-white/20 tracking-widest">({protectiveFactors.length})</span>
+            </div>
+            <CaretDown size={12} className={`transition-transform duration-200 ${balancingExpanded ? '' : '-rotate-90'}`} />
+          </button>
+          {balancingExpanded && (
+            <div className="grid grid-cols-1 gap-3">
+              {protectiveFactors.map((f, i) => (
+                <div key={i} className="p-4 bg-[#4ade80]/[0.02] border border-[#4ade80]/10 hover:border-[#4ade80]/20 transition-all">
+                  <div className="text-xs font-bold text-[#4ade80] mb-1 uppercase tracking-tight">{f.title}</div>
+                  <p className="text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       )}
 
