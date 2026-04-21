@@ -6,7 +6,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import {
-  Pulse, TestTube2, Calendar, Cpu,
+  Pulse, TestTube, Calendar, Cpu,
   ShieldCheck, ArrowRight, WarningCircle, Info, CaretDown
 } from '@phosphor-icons/react';
 import { cn } from '@/lib/utils';
@@ -306,7 +306,7 @@ export default function LabUploadPage() {
           {recommendedBio.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-4 px-2">
-                <TestTube2 size={16} className="text-[#E8C470]" />
+                <TestTube size={16} className="text-[#E8C470]" />
                 <h2 className="text-[10px] font-black text-[#E8C470] uppercase tracking-[3px]">Recommended Biomarkers</h2>
               </div>
               <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(232,196,112,0.08)' }}>
@@ -335,7 +335,7 @@ export default function LabUploadPage() {
           {extendedBio.length > 0 && (
             <section>
               <div className="flex items-center gap-2 mb-4 px-2">
-                <TestTube2 size={16} className="text-white/20" />
+                <TestTube size={16} className="text-white/20" />
                 <h2 className="text-[10px] font-black text-white/20 uppercase tracking-[3px]">Extended Variables</h2>
               </div>
               <Card className="p-0 overflow-hidden" style={{ background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)' }}>
@@ -369,7 +369,7 @@ export default function LabUploadPage() {
                 className="w-full flex items-center justify-between px-2 mb-4 group"
               >
                 <div className="flex items-center gap-2">
-                  <TestTube2 size={16} className="text-white/15 group-hover:text-white/30 transition-colors" />
+                  <TestTube size={16} className="text-white/15 group-hover:text-white/30 transition-colors" />
                   <h2 className="text-[10px] font-black text-white/15 uppercase tracking-[3px] group-hover:text-white/30 transition-colors">
                     Additional Markers
                   </h2>

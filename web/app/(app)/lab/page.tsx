@@ -6,7 +6,7 @@ import { ScoreRing } from '@/components/ui/ScoreRing';
 import { StatusBadge, getStatusColor } from '@/components/ui/StatusBadge';
 import {
   Pulse, Lightning, Drop, Flask,
-  ArrowUpRight, CaretRight, TestTube2, ClipboardText, Clock,
+  ArrowUpRight, CaretRight, TestTube, ClipboardText, Clock,
   Info, Clipboard, ArrowRight,
 } from '@phosphor-icons/react';
 import { LabAIBriefing } from './LabAIBriefing';
@@ -20,7 +20,7 @@ import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Da
 // ── Category config ──────────────────────────────────────────────────────────
 const CATEGORY_META: Record<string, { label: string; color: string; Icon: React.ComponentType<{ size?: number; className?: string; style?: React.CSSProperties }> }> = {
   hormones:  { label: 'Hormonal Axis',    color: '#C8A2C8', Icon: Pulse  },
-  thyroid:   { label: 'Thyroid Function', color: '#CE93D8', Icon: TestTube2 },
+  thyroid:   { label: 'Thyroid Function', color: '#CE93D8', Icon: TestTube },
   metabolic: { label: 'Metabolic Health', color: '#64B5F6', Icon: Lightning       },
   lipids:    { label: 'Lipid Panel',      color: '#E8C470', Icon: Drop  },
 };
@@ -364,7 +364,7 @@ export default async function LabPage() {
           <Card className="p-0 overflow-hidden">
             <div className="px-5 py-4 border-b border-[rgba(255,255,255,0.05)] flex items-center gap-3"
               style={{ background: 'rgba(255,255,255,0.01)' }}>
-              <TestTube2 size={16} className="text-[#C8A2C8]" />
+              <TestTube size={16} className="text-[#C8A2C8]" />
               <div>
                 <div className="text-xs font-black text-white uppercase tracking-widest">Recommended Next Tests</div>
                 <div className="text-[9px] text-[#4A4A4A] uppercase tracking-wide">Based on your profile and current results</div>
