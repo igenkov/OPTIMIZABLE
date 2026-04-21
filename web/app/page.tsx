@@ -7,150 +7,161 @@ import {
   BarChart2, FlaskConical, TrendingUp,
 } from 'lucide-react';
 
-// ── Timeline sequence map ─────────────────────────────────────────────────────
+// -- Step definitions ----------------------------------------------------------
 
-function TimelineFlow() {
+const STEPS = [
+  {
+    id: '01', icon: UserCircle,    label: 'Personal Details',
+    sub: 'Age, body composition, medical history',                       pro: false,
+  },
+  {
+    id: '02', icon: Activity,      label: 'Lifestyle Assessment',
+    sub: 'Sleep, stress, bad habits, physical activity',                 pro: false,
+  },
+  {
+    id: '03', icon: ClipboardList, label: 'Symptoms Audit',
+    sub: 'Energy, libido, recovery, cognition',                          pro: false,
+  },
+  {
+    id: '04', icon: BarChart2,     label: 'Risk Score',
+    sub: 'Hormonal coefficient + bloodwork panel recommendation',        pro: false, full: true,
+  },
+  {
+    id: '05', icon: FlaskConical,  label: 'Lab Analysis',
+    sub: 'Deep AI analysis of bloodwork. Actual hormonal health status', pro: true, glow: true,
+  },
+  {
+    id: '06', icon: TrendingUp,    label: 'Optimization',
+    sub: '90-day optimization protocol',                                 pro: true,
+  },
+  {
+    id: '07', icon: Activity,      label: 'Progress Tracking',
+    sub: 'Daily progress assessment',                                    pro: true,
+  },
+];
+
+const freeSteps  = STEPS.filter(s => !s.pro && !s.full);
+const riskStep   = STEPS.find(s => s.full)!;
+const proSteps   = STEPS.filter(s => s.pro);
+
+// -- Desktop Bento Grid --------------------------------------------------------
+
+function StepBento() {
   return (
-    <div className="relative flex items-center justify-center w-full">
-      <div className="w-full max-w-2xl relative">
+    <div className="flex flex-col gap-2 w-full">
 
-        {/* Vertical center line */}
-        <div className="absolute left-1/2 top-2 bottom-2 w-px glow-line -translate-x-1/2 hidden md:block"/>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3 relative">
-
-          {/* Step 01 — LEFT */}
-          <div className="flex items-center justify-end relative">
-            <div className="step-card bg-[#111111] border border-white/10 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#666666]">
-                <UserCircle size={16}/>
+      {/* Row 1 - 3 free steps */}
+      <div className="grid grid-cols-3 gap-2">
+        {freeSteps.map(step => {
+          const Icon = step.icon;
+          return (
+            <div
+              key={step.id}
+              className="group bg-[#111111] border border-white/[0.055] rounded-2xl p-4 flex flex-col gap-3 hover:border-white/[0.1] transition-colors duration-300"
+            >
+              <div className="flex items-start justify-between">
+                <div className="w-7 h-7 bg-white/[0.035] rounded-lg flex items-center justify-center">
+                  <Icon size={13} className="text-[#555]" />
+                </div>
+                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] uppercase tabular-nums">{step.id}</span>
               </div>
               <div>
-                <div className="text-[8px] font-bold text-[#5A5A5A] uppercase tracking-widest">Step 01</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Personal Details</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Age, body composition, medical history</div>
+                <div className="text-[10.5px] font-black uppercase tracking-wide text-white leading-tight">{step.label}</div>
+                <div className="text-[8.5px] text-[#484848] leading-snug mt-1.5">{step.sub}</div>
               </div>
             </div>
-            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/25 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/40 absolute inset-0 m-auto"/>
+          );
+        })}
+      </div>
+
+      {/* Row 2 - Risk Score (full width) */}
+      {(() => {
+        const Icon = riskStep.icon;
+        return (
+          <div className="bg-[#111111] border border-white/[0.07] rounded-2xl px-5 py-4 flex items-center gap-5">
+            <div className="w-10 h-10 bg-white/[0.035] rounded-xl flex items-center justify-center shrink-0">
+              <Icon size={18} className="text-[#5A5A5A]" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] uppercase block mb-0.5">{riskStep.id}</span>
+              <div className="text-[13px] font-black uppercase tracking-wide text-white leading-tight">{riskStep.label}</div>
+              <div className="text-[9px] text-[#484848] mt-0.5">{riskStep.sub}</div>
+            </div>
+            <div className="shrink-0 border border-white/[0.06] rounded-lg px-3 py-1.5">
+              <span className="text-[8px] font-black uppercase tracking-[2px] text-[#444]">Free</span>
             </div>
           </div>
+        );
+      })()}
 
-          {/* Step 02 — RIGHT */}
-          <div className="flex items-center relative">
-            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/25 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/40 absolute inset-0 m-auto"/>
-            </div>
-            <div className="step-card bg-[#111111] border border-white/10 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#666666]">
-                <Activity size={16}/>
+      {/* Row 3 - PRO section */}
+      <div className="rounded-2xl border border-[#C8A2C8]/[0.18] bg-[#C8A2C8]/[0.015] p-2">
+        <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-[#C8A2C8]/[0.08]">
+          <span className="text-[8px] font-black tracking-[3px] text-[#C8A2C8]/45 uppercase">Pro Features</span>
+          <div className="bg-[#C8A2C8] text-black text-[7px] font-black px-2 py-0.5 rounded tracking-wide uppercase">Unlock</div>
+        </div>
+        <div className="grid grid-cols-3 gap-2">
+          {proSteps.map(step => {
+            const Icon = step.icon;
+            return (
+              <div
+                key={step.id}
+                className={`rounded-xl p-3 flex flex-col gap-2.5 transition-colors duration-300 ${
+                  step.glow
+                    ? 'bg-[#C8A2C8]/[0.07] border border-[#C8A2C8]/30'
+                    : 'bg-[#C8A2C8]/[0.02] border border-[#C8A2C8]/[0.1] hover:border-[#C8A2C8]/20'
+                }`}
+              >
+                <div className="flex items-start justify-between">
+                  <div className="w-7 h-7 bg-[#C8A2C8]/[0.09] rounded-lg flex items-center justify-center">
+                    <Icon size={13} className="text-[#C8A2C8]" />
+                  </div>
+                  <span className="text-[8px] font-bold tracking-[2px] text-[#C8A2C8]/35 uppercase tabular-nums">{step.id}</span>
+                </div>
+                <div>
+                  <div className="text-[10.5px] font-black uppercase tracking-wide text-white leading-tight">{step.label}</div>
+                  <div className="text-[8.5px] text-[#484848] leading-snug mt-1.5">{step.sub}</div>
+                </div>
               </div>
-              <div>
-                <div className="text-[8px] font-bold text-[#5A5A5A] uppercase tracking-widest">Step 02</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lifestyle Assessment</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Sleep, stress, bad habits, physical activity</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 03 — LEFT */}
-          <div className="flex items-center justify-end relative">
-            <div className="step-card bg-[#111111] border border-white/10 px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full">
-              <div className="w-8 h-8 shrink-0 bg-[#1a1a1a] rounded-lg flex items-center justify-center text-[#666666]">
-                <ClipboardList size={16}/>
-              </div>
-              <div>
-                <div className="text-[8px] font-bold text-[#5A5A5A] uppercase tracking-widest">Step 03</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Symptoms Audit</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Energy, libido, recovery, cognition</div>
-              </div>
-            </div>
-            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-white/25 z-10">
-              <div className="w-1 h-1 rounded-full bg-white/40 absolute inset-0 m-auto"/>
-            </div>
-          </div>
-
-          {/* Empty right cell */}
-          <div className="hidden md:block"/>
-
-          {/* Step 04 — centered, plain (free) */}
-          <div className="md:col-span-2 flex justify-center py-2 relative">
-            <div className="bg-[#111111] border border-white/10 px-6 py-3 rounded-2xl flex items-center gap-4 z-20">
-              <div className="w-10 h-10 bg-[#1a1a1a] rounded-full flex items-center justify-center text-[#666666]">
-                <BarChart2 size={20}/>
-              </div>
-              <div>
-                <div className="text-[8px] font-black text-[#3A3A3A] uppercase tracking-[3px]">Step 04</div>
-                <div className="text-xs font-black uppercase text-white leading-tight">Risk Score</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Hormonal coefficient + bloodwork panel recommendation</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Empty left cell */}
-          <div className="hidden md:block"/>
-
-          {/* Step 05 — RIGHT, glowing (PRO) */}
-          <div className="flex items-center relative">
-            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
-              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
-            </div>
-            <div className="step-card pro glow-pulse bg-[rgba(200,162,200,0.03)] border-2 border-[rgba(200,162,200,0.5)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
-              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
-                <FlaskConical size={16}/>
-              </div>
-              <div>
-                <div className="text-[8px] font-bold text-[#C8A2C8] uppercase tracking-widest">Step 05</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Lab Analysis</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Deep AI analysis of bloodwork. Actual hormonal health status</div>
-              </div>
-            </div>
-          </div>
-
-          {/* Step 06 — LEFT (PRO) */}
-          <div className="flex items-center justify-end relative">
-            <div className="step-card pro bg-[rgba(200,162,200,0.03)] border border-[rgba(200,162,200,0.2)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
-              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
-                <TrendingUp size={16}/>
-              </div>
-              <div>
-                <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 06</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Optimization</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">90-day optimization protocol</div>
-              </div>
-            </div>
-            <div className="hidden md:block absolute -right-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
-              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
-            </div>
-          </div>
-
-          {/* Step 07 — RIGHT (PRO), slightly lower via pt-3 */}
-          <div className="flex items-start pt-3 relative">
-            <div className="hidden md:block absolute -left-[25px] top-1/2 -translate-y-1/2 w-3 h-3 rounded-full bg-[#0e0e0e] border border-[rgba(200,162,200,0.4)] z-10">
-              <div className="w-1.5 h-1.5 rounded-full bg-[rgba(200,162,200,0.7)] absolute inset-0 m-auto"/>
-            </div>
-            <div className="step-card pro bg-[rgba(200,162,200,0.03)] border border-[rgba(200,162,200,0.2)] px-3.5 py-2.5 rounded-xl flex items-center gap-3 w-full relative overflow-hidden">
-              <div className="absolute top-0 right-0 bg-[#C8A2C8] text-black text-[6px] font-black px-1.5 py-px tracking-tight uppercase">PRO</div>
-              <div className="w-8 h-8 shrink-0 bg-[rgba(200,162,200,0.1)] rounded-lg flex items-center justify-center text-[#C8A2C8]">
-                <Activity size={16}/>
-              </div>
-              <div>
-                <div className="text-[8px] font-bold text-[rgba(200,162,200,0.5)] uppercase tracking-widest">Step 07</div>
-                <div className="text-[11px] font-bold uppercase tracking-wide text-white">Progress Tracking</div>
-                <div className="text-[9px] text-[#6A6A6A] leading-snug mt-0.5">Daily progress assessment</div>
-              </div>
-            </div>
-          </div>
-
+            );
+          })}
         </div>
       </div>
     </div>
   );
 }
 
-// ── Page ─────────────────────────────────────────────────────────────────────
+// -- Mobile Step List ----------------------------------------------------------
+
+function MobileStepList() {
+  return (
+    <div className="mt-10 pt-8 border-t border-white/[0.05]">
+      <p className="text-[9px] font-black text-[#3A3A3A] uppercase tracking-[3px] mb-5">How it works</p>
+      <div className="flex flex-col">
+        {STEPS.map(step => {
+          const Icon = step.icon;
+          return (
+            <div
+              key={step.id}
+              className="flex items-center gap-3.5 py-3 border-b border-white/[0.04] last:border-0"
+            >
+              <span className="text-[9px] font-bold text-[#2E2E2E] w-5 shrink-0 tabular-nums">{step.id}</span>
+              <Icon size={12} className={step.pro ? 'text-[#C8A2C8] shrink-0' : 'text-[#484848] shrink-0'} />
+              <span className="text-[11px] font-black uppercase tracking-wide text-white flex-1 leading-tight">{step.label}</span>
+              {step.pro && (
+                <span className="text-[7px] font-black bg-[#C8A2C8] text-black px-1.5 py-0.5 rounded-sm uppercase tracking-wide shrink-0">
+                  Pro
+                </span>
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+// -- Page ---------------------------------------------------------------------
 
 export default async function Home() {
   const supabase = await createClient();
@@ -163,85 +174,175 @@ export default async function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0e0e0e] text-white flex flex-col">
+    <div className="min-h-[100dvh] bg-[#0e0e0e] text-white flex flex-col">
+
+      {/* Dot grid background */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none select-none"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+
+      {/* Lilac ambient light - top right */}
+      <div
+        aria-hidden="true"
+        className="fixed top-0 right-0 w-[500px] h-[400px] pointer-events-none select-none"
+        style={{
+          background: 'radial-gradient(ellipse at top right, rgba(200,162,200,0.05) 0%, transparent 65%)',
+        }}
+      />
 
       {/* NAV */}
-      <nav className="border-b border-[rgba(255,255,255,0.07)] px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-4">
-        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
-          <Image src="/logo_trsp.png" alt="Optimizable" width={36} height={36} style={{ objectFit: 'contain', flexShrink: 0 }}/>
+      <nav className="relative z-10 border-b border-white/[0.05] px-4 sm:px-6 lg:px-12 py-4 flex items-center justify-between gap-4">
+
+        {/* Logo */}
+        <div className="flex items-center gap-2.5 min-w-0">
+          <Image
+            src="/logo_trsp.png"
+            alt="Optimizable"
+            width={30}
+            height={30}
+            style={{ objectFit: 'contain', flexShrink: 0 }}
+          />
           <div className="min-w-0">
-            <div className="text-white font-bold uppercase tracking-[0.14em] truncate"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '1rem' }}>OPTIMIZABLE</div>
-            <div className="text-[#666666] uppercase tracking-[0.14em] mt-0.5 truncate"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", fontSize: '0.52rem' }}>MALEMAXXING QUANTIFIED</div>
+            <div
+              className="text-white font-bold uppercase truncate"
+              style={{
+                fontFamily: "var(--font-oswald,'Oswald',sans-serif)",
+                fontSize: '14px',
+                letterSpacing: '0.15em',
+              }}
+            >
+              OPTIMIZABLE
+            </div>
+            <div
+              className="text-[#4A4A4A] uppercase truncate"
+              style={{
+                fontFamily: "var(--font-oswald,'Oswald',sans-serif)",
+                fontSize: '7px',
+                letterSpacing: '0.13em',
+              }}
+            >
+              MALEMAXXING QUANTIFIED
+            </div>
           </div>
         </div>
-        <div className="flex items-center gap-3 sm:gap-6 shrink-0">
-          <Link href="/how-it-works" className="text-[10px] sm:text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase whitespace-nowrap">
+
+        {/* Links */}
+        <div className="flex items-center gap-5 shrink-0">
+          <Link
+            href="/how-it-works"
+            className="text-[10px] font-bold text-[#5A5A5A] hover:text-white transition-colors duration-200 tracking-[2px] uppercase whitespace-nowrap"
+          >
             How It Works
           </Link>
-          <Link href="/login" className="text-[10px] sm:text-[11px] font-bold text-[#9A9A9A] hover:text-white transition-colors tracking-widest uppercase whitespace-nowrap">
+          <Link
+            href="/login"
+            className="text-[10px] font-bold text-[#5A5A5A] hover:text-white transition-colors duration-200 tracking-[2px] uppercase whitespace-nowrap"
+          >
             Sign In
           </Link>
         </div>
       </nav>
 
       {/* HERO */}
-      <div className="flex-1 flex items-center px-4 sm:px-6 lg:px-12 py-8 sm:py-12 max-w-7xl mx-auto w-full">
-        <div className="grid grid-cols-12 gap-8 lg:gap-16 w-full items-stretch">
+      <main className="relative z-10 flex-1 flex items-center px-4 sm:px-6 lg:px-12 py-10 lg:py-12">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 w-full max-w-7xl mx-auto items-center">
 
-          {/* LEFT — text */}
-          <div className="col-span-12 lg:col-span-4 xl:col-span-4 flex flex-col">
-            <div className="text-[10px] font-bold tracking-[3px] text-[#C8A2C8] uppercase mb-4">
-              Biological Baseline Assessment
+          {/* LEFT - headline + CTAs */}
+          <div className="flex flex-col">
+
+            {/* Eyebrow */}
+            <div className="flex items-center gap-3 mb-6">
+              <div className="h-px w-5 bg-[#C8A2C8]/50" />
+              <span
+                className="text-[9px] font-bold tracking-[3px] uppercase"
+                style={{ color: '#C8A2C8' }}
+              >
+                Biological Baseline Assessment
+              </span>
             </div>
-            <h1 className="font-black uppercase leading-none mb-5"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", letterSpacing: '0.03em' }}>
-              <span className="text-white" style={{ fontSize: 'clamp(1.1rem,1.8vw,1.5rem)' }}>
-                If you don't wake up hard every morning,<br/>something is off.
-              </span><br/>
-              <span className="text-[#C8A2C8]" style={{ fontSize: 'clamp(2.2rem,3.5vw,3.2rem)' }}>
+
+            {/* Headline */}
+            <h1
+              className="font-black uppercase mb-5"
+              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", letterSpacing: '0.02em' }}
+            >
+              <span
+                className="block text-[#666] leading-snug mb-1"
+                style={{ fontSize: 'clamp(0.9rem, 1.4vw, 1.2rem)' }}
+              >
+                If you don't wake up hard every morning,<br />
+                something is off.
+              </span>
+              <span
+                className="block text-white leading-none"
+                style={{ fontSize: 'clamp(2rem, 3vw, 2.8rem)' }}
+              >
                 Find it and{' '}
-                <span style={{ textShadow: '0 0 8px rgba(200,162,200,0.5)' }}>
-                  optimize it!
-                </span>
+                <span style={{ color: '#C8A2C8' }}>optimize it!</span>
               </span>
             </h1>
-            <p className="text-[12px] text-[#5A5A5A] leading-relaxed mb-8">
+
+            {/* Subtext */}
+            <p className="text-[12px] leading-relaxed mb-8 max-w-xs" style={{ color: '#4E4E4E' }}>
               From a 3-minute assessment to a full clinical bloodwork analysis and 90-day optimization protocol.
             </p>
-            <div className="flex flex-col gap-2.5 mt-6 lg:mt-auto">
-              <Link href="/onboarding/phase1"
-                className="group inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[3px] uppercase hover:bg-[#A882A8] transition-colors">
-                Start Free Assessment <ArrowRight size={13} className="group-hover:translate-x-1 transition-transform"/>
+
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-2.5">
+              <Link
+                href="/onboarding/phase1"
+                className="group inline-flex items-center justify-center gap-2.5 px-7 py-4 bg-[#C8A2C8] text-black font-black text-[10px] tracking-[3px] uppercase hover:bg-[#b890b8] active:bg-[#a880a8] transition-colors duration-200"
+              >
+                Start Free Assessment
+                <ArrowRight
+                  size={12}
+                  className="group-hover:translate-x-1 transition-transform duration-200"
+                />
               </Link>
-              <Link href="/login"
-                className="inline-flex items-center justify-center px-6 py-3.5 border border-[rgba(255,255,255,0.07)] text-[#666666] font-bold text-[10px] tracking-[3px] uppercase hover:border-[rgba(255,255,255,0.15)] hover:text-white transition-all">
+              <Link
+                href="/login"
+                className="inline-flex items-center justify-center px-7 py-4 border border-white/[0.07] text-[#5A5A5A] font-bold text-[10px] tracking-[3px] uppercase hover:border-white/[0.16] hover:text-[#999] transition-all duration-200"
+              >
                 Sign In
               </Link>
             </div>
+
+            {/* Mobile step list - only on small screens */}
+            <div className="lg:hidden">
+              <MobileStepList />
+            </div>
           </div>
 
-          {/* RIGHT — timeline sequence map */}
-          <div className="hidden lg:flex col-span-8 xl:col-span-8 items-center justify-center">
-            <TimelineFlow/>
+          {/* RIGHT - bento step grid (desktop only) */}
+          <div className="hidden lg:block">
+            <StepBento />
           </div>
 
         </div>
-      </div>
+      </main>
 
       {/* FOOTER */}
-      <footer className="border-t border-[rgba(255,255,255,0.05)] px-6 lg:px-12 py-5">
+      <footer className="relative z-10 border-t border-white/[0.04] px-4 sm:px-6 lg:px-12 py-5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
-          <div className="flex flex-wrap justify-center gap-8">
-            {['Clinical Grade Analysis','Encrypted & Private','AI-Powered Protocol','90-Day Optimization'].map((text, i) => (
+          <div className="flex flex-wrap justify-center gap-6 md:gap-8">
+            {[
+              'Clinical Grade Analysis',
+              'Encrypted & Private',
+              'AI-Powered Protocol',
+              '90-Day Optimization',
+            ].map((text, i) => (
               <div key={i} className="flex items-center gap-2">
-                <div className="w-1 h-1 rounded-full bg-[#C8A2C8] opacity-60"/>
-                <span className="text-[9px] text-[#5A5A5A] uppercase tracking-widest">{text}</span>
+                <div className="w-1 h-1 rounded-full bg-[#C8A2C8]/45" />
+                <span className="text-[9px] text-[#363636] uppercase tracking-[2px]">{text}</span>
               </div>
             ))}
           </div>
-          <p className="text-[9px] text-[#4A4A4A] uppercase tracking-widest">Wellness only · Not medical advice</p>
+          <p className="text-[9px] text-[#303030] uppercase tracking-[2px]">Wellness only - Not medical advice</p>
         </div>
       </footer>
     </div>
