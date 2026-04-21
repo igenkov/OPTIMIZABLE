@@ -9,10 +9,10 @@ const oswald = Oswald({
 });
 
 export const metadata: Metadata = {
-  title: "Optimizable — Malemaxxing, Quantified",
+  title: "Optimizable — Just a Man. Properly.",
   description: "AI-powered testosterone health optimization",
   openGraph: {
-    title: "Optimizable — Malemaxxing, Quantified",
+    title: "Optimizable — Just a Man. Properly.",
     description: "AI-powered testosterone health optimization",
     url: "https://optimizable.vercel.app",
     siteName: "Optimizable",
@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Optimizable — Malemaxxing, Quantified",
+    title: "Optimizable — Just a Man. Properly.",
     description: "AI-powered testosterone health optimization",
   },
 };

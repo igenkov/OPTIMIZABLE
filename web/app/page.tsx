@@ -226,7 +226,7 @@ export default async function Home() {
                 letterSpacing: '0.13em',
               }}
             >
-              MALEMAXXING QUANTIFIED
+              JUST A MAN. PROPERLY
             </div>
           </div>
         </div>

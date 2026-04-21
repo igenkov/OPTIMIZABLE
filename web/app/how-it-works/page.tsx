@@ -21,7 +21,7 @@ export default function HowItWorksPage() {
             <div className="text-white font-bold uppercase tracking-[0.14em]"
               style={{ ...OSWALD, fontSize: '1.15rem' }}>OPTIMIZABLE</div>
             <div className="text-[#666666] uppercase tracking-[0.18em] mt-0.5"
-              style={{ ...OSWALD, fontSize: '0.58rem' }}>MALEMAXXING QUANTIFIED</div>
+              style={{ ...OSWALD, fontSize: '0.58rem' }}>JUST A MAN. PROPERLY</div>
           </div>
         </Link>
         <div className="flex items-center gap-6">

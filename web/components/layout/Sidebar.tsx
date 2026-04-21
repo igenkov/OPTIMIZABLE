@@ -59,7 +59,7 @@ export function Sidebar({ tier, cycleInfo }: { tier: 'free' | 'premium' | 'exper
               className="text-[#4A4A4A] uppercase tracking-[0.18em] mt-0.5"
               style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: "0.58rem" }}
             >
-              MALEMAXXING QUANTIFIED
+              JUST A MAN. PROPERLY
             </div>
           </div>
         </div>

@@ -203,7 +203,7 @@ export default async function ProfilePage() {
 
           {/* Footer row */}
           <div className="flex items-center justify-between pt-1">
-            <span className="text-[10px] text-[#3A3A3A] font-mono">v1.0.0 · malemaxxing quantified</span>
+            <span className="text-[10px] text-[#3A3A3A] font-mono">v1.0.0 · just a man. properly</span>
             <SignOutButton />
           </div>
 
