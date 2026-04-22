@@ -6,7 +6,6 @@ import Image from 'next/image';
 import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card } from '@/components/ui/Card';
 import {
   calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel,
   getKeyFactors, isExcluded,
@@ -295,7 +294,12 @@ export default function ConvertPage() {
             </div>
           </div>
 
-          <Card className="p-8 md:p-10">
+          <div className="relative overflow-hidden p-8 md:p-10"
+            style={{
+              background: 'linear-gradient(165deg, rgba(255,255,255,0.04) 0%, rgba(20,20,20,0) 55%), #141414',
+              border: '1px solid rgba(255,255,255,0.07)',
+              borderTopColor: isBetaSignup ? 'rgba(74,222,128,0.5)' : isPremiumSignup ? 'rgba(200,162,200,0.6)' : 'rgba(255,255,255,0.12)',
+            }}>
             <header className="mb-8">
               {isBetaSignup && (
                 <div className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#4ADE80]/10 border border-[#4ADE80]/20 mb-4">
@@ -390,7 +394,7 @@ export default function ConvertPage() {
                 Back to Overview
               </button>
             </div>
-          </Card>
+          </div>
 
           <div className="mt-6 text-center">
             <Link href="/login" className="text-[10px] font-black text-[#C8A2C8] uppercase tracking-[2px] hover:text-white transition-colors">
@@ -405,83 +409,176 @@ export default function ConvertPage() {
   /* ── Main conversion pitch screen ── */
   return (
     <div className="min-h-screen bg-[#0e0e0e] text-white">
-      <div className="max-w-3xl mx-auto px-6 py-12 lg:py-16">
+
+      {/* Dot grid background */}
+      <div
+        aria-hidden="true"
+        className="fixed inset-0 pointer-events-none select-none"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
+          backgroundSize: '28px 28px',
+        }}
+      />
+
+      {/* Risk-color ambient glow - top left */}
+      <div
+        aria-hidden="true"
+        className="fixed top-0 left-0 w-[700px] h-[500px] pointer-events-none select-none"
+        style={{ background: `radial-gradient(ellipse at top left, ${color}0e 0%, transparent 65%)` }}
+      />
+
+      {/* Lilac ambient - top right */}
+      <div
+        aria-hidden="true"
+        className="fixed top-0 right-0 w-[500px] h-[400px] pointer-events-none select-none"
+        style={{ background: 'radial-gradient(ellipse at top right, rgba(200,162,200,0.05) 0%, transparent 65%)' }}
+      />
+
+      <div className="relative z-10 max-w-[1200px] mx-auto px-4 sm:px-6 lg:px-10 py-8 lg:py-12">
 
         {/* BRANDING */}
-        <div className="flex items-center gap-3 mb-12">
+        <div className="flex items-center gap-3 mb-10 lg:mb-12">
           <Link href="/">
             <Image src="/logo_trsp.png" alt="Optimizable" width={36} height={36} style={{ objectFit: 'contain' }} />
           </Link>
-          <div className="text-white font-bold uppercase tracking-[0.15em] text-sm"
-            style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)" }}>
+          <div
+            className="text-white font-bold uppercase"
+            style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", letterSpacing: '0.15em', fontSize: '14px' }}
+          >
             OPTIMIZABLE
           </div>
         </div>
 
-        {/* RISK SCORE SUMMARY */}
-        <Card className="mb-10 p-8 relative overflow-hidden">
-          <div className="absolute top-0 right-0 p-6 opacity-5">
-            <Pulse size={100} />
-          </div>
-          <div className="relative z-10">
-            <div className="text-[9px] font-black uppercase tracking-[4px] text-white/40 mb-4">Your Assessment Results</div>
-            <div className="flex items-center gap-6 mb-4">
+        {/* ── ROW 1: Risk Score + Feature pillars ── */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 mb-3">
+
+          {/* Risk score card — 7 cols */}
+          <div className="lg:col-span-7 relative overflow-hidden border border-white/[0.07] bg-[#111111] p-8 lg:p-10">
+            {/* Background Pulse decoration */}
+            <div className="absolute bottom-0 right-0 pointer-events-none select-none" style={{ opacity: 0.03 }}>
+              <Pulse size={220} />
+            </div>
+
+            <div className="relative z-10">
+              <div className="text-[9px] font-black uppercase tracking-[4px] text-white/25 mb-8">Your Assessment Results</div>
+
               {excluded ? (
-                <div className="flex items-center gap-3">
-                  <Warning size={28} className="text-yellow-500" />
+                <div className="flex items-center gap-5">
+                  <Warning size={48} className="text-yellow-500 shrink-0" />
                   <div>
-                    <div className="text-2xl font-black text-yellow-500 uppercase tracking-tight">Monitoring Required</div>
-                    <div className="text-[10px] text-white/40 uppercase tracking-widest">Exogenous Protocol Detected</div>
+                    <div className="text-3xl font-black text-yellow-500 uppercase tracking-tight">Monitoring Required</div>
+                    <div className="text-[10px] text-white/40 uppercase tracking-widest mt-2">Exogenous Protocol Detected</div>
                   </div>
                 </div>
               ) : riskScore !== null ? (
                 <>
-                  <div className="text-6xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
-                  <div>
-                    <div className="text-[9px] font-black uppercase tracking-[3px] text-white/30 mb-1">Hormonal Risk</div>
-                    <div className="text-xl font-black uppercase tracking-tight" style={{ color }}>
-                      {getRiskLabel(level)}
+                  <div className="flex items-end gap-5 mb-5">
+                    <div
+                      className="font-black leading-none tracking-tighter"
+                      style={{ color, fontSize: 'clamp(72px, 9vw, 116px)' }}
+                    >
+                      {riskScore}
                     </div>
-                    {criticalCount > 0 && (
-                      <div className="text-[10px] text-[#E8C470] font-bold mt-1">
-                        {criticalCount} critical factor{criticalCount !== 1 ? 's' : ''} identified
+                    <div className="pb-2">
+                      <div className="text-[8px] font-black uppercase tracking-[3px] text-white/25 mb-1.5">Hormonal Risk</div>
+                      <div className="text-xl font-black uppercase tracking-tight" style={{ color }}>
+                        {getRiskLabel(level)}
                       </div>
-                    )}
+                    </div>
                   </div>
+                  {criticalCount > 0 && (
+                    <div className="inline-flex items-center gap-2.5 px-3 py-1.5 mb-5"
+                      style={{ background: 'rgba(232,196,112,0.07)', border: '1px solid rgba(232,196,112,0.2)' }}>
+                      <div className="w-1.5 h-1.5 rounded-full bg-[#E8C470] shrink-0" />
+                      <span className="text-[10px] text-[#E8C470] font-bold uppercase tracking-wider">
+                        {criticalCount} critical factor{criticalCount !== 1 ? 's' : ''} identified
+                      </span>
+                    </div>
+                  )}
                 </>
               ) : (
-                <div className="text-white/40 text-sm">Complete onboarding to see your risk score</div>
+                <div className="text-white/30 text-sm mb-5">Complete onboarding to see your risk score</div>
               )}
+
+              <p className="text-[11px] text-white/30 leading-relaxed max-w-lg">
+                Your assessment is complete. The next step is understanding what these numbers mean for your body - and building a protocol to optimize them.
+              </p>
             </div>
-            <p className="text-[11px] text-white/30 leading-relaxed max-w-lg">
-              Your assessment is complete. The next step is understanding what these numbers mean for your body - and building a protocol to optimize them.
-            </p>
-          </div>
-        </Card>
-
-        {/* WHAT YOU GET — TIMELINE */}
-        <div className="mb-12">
-          <div className="text-[9px] font-black uppercase tracking-[4px] text-[#C8A2C8] mb-6">
-            The LAB Optimization Sequence
           </div>
 
-          <div className="space-y-1">
+          {/* Feature pillars — 5 cols */}
+          <div className="lg:col-span-5 grid grid-cols-3 lg:grid-cols-1 gap-3">
+            {[
+              { Icon: Lightning, label: 'AI-Powered', detail: '40+ biomarkers analyzed', accent: '#C8A2C8' },
+              { Icon: Calendar, label: '90-Day Cycle', detail: 'Adaptive protocol phases', accent: '#E8C470' },
+              { Icon: ShieldCheck, label: 'Clinical Grade', detail: 'Optimal range targeting', accent: '#4ADE80' },
+            ].map(({ Icon, label, detail, accent }, i) => (
+              <div key={i}
+                className="flex flex-col lg:flex-row items-center lg:items-center gap-3 lg:gap-4 px-4 lg:px-5 py-4 lg:py-5 border border-white/[0.055] bg-[#111111] text-center lg:text-left">
+                <div
+                  className="w-9 h-9 flex items-center justify-center shrink-0"
+                  style={{ background: `${accent}12`, border: `1px solid ${accent}28` }}
+                >
+                  <Icon size={16} style={{ color: accent }} />
+                </div>
+                <div className="min-w-0">
+                  <div className="text-[10px] font-black text-white uppercase tracking-wider mb-0.5">{label}</div>
+                  <div className="text-[9px] text-white/30 leading-snug">{detail}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* ── ROW 2: Timeline ── */}
+        <div className="mb-3">
+          <div className="flex items-center gap-3 mb-3 px-1">
+            <div className="h-px w-4 bg-[#C8A2C8]/40" />
+            <div className="text-[9px] font-black uppercase tracking-[4px] text-[#C8A2C8]/70">
+              The LAB Optimization Sequence
+            </div>
+          </div>
+
+          {/* Desktop: horizontal 5-col */}
+          <div className="hidden lg:grid grid-cols-5 gap-1">
             {TIMELINE.map((step, i) => (
-              <div key={i} className="relative flex gap-5 p-5 border border-white/5 bg-white/[0.02] hover:bg-white/[0.04] transition-all group">
-                {/* Timeline connector */}
+              <div key={i}
+                className="flex flex-col p-5 border border-white/[0.055] bg-[#111111] hover:bg-white/[0.03] transition-colors">
+                <div className="flex items-center gap-2 mb-4">
+                  <div
+                    className="w-4 h-4 rounded-full shrink-0 flex items-center justify-center"
+                    style={{ background: `${step.color}20`, border: `1px solid ${step.color}45` }}
+                  >
+                    <div className="w-1.5 h-1.5 rounded-full" style={{ background: step.color }} />
+                  </div>
+                  <div className="text-[7px] font-black uppercase tracking-[1.5px] leading-tight" style={{ color: step.color }}>
+                    {step.phase}
+                  </div>
+                </div>
+                <div className="flex items-start gap-2 mb-2">
+                  <step.Icon size={12} className="text-white/30 shrink-0 mt-0.5" />
+                  <h3 className="text-[10px] font-black text-white uppercase tracking-tight leading-tight">{step.title}</h3>
+                </div>
+                <p className="text-[9px] text-white/35 leading-relaxed mt-auto pt-2">{step.desc}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Mobile: vertical */}
+          <div className="lg:hidden space-y-1">
+            {TIMELINE.map((step, i) => (
+              <div key={i} className="relative flex gap-5 p-5 border border-white/[0.055] bg-[#111111]">
                 {i < TIMELINE.length - 1 && (
                   <div className="absolute left-[29px] top-[56px] bottom-[-4px] w-px bg-white/5" />
                 )}
-
-                <div className="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center mt-0.5"
-                  style={{ background: `${step.color}20`, border: `1px solid ${step.color}40` }}>
+                <div
+                  className="shrink-0 w-[18px] h-[18px] rounded-full flex items-center justify-center mt-0.5"
+                  style={{ background: `${step.color}20`, border: `1px solid ${step.color}40` }}
+                >
                   <div className="w-1.5 h-1.5 rounded-full" style={{ background: step.color }} />
                 </div>
-
                 <div className="flex-1 min-w-0">
-                  <div className="text-[8px] font-black uppercase tracking-[3px] mb-1.5" style={{ color: step.color }}>
-                    {step.phase}
-                  </div>
+                  <div className="text-[8px] font-black uppercase tracking-[3px] mb-1.5" style={{ color: step.color }}>{step.phase}</div>
                   <div className="flex items-center gap-2 mb-1.5">
                     <step.Icon size={14} className="text-white/30 shrink-0" />
                     <h3 className="text-sm font-black text-white uppercase tracking-tight">{step.title}</h3>
@@ -493,37 +590,32 @@ export default function ConvertPage() {
           </div>
         </div>
 
-        {/* FEATURE HIGHLIGHTS */}
-        <div className="grid grid-cols-3 gap-3 mb-12">
-          {[
-            { Icon: Lightning, label: 'AI-Powered', detail: '40+ biomarkers analyzed' },
-            { Icon: Calendar, label: '90-Day Cycle', detail: 'Adaptive protocol phases' },
-            { Icon: ShieldCheck, label: 'Clinical Grade', detail: 'Optimal range targeting' },
-          ].map(({ Icon, label, detail }, i) => (
-            <div key={i} className="p-4 border border-white/5 bg-white/[0.02] text-center">
-              <Icon size={18} className="text-[#C8A2C8]/40 mx-auto mb-2" />
-              <div className="text-[9px] font-black text-white uppercase tracking-widest mb-1">{label}</div>
-              <div className="text-[9px] text-white/30">{detail}</div>
-            </div>
-          ))}
-        </div>
+        {/* ── ROW 3: CTA ── */}
+        <div
+          className="relative overflow-hidden border border-[#C8A2C8]/[0.18] mb-3"
+          style={{ background: 'linear-gradient(135deg, rgba(200,162,200,0.04) 0%, #0f0f0f 60%)' }}
+        >
+          {/* Corner glow */}
+          <div
+            className="absolute top-0 right-0 w-80 h-80 pointer-events-none"
+            style={{ background: 'radial-gradient(ellipse at top right, rgba(200,162,200,0.09) 0%, transparent 60%)' }}
+          />
 
-        {/* CTA SECTION */}
-        <Card className="p-8 md:p-10 relative overflow-hidden" style={{ border: '1px solid rgba(200,162,200,0.2)' }}>
-          <div className="absolute top-0 right-0 w-48 h-48 bg-[#C8A2C8]/5 rounded-full -mr-24 -mt-24 blur-3xl" />
-
-          <div className="relative z-10">
+          <div className="relative z-10 px-8 lg:px-16 py-10 lg:py-12">
             <div className="text-center mb-8">
               {BETA_PERIOD && (
-                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4ADE80]/10 border border-[#4ADE80]/20 mb-4">
+                <div className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#4ADE80]/10 border border-[#4ADE80]/20 mb-5">
                   <span className="w-1.5 h-1.5 rounded-full bg-[#4ADE80] animate-pulse" />
                   <span className="text-[8px] font-black text-[#4ADE80] uppercase tracking-[3px]">Free Early Access - Beta Open</span>
                 </div>
               )}
-              <h2 className="text-2xl font-black text-white uppercase tracking-tighter mb-2">
+              <h2
+                className="font-black text-white uppercase tracking-tighter mb-3"
+                style={{ fontFamily: "var(--font-oswald, 'Oswald', sans-serif)", fontSize: 'clamp(1.5rem, 3vw, 2.25rem)' }}
+              >
                 {BETA_PERIOD ? 'Claim Free Beta Access' : 'Start Your Optimization'}
               </h2>
-              <p className="text-[11px] text-white/40 uppercase tracking-wide max-w-md mx-auto">
+              <p className="text-[11px] text-white/40 uppercase tracking-wide max-w-sm mx-auto">
                 {BETA_PERIOD
                   ? 'Full LAB access at no cost during beta. Daily tracking starts now - upload bloodwork when ready.'
                   : 'Daily tracking begins immediately. Upload bloodwork at your own pace - your data creates the pull.'}
@@ -593,7 +685,7 @@ export default function ConvertPage() {
               </div>
             ) : (
               /* Not logged in */
-              <div className="max-w-sm mx-auto space-y-4">
+              <div className="max-w-sm mx-auto space-y-3">
                 {BETA_PERIOD ? (
                   /* Beta: single CTA */
                   <button type="button" onClick={() => setMode('signup-beta')}
@@ -632,17 +724,18 @@ export default function ConvertPage() {
               </div>
             )}
           </div>
-        </Card>
+        </div>
 
         {/* TRUST FOOTER */}
-        <div className="mt-8 p-4 bg-white/[0.02] border border-white/5">
+        <div className="p-4 border border-white/[0.04] bg-white/[0.01]">
           <div className="flex gap-3 items-start">
             <Lightning size={14} className="text-[#E8C470] shrink-0 mt-0.5" />
-            <p className="text-[9px] text-white/30 leading-relaxed uppercase font-bold tracking-tight">
+            <p className="text-[9px] text-white/25 leading-relaxed uppercase font-bold tracking-tight">
               Your data is encrypted and used exclusively for your personalized optimization protocol. This is a wellness tool, not a medical device. Cancel anytime.
             </p>
           </div>
         </div>
+
       </div>
     </div>
   );
