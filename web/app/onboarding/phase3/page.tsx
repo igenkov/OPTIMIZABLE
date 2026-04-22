@@ -104,7 +104,7 @@ export default function Phase3Page() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto pb-20">
+    <div className="max-w-2xl mx-auto px-4 pb-20">
 
       {/* HEADER & PROGRESS */}
       <header className="mb-12">

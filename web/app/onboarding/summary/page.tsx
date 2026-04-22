@@ -115,7 +115,7 @@ export default function SummaryPage() {
   );
 
   return (
-    <div className="max-w-5xl mx-auto px-4 lg:px-8 py-6 pb-16">
+    <div className="px-4 lg:px-10 py-4 pb-16 max-w-[1600px] mx-auto">
 
       {/* HEADER */}
       <header className="mb-8">

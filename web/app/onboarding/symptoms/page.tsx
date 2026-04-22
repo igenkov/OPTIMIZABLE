@@ -68,7 +68,7 @@ export default function SymptomsPage() {
   const activeSymptomCount = selected.filter(s => s !== 'none').length;
 
   return (
-    <div className="max-w-2xl mx-auto pb-32">
+    <div className="max-w-2xl mx-auto px-4 pb-32">
 
       {/* HEADER & PROGRESS */}
       <header className="mb-12">

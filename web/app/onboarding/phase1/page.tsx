@@ -118,7 +118,7 @@ export default function Phase1Page() {
   const selectedType = BODY_TYPES.find(t => t.level === form.body_type_level);
 
   return (
-    <div className="max-w-2xl mx-auto pb-20">
+    <div className="max-w-2xl mx-auto px-4 pb-20">
 
       {/* HEADER & PROGRESS */}
       <header className="mb-12">
