@@ -268,11 +268,13 @@ export default async function Home() {
 
             {/* Headline */}
             <h1
-              className="font-black uppercase leading-tight mb-5"
-              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", letterSpacing: '0.02em', fontSize: 'clamp(2rem, 3vw, 2.8rem)' }}
+              className="font-black uppercase leading-snug mb-5"
+              style={{ fontFamily: "var(--font-oswald,'Oswald',sans-serif)", letterSpacing: '0.02em', fontSize: 'clamp(1.5rem, 2.2vw, 2rem)' }}
             >
-              <span className="text-white">If you don&apos;t wake up hard, something is wrong.{' '}</span>
-              <span style={{ color: '#C8A2C8' }}>Find it. Optimize it.</span>
+              <span className="block text-white">If you don&apos;t</span>
+              <span className="block text-white">wake up hard,</span>
+              <span className="block text-white">something is wrong.</span>
+              <span className="block" style={{ color: '#C8A2C8' }}>Find it. Optimize it.</span>
             </h1>
 
             {/* Subtext */}
