@@ -115,10 +115,10 @@ export default function SummaryPage() {
   );
 
   return (
-    <div className="max-w-2xl mx-auto pb-32">
+    <div className="max-w-5xl mx-auto px-4 lg:px-8 py-6 pb-16">
 
       {/* HEADER */}
-      <header className="mb-12">
+      <header className="mb-8">
         <div className="flex gap-1.5 mb-6">
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className="h-1 flex-1 rounded-full bg-[#C8A2C8] shadow-[0_0_8px_rgba(200,162,200,0.4)]" />
@@ -131,121 +131,124 @@ export default function SummaryPage() {
         <p className="text-white/40 text-sm">Aggregated results based on biometric profile, lifestyle telemetry, and clinical signal history.</p>
       </header>
 
-      {/* MAIN SCORE OR EXCLUSION */}
-      {excluded ? (
-        <Card className="mb-6 p-8" style={{ border: '1px solid rgba(234,179,8,0.2)', background: 'rgba(234,179,8,0.02)' }}>
-          <div className="flex items-center gap-3 text-yellow-500 mb-6">
-            <Warning size={24} />
-            <h2 className="text-lg font-black uppercase tracking-tight">Monitoring Protocol Required</h2>
-          </div>
-          <div className="p-4 bg-white/5 border border-white/5 mb-6">
-            <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1 text-center">Current Status</div>
-            <div className="text-xl font-black text-white text-center uppercase tracking-tighter">
-              {excludedReason === 'both' ? 'Exogenous Overload' : excludedReason === 'steroids' ? 'Active AAS Cycle' : 'Exogenous Replacement (TRT)'}
-            </div>
-          </div>
-          <p className="text-sm text-white/60 leading-relaxed text-center italic">
-            "Natural risk scoring is inapplicable during exogenous administration. Objective monitoring of safety markers is the priority sequence."
-          </p>
-        </Card>
-      ) : (
-        <Card className="mb-6 p-10 relative overflow-hidden text-center" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)' }}>
-          <div className="absolute top-0 right-0 p-4 opacity-5">
-            <Pulse size={120} />
-          </div>
+      {/* ROW 1: Score + Signals */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 mb-6">
 
-          <div className="relative z-10">
-            <div className="text-[10px] tracking-[4px] text-white/40 uppercase mb-6 font-black">Hormonal Risk Coefficient</div>
+        {/* Score / Exclusion */}
+        <div className="lg:col-span-7">
+          {excluded ? (
+            <Card className="p-8 h-full" style={{ border: '1px solid rgba(234,179,8,0.2)', background: 'rgba(234,179,8,0.02)' }}>
+              <div className="flex items-center gap-3 text-yellow-500 mb-6">
+                <Warning size={24} />
+                <h2 className="text-lg font-black uppercase tracking-tight">Monitoring Protocol Required</h2>
+              </div>
+              <div className="p-4 bg-white/5 border border-white/5 mb-6">
+                <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1 text-center">Current Status</div>
+                <div className="text-xl font-black text-white text-center uppercase tracking-tighter">
+                  {excludedReason === 'both' ? 'Exogenous Overload' : excludedReason === 'steroids' ? 'Active AAS Cycle' : 'Exogenous Replacement (TRT)'}
+                </div>
+              </div>
+              <p className="text-sm text-white/60 leading-relaxed text-center italic">
+                "Natural risk scoring is inapplicable during exogenous administration. Objective monitoring of safety markers is the priority sequence."
+              </p>
+            </Card>
+          ) : (
+            <Card className="p-8 lg:p-10 relative overflow-hidden text-center h-full" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)' }}>
+              <div className="absolute top-0 right-0 p-4 opacity-5">
+                <Pulse size={120} />
+              </div>
+              <div className="relative z-10">
+                <div className="text-[10px] tracking-[4px] text-white/40 uppercase mb-6 font-black">Hormonal Risk Coefficient</div>
+                <div className="flex items-center justify-center mb-4">
+                  <div className="text-7xl md:text-9xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
+                  <div className="text-left ml-4">
+                    <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">Scales</div>
+                    <div className="text-xs font-mono text-white/40">0—100</div>
+                  </div>
+                </div>
+                <div className={cn(
+                  'inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[3px] mb-8 border',
+                  level === 'critical' ? 'border-red-600/60 text-red-400 bg-red-500/15' :
+                  level === 'high' ? 'border-red-500/50 text-red-500 bg-red-500/10' :
+                  level === 'moderate' ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10' :
+                  'border-[#C8A2C8]/50 text-[#C8A2C8] bg-[#C8A2C8]/10'
+                )}>
+                  {label} Detected
+                </div>
+                <div className="max-w-sm mx-auto p-4 bg-white/5 border border-white/5">
+                  <p className="text-[11px] font-bold text-white/60 uppercase tracking-tight leading-relaxed">
+                    <span className="text-[#E8C470] mr-2 underline underline-offset-4 decoration-yellow-500/30">Immediate Action:</span>
+                    {action}
+                  </p>
+                </div>
+              </div>
+            </Card>
+          )}
+        </div>
 
-            <div className="flex items-center justify-center mb-4">
-              <div className="text-7xl md:text-9xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
-              <div className="text-left ml-4">
-                <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">Scales</div>
-                <div className="text-xs font-mono text-white/40">0—100</div>
+        {/* Key factors + Balancing factors */}
+        <div className="lg:col-span-5 space-y-4">
+          {!excluded && keyFactors.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-white/40 px-1">
+                <ClipboardText size={14} />
+                <h2 className="text-[10px] font-black tracking-[3px] uppercase">Telemetry Findings</h2>
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                {keyFactors.map((f, i) => {
+                  const open = openKeyFactors.has(i);
+                  return (
+                    <div key={i} className="bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
+                      <button
+                        onClick={() => toggleSet(openKeyFactors, setOpenKeyFactors, i)}
+                        className="w-full flex items-center justify-between px-4 py-3 text-left"
+                      >
+                        <span className="text-xs font-bold text-[#C8A2C8] uppercase tracking-tight">{f.title}</span>
+                        <CaretDown size={11} className={`text-white/30 shrink-0 ml-3 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
+                      </button>
+                      {open && (
+                        <p className="px-4 pb-3 text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
+          )}
 
-            <div className={cn(
-              'inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[3px] mb-8 border',
-              level === 'critical' ? 'border-red-600/60 text-red-400 bg-red-500/15' :
-              level === 'high' ? 'border-red-500/50 text-red-500 bg-red-500/10' :
-              level === 'moderate' ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10' :
-              'border-[#C8A2C8]/50 text-[#C8A2C8] bg-[#C8A2C8]/10'
-            )}>
-              {label} Detected
+          {!excluded && protectiveFactors.length > 0 && (
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-white/40 px-1">
+                <ShieldCheck size={14} />
+                <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
+              </div>
+              <div className="grid grid-cols-1 gap-2">
+                {protectiveFactors.map((f, i) => {
+                  const open = openBalancing.has(i);
+                  return (
+                    <div key={i} className="bg-[#4ade80]/[0.02] border border-[#4ade80]/10 hover:border-[#4ade80]/20 transition-all">
+                      <button
+                        onClick={() => toggleSet(openBalancing, setOpenBalancing, i)}
+                        className="w-full flex items-center justify-between px-4 py-3 text-left"
+                      >
+                        <span className="text-xs font-bold text-[#4ade80] uppercase tracking-tight">{f.title}</span>
+                        <CaretDown size={11} className={`text-white/30 shrink-0 ml-3 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
+                      </button>
+                      {open && (
+                        <p className="px-4 pb-3 text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-
-            <div className="max-w-sm mx-auto p-4 bg-white/5 border border-white/5">
-              <p className="text-[11px] font-bold text-white/60 uppercase tracking-tight leading-relaxed">
-                <span className="text-[#E8C470] mr-2 underline underline-offset-4 decoration-yellow-500/30">Immediate Action:</span>
-                {action}
-              </p>
-            </div>
-          </div>
-        </Card>
-      )}
-
-      {/* KEY FACTORS */}
-      {!excluded && keyFactors.length > 0 && (
-        <div className="mb-10 space-y-4">
-          <div className="flex items-center gap-2 text-white/40 px-1">
-            <ClipboardText size={14} />
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Telemetry Findings</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {keyFactors.map((f, i) => {
-              const open = openKeyFactors.has(i);
-              return (
-                <div key={i} className="bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
-                  <button
-                    onClick={() => toggleSet(openKeyFactors, setOpenKeyFactors, i)}
-                    className="w-full flex items-center justify-between p-4 text-left"
-                  >
-                    <span className="text-xs font-bold text-[#C8A2C8] uppercase tracking-tight">{f.title}</span>
-                    <CaretDown size={11} className={`text-white/30 shrink-0 ml-3 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
-                  </button>
-                  {open && (
-                    <p className="px-4 pb-4 text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+          )}
         </div>
-      )}
+      </div>
 
-      {/* BALANCING FACTORS */}
-      {!excluded && protectiveFactors.length > 0 && (
-        <div className="mb-10 space-y-4">
-          <div className="flex items-center gap-2 text-white/40 px-1">
-            <ShieldCheck size={14} />
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
-          </div>
-          <div className="grid grid-cols-1 gap-3">
-            {protectiveFactors.map((f, i) => {
-              const open = openBalancing.has(i);
-              return (
-                <div key={i} className="bg-[#4ade80]/[0.02] border border-[#4ade80]/10 hover:border-[#4ade80]/20 transition-all">
-                  <button
-                    onClick={() => toggleSet(openBalancing, setOpenBalancing, i)}
-                    className="w-full flex items-center justify-between p-4 text-left"
-                  >
-                    <span className="text-xs font-bold text-[#4ade80] uppercase tracking-tight">{f.title}</span>
-                    <CaretDown size={11} className={`text-white/30 shrink-0 ml-3 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
-                  </button>
-                  {open && (
-                    <p className="px-4 pb-4 text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
-                  )}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      )}
-
-      {/* BLOODWORK PANELS */}
-      <div className="space-y-6 mb-12">
-        <div className="flex items-center gap-2 text-white/40 px-1">
+      {/* ROW 2: BLOODWORK PANELS */}
+      <div className="mb-6">
+        <div className="flex items-center gap-2 text-white/40 px-1 mb-4">
           <Flask size={14} />
           <h2 className="text-[10px] font-black tracking-[3px] uppercase">Recommended Laboratory Sequence</h2>
         </div>
@@ -270,153 +273,154 @@ export default function SummaryPage() {
           </Card>
         ) : panel && (
           <>
-            {/* ESSENTIAL */}
-            {panel.essential.length > 0 && (
-              <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(200,162,200,0.15)' }}>
-                <div className="p-4 bg-[#C8A2C8]/5 border-b border-[#C8A2C8]/10 flex justify-between items-center">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A2C8]">Essential Panel</span>
-                  <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Required for Analysis</span>
-                </div>
-                <div className="divide-y divide-white/5">
-                  {panel.essential.map(m => {
-                    const bio = BIOMARKERS.find(b => b.id === m.id);
-                    if (!bio) return null;
-                    return (
-                      <div key={m.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                        <div className="mt-1 w-2 h-2 rounded-full bg-[#C8A2C8] shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-bold text-white group-hover:text-[#C8A2C8] transition-colors uppercase tracking-tight">{bio.name}</div>
-                          {m.reasons.length > 0 && (
-                            <div className="text-[10px] text-[#C8A2C8]/50 font-medium leading-relaxed mt-1 tracking-tight">{m.reasons.join(' · ')}</div>
-                          )}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+              {/* ESSENTIAL */}
+              {panel.essential.length > 0 && (
+                <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(200,162,200,0.15)' }}>
+                  <div className="p-4 bg-[#C8A2C8]/5 border-b border-[#C8A2C8]/10 flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A2C8]">Essential</span>
+                    <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Required</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {panel.essential.map(m => {
+                      const bio = BIOMARKERS.find(b => b.id === m.id);
+                      if (!bio) return null;
+                      return (
+                        <div key={m.id} className="p-3 flex gap-3 items-start hover:bg-white/[0.02] transition-colors group">
+                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#C8A2C8] shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-bold text-white group-hover:text-[#C8A2C8] transition-colors uppercase tracking-tight">{bio.name}</div>
+                            {m.reasons.length > 0 && (
+                              <div className="text-[9px] text-[#C8A2C8]/50 font-medium leading-relaxed mt-0.5 tracking-tight truncate">{m.reasons.join(' · ')}</div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-            )}
+                      );
+                    })}
+                  </div>
+                </Card>
+              )}
 
-            {/* RECOMMENDED */}
-            {panel.recommended.length > 0 && (
-              <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(232,196,112,0.15)' }}>
-                <div className="p-4 bg-[#E8C470]/5 border-b border-[#E8C470]/10 flex justify-between items-center">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Recommended Panel</span>
-                  <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Strongly Advised</span>
-                </div>
-                <div className="divide-y divide-white/5">
-                  {panel.recommended.map(m => {
-                    const bio = BIOMARKERS.find(b => b.id === m.id);
-                    if (!bio) return null;
-                    return (
-                      <div key={m.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                        <div className="mt-1 w-2 h-2 rounded-full bg-[#E8C470] shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-bold text-white group-hover:text-[#E8C470] transition-colors uppercase tracking-tight">{bio.name}</div>
-                          {m.reasons.length > 0 && (
-                            <div className="text-[10px] text-[#E8C470]/50 font-medium leading-relaxed mt-1 tracking-tight">{m.reasons.join(' · ')}</div>
-                          )}
+              {/* RECOMMENDED */}
+              {panel.recommended.length > 0 && (
+                <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(232,196,112,0.15)' }}>
+                  <div className="p-4 bg-[#E8C470]/5 border-b border-[#E8C470]/10 flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Recommended</span>
+                    <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Advised</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {panel.recommended.map(m => {
+                      const bio = BIOMARKERS.find(b => b.id === m.id);
+                      if (!bio) return null;
+                      return (
+                        <div key={m.id} className="p-3 flex gap-3 items-start hover:bg-white/[0.02] transition-colors group">
+                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#E8C470] shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-bold text-white group-hover:text-[#E8C470] transition-colors uppercase tracking-tight">{bio.name}</div>
+                            {m.reasons.length > 0 && (
+                              <div className="text-[9px] text-[#E8C470]/50 font-medium leading-relaxed mt-0.5 tracking-tight truncate">{m.reasons.join(' · ')}</div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-            )}
+                      );
+                    })}
+                  </div>
+                </Card>
+              )}
 
-            {/* EXTENDED */}
-            {panel.extended.length > 0 && (
-              <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
-                <div className="p-4 bg-white/[0.03] border-b border-white/5 flex justify-between items-center">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Extended Refinement</span>
-                  <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Additional Markers</span>
-                </div>
-                <div className="divide-y divide-white/5">
-                  {panel.extended.map(m => {
-                    const bio = BIOMARKERS.find(b => b.id === m.id);
-                    if (!bio) return null;
-                    return (
-                      <div key={m.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                        <div className="mt-1 w-2 h-2 rounded-full bg-white/20 shrink-0" />
-                        <div className="flex-1">
-                          <div className="text-xs font-bold text-white/60 group-hover:text-white transition-colors uppercase tracking-tight">{bio.name}</div>
-                          {m.reasons.length > 0 && (
-                            <div className="text-[10px] text-white/25 font-medium leading-relaxed mt-1 tracking-tight">{m.reasons.join(' · ')}</div>
-                          )}
+              {/* EXTENDED */}
+              {panel.extended.length > 0 && (
+                <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
+                  <div className="p-4 bg-white/[0.03] border-b border-white/5 flex justify-between items-center">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Extended</span>
+                    <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Additional</span>
+                  </div>
+                  <div className="divide-y divide-white/5">
+                    {panel.extended.map(m => {
+                      const bio = BIOMARKERS.find(b => b.id === m.id);
+                      if (!bio) return null;
+                      return (
+                        <div key={m.id} className="p-3 flex gap-3 items-start hover:bg-white/[0.02] transition-colors group">
+                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/20 shrink-0" />
+                          <div className="flex-1 min-w-0">
+                            <div className="text-xs font-bold text-white/60 group-hover:text-white transition-colors uppercase tracking-tight">{bio.name}</div>
+                            {m.reasons.length > 0 && (
+                              <div className="text-[9px] text-white/25 font-medium leading-relaxed mt-0.5 tracking-tight truncate">{m.reasons.join(' · ')}</div>
+                            )}
+                          </div>
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </Card>
-            )}
+                      );
+                    })}
+                  </div>
+                </Card>
+              )}
+            </div>
 
             {/* DISCLAIMER */}
-            <div className="px-1">
-              <p className="text-[10px] text-white/25 leading-relaxed italic">
-                The endocrine system is a complex dynamic system where all markers work in correlation.
-                The more biomarkers included, the more accurate and personalized your analysis will be.
-                Essential markers are required for a meaningful result — recommended and extended markers
-                significantly improve diagnostic precision.
-              </p>
-            </div>
+            <p className="text-[10px] text-white/25 leading-relaxed italic mt-4 px-1">
+              The endocrine system is a complex dynamic system where all markers work in correlation.
+              Essential markers are required for a meaningful result — recommended and extended markers
+              significantly improve diagnostic precision.
+            </p>
           </>
         )}
       </div>
 
-      {/* PRE-DRAW INSTRUCTIONS */}
-      <Card className="mb-12 p-6 space-y-4" style={{ border: '1px solid rgba(200,162,200,0.2)', background: 'rgba(200,162,200,0.02)' }}>
-        <div className="flex items-center gap-2 text-[#C8A2C8]">
-          <Clock size={16} />
-          <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pre-Draw Protocol</h2>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {[
-            { label: 'Time Window', val: '07:00 – 10:00 AM', detail: 'Hormonal peak window' },
-            { label: 'Metabolic State', val: 'Fasted (10-12 HR)', detail: 'Water only' },
-            { label: 'Physical State', val: 'Rest Day', detail: 'No heavy lifting 24hr prior' },
-            { label: 'Sleep Hygiene', val: 'Normal Duration', detail: 'Aim for 7+ hours prior' },
-            { label: 'Sexual Pulse', val: 'Abstain 24HR Prior', detail: 'Preserves baseline LH and testosterone levels' },
-          ].map((item, i) => (
-            <div key={i} className="p-3 bg-black/20 border border-white/5">
-              <div className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">{item.label}</div>
-              <div className="text-xs font-bold text-white uppercase tracking-tight">{item.val}</div>
-              <div className="text-[9px] text-[#C8A2C8]/40 font-bold uppercase tracking-tighter mt-1">{item.detail}</div>
+      {/* ROW 3: Pre-draw + CTA */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+
+        {/* PRE-DRAW */}
+        <Card className="lg:col-span-7 p-6 space-y-4" style={{ border: '1px solid rgba(200,162,200,0.2)', background: 'rgba(200,162,200,0.02)' }}>
+          <div className="flex items-center gap-2 text-[#C8A2C8]">
+            <Clock size={16} />
+            <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pre-Draw Protocol</h2>
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {[
+              { label: 'Time Window', val: '07:00 – 10:00 AM', detail: 'Hormonal peak window' },
+              { label: 'Metabolic State', val: 'Fasted (10-12 HR)', detail: 'Water only' },
+              { label: 'Physical State', val: 'Rest Day', detail: 'No heavy lifting 24hr prior' },
+              { label: 'Sleep Hygiene', val: 'Normal Duration', detail: 'Aim for 7+ hours prior' },
+              { label: 'Sexual Pulse', val: 'Abstain 24HR Prior', detail: 'Preserves baseline LH and testosterone levels' },
+            ].map((item, i) => (
+              <div key={i} className="p-3 bg-black/20 border border-white/5">
+                <div className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">{item.label}</div>
+                <div className="text-xs font-bold text-white uppercase tracking-tight">{item.val}</div>
+                <div className="text-[9px] text-[#C8A2C8]/40 font-bold uppercase tracking-tighter mt-1">{item.detail}</div>
+              </div>
+            ))}
+          </div>
+        </Card>
+
+        {/* CTA */}
+        <div className="lg:col-span-5 relative overflow-hidden p-8 border border-[#C8A2C8]/30 flex flex-col justify-between" style={{ background: 'rgba(200,162,200,0.05)' }}>
+          <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
+            <Lock size={80} />
+          </div>
+          <div className="relative z-10">
+            <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-2">
+              {isLoggedIn ? 'Unlock the Full Optimization Sequence' : 'What Happens Next'}
+            </h2>
+            <p className="text-xs text-white/40 mb-8 uppercase font-bold leading-relaxed tracking-tighter">
+              Start daily tracking now, upload bloodwork when ready, and get a personalized 90-day protocol built from your data.
+            </p>
+            <div className="space-y-3">
+              <Link href="/convert"
+                className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
+                See What&apos;s Included <CaretRight size={16} className="ml-1" />
+              </Link>
+              {isLoggedIn ? (
+                <Link href="/dashboard"
+                  className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
+                  Go to Dashboard
+                </Link>
+              ) : (
+                <Link href="/login"
+                  className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
+                  Existing Member Sign In
+                </Link>
+              )}
             </div>
-          ))}
-        </div>
-      </Card>
-
-      {/* CTA — route to conversion screen */}
-      <div className="relative overflow-hidden p-8 border border-[#C8A2C8]/30" style={{ background: 'rgba(200,162,200,0.05)' }}>
-        <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-          <Lock size={80} />
-        </div>
-
-        <div className="relative z-10">
-          <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-2">
-            {isLoggedIn ? 'Unlock the Full Optimization Sequence' : 'What Happens Next'}
-          </h2>
-          <p className="text-xs text-white/40 mb-8 max-w-sm uppercase font-bold leading-relaxed tracking-tighter">
-            Start daily tracking now, upload bloodwork when ready, and get a personalized 90-day protocol built from your data.
-          </p>
-
-          <div className="space-y-3">
-            <Link href="/convert"
-              className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
-              See What&apos;s Included <CaretRight size={16} className="ml-1" />
-            </Link>
-            {isLoggedIn ? (
-              <Link href="/dashboard"
-                className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
-                Go to Dashboard
-              </Link>
-            ) : (
-              <Link href="/login"
-                className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
-                Existing Member Sign In
-              </Link>
-            )}
           </div>
         </div>
       </div>
