@@ -357,11 +357,13 @@ export default function SummaryPage() {
             </div>
 
             {/* DISCLAIMER */}
-            <p className="text-[10px] text-white/25 leading-relaxed italic mt-4 px-1">
-              The endocrine system is a complex dynamic system where all markers work in correlation.
-              Essential markers are required for a meaningful result — recommended and extended markers
-              significantly improve diagnostic precision.
-            </p>
+            <div className="mt-4 px-4 py-3 border border-red-800/50 bg-red-950/30">
+              <p className="text-[10px] text-red-400/80 leading-relaxed italic">
+                The endocrine system is a complex dynamic system where all markers work in correlation.
+                Essential markers are required for a meaningful result - recommended and extended markers
+                significantly improve diagnostic precision.
+              </p>
+            </div>
           </>
         )}
       </div>
