@@ -125,10 +125,10 @@ export default function SummaryPage() {
           ))}
         </div>
         <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-[#C8A2C8] mb-4">
-          Analysis Complete / Final Synthesis
+          Onboarding Complete / Final Assessment
         </div>
         <h1 className="text-3xl font-black text-white tracking-tight mb-2">Diagnostic Report</h1>
-        <p className="text-white/40 text-sm">Aggregated results based on biometric profile, lifestyle telemetry, and clinical signal history.</p>
+        <p className="text-white/40 text-sm">Aggregated results, based on biometric profile, lifestyle habits, clinical history, symptoms audit:</p>
       </header>
 
       {/* ROW 1: Score + Signals */}
@@ -192,7 +192,7 @@ export default function SummaryPage() {
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-white/40 px-1">
                 <ClipboardText size={14} />
-                <h2 className="text-[10px] font-black tracking-[3px] uppercase">Telemetry Findings</h2>
+                <h2 className="text-[10px] font-black tracking-[3px] uppercase">Critical Factors</h2>
               </div>
               <div className="grid grid-cols-1 gap-2">
                 {keyFactors.map((f, i) => {
