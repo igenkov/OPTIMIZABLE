@@ -309,7 +309,7 @@ export default function ConvertPage() {
         <div className="w-full max-w-md relative z-10">
           {/* Branding */}
           <div className="flex flex-col items-center mb-10">
-            <Link href="/" className="relative mb-4 block p-1 rounded-2xl border border-white/[0.06] bg-white/[0.02] shadow-[0_8px_40px_-12px_rgba(0,0,0,0.5)]">
+            <Link href="/" className="relative mb-4 block">
               <Image src="/logo_trsp.png" alt="Optimizable" width={48} height={48} style={{ objectFit: 'contain' }} />
             </Link>
             <div className="text-white font-bold uppercase tracking-[0.2em] text-xl"
@@ -470,7 +470,7 @@ export default function ConvertPage() {
         {/* BRANDING */}
         <div className="flex items-center justify-between gap-4 mb-10 lg:mb-14">
           <div className="flex items-center gap-3">
-            <Link href="/" className="rounded-xl border border-white/[0.07] bg-white/[0.03] p-1.5 shadow-[0_4px_24px_rgba(0,0,0,0.35)] backdrop-blur-sm transition-transform hover:scale-[1.02]">
+            <Link href="/">
               <Image src="/logo_trsp.png" alt="Optimizable" width={36} height={36} style={{ objectFit: 'contain' }} />
             </Link>
             <div
