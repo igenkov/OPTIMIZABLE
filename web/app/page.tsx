@@ -3,8 +3,8 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  ArrowRight, UserCircle, Pulse, ClipboardText,
-  ChartBar, Flask, TrendUp,
+  ArrowRight, UserCircle, Barbell, Brain,
+  ChartBar, Flask, TrendUp, ClockCounterClockwise,
 } from '@phosphor-icons/react/dist/ssr';
 
 // -- Step definitions ----------------------------------------------------------
@@ -15,11 +15,11 @@ const STEPS = [
     sub: 'Age, body composition, medical history',                       pro: false,
   },
   {
-    id: '02', icon: Pulse,      label: 'Lifestyle Assessment',
+    id: '02', icon: Barbell,      label: 'Lifestyle Assessment',
     sub: 'Sleep, stress, bad habits, physical activity',                 pro: false,
   },
   {
-    id: '03', icon: ClipboardText, label: 'Symptoms Audit',
+    id: '03', icon: Brain, label: 'Symptoms Audit',
     sub: 'Energy, libido, recovery, cognition',                          pro: false,
   },
   {
@@ -35,7 +35,7 @@ const STEPS = [
     sub: '90-day optimization protocol',                                 pro: true,
   },
   {
-    id: '07', icon: Pulse,      label: 'Progress Tracking',
+    id: '07', icon: ClockCounterClockwise,      label: 'Progress Tracking',
     sub: 'Daily progress assessment',                                    pro: true,
   },
 ];
@@ -50,8 +50,6 @@ function StepBento() {
   const labelClass = 'text-[10.5px] font-black uppercase tracking-wide text-white leading-snug';
   const subClass =
     'text-[8.5px] text-[#6A6A6A] sm:text-[#5C5C5C] leading-snug mt-1.5 line-clamp-3 sm:line-clamp-none';
-  const idxClass =
-    'w-7 sm:w-9 shrink-0 text-[9px] font-bold tabular-nums text-right tracking-[0.1em] text-[#3D3D3D] pt-0.5 lg:text-[#5A5A5A]';
 
   return (
     <div className="w-full min-w-0 pl-1 sm:pl-2 lg:pl-0">
@@ -64,12 +62,11 @@ function StepBento() {
           {freeSteps.map(step => {
             const Icon = step.icon;
             return (
-              <div key={step.id} className="group flex gap-2.5 sm:gap-3.5 py-3.5 sm:py-4 first:pt-0 items-start transition-colors duration-200">
-                <span className={idxClass}>{step.id}</span>
+              <div key={step.id} className="group flex gap-3 sm:gap-4 py-3.5 sm:py-4 first:pt-0 items-start transition-colors duration-200">
                 <Icon
                   weight="duotone"
-                  size={20}
-                  className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91] group-hover:text-[#B09BB0]"
+                  size={24}
+                  className="shrink-0 text-[#7A7A7A] w-6 h-6 sm:w-[22px] sm:h-[22px] mt-0.5 lg:text-[#A79FA7] group-hover:text-[#C8A2C8]"
                 />
                 <div className="min-w-0 flex-1">
                   <div className={labelClass}>{step.label}</div>
@@ -86,11 +83,10 @@ function StepBento() {
             <div className="pt-4 sm:pt-5 border-t border-white/[0.1] mt-0">
               <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 sm:gap-4 sm:items-start min-w-0">
                 <div className="flex gap-2.5 sm:gap-3.5 items-start min-w-0">
-                  <span className={idxClass}>{riskStep.id}</span>
                   <Icon
                     weight="duotone"
-                    size={20}
-                    className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91]"
+                    size={24}
+                    className="shrink-0 text-[#7A7A7A] w-6 h-6 sm:w-[22px] sm:h-[22px] mt-0.5 lg:text-[#A79FA7]"
                   />
                   <div className="min-w-0 flex-1">
                     <div className="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-white leading-tight">
@@ -110,7 +106,7 @@ function StepBento() {
 
       <div className="mt-6 sm:mt-7 pt-5 border-t border-[#C8A2C8]/25 lg:ml-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
-          <span className="text-[8px] font-black tracking-[0.2em] text-[#C8A2C8]/70 uppercase">Pro</span>
+          <span className="text-[8px] font-black tracking-[0.2em] text-[#C8A2C8]/70 uppercase">Lab</span>
           <span className="text-[7px] font-black tracking-[0.16em] text-[#C8A2C8] uppercase">Unlock</span>
         </div>
 
@@ -127,19 +123,12 @@ function StepBento() {
                     : 'pl-0.5 sm:pl-0'
                 }`}
               >
-                <div className="flex gap-2.5 sm:gap-3.5 items-start">
-                  <span
-                    className={`w-7 sm:w-9 shrink-0 text-[9px] font-bold text-right tabular-nums tracking-[0.1em] pt-0.5 ${
-                      highlight ? 'text-[#C8A2C8]/60' : 'text-[#C8A2C8]/40'
-                    }`}
-                  >
-                    {step.id}
-                  </span>
+                <div className="flex gap-3 sm:gap-4 items-start">
                   <Icon
                     weight="duotone"
-                    size={18}
-                    className={`shrink-0 w-[18px] h-[18px] mt-0.5 ${
-                      highlight ? 'text-[#C8A2C8]' : 'text-[#C8A2C8]/50 group-hover:text-[#C8A2C8]/75'
+                    size={22}
+                    className={`shrink-0 w-[22px] h-[22px] mt-0.5 ${
+                      highlight ? 'text-[#C8A2C8]' : 'text-[#C8A2C8]/65 group-hover:text-[#C8A2C8]'
                     }`}
                   />
                   <div className="min-w-0 flex-1">
