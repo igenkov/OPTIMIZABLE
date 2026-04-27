@@ -55,16 +55,20 @@ function StepBento() {
 
   return (
     <div className="w-full min-w-0 pl-3 sm:pl-4 border-l border-white/[0.1] lg:border-white/[0.14] lg:pl-5">
+      <div className="mb-4 sm:mb-5 flex items-center gap-3">
+        <div className="h-px flex-1 bg-gradient-to-r from-[#C8A2C8]/50 to-transparent" />
+        <span className="text-[8px] uppercase tracking-[0.18em] text-[#7D667D]">Clinical Flow</span>
+      </div>
       <div className="divide-y divide-white/[0.08]">
         {freeSteps.map(step => {
           const Icon = step.icon;
           return (
-            <div key={step.id} className="flex gap-2.5 sm:gap-3.5 py-3.5 sm:py-4 first:pt-0 items-start">
+            <div key={step.id} className="group flex gap-2.5 sm:gap-3.5 py-3.5 sm:py-4 first:pt-0 items-start transition-colors duration-200">
               <span className={idxClass}>{step.id}</span>
               <Icon
                 weight="duotone"
                 size={20}
-                className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91]"
+                className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91] group-hover:text-[#B09BB0]"
               />
               <div className="min-w-0 flex-1">
                 <div className={labelClass}>{step.label}</div>
@@ -115,7 +119,7 @@ function StepBento() {
             return (
               <li
                 key={step.id}
-                className={`py-3.5 sm:py-4 ${
+                className={`group py-3.5 sm:py-4 transition-colors duration-200 ${
                   highlight
                     ? 'border-l-2 border-l-[#C8A2C8] -ml-px pl-3 sm:pl-3.5 -mr-0 sm:mr-0 bg-[#C8A2C8]/[0.05]'
                     : 'pl-0.5 sm:pl-0'
@@ -133,7 +137,7 @@ function StepBento() {
                     weight="duotone"
                     size={18}
                     className={`shrink-0 w-[18px] h-[18px] mt-0.5 ${
-                      highlight ? 'text-[#C8A2C8]' : 'text-[#C8A2C8]/50'
+                      highlight ? 'text-[#C8A2C8]' : 'text-[#C8A2C8]/50 group-hover:text-[#C8A2C8]/75'
                     }`}
                   />
                   <div className="min-w-0 flex-1">
@@ -304,6 +308,27 @@ export default async function Home() {
               >
                 Sign In
               </Link>
+            </div>
+
+            <div className="mt-6 sm:mt-7 border border-white/[0.08] bg-white/[0.015] rounded-sm p-3.5 sm:p-4">
+              <div className="flex items-center gap-2 mb-3">
+                <div className="h-px flex-1 bg-gradient-to-r from-[#C8A2C8]/55 to-transparent" />
+                <span className="text-[8px] font-black tracking-[0.18em] text-[#C8A2C8]/75 uppercase">Signal Snapshot</span>
+              </div>
+              <div className="grid grid-cols-3 gap-3">
+                <div>
+                  <p className="text-[7px] uppercase tracking-[0.16em] text-[#5D5D5D]">Assessment</p>
+                  <p className="text-[15px] font-black text-white leading-none mt-1">3 Min</p>
+                </div>
+                <div>
+                  <p className="text-[7px] uppercase tracking-[0.16em] text-[#5D5D5D]">Protocol</p>
+                  <p className="text-[15px] font-black text-white leading-none mt-1">90 Day</p>
+                </div>
+                <div>
+                  <p className="text-[7px] uppercase tracking-[0.16em] text-[#5D5D5D]">Tracking</p>
+                  <p className="text-[15px] font-black text-white leading-none mt-1">Daily</p>
+                </div>
+              </div>
             </div>
           </section>
 
