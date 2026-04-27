@@ -59,54 +59,56 @@ function StepBento() {
         <div className="h-px flex-1 bg-gradient-to-r from-[#C8A2C8]/50 to-transparent" />
         <span className="text-[8px] uppercase tracking-[0.18em] text-[#7D667D]">Clinical Flow</span>
       </div>
-      <div className="divide-y divide-white/[0.08]">
-        {freeSteps.map(step => {
-          const Icon = step.icon;
-          return (
-            <div key={step.id} className="group flex gap-2.5 sm:gap-3.5 py-3.5 sm:py-4 first:pt-0 items-start transition-colors duration-200">
-              <span className={idxClass}>{step.id}</span>
-              <Icon
-                weight="duotone"
-                size={20}
-                className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91] group-hover:text-[#B09BB0]"
-              />
-              <div className="min-w-0 flex-1">
-                <div className={labelClass}>{step.label}</div>
-                <p className={subClass}>{step.sub}</p>
-              </div>
-            </div>
-          );
-        })}
-      </div>
-
-      {(() => {
-        const Icon = riskStep.icon;
-        return (
-          <div className="pt-4 sm:pt-5 border-t border-white/[0.1] mt-0">
-            <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 sm:gap-4 sm:items-start min-w-0">
-              <div className="flex gap-2.5 sm:gap-3.5 items-start min-w-0">
-                <span className={idxClass}>{riskStep.id}</span>
+      <div className="lg:-ml-5 lg:pr-5">
+        <div className="divide-y divide-white/[0.08]">
+          {freeSteps.map(step => {
+            const Icon = step.icon;
+            return (
+              <div key={step.id} className="group flex gap-2.5 sm:gap-3.5 py-3.5 sm:py-4 first:pt-0 items-start transition-colors duration-200">
+                <span className={idxClass}>{step.id}</span>
                 <Icon
                   weight="duotone"
                   size={20}
-                  className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91]"
+                  className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91] group-hover:text-[#B09BB0]"
                 />
                 <div className="min-w-0 flex-1">
-                  <div className="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-white leading-tight">
-                    {riskStep.label}
-                  </div>
-                  <p className={`${subClass} sm:line-clamp-none`}>{riskStep.sub}</p>
+                  <div className={labelClass}>{step.label}</div>
+                  <p className={subClass}>{step.sub}</p>
                 </div>
               </div>
-              <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C8A2C8]/55 sm:pt-1 sm:text-right sm:justify-self-end">
-                Free
-              </p>
-            </div>
-          </div>
-        );
-      })()}
+            );
+          })}
+        </div>
 
-      <div className="mt-6 sm:mt-7 pt-5 border-t border-[#C8A2C8]/25">
+        {(() => {
+          const Icon = riskStep.icon;
+          return (
+            <div className="pt-4 sm:pt-5 border-t border-white/[0.1] mt-0">
+              <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 sm:gap-4 sm:items-start min-w-0">
+                <div className="flex gap-2.5 sm:gap-3.5 items-start min-w-0">
+                  <span className={idxClass}>{riskStep.id}</span>
+                  <Icon
+                    weight="duotone"
+                    size={20}
+                    className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91]"
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-white leading-tight">
+                      {riskStep.label}
+                    </div>
+                    <p className={`${subClass} sm:line-clamp-none`}>{riskStep.sub}</p>
+                  </div>
+                </div>
+                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C8A2C8]/55 sm:pt-1 sm:text-right sm:justify-self-end">
+                  Free
+                </p>
+              </div>
+            </div>
+          );
+        })()}
+      </div>
+
+      <div className="mt-6 sm:mt-7 pt-5 border-t border-[#C8A2C8]/25 lg:ml-4">
         <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
           <span className="text-[8px] font-black tracking-[0.2em] text-[#C8A2C8]/70 uppercase">Pro</span>
           <span className="text-[7px] font-black tracking-[0.16em] text-[#C8A2C8] uppercase">Unlock</span>
