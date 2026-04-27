@@ -43,103 +43,138 @@ const STEPS = [
 const freeSteps  = STEPS.filter(s => !s.pro && !s.full);
 const riskStep   = STEPS.find(s => s.full)!;
 const proSteps   = STEPS.filter(s => s.pro);
+type Step = (typeof STEPS)[number];
 
-// -- Steps: one vertical spec (border-l + divide-y) — anti–nested-card per design-taste-frontend --
+// -- Asymmetric bento: one tile layer, varied spans, no nested containers -------
 
-function StepBento() {
-  const labelClass = 'text-[10.5px] font-black uppercase tracking-wide text-white leading-snug';
-  const subClass =
-    'text-[8.5px] text-[#6A6A6A] sm:text-[#5C5C5C] leading-snug mt-1.5 line-clamp-3 sm:line-clamp-none';
+function StepTile({
+  step,
+  className = '',
+  tone = 'neutral',
+  emphasis = 'standard',
+  meta,
+}: {
+  step: Step;
+  className?: string;
+  tone?: 'neutral' | 'lab';
+  emphasis?: 'standard' | 'large';
+  meta?: string;
+}) {
+  const Icon = step.icon;
+  const isLab = tone === 'lab';
+  const isLarge = emphasis === 'large';
 
   return (
-    <div className="w-full min-w-0 pl-1 sm:pl-2 lg:pl-0">
-      <div className="mb-4 sm:mb-5 flex items-center gap-3">
+    <article
+      className={`group relative overflow-hidden rounded-[18px] border p-4 sm:p-5 transition-all duration-300 ${className} ${
+        isLab
+          ? 'border-[#C8A2C8]/25 bg-[#C8A2C8]/[0.045] hover:border-[#C8A2C8]/40'
+          : 'border-white/[0.08] bg-white/[0.025] hover:border-white/[0.14] hover:bg-white/[0.04]'
+      }`}
+    >
+      <div
+        aria-hidden="true"
+        className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 group-hover:opacity-100 ${
+          isLab
+            ? 'bg-[radial-gradient(circle_at_20%_0%,rgba(200,162,200,0.18),transparent_45%)]'
+            : 'bg-[radial-gradient(circle_at_15%_0%,rgba(255,255,255,0.08),transparent_42%)]'
+        }`}
+      />
+      <div className="relative flex h-full flex-col justify-between gap-6">
+        <div className="flex items-start justify-between gap-4">
+          <Icon
+            weight="duotone"
+            size={isLarge ? 34 : 28}
+            className={`shrink-0 ${isLab ? 'text-[#C8A2C8]' : 'text-[#A79FA7]'} transition-colors duration-300`}
+          />
+          {meta && (
+            <span
+              className={`text-[8px] font-black uppercase tracking-[0.2em] ${
+                isLab ? 'text-[#C8A2C8]/70' : 'text-[#8B8B8B]'
+              }`}
+            >
+              {meta}
+            </span>
+          )}
+        </div>
+        <div>
+          <div
+            className={`font-black uppercase tracking-wide text-white leading-tight ${
+              isLarge ? 'text-[14px] sm:text-[15px]' : 'text-[11px]'
+            }`}
+          >
+            {step.label}
+          </div>
+          <p
+            className={`mt-1.5 leading-snug text-[#777] ${
+              isLarge ? 'text-[9.5px] sm:text-[10px]' : 'text-[8.5px]'
+            }`}
+          >
+            {step.sub}
+          </p>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function StepBento() {
+  return (
+    <div className="w-full min-w-0">
+      <div className="mb-4 sm:mb-5 flex items-center gap-3 lg:max-w-[92%]">
         <div className="h-px flex-1 bg-gradient-to-r from-[#C8A2C8]/50 to-transparent" />
         <span className="text-[8px] uppercase tracking-[0.18em] text-[#7D667D]">Clinical Flow</span>
       </div>
-      <div className="lg:-ml-5 lg:pr-5">
-        <div className="divide-y divide-white/[0.08]">
-          {freeSteps.map(step => {
-            const Icon = step.icon;
-            return (
-              <div key={step.id} className="group flex gap-3 sm:gap-4 py-3.5 sm:py-4 first:pt-0 items-start transition-colors duration-200">
-                <Icon
-                  weight="duotone"
-                  size={24}
-                  className="shrink-0 text-[#7A7A7A] w-6 h-6 sm:w-[22px] sm:h-[22px] mt-0.5 lg:text-[#A79FA7] group-hover:text-[#C8A2C8]"
-                />
-                <div className="min-w-0 flex-1">
-                  <div className={labelClass}>{step.label}</div>
-                  <p className={subClass}>{step.sub}</p>
-                </div>
-              </div>
-            );
-          })}
-        </div>
 
-        {(() => {
-          const Icon = riskStep.icon;
-          return (
-            <div className="pt-4 sm:pt-5 border-t border-white/[0.1] mt-0">
-              <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 sm:gap-4 sm:items-start min-w-0">
-                <div className="flex gap-2.5 sm:gap-3.5 items-start min-w-0">
-                  <Icon
-                    weight="duotone"
-                    size={24}
-                    className="shrink-0 text-[#7A7A7A] w-6 h-6 sm:w-[22px] sm:h-[22px] mt-0.5 lg:text-[#A79FA7]"
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-white leading-tight">
-                      {riskStep.label}
-                    </div>
-                    <p className={`${subClass} sm:line-clamp-none`}>{riskStep.sub}</p>
-                  </div>
-                </div>
-                <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C8A2C8]/55 sm:pt-1 sm:text-right sm:justify-self-end">
-                  Free
-                </p>
-              </div>
-            </div>
-          );
-        })()}
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 lg:-ml-8 lg:pr-4 lg:gap-3.5">
+        <StepTile
+          step={freeSteps[0]}
+          className="sm:col-span-3 lg:col-span-3 lg:min-h-[154px]"
+        />
+        <StepTile
+          step={freeSteps[1]}
+          className="sm:col-span-3 lg:col-span-3 lg:translate-y-7 lg:min-h-[154px]"
+        />
+        <StepTile
+          step={freeSteps[2]}
+          className="sm:col-span-4 lg:col-span-4 lg:min-h-[142px]"
+        />
+
+        <div className="hidden lg:block lg:col-span-2" aria-hidden="true" />
+
+        <StepTile
+          step={riskStep}
+          meta="Free"
+          emphasis="large"
+          className="sm:col-span-6 lg:col-span-5 lg:min-h-[170px]"
+        />
       </div>
 
-      <div className="mt-6 sm:mt-7 pt-5 border-t border-[#C8A2C8]/25 lg:ml-4">
-        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+      <div className="mt-6 sm:mt-7 lg:mt-11 lg:ml-8">
+        <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
           <span className="text-[8px] font-black tracking-[0.2em] text-[#C8A2C8]/70 uppercase">Lab</span>
           <span className="text-[7px] font-black tracking-[0.16em] text-[#C8A2C8] uppercase">Unlock</span>
         </div>
 
-        <ul className="border-t border-[#C8A2C8]/20 divide-y divide-[#C8A2C8]/[0.15]">
-          {proSteps.map(step => {
-            const Icon = step.icon;
-            const highlight = step.glow;
-            return (
-              <li
-                key={step.id}
-                className={`group py-3.5 sm:py-4 transition-colors duration-200 ${
-                  highlight
-                    ? 'border-l-2 border-l-[#C8A2C8] -ml-px pl-3 sm:pl-3.5 -mr-0 sm:mr-0 bg-[#C8A2C8]/[0.05]'
-                    : 'pl-0.5 sm:pl-0'
-                }`}
-              >
-                <div className="flex gap-3 sm:gap-4 items-start">
-                  <Icon
-                    weight="duotone"
-                    size={22}
-                    className={`shrink-0 w-[22px] h-[22px] mt-0.5 ${
-                      highlight ? 'text-[#C8A2C8]' : 'text-[#C8A2C8]/65 group-hover:text-[#C8A2C8]'
-                    }`}
-                  />
-                  <div className="min-w-0 flex-1">
-                    <div className={labelClass}>{step.label}</div>
-                    <p className={`${subClass} line-clamp-2 sm:line-clamp-none`}>{step.sub}</p>
-                  </div>
-                </div>
-              </li>
-            );
-          })}
-        </ul>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 lg:gap-3.5">
+          <StepTile
+            step={proSteps[0]}
+            tone="lab"
+            emphasis="large"
+            className="sm:col-span-4 lg:col-span-4 lg:min-h-[184px]"
+          />
+          <StepTile
+            step={proSteps[1]}
+            tone="lab"
+            className="sm:col-span-2 lg:col-span-2 lg:translate-y-8 lg:min-h-[184px]"
+          />
+          <div className="hidden lg:block lg:col-span-2" aria-hidden="true" />
+          <StepTile
+            step={proSteps[2]}
+            tone="lab"
+            className="sm:col-span-4 lg:col-span-4 lg:min-h-[142px]"
+          />
+        </div>
       </div>
     </div>
   );
