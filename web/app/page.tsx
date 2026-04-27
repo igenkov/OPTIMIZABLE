@@ -66,7 +66,7 @@ function StepTile({
 
   return (
     <article
-      className={`group relative overflow-hidden rounded-[18px] border p-4 sm:p-5 transition-all duration-300 ${className} ${
+      className={`group relative overflow-hidden rounded-[18px] border p-4 sm:p-5 lg:p-4 transition-all duration-300 ${className} ${
         isLab
           ? 'border-[#C8A2C8]/25 bg-[#C8A2C8]/[0.045] hover:border-[#C8A2C8]/40'
           : 'border-white/[0.08] bg-white/[0.025] hover:border-white/[0.14] hover:bg-white/[0.04]'
@@ -129,15 +129,15 @@ function StepBento() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 lg:-ml-8 lg:pr-4 lg:gap-3.5">
         <StepTile
           step={freeSteps[0]}
-          className="sm:col-span-3 lg:col-span-3 lg:min-h-[140px]"
+          className="sm:col-span-3 lg:col-span-3 lg:min-h-[122px]"
         />
         <StepTile
           step={freeSteps[1]}
-          className="sm:col-span-3 lg:col-span-3 lg:min-h-[140px] xl:translate-y-4"
+          className="sm:col-span-3 lg:col-span-3 lg:min-h-[122px]"
         />
         <StepTile
           step={freeSteps[2]}
-          className="sm:col-span-4 lg:col-span-4 lg:min-h-[132px]"
+          className="sm:col-span-4 lg:col-span-4 lg:min-h-[116px]"
         />
 
         <div className="hidden lg:block lg:col-span-2" aria-hidden="true" />
@@ -146,11 +146,11 @@ function StepBento() {
           step={riskStep}
           meta="Free"
           emphasis="large"
-          className="sm:col-span-6 lg:col-span-5 lg:min-h-[154px]"
+          className="sm:col-span-6 lg:col-span-5 lg:min-h-[136px]"
         />
       </div>
 
-      <div className="mt-6 sm:mt-7 lg:mt-11 lg:ml-8">
+      <div className="mt-6 sm:mt-7 lg:mt-7 lg:ml-6">
         <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
           <span className="text-[8px] font-black tracking-[0.2em] text-[#C8A2C8]/70 uppercase">Lab</span>
           <span className="text-[7px] font-black tracking-[0.16em] text-[#C8A2C8] uppercase">Unlock</span>
@@ -161,18 +161,18 @@ function StepBento() {
             step={proSteps[0]}
             tone="lab"
             emphasis="large"
-            className="sm:col-span-4 lg:col-span-4 lg:min-h-[164px]"
+            className="sm:col-span-4 lg:col-span-4 lg:min-h-[144px]"
           />
           <StepTile
             step={proSteps[1]}
             tone="lab"
-            className="sm:col-span-2 lg:col-span-2 lg:min-h-[164px] xl:translate-y-5"
+            className="sm:col-span-2 lg:col-span-2 lg:min-h-[144px]"
           />
           <div className="hidden lg:block lg:col-span-2" aria-hidden="true" />
           <StepTile
             step={proSteps[2]}
             tone="lab"
-            className="sm:col-span-4 lg:col-span-4 lg:min-h-[132px]"
+            className="sm:col-span-4 lg:col-span-4 lg:min-h-[116px]"
           />
         </div>
       </div>
@@ -283,8 +283,8 @@ export default async function Home() {
       </nav>
 
       {/* HERO + steps (bento is visible on all sizes; 2-col from lg) */}
-      <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-12 py-8 sm:py-10 lg:py-8">
-        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-start">
+      <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-12 py-8 sm:py-10 lg:py-6">
+        <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 xl:gap-20 items-start">
 
           <section className="flex flex-col min-w-0" aria-label="Overview">
             <div className="flex items-center gap-3 mb-5 sm:mb-6">
