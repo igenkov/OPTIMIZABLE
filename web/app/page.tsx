@@ -44,54 +44,31 @@ const freeSteps  = STEPS.filter(s => !s.pro && !s.full);
 const riskStep   = STEPS.find(s => s.full)!;
 const proSteps   = STEPS.filter(s => s.pro);
 
-// -- Step cards: same bento for all viewports; responsive grid (mobile-first) --
+// -- Steps: one vertical spec (border-l + divide-y) — anti–nested-card per design-taste-frontend --
 
 function StepBento() {
+  const labelClass = 'text-[10.5px] font-black uppercase tracking-wide text-white leading-snug';
+  const subClass =
+    'text-[8.5px] text-[#6A6A6A] sm:text-[#5C5C5C] leading-snug mt-1.5 line-clamp-3 sm:line-clamp-none';
+  const idxClass =
+    'w-7 sm:w-9 shrink-0 text-[9px] font-bold tabular-nums text-right tracking-[0.1em] text-[#3D3D3D] pt-0.5 lg:text-[#5A5A5A]';
+
   return (
-    <div
-      className="relative overflow-hidden flex flex-col gap-3 w-full min-w-0
-        lg:gap-5 lg:rounded-[28px] lg:border lg:border-white/[0.12]
-        lg:bg-[linear-gradient(165deg,rgba(255,255,255,0.06)_0%,rgba(200,162,200,0.04)_18%,rgba(12,12,12,0.98)_42%,#0a0a0a_100%)]
-        lg:p-6 lg:shadow-[0_32px_80px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.07)]"
-    >
-      <div
-        className="hidden lg:block pointer-events-none absolute inset-0 z-0 rounded-[28px] opacity-50"
-        style={{
-          background:
-            'radial-gradient(ellipse 70% 55% at 18% 12%, rgba(200, 162, 200, 0.16) 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 88% 88%, rgba(200, 162, 200, 0.1) 0%, transparent 50%)',
-        }}
-        aria-hidden
-      />
-      <div className="relative z-[1] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-3.5">
+    <div className="w-full min-w-0 pl-3 sm:pl-4 border-l border-white/[0.1] lg:border-white/[0.14] lg:pl-5">
+      <div className="divide-y divide-white/[0.08]">
         {freeSteps.map(step => {
           const Icon = step.icon;
           return (
-            <div
-              key={step.id}
-              className="group relative overflow-hidden bg-[#111111] border border-white/[0.055] rounded-2xl p-4 flex flex-col gap-3
-                hover:border-white/[0.1] transition-all duration-300
-                lg:border-white/15 lg:bg-[#131313] lg:shadow-[0_12px_40px_rgba(0,0,0,0.55)] lg:ring-1 lg:ring-inset lg:ring-white/[0.06] lg:hover:border-white/25 lg:hover:shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
-            >
-              <div className="flex items-start justify-between">
-                <div
-                  className="w-9 h-9 sm:w-7 sm:h-7 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center
-                    bg-white/[0.035] ring-1 ring-inset ring-white/[0.04] lg:rounded-xl lg:bg-white/[0.09] lg:ring-white/12"
-                >
-                  <Icon
-                    weight="duotone"
-                    size={16}
-                    className="text-[#6a6a6a] sm:w-[13px] sm:h-[13px] lg:w-[18px] lg:h-[18px] lg:text-[#9A959C]"
-                  />
-                </div>
-                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] lg:text-[#5A5A5A] uppercase tabular-nums">
-                  {step.id}
-                </span>
-              </div>
-              <div>
-                <div className="text-[10.5px] font-black uppercase tracking-wide text-white leading-tight">{step.label}</div>
-                <p className="text-[8.5px] text-[#5A5A5A] sm:text-[#484848] leading-snug mt-1.5 line-clamp-3 sm:line-clamp-none lg:text-[#6B6B6B]">
-                  {step.sub}
-                </p>
+            <div key={step.id} className="flex gap-2.5 sm:gap-3.5 py-3.5 sm:py-4 first:pt-0 items-start">
+              <span className={idxClass}>{step.id}</span>
+              <Icon
+                weight="duotone"
+                size={20}
+                className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91]"
+              />
+              <div className="min-w-0 flex-1">
+                <div className={labelClass}>{step.label}</div>
+                <p className={subClass}>{step.sub}</p>
               </div>
             </div>
           );
@@ -101,79 +78,73 @@ function StepBento() {
       {(() => {
         const Icon = riskStep.icon;
         return (
-          <div
-            className="relative z-[1] bg-[#111111] border border-white/[0.07] rounded-2xl px-4 py-4 sm:px-5 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5
-              lg:rounded-2xl lg:border-white/16 lg:bg-[#141414] lg:px-6 lg:py-5 lg:shadow-[0_14px_44px_rgba(0,0,0,0.5)] lg:ring-1 lg:ring-inset lg:ring-white/[0.05]"
-          >
-            <div className="flex flex-1 min-w-0 items-start gap-4 sm:gap-5">
-              <div
-                className="w-10 h-10 lg:w-12 lg:h-12 bg-white/[0.035] rounded-xl flex items-center justify-center shrink-0
-                  ring-1 ring-inset ring-white/[0.05] lg:bg-white/[0.1] lg:ring-white/12"
-              >
-                <Icon weight="duotone" size={18} className="text-[#5A5A5A] lg:w-[22px] lg:h-[22px] lg:text-[#A8A3AA]" />
+          <div className="pt-4 sm:pt-5 border-t border-white/[0.1] mt-0">
+            <div className="grid grid-cols-1 sm:grid-cols-[minmax(0,1fr)_auto] gap-2 sm:gap-4 sm:items-start min-w-0">
+              <div className="flex gap-2.5 sm:gap-3.5 items-start min-w-0">
+                <span className={idxClass}>{riskStep.id}</span>
+                <Icon
+                  weight="duotone"
+                  size={20}
+                  className="shrink-0 text-[#6B6B6B] w-5 h-5 sm:w-[18px] sm:h-[18px] mt-0.5 lg:text-[#8E8A91]"
+                />
+                <div className="min-w-0 flex-1">
+                  <div className="text-[12px] sm:text-[13px] font-black uppercase tracking-wide text-white leading-tight">
+                    {riskStep.label}
+                  </div>
+                  <p className={`${subClass} sm:line-clamp-none`}>{riskStep.sub}</p>
+                </div>
               </div>
-              <div className="flex-1 min-w-0">
-                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] lg:text-[#5A5A5A] uppercase block mb-0.5">{riskStep.id}</span>
-                <div className="text-[13px] font-black uppercase tracking-wide text-white leading-tight">{riskStep.label}</div>
-                <p className="text-[9px] text-[#5A5A5A] sm:text-[#484848] mt-0.5 line-clamp-2 sm:line-clamp-none lg:text-[#6B6B6B]">
-                  {riskStep.sub}
-                </p>
-              </div>
-            </div>
-            <div className="shrink-0 border border-white/[0.12] rounded-lg px-3 py-1.5 self-start sm:self-center lg:bg-white/[0.04]">
-              <span className="text-[8px] font-black uppercase tracking-[2px] text-[#6B6B6B] lg:text-[#888]">Free</span>
+              <p className="text-[8px] font-black uppercase tracking-[0.2em] text-[#C8A2C8]/55 sm:pt-1 sm:text-right sm:justify-self-end">
+                Free
+              </p>
             </div>
           </div>
         );
       })()}
 
-      <div
-        className="relative z-[1] rounded-2xl border border-[#C8A2C8]/[0.18] bg-[#C8A2C8]/[0.015] p-2
-          lg:rounded-2xl lg:border-[#C8A2C8]/35 lg:bg-[linear-gradient(180deg,rgba(200,162,200,0.1)_0%,rgba(200,162,200,0.04)_32%,rgba(10,10,10,0.4)_100%)] lg:p-3 lg:shadow-[0_0_48px_-12px_rgba(200,162,200,0.2)]"
-      >
-        <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-[#C8A2C8]/[0.08] lg:border-[#C8A2C8]/[0.15]">
-          <span className="text-[8px] font-black tracking-[3px] text-[#C8A2C8]/60 lg:text-[#C8A2C8]/80 uppercase">Pro Features</span>
-          <div className="bg-[#C8A2C8] text-black text-[7px] font-black px-2 py-0.5 rounded tracking-wide uppercase shadow-sm shadow-[#C8A2C8]/30">
-            Unlock
-          </div>
+      <div className="mt-6 sm:mt-7 pt-5 border-t border-[#C8A2C8]/25">
+        <div className="flex flex-wrap items-baseline justify-between gap-2 mb-3">
+          <span className="text-[8px] font-black tracking-[0.2em] text-[#C8A2C8]/70 uppercase">Pro</span>
+          <span className="text-[7px] font-black tracking-[0.16em] text-[#C8A2C8] uppercase">Unlock</span>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-2.5">
+
+        <ul className="border-t border-[#C8A2C8]/20 divide-y divide-[#C8A2C8]/[0.15]">
           {proSteps.map(step => {
             const Icon = step.icon;
+            const highlight = step.glow;
             return (
-              <div
+              <li
                 key={step.id}
-                className={`relative rounded-xl p-3 flex flex-col gap-2.5 transition-all duration-300 lg:rounded-[14px] lg:p-3.5 ${
-                  step.glow
-                    ? 'bg-[#C8A2C8]/[0.07] border border-[#C8A2C8]/30 lg:border-[#C8A2C8]/50 lg:bg-[#C8A2C8]/[0.12] lg:shadow-[0_0_36px_-8px_rgba(200,162,200,0.35),inset_0_1px_0_0_rgba(255,255,255,0.12)]'
-                    : 'bg-[#C8A2C8]/[0.02] border border-[#C8A2C8]/[0.1] hover:border-[#C8A2C8]/20 lg:border-[#C8A2C8]/25 lg:bg-[#C8A2C8]/[0.06] lg:hover:border-[#C8A2C8]/40'
+                className={`py-3.5 sm:py-4 ${
+                  highlight
+                    ? 'border-l-2 border-l-[#C8A2C8] -ml-px pl-3 sm:pl-3.5 -mr-0 sm:mr-0 bg-[#C8A2C8]/[0.05]'
+                    : 'pl-0.5 sm:pl-0'
                 }`}
               >
-                <div className="flex items-start justify-between">
-                  <div
-                    className="w-7 h-7 lg:w-9 lg:h-9 bg-[#C8A2C8]/[0.09] rounded-lg flex items-center justify-center
-                      ring-1 ring-inset ring-[#C8A2C8]/20 lg:ring-[#C8A2C8]/30"
+                <div className="flex gap-2.5 sm:gap-3.5 items-start">
+                  <span
+                    className={`w-7 sm:w-9 shrink-0 text-[9px] font-bold text-right tabular-nums tracking-[0.1em] pt-0.5 ${
+                      highlight ? 'text-[#C8A2C8]/60' : 'text-[#C8A2C8]/40'
+                    }`}
                   >
-                    <Icon
-                      weight="duotone"
-                      size={14}
-                      className="text-[#C8A2C8] lg:w-[17px] lg:h-[17px] lg:text-[#D4B8D4]"
-                    />
-                  </div>
-                  <span className="text-[8px] font-bold tracking-[2px] text-[#C8A2C8]/50 lg:text-[#C8A2C8]/70 uppercase tabular-nums">
                     {step.id}
                   </span>
+                  <Icon
+                    weight="duotone"
+                    size={18}
+                    className={`shrink-0 w-[18px] h-[18px] mt-0.5 ${
+                      highlight ? 'text-[#C8A2C8]' : 'text-[#C8A2C8]/50'
+                    }`}
+                  />
+                  <div className="min-w-0 flex-1">
+                    <div className={labelClass}>{step.label}</div>
+                    <p className={`${subClass} line-clamp-2 sm:line-clamp-none`}>{step.sub}</p>
+                  </div>
                 </div>
-                <div>
-                  <div className="text-[10.5px] font-black uppercase tracking-wide text-white leading-tight">{step.label}</div>
-                  <p className="text-[8.5px] text-[#5A5A5A] sm:text-[#484848] leading-snug mt-1.5 line-clamp-2 sm:line-clamp-none lg:text-[#9A9A9A]">
-                    {step.sub}
-                  </p>
-                </div>
-              </div>
+              </li>
             );
           })}
-        </div>
+        </ul>
       </div>
     </div>
   );
