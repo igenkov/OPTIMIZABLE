@@ -54,7 +54,7 @@ function StepBento() {
     'w-7 sm:w-9 shrink-0 text-[9px] font-bold tabular-nums text-right tracking-[0.1em] text-[#3D3D3D] pt-0.5 lg:text-[#5A5A5A]';
 
   return (
-    <div className="w-full min-w-0 pl-3 sm:pl-4 border-l border-white/[0.1] lg:border-white/[0.14] lg:pl-5">
+    <div className="w-full min-w-0 pl-1 sm:pl-2 lg:pl-0">
       <div className="mb-4 sm:mb-5 flex items-center gap-3">
         <div className="h-px flex-1 bg-gradient-to-r from-[#C8A2C8]/50 to-transparent" />
         <span className="text-[8px] uppercase tracking-[0.18em] text-[#7D667D]">Clinical Flow</span>
