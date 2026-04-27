@@ -129,15 +129,15 @@ function StepBento() {
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 lg:-ml-8 lg:pr-4 lg:gap-3.5">
         <StepTile
           step={freeSteps[0]}
-          className="sm:col-span-3 lg:col-span-3 lg:min-h-[154px]"
+          className="sm:col-span-3 lg:col-span-3 lg:min-h-[140px]"
         />
         <StepTile
           step={freeSteps[1]}
-          className="sm:col-span-3 lg:col-span-3 lg:translate-y-7 lg:min-h-[154px]"
+          className="sm:col-span-3 lg:col-span-3 lg:min-h-[140px] xl:translate-y-4"
         />
         <StepTile
           step={freeSteps[2]}
-          className="sm:col-span-4 lg:col-span-4 lg:min-h-[142px]"
+          className="sm:col-span-4 lg:col-span-4 lg:min-h-[132px]"
         />
 
         <div className="hidden lg:block lg:col-span-2" aria-hidden="true" />
@@ -146,7 +146,7 @@ function StepBento() {
           step={riskStep}
           meta="Free"
           emphasis="large"
-          className="sm:col-span-6 lg:col-span-5 lg:min-h-[170px]"
+          className="sm:col-span-6 lg:col-span-5 lg:min-h-[154px]"
         />
       </div>
 
@@ -161,18 +161,18 @@ function StepBento() {
             step={proSteps[0]}
             tone="lab"
             emphasis="large"
-            className="sm:col-span-4 lg:col-span-4 lg:min-h-[184px]"
+            className="sm:col-span-4 lg:col-span-4 lg:min-h-[164px]"
           />
           <StepTile
             step={proSteps[1]}
             tone="lab"
-            className="sm:col-span-2 lg:col-span-2 lg:translate-y-8 lg:min-h-[184px]"
+            className="sm:col-span-2 lg:col-span-2 lg:min-h-[164px] xl:translate-y-5"
           />
           <div className="hidden lg:block lg:col-span-2" aria-hidden="true" />
           <StepTile
             step={proSteps[2]}
             tone="lab"
-            className="sm:col-span-4 lg:col-span-4 lg:min-h-[142px]"
+            className="sm:col-span-4 lg:col-span-4 lg:min-h-[132px]"
           />
         </div>
       </div>
@@ -283,7 +283,7 @@ export default async function Home() {
       </nav>
 
       {/* HERO + steps (bento is visible on all sizes; 2-col from lg) */}
-      <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-12 py-8 sm:py-10 lg:py-12">
+      <main className="relative z-10 flex-1 flex flex-col justify-center px-4 sm:px-6 lg:px-12 py-8 sm:py-10 lg:py-8">
         <div className="w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 xl:gap-24 items-start">
 
           <section className="flex flex-col min-w-0" aria-label="Overview">
