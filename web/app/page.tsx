@@ -48,24 +48,50 @@ const proSteps   = STEPS.filter(s => s.pro);
 
 function StepBento() {
   return (
-    <div className="flex flex-col gap-3 w-full min-w-0">
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+    <div
+      className="relative overflow-hidden flex flex-col gap-3 w-full min-w-0
+        lg:gap-5 lg:rounded-[28px] lg:border lg:border-white/[0.12]
+        lg:bg-[linear-gradient(165deg,rgba(255,255,255,0.06)_0%,rgba(200,162,200,0.04)_18%,rgba(12,12,12,0.98)_42%,#0a0a0a_100%)]
+        lg:p-6 lg:shadow-[0_32px_80px_-24px_rgba(0,0,0,0.75),inset_0_1px_0_0_rgba(255,255,255,0.07)]"
+    >
+      <div
+        className="hidden lg:block pointer-events-none absolute inset-0 z-0 rounded-[28px] opacity-50"
+        style={{
+          background:
+            'radial-gradient(ellipse 70% 55% at 18% 12%, rgba(200, 162, 200, 0.16) 0%, transparent 55%), radial-gradient(ellipse 50% 40% at 88% 88%, rgba(200, 162, 200, 0.1) 0%, transparent 50%)',
+        }}
+        aria-hidden
+      />
+      <div className="relative z-[1] grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 lg:gap-3.5">
         {freeSteps.map(step => {
           const Icon = step.icon;
           return (
             <div
               key={step.id}
-              className="group bg-[#111111] border border-white/[0.055] rounded-2xl p-4 flex flex-col gap-3 hover:border-white/[0.1] transition-colors duration-300"
+              className="group relative overflow-hidden bg-[#111111] border border-white/[0.055] rounded-2xl p-4 flex flex-col gap-3
+                hover:border-white/[0.1] transition-all duration-300
+                lg:border-white/15 lg:bg-[#131313] lg:shadow-[0_12px_40px_rgba(0,0,0,0.55)] lg:ring-1 lg:ring-inset lg:ring-white/[0.06] lg:hover:border-white/25 lg:hover:shadow-[0_16px_48px_rgba(0,0,0,0.6)]"
             >
               <div className="flex items-start justify-between">
-                <div className="w-9 h-9 sm:w-7 sm:h-7 bg-white/[0.035] rounded-lg flex items-center justify-center">
-                  <Icon weight="duotone" size={16} className="text-[#555]" />
+                <div
+                  className="w-9 h-9 sm:w-7 sm:h-7 lg:w-10 lg:h-10 rounded-lg flex items-center justify-center
+                    bg-white/[0.035] ring-1 ring-inset ring-white/[0.04] lg:rounded-xl lg:bg-white/[0.09] lg:ring-white/12"
+                >
+                  <Icon
+                    weight="duotone"
+                    size={16}
+                    className="text-[#6a6a6a] sm:w-[13px] sm:h-[13px] lg:w-[18px] lg:h-[18px] lg:text-[#9A959C]"
+                  />
                 </div>
-                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] uppercase tabular-nums">{step.id}</span>
+                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] lg:text-[#5A5A5A] uppercase tabular-nums">
+                  {step.id}
+                </span>
               </div>
               <div>
                 <div className="text-[10.5px] font-black uppercase tracking-wide text-white leading-tight">{step.label}</div>
-                <p className="text-[8.5px] text-[#5A5A5A] sm:text-[#484848] leading-snug mt-1.5 line-clamp-3 sm:line-clamp-none">{step.sub}</p>
+                <p className="text-[8.5px] text-[#5A5A5A] sm:text-[#484848] leading-snug mt-1.5 line-clamp-3 sm:line-clamp-none lg:text-[#6B6B6B]">
+                  {step.sub}
+                </p>
               </div>
             </div>
           );
@@ -75,50 +101,74 @@ function StepBento() {
       {(() => {
         const Icon = riskStep.icon;
         return (
-          <div className="bg-[#111111] border border-white/[0.07] rounded-2xl px-4 py-4 sm:px-5 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5">
+          <div
+            className="relative z-[1] bg-[#111111] border border-white/[0.07] rounded-2xl px-4 py-4 sm:px-5 sm:py-4 flex flex-col sm:flex-row sm:items-center gap-4 sm:gap-5
+              lg:rounded-2xl lg:border-white/16 lg:bg-[#141414] lg:px-6 lg:py-5 lg:shadow-[0_14px_44px_rgba(0,0,0,0.5)] lg:ring-1 lg:ring-inset lg:ring-white/[0.05]"
+          >
             <div className="flex flex-1 min-w-0 items-start gap-4 sm:gap-5">
-              <div className="w-10 h-10 bg-white/[0.035] rounded-xl flex items-center justify-center shrink-0">
-                <Icon weight="duotone" size={18} className="text-[#5A5A5A]" />
+              <div
+                className="w-10 h-10 lg:w-12 lg:h-12 bg-white/[0.035] rounded-xl flex items-center justify-center shrink-0
+                  ring-1 ring-inset ring-white/[0.05] lg:bg-white/[0.1] lg:ring-white/12"
+              >
+                <Icon weight="duotone" size={18} className="text-[#5A5A5A] lg:w-[22px] lg:h-[22px] lg:text-[#A8A3AA]" />
               </div>
               <div className="flex-1 min-w-0">
-                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] uppercase block mb-0.5">{riskStep.id}</span>
+                <span className="text-[8px] font-bold tracking-[2px] text-[#2E2E2E] lg:text-[#5A5A5A] uppercase block mb-0.5">{riskStep.id}</span>
                 <div className="text-[13px] font-black uppercase tracking-wide text-white leading-tight">{riskStep.label}</div>
-                <p className="text-[9px] text-[#5A5A5A] sm:text-[#484848] mt-0.5 line-clamp-2 sm:line-clamp-none">{riskStep.sub}</p>
+                <p className="text-[9px] text-[#5A5A5A] sm:text-[#484848] mt-0.5 line-clamp-2 sm:line-clamp-none lg:text-[#6B6B6B]">
+                  {riskStep.sub}
+                </p>
               </div>
             </div>
-            <div className="shrink-0 border border-white/[0.06] rounded-lg px-3 py-1.5 self-start sm:self-center">
-              <span className="text-[8px] font-black uppercase tracking-[2px] text-[#444]">Free</span>
+            <div className="shrink-0 border border-white/[0.12] rounded-lg px-3 py-1.5 self-start sm:self-center lg:bg-white/[0.04]">
+              <span className="text-[8px] font-black uppercase tracking-[2px] text-[#6B6B6B] lg:text-[#888]">Free</span>
             </div>
           </div>
         );
       })()}
 
-      <div className="rounded-2xl border border-[#C8A2C8]/[0.18] bg-[#C8A2C8]/[0.015] p-2">
-        <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-[#C8A2C8]/[0.08]">
-          <span className="text-[8px] font-black tracking-[3px] text-[#C8A2C8]/45 uppercase">Pro Features</span>
-          <div className="bg-[#C8A2C8] text-black text-[7px] font-black px-2 py-0.5 rounded tracking-wide uppercase">Unlock</div>
+      <div
+        className="relative z-[1] rounded-2xl border border-[#C8A2C8]/[0.18] bg-[#C8A2C8]/[0.015] p-2
+          lg:rounded-2xl lg:border-[#C8A2C8]/35 lg:bg-[linear-gradient(180deg,rgba(200,162,200,0.1)_0%,rgba(200,162,200,0.04)_32%,rgba(10,10,10,0.4)_100%)] lg:p-3 lg:shadow-[0_0_48px_-12px_rgba(200,162,200,0.2)]"
+      >
+        <div className="flex items-center justify-between px-2 pb-2 mb-2 border-b border-[#C8A2C8]/[0.08] lg:border-[#C8A2C8]/[0.15]">
+          <span className="text-[8px] font-black tracking-[3px] text-[#C8A2C8]/60 lg:text-[#C8A2C8]/80 uppercase">Pro Features</span>
+          <div className="bg-[#C8A2C8] text-black text-[7px] font-black px-2 py-0.5 rounded tracking-wide uppercase shadow-sm shadow-[#C8A2C8]/30">
+            Unlock
+          </div>
         </div>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2 lg:gap-2.5">
           {proSteps.map(step => {
             const Icon = step.icon;
             return (
               <div
                 key={step.id}
-                className={`rounded-xl p-3 flex flex-col gap-2.5 transition-colors duration-300 ${
+                className={`relative rounded-xl p-3 flex flex-col gap-2.5 transition-all duration-300 lg:rounded-[14px] lg:p-3.5 ${
                   step.glow
-                    ? 'bg-[#C8A2C8]/[0.07] border border-[#C8A2C8]/30'
-                    : 'bg-[#C8A2C8]/[0.02] border border-[#C8A2C8]/[0.1] hover:border-[#C8A2C8]/20'
+                    ? 'bg-[#C8A2C8]/[0.07] border border-[#C8A2C8]/30 lg:border-[#C8A2C8]/50 lg:bg-[#C8A2C8]/[0.12] lg:shadow-[0_0_36px_-8px_rgba(200,162,200,0.35),inset_0_1px_0_0_rgba(255,255,255,0.12)]'
+                    : 'bg-[#C8A2C8]/[0.02] border border-[#C8A2C8]/[0.1] hover:border-[#C8A2C8]/20 lg:border-[#C8A2C8]/25 lg:bg-[#C8A2C8]/[0.06] lg:hover:border-[#C8A2C8]/40'
                 }`}
               >
                 <div className="flex items-start justify-between">
-                  <div className="w-7 h-7 bg-[#C8A2C8]/[0.09] rounded-lg flex items-center justify-center">
-                    <Icon weight="duotone" size={14} className="text-[#C8A2C8]" />
+                  <div
+                    className="w-7 h-7 lg:w-9 lg:h-9 bg-[#C8A2C8]/[0.09] rounded-lg flex items-center justify-center
+                      ring-1 ring-inset ring-[#C8A2C8]/20 lg:ring-[#C8A2C8]/30"
+                  >
+                    <Icon
+                      weight="duotone"
+                      size={14}
+                      className="text-[#C8A2C8] lg:w-[17px] lg:h-[17px] lg:text-[#D4B8D4]"
+                    />
                   </div>
-                  <span className="text-[8px] font-bold tracking-[2px] text-[#C8A2C8]/35 uppercase tabular-nums">{step.id}</span>
+                  <span className="text-[8px] font-bold tracking-[2px] text-[#C8A2C8]/50 lg:text-[#C8A2C8]/70 uppercase tabular-nums">
+                    {step.id}
+                  </span>
                 </div>
                 <div>
                   <div className="text-[10.5px] font-black uppercase tracking-wide text-white leading-tight">{step.label}</div>
-                  <p className="text-[8.5px] text-[#5A5A5A] sm:text-[#484848] leading-snug mt-1.5 line-clamp-2 sm:line-clamp-none">{step.sub}</p>
+                  <p className="text-[8.5px] text-[#5A5A5A] sm:text-[#484848] leading-snug mt-1.5 line-clamp-2 sm:line-clamp-none lg:text-[#9A9A9A]">
+                    {step.sub}
+                  </p>
                 </div>
               </div>
             );
@@ -147,19 +197,34 @@ export default async function Home() {
       {/* Dot grid background */}
       <div
         aria-hidden="true"
-        className="fixed inset-0 pointer-events-none select-none"
+        className="fixed inset-0 pointer-events-none select-none lg:hidden"
         style={{
           backgroundImage: 'radial-gradient(rgba(255,255,255,0.022) 1px, transparent 1px)',
           backgroundSize: '28px 28px',
         }}
       />
-
-      {/* Lilac ambient light - top right */}
       <div
         aria-hidden="true"
-        className="fixed top-0 right-0 w-[500px] h-[400px] pointer-events-none select-none"
+        className="fixed inset-0 pointer-events-none select-none hidden lg:block"
+        style={{
+          backgroundImage: 'radial-gradient(rgba(255,255,255,0.038) 1px, transparent 1px)',
+          backgroundSize: '32px 32px',
+        }}
+      />
+
+      {/* Lilac ambient light — base + stronger on lg so the right column reads (clinical / not neon) */}
+      <div
+        aria-hidden="true"
+        className="fixed top-0 right-0 w-[min(100vw,520px)] h-[min(100vh,420px)] pointer-events-none select-none lg:hidden"
         style={{
           background: 'radial-gradient(ellipse at top right, rgba(200,162,200,0.05) 0%, transparent 65%)',
+        }}
+      />
+      <div
+        aria-hidden="true"
+        className="hidden lg:block fixed top-0 right-0 w-[min(92vw,900px)] h-[min(75vh,580px)] pointer-events-none select-none"
+        style={{
+          background: 'radial-gradient(ellipse 85% 70% at 100% 0%, rgba(200,162,200,0.12) 0%, rgba(200,162,200,0.04) 45%, transparent 70%)',
         }}
       />
 
@@ -274,7 +339,8 @@ export default async function Home() {
           <section className="min-w-0 w-full lg:pl-0" aria-labelledby="how-it-works-heading">
             <h2
               id="how-it-works-heading"
-              className="text-[9px] font-black text-[#3A3A3A] uppercase tracking-[3px] mb-4"
+              className="text-[9px] font-black text-[#3A3A3A] uppercase tracking-[3px] mb-4
+                lg:mb-5 lg:tracking-[0.2em] lg:text-[#C8A2C8]/[0.55]"
             >
               How it works
             </h2>
