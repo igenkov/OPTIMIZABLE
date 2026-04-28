@@ -40,6 +40,27 @@
   background: rgba(200,162,200,0.05);
 }
 
+/* Home orbital hero (layout from reference; lilac matches --color-green) */
+.home-orb-glow {
+  filter: blur(80px);
+  background: radial-gradient(circle, rgba(200, 162, 200, 0.38) 0%, rgba(200, 162, 200, 0) 70%);
+}
+.home-connecting-line {
+  stroke: rgba(200, 162, 200, 0.22);
+  stroke-width: 0.5;
+  fill: none;
+}
+.protocol-node {
+  background: rgba(200, 162, 200, 0.1);
+  border: 1px solid rgba(200, 162, 200, 0.3);
+  backdrop-filter: blur(10px);
+}
+.protocol-node-dim {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+}
+
 body {
   background: #0e0e0e;
   color: #E0E0E0;
