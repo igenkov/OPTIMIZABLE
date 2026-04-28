@@ -1,16 +1,29 @@
 @import "tailwindcss";
 
 @theme inline {
-  --color-bg: #0e0e0e;
-  --color-bg2: #141414;
-  --color-bg3: #1a1a1a;
-  --color-bg4: #1f1f1f;
-  --color-green: #C8A2C8;
-  --color-green-dim: rgba(200,162,200,0.12);
+  /* Brand: disciplined lilac (see .impeccable.md) + warm-tinted neutrals */
+  --font-serif: var(--font-source-serif), ui-serif, Georgia, "Times New Roman", serif;
+
+  --color-bg: oklch(17.5% 0.011 310);
+  --color-bg2: oklch(20% 0.012 310);
+  --color-bg3: oklch(23% 0.013 310);
+  --color-bg4: oklch(26% 0.014 310);
+  --color-surface-deep: oklch(14.5% 0.009 310);
+  --color-lilac: oklch(73% 0.088 310);
+  --color-lilac-muted: oklch(58% 0.06 310);
+  --color-green: oklch(73% 0.088 310);
+  --color-green-dim: color-mix(in oklch, oklch(73% 0.088 310) 12%, transparent);
   --color-gold: #E8C470;
   --color-red: #E88080;
-  --color-border: rgba(255,255,255,0.07);
-  --color-border-green: rgba(200,162,200,0.25);
+  --color-border: color-mix(in oklch, white 7%, transparent);
+  --color-border-green: color-mix(in oklch, oklch(73% 0.088 310) 25%, transparent);
+  --color-muted: oklch(62% 0.018 310);
+  --color-dim: oklch(48% 0.02 310);
+  --color-label: oklch(52% 0.022 310);
+}
+
+.font-display {
+  font-family: var(--font-oswald), system-ui, sans-serif;
 }
 
 * { box-sizing: border-box; }
@@ -40,31 +53,80 @@
   background: rgba(200,162,200,0.05);
 }
 
-/* Home orbital hero (layout from reference; lilac matches --color-green) */
+/* Home orbital hero — lilac wires; reduced decorative blur vs glass stacks */
 .home-orb-glow {
   filter: blur(80px);
-  background: radial-gradient(circle, rgba(200, 162, 200, 0.38) 0%, rgba(200, 162, 200, 0) 70%);
+  background: radial-gradient(
+    circle,
+    color-mix(in oklch, var(--color-lilac) 36%, transparent) 0%,
+    transparent 70%
+  );
 }
 .home-connecting-line {
-  stroke: rgba(200, 162, 200, 0.22);
+  stroke: color-mix(in oklch, var(--color-lilac) 24%, transparent);
   stroke-width: 0.5;
   fill: none;
 }
 .protocol-node {
-  background: rgba(200, 162, 200, 0.1);
-  border: 1px solid rgba(200, 162, 200, 0.3);
-  backdrop-filter: blur(10px);
+  background: color-mix(in oklch, var(--color-lilac) 11%, transparent);
+  border: 1px solid color-mix(in oklch, var(--color-lilac) 32%, transparent);
+  backdrop-filter: blur(8px);
 }
 .protocol-node-dim {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  backdrop-filter: blur(10px);
+  background: color-mix(in oklch, white 5%, transparent);
+  border: 1px solid color-mix(in oklch, white 14%, transparent);
+  backdrop-filter: blur(8px);
+}
+
+@keyframes home-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(0.75rem);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes home-reveal-static {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.home-reveal {
+  animation: home-reveal 0.65s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.home-reveal-delay-1 {
+  animation-delay: 75ms;
+}
+.home-reveal-delay-2 {
+  animation-delay: 150ms;
+}
+.home-reveal-delay-3 {
+  animation-delay: 225ms;
+}
+.home-reveal-delay-4 {
+  animation-delay: 300ms;
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-reveal {
+    animation: home-reveal-static 0.22s ease-out both;
+  }
+  .home-reveal-delay-1,
+  .home-reveal-delay-2,
+  .home-reveal-delay-3,
+  .home-reveal-delay-4 {
+    animation-delay: 0ms;
+  }
 }
 
 body {
-  background: #0e0e0e;
-  color: #E0E0E0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--color-bg);
+  color: oklch(92% 0.01 310);
+  font-family: var(--font-serif);
   min-height: 100vh;
 }
 
