@@ -419,27 +419,18 @@ export default async function Home() {
             </div>
           </Link>
 
-          <div className="hidden items-center gap-8 md:flex">
+          <div className="flex shrink-0 items-center gap-5 sm:gap-6">
             <Link
               href="/how-it-works"
               className="font-display text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white"
             >
               How It Works
             </Link>
-          </div>
-
-          <div className="flex shrink-0 items-center gap-4 sm:gap-6">
             <Link
               href="/login"
-              className="font-display hidden text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white sm:block"
+              className="font-display text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white"
             >
               Sign In
-            </Link>
-            <Link
-              href="/onboarding/phase1"
-              className="font-display rounded-full bg-lilac px-5 py-2 text-center text-[10px] font-black uppercase tracking-wide text-black transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-6"
-            >
-              Start Free Assessment
             </Link>
           </div>
         </nav>
@@ -457,11 +448,17 @@ export default async function Home() {
             </div>
 
             <h1
-              className="home-reveal home-reveal-delay-1 mb-8 max-w-[22ch] font-display font-bold tracking-[-0.02em] text-white"
-              style={{ fontSize: 'clamp(2rem, 5vw + 0.75rem, 3.65rem)', lineHeight: 1.1 }}
+              className="home-reveal home-reveal-delay-1 mb-3 max-w-[min(100%,38ch)] font-display font-bold uppercase tracking-[0.03em] text-white"
+              style={{
+                fontSize: 'clamp(1.35rem, 2.85vw + 0.55rem, 2.35rem)',
+                lineHeight: 1.12,
+              }}
             >
-              Clinical insight into your hormones—a 90-day path to optimization.
+              If you don&apos;t wake up hard, something is off. Optimize it!
             </h1>
+            <p className="home-reveal home-reveal-delay-1 mb-8 max-w-md text-[13px] leading-relaxed text-muted sm:text-[14px]">
+              From a 3-minute assessment to your full hormonal system insights
+            </p>
 
             <div className="home-reveal home-reveal-delay-2 flex max-w-prose flex-col gap-4 sm:flex-row sm:gap-5">
               <Link
