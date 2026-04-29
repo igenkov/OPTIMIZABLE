@@ -95,10 +95,10 @@ export default async function Home() {
         </nav>
       </header>
 
-      <main className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-8 pt-[4.75rem] sm:px-6 sm:pb-10 sm:pt-28 lg:px-8 lg:pt-32">
-        <section className="mx-auto w-full max-w-2xl">
-          <div className="relative z-10 mx-auto text-center">
-            <div className="home-reveal mb-4 inline-flex items-center gap-2 rounded-full border border-lilac/20 bg-lilac/[0.07] px-3 py-1.5 sm:mb-5">
+      <main className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-6 pt-[4.75rem] sm:px-6 sm:pb-8 sm:pt-28 lg:px-8 lg:pb-10 lg:pt-32">
+        <section className="mx-auto grid w-full max-w-7xl items-center gap-10 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-12">
+          <div className="relative z-10 flex min-w-0 flex-col items-start text-left">
+            <div className="home-reveal mb-6 inline-flex items-center gap-2 rounded-full border border-lilac/20 bg-lilac/[0.07] px-3 py-1.5">
               <span className="size-2 shrink-0 animate-pulse rounded-full bg-lilac" aria-hidden />
               <span className="font-display text-[10px] font-black uppercase tracking-[0.14em] text-lilac">
                 Assessment pipeline active
@@ -106,22 +106,22 @@ export default async function Home() {
             </div>
 
             <h1
-              className="home-reveal home-reveal-delay-1 mx-auto mb-3 max-w-[min(100%,36ch)] font-display font-bold uppercase tracking-[0.03em] text-white sm:mb-4"
+              className="home-reveal home-reveal-delay-1 mb-3 max-w-[min(100%,38ch)] font-display font-bold uppercase tracking-[0.03em] text-white"
               style={{
-                fontSize: 'clamp(1.2rem, 4.2vw + 0.35rem, 2.2rem)',
+                fontSize: 'clamp(1.35rem, 2.85vw + 0.55rem, 2.35rem)',
                 lineHeight: 1.12,
               }}
             >
               If you don&apos;t wake up hard, something is off. Optimize it!
             </h1>
-            <p className="home-reveal home-reveal-delay-1 mx-auto mb-6 max-w-md text-[12px] leading-relaxed text-muted sm:mb-8 sm:text-[14px]">
+            <p className="home-reveal home-reveal-delay-1 mb-8 max-w-md text-[13px] leading-relaxed text-muted sm:text-[14px]">
               From a 3-minute assessment to your full hormonal system insights
             </p>
 
-            <div className="home-reveal home-reveal-delay-2 flex max-w-md flex-col gap-3 sm:mx-auto sm:flex-row sm:justify-center sm:gap-5">
+            <div className="home-reveal home-reveal-delay-2 flex max-w-prose flex-col gap-4 sm:flex-row sm:gap-5">
               <Link
                 href="/onboarding/phase1"
-                className="font-display group inline-flex items-center justify-center gap-2.5 rounded-full bg-lilac px-8 py-3.5 text-[11px] font-black uppercase tracking-[0.22em] text-black shadow-[0_12px_40px_rgba(200,162,200,0.22)] transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-10 sm:py-4"
+                className="font-display group inline-flex items-center justify-center gap-2.5 rounded-full bg-lilac px-8 py-4 text-[11px] font-black uppercase tracking-[0.22em] text-black shadow-[0_12px_40px_rgba(200,162,200,0.22)] transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-10"
               >
                 Get started
                 <ArrowRight
@@ -131,34 +131,30 @@ export default async function Home() {
               </Link>
               <Link
                 href="/how-it-works"
-                className="font-display inline-flex items-center justify-center rounded-full border border-white/[0.18] bg-white/[0.03] px-8 py-3.5 text-[11px] font-bold uppercase tracking-[0.18em] text-muted backdrop-blur-[6px] transition-colors duration-200 hover:bg-white/[0.06] hover:text-white sm:px-10 sm:py-4"
+                className="font-display inline-flex items-center justify-center rounded-full border border-white/[0.18] bg-white/[0.03] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.18em] text-muted backdrop-blur-[6px] transition-colors duration-200 hover:bg-white/[0.06] hover:text-white sm:px-10"
               >
                 How it works
               </Link>
             </div>
           </div>
+
+          <div className="hidden min-h-[1px] lg:block" aria-hidden />
         </section>
       </main>
 
-      <footer className="relative z-10 border-t border-white/[0.06] bg-surface-deep/80 py-8 backdrop-blur-md sm:py-10">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 sm:px-6 lg:flex-row lg:items-center lg:justify-between lg:gap-8 lg:px-8">
-          <div className="flex items-center gap-2.5">
-            <Image src="/logo_trsp.png" alt="" width={24} height={24} className="opacity-60" />
-            <span className="font-display text-sm font-black uppercase tracking-tight text-white/50">
-              Optimizable
-            </span>
-          </div>
-          <div className="grid grid-cols-2 gap-x-3 gap-y-2.5 sm:flex sm:flex-wrap sm:justify-center sm:gap-x-8 sm:gap-y-2 sm:text-center">
+      <footer className="relative z-10 border-t border-white/[0.06] bg-surface-deep/80 py-2 backdrop-blur-md">
+        <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-6 sm:gap-y-1 sm:px-6 lg:px-8">
+          <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 sm:justify-start">
             {['Clinical grade analysis', 'Encrypted & private', 'AI protocol', '90-day track'].map((text, i) => (
-              <div key={i} className="flex items-center gap-2 sm:justify-center">
+              <div key={i} className="flex items-center gap-2">
                 <div className="size-1 shrink-0 rounded-full bg-lilac/45" />
-                <span className="font-display text-[8px] uppercase leading-tight tracking-[0.12em] text-dim sm:text-[9px] sm:tracking-[2px]">
+                <span className="font-display text-[8px] uppercase leading-none tracking-[0.12em] text-dim sm:text-[9px] sm:tracking-[2px]">
                   {text}
                 </span>
               </div>
             ))}
           </div>
-          <p className="text-center text-[8px] uppercase tracking-[0.15em] text-dim sm:text-[9px] lg:text-right">
+          <p className="shrink-0 text-center text-[8px] uppercase tracking-[0.15em] text-dim sm:text-[9px] sm:text-right">
             Wellness only — not medical advice
           </p>
         </div>
