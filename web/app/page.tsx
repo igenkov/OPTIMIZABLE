@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
+import { CaretRight } from '@phosphor-icons/react/dist/ssr';
 import { HomeVideoBackground } from '@/components/home/HomeVideoBackground';
 
 export default async function Home() {
@@ -95,15 +95,12 @@ export default async function Home() {
         </nav>
       </header>
 
-      <main className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-6 pt-[4.75rem] sm:px-6 sm:pb-8 sm:pt-28 lg:px-8 lg:pb-10 lg:pt-32">
-        <section className="mx-auto grid w-full max-w-7xl items-center gap-10 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-12">
+      <main className="relative z-10 flex flex-1 flex-col justify-start px-4 pb-6 pt-[4.75rem] sm:px-6 sm:pb-8 sm:pt-24 lg:px-8 lg:pb-10 lg:pt-28">
+        <section className="mx-auto grid w-full max-w-7xl items-center gap-6 py-4 sm:px-6 sm:py-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-8">
           <div className="relative z-10 flex min-w-0 flex-col items-start text-left">
-            <div className="home-reveal mb-6 inline-flex items-center gap-2 rounded-full border border-lilac/20 bg-lilac/[0.07] px-3 py-1.5">
-              <span className="size-2 shrink-0 animate-pulse rounded-full bg-lilac" aria-hidden />
-              <span className="font-display text-[10px] font-black uppercase tracking-[0.14em] text-lilac">
-                Assessment pipeline active
-              </span>
-            </div>
+            <p className="home-reveal mb-4 font-display text-[10px] font-black uppercase tracking-[0.14em] text-lilac sm:mb-5">
+              Men&apos;s hormonal health
+            </p>
 
             <div
               className="home-reveal home-reveal-delay-1 mb-8 max-w-[min(100%,22ch)] font-display"
@@ -130,17 +127,19 @@ export default async function Home() {
             <div className="home-reveal home-reveal-delay-2 flex max-w-prose flex-col gap-4 sm:flex-row sm:gap-5">
               <Link
                 href="/onboarding/phase1"
-                className="font-display group inline-flex items-center justify-center gap-2.5 rounded-full bg-lilac px-8 py-4 text-[11px] font-black uppercase tracking-[0.22em] text-black shadow-[0_12px_40px_rgba(200,162,200,0.22)] transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-10"
+                className="font-display group inline-flex items-center justify-center gap-2.5 rounded-lg bg-lilac px-6 py-4 text-[10px] font-black uppercase tracking-[0.16em] text-black shadow-[0_12px_40px_rgba(200,162,200,0.22)] transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-8 sm:text-[11px] sm:tracking-[0.18em]"
               >
-                Get started
-                <ArrowRight
+                Start Your Free Assessment
+                <CaretRight
                   size={14}
-                  className="transition-transform duration-200 ease-out group-hover:translate-x-1"
+                  weight="bold"
+                  className="shrink-0 transition-transform duration-200 ease-out group-hover:translate-x-0.5"
+                  aria-hidden
                 />
               </Link>
               <Link
                 href="/how-it-works"
-                className="font-display inline-flex items-center justify-center rounded-full border border-white/[0.18] bg-white/[0.03] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.18em] text-muted backdrop-blur-[6px] transition-colors duration-200 hover:bg-white/[0.06] hover:text-white sm:px-10"
+                className="font-display inline-flex items-center justify-center rounded-lg border border-white/[0.18] bg-white/[0.03] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.18em] text-muted backdrop-blur-[6px] transition-colors duration-200 hover:bg-white/[0.06] hover:text-white sm:px-10"
               >
                 How it works
               </Link>
