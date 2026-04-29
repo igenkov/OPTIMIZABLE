@@ -68,60 +68,60 @@ export default function SymptomsPage() {
   const activeSymptomCount = selected.filter(s => s !== 'none').length;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pb-32">
+    <div className="relative mx-auto max-w-3xl px-4 pb-32 lg:px-6">
 
       {/* HEADER & PROGRESS */}
-      <header className="mb-12">
-        <div className="flex gap-1.5 mb-6">
+      <header className="mb-10 border-b border-white/10 pb-8">
+        <div className="mb-6 flex gap-1.5">
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
-              'h-1 flex-1 rounded-full transition-all duration-500',
-              i <= 4 ? 'bg-[#C8A2C8]' : 'bg-white/5',
-              i === 4 && 'shadow-[0_0_8px_rgba(200,162,200,0.4)]'
+              'h-1 flex-1 rounded-sm transition-all duration-500',
+              i <= 4 ? 'bg-[#C8A2C8]' : 'bg-white/[0.06]',
+              i === 4 && 'shadow-[0_0_12px_rgba(200,162,200,0.35)]'
             )} />
           ))}
         </div>
-        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-white/40 mb-4">
+        <div className="mb-4 inline-flex items-center border border-[#C8A2C8]/25 bg-[#C8A2C8]/10 px-2.5 py-1 text-[10px] font-black tracking-[2px] text-[#C8A2C8] uppercase">
           Phase 04 / Symptomatic Calibration
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight mb-2">Signal Assessment</h1>
-        <p className="text-white/40 text-sm">
+        <h1 className="mb-2 text-3xl font-black tracking-tight text-white">Signal Assessment</h1>
+        <p className="text-sm text-white/45">
           We use clinical weighting to determine the severity of your symptoms. High-weight signals indicate a potential devaluation of your endocrine system.
         </p>
       </header>
 
       {/* COUNTER */}
-      <div className="flex items-center justify-between mb-8 p-4 bg-white/[0.02] border border-white/5">
-        <div className="flex items-center gap-3">
+      <div className="mb-8 flex items-center justify-between gap-3 rounded-lg border border-white/[0.08] bg-[#141414]/50 p-4">
+        <div className="flex min-w-0 items-center gap-3">
           <div className={cn(
-            'w-10 h-10 flex items-center justify-center border transition-all duration-500',
-            activeSymptomCount > 0 ? 'border-[#C8A2C8] bg-[#C8A2C8]/10 shadow-[0_0_15px_rgba(200,162,200,0.2)]' : 'border-white/10 bg-white/5'
+            'flex size-10 shrink-0 items-center justify-center rounded-md border transition-all duration-500',
+            activeSymptomCount > 0 ? 'border-[#C8A2C8] bg-[#C8A2C8]/10 shadow-[0_0_15px_rgba(200,162,200,0.2)]' : 'border-white/12 bg-white/[0.04]'
           )}>
-            <Gauge size={20} className={activeSymptomCount > 0 ? 'text-[#C8A2C8]' : 'text-white/20'} />
+            <Gauge size={20} className={activeSymptomCount > 0 ? 'text-[#C8A2C8]' : 'text-white/25'} aria-hidden />
           </div>
-          <div>
+          <div className="min-w-0">
             <div className="text-[10px] font-black uppercase tracking-widest text-white/40">Signals Logged</div>
-            <div className="text-lg font-mono font-black text-white">{activeSymptomCount} Active</div>
+            <div className="font-mono text-lg font-black text-white">{activeSymptomCount} Active</div>
           </div>
         </div>
         {activeSymptomCount > 5 && (
-          <div className="flex items-center gap-2 px-3 py-1 bg-red-500/10 border border-red-500/20">
-            <WarningCircle size={12} className="text-red-500" />
-            <span className="text-[9px] font-black uppercase tracking-tighter text-red-500">High Symptom Load</span>
+          <div className="flex shrink-0 items-center gap-2 rounded-lg border border-red-500/25 bg-red-500/[0.08] px-3 py-1.5">
+            <WarningCircle size={12} className="text-red-400" aria-hidden />
+            <span className="text-[9px] font-black uppercase tracking-tighter text-red-400">High Symptom Load</span>
           </div>
         )}
       </div>
 
       {/* SYMPTOM CATEGORIES */}
-      <div className="space-y-10 mb-12">
+      <div className="mb-12 space-y-10">
         {SYMPTOM_CATEGORIES.map(cat => {
           const items = SYMPTOMS.filter(s => s.category === cat && s.id !== 'none');
           const Icon = CATEGORY_ICONS[cat] || Pulse;
 
           return (
             <div key={cat} className="space-y-4">
-              <div className="flex items-center gap-2 text-white/40 border-b border-white/5 pb-2">
-                <Icon size={14} />
+              <div className="flex items-center gap-2 border-b border-white/[0.07] pb-2 text-[#C8A2C8]">
+                <Icon size={14} aria-hidden />
                 <h2 className="text-[10px] font-black tracking-[3px] uppercase">{cat}</h2>
               </div>
 
@@ -129,9 +129,9 @@ export default function SymptomsPage() {
                 {items.map(s => {
                   const isSelected = selected.includes(s.id);
                   const weightColor = s.correlation_weight >= 0.9
-                    ? 'bg-red-500'
+                    ? 'bg-[#E88080]'
                     : s.correlation_weight >= 0.75
-                    ? 'bg-yellow-500'
+                    ? 'bg-[#E8C470]'
                     : 'bg-[#C8A2C8]';
 
                   return (
@@ -140,40 +140,40 @@ export default function SymptomsPage() {
                       type="button"
                       onClick={() => toggle(s.id)}
                       className={cn(
-                        'group flex items-center gap-4 p-4 border transition-all text-left',
+                        'group flex items-center gap-4 rounded-lg border p-4 text-left transition-all',
                         isSelected
-                          ? 'bg-white/10 border-white/20'
-                          : 'bg-transparent border-white/5 hover:border-white/15'
+                          ? 'border-white/[0.18] bg-white/[0.06] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
+                          : 'border-white/[0.07] bg-[#141414]/40 hover:border-white/14'
                       )}
                     >
                       <div className={cn(
-                        'w-5 h-5 border flex items-center justify-center transition-all shrink-0',
-                        isSelected ? 'bg-[#C8A2C8] border-[#C8A2C8]' : 'border-white/10 bg-white/5 group-hover:border-white/30'
+                        'flex size-5 shrink-0 items-center justify-center rounded-md border transition-all',
+                        isSelected ? 'border-[#C8A2C8] bg-[#C8A2C8]' : 'border-white/12 bg-white/[0.04] group-hover:border-white/25'
                       )}>
-                        {isSelected && <Check size={12} className="text-black stroke-[4px]" />}
+                        {isSelected && <Check size={12} className="stroke-[4px] text-black" aria-hidden />}
                       </div>
 
-                      <div className="flex-1">
+                      <div className="min-w-0 flex-1">
                         <div className={cn(
                           'text-xs font-bold transition-colors',
-                          isSelected ? 'text-white' : 'text-white/40 group-hover:text-white/60'
+                          isSelected ? 'text-white' : 'text-white/45 group-hover:text-white/65'
                         )}>
                           {s.name}
                         </div>
                       </div>
 
                       {isSelected && s.correlation_weight > 0 && (
-                        <div className="flex items-center gap-2">
-                          <span className="text-[8px] font-black uppercase tracking-widest text-white/20">Signal</span>
+                        <div className="flex shrink-0 items-center gap-2">
+                          <span className="text-[8px] font-black uppercase tracking-widest text-white/25">Signal</span>
                           <div className="flex gap-0.5">
                             {[1, 2, 3].map((bar) => (
                               <div
                                 key={bar}
                                 className={cn(
-                                  'w-1 h-3',
+                                  'h-3 w-1 rounded-sm',
                                   (bar === 1 || (bar === 2 && s.correlation_weight >= 0.75) || (bar === 3 && s.correlation_weight >= 0.9))
                                     ? weightColor
-                                    : 'bg-white/5'
+                                    : 'bg-white/10'
                                 )}
                               />
                             ))}
@@ -193,10 +193,10 @@ export default function SymptomsPage() {
           type="button"
           onClick={() => toggle('none')}
           className={cn(
-            'w-full p-4 border transition-all text-[10px] font-black uppercase tracking-[2px]',
+            'w-full rounded-lg border p-4 text-[10px] font-black uppercase tracking-[2px] transition-all',
             selected.includes('none')
-              ? 'bg-white/10 border-white/20 text-white'
-              : 'bg-transparent border-white/5 text-white/20'
+              ? 'border-[#C8A2C8]/40 bg-[#C8A2C8]/[0.1] text-white shadow-[inset_0_1px_0_rgba(200,162,200,0.08)]'
+              : 'border-white/[0.07] bg-[#141414]/40 text-white/35 hover:border-white/14'
           )}
         >
           None of the above symptoms apply
@@ -204,17 +204,17 @@ export default function SymptomsPage() {
       </div>
 
       {/* ACTIONS */}
-      <div className="pt-8 space-y-4">
+      <div className="space-y-4 border-t border-white/[0.07] pt-8">
         {error && (
-          <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[10px] font-black uppercase tracking-widest">
-            <ShieldWarning size={14} />
+          <div className="flex items-center gap-2 rounded-lg border border-red-500/25 bg-red-500/[0.08] p-3 text-[10px] font-black uppercase tracking-widest text-red-400">
+            <ShieldWarning size={14} aria-hidden />
             {error}
           </div>
         )}
 
-        <div className="flex items-center gap-3 p-4 bg-white/5 border border-white/10">
-          <Info size={18} className="text-[#C8A2C8] shrink-0" />
-          <p className="text-[10px] text-white/40 leading-tight uppercase font-bold tracking-tighter">
+        <div className="flex items-start gap-3 rounded-lg border border-white/[0.1] bg-black/30 p-4 backdrop-blur-sm">
+          <Info size={18} className="mt-0.5 shrink-0 text-[#C8A2C8]" aria-hidden />
+          <p className="text-[10px] font-bold uppercase leading-tight tracking-tighter text-white/45">
             The aggregate of these signals creates your Subjective Health Score, cross-referenced against your biomarker data.
           </p>
         </div>
@@ -223,9 +223,9 @@ export default function SymptomsPage() {
           onClick={handleSubmit}
           loading={loading}
           fullWidth
-          className="py-5 flex items-center justify-center gap-2"
+          className="flex items-center justify-center gap-2 rounded-lg py-5 shadow-[0_10px_36px_rgba(200,162,200,0.2)]"
         >
-          {!loading && <>Analyze Clinical Signals <CaretRight size={16} /></>}
+          {!loading && <>Analyze Clinical Signals <CaretRight size={16} aria-hidden /></>}
         </Button>
       </div>
     </div>
