@@ -15,9 +15,9 @@ function SliderInput({ value, min, max, step, onChange, color = '#C8A2C8' }: {
   return (
     <div className="relative flex items-center h-5">
       {/* Track */}
-      <div className="absolute w-full h-[3px] bg-white/10 rounded-full" />
+      <div className="absolute h-[3px] w-full rounded-sm bg-white/10" />
       {/* Fill */}
-      <div className="absolute h-[3px] rounded-full transition-all duration-150"
+      <div className="absolute h-[3px] rounded-sm transition-all duration-150"
         style={{ width: `${pct}%`, backgroundColor: color, boxShadow: `0 0 8px ${color}60` }} />
       {/* Input */}
       <input
@@ -27,7 +27,7 @@ function SliderInput({ value, min, max, step, onChange, color = '#C8A2C8' }: {
           [&::-webkit-slider-thumb]:appearance-none
           [&::-webkit-slider-thumb]:w-4
           [&::-webkit-slider-thumb]:h-4
-          [&::-webkit-slider-thumb]:rounded-full
+          [&::-webkit-slider-thumb]:rounded-md
           [&::-webkit-slider-thumb]:bg-white
           [&::-webkit-slider-thumb]:border-[3px]
           [&::-webkit-slider-thumb]:border-black
@@ -36,7 +36,7 @@ function SliderInput({ value, min, max, step, onChange, color = '#C8A2C8' }: {
           [&::-webkit-slider-thumb]:hover:scale-125
           [&::-moz-range-thumb]:w-4
           [&::-moz-range-thumb]:h-4
-          [&::-moz-range-thumb]:rounded-full
+          [&::-moz-range-thumb]:rounded-md
           [&::-moz-range-thumb]:bg-white
           [&::-moz-range-thumb]:border-[3px]
           [&::-moz-range-thumb]:border-black
@@ -48,16 +48,16 @@ function SliderInput({ value, min, max, step, onChange, color = '#C8A2C8' }: {
 
 function RatingGrid({ label, value, onChange, max = 5 }: { label: string; value: number; onChange: (v: number) => void; max?: number }) {
   return (
-    <div className="flex flex-col gap-3 py-4 border-b border-white/5 last:border-0">
+    <div className="flex flex-col gap-3 border-b border-white/[0.07] py-4 last:border-0">
       <span className="text-[10px] font-black uppercase tracking-widest text-white/40">{label}</span>
       <div className="grid grid-cols-5 gap-2">
         {Array.from({ length: max }, (_, i) => i + 1).map(n => (
           <button key={n} type="button" onClick={() => onChange(n)}
             className={cn(
-              'h-10 border text-xs font-black transition-all',
+              'h-10 rounded-lg border text-xs font-black transition-all',
               value === n
-                ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black shadow-[0_0_15px_rgba(200,162,200,0.2)]'
-                : 'bg-white/5 border-white/5 text-white/20 hover:border-white/20'
+                ? 'border-[#C8A2C8] bg-[#C8A2C8] text-black shadow-[0_6px_20px_rgba(200,162,200,0.15)]'
+                : 'border-white/[0.08] bg-[#141414]/50 text-white/40 hover:border-white/18'
             )}>
             {n}
           </button>
@@ -69,16 +69,16 @@ function RatingGrid({ label, value, onChange, max = 5 }: { label: string; value:
 
 function SegmentedControl({ label, options, value, onChange }: { label: string; options: { label: string; value: string }[]; value: string; onChange: (v: string) => void }) {
   return (
-    <div className="flex flex-col gap-3 py-4 border-b border-white/5 last:border-0">
+    <div className="flex flex-col gap-3 border-b border-white/[0.07] py-4 last:border-0">
       <span className="text-[10px] font-black uppercase tracking-widest text-white/40">{label}</span>
-      <div className="flex flex-wrap gap-1.5">
+      <div className="flex flex-wrap gap-2">
         {options.map(o => (
           <button key={o.value} type="button" onClick={() => onChange(o.value)}
             className={cn(
-              'px-3 py-1.5 border text-[10px] font-bold transition-all uppercase tracking-wider',
+              'rounded-lg border px-3 py-1.5 text-[10px] font-bold uppercase tracking-wider transition-all',
               value === o.value
-                ? 'bg-white/10 border-white/20 text-white'
-                : 'bg-transparent border-white/5 text-white/20 hover:text-white/40'
+                ? 'border-[#C8A2C8] bg-[#C8A2C8] text-black shadow-[0_6px_20px_rgba(200,162,200,0.15)]'
+                : 'border-white/[0.08] bg-[#141414]/50 text-white/40 hover:border-white/18 hover:text-white/60'
             )}>
             {o.label}
           </button>
@@ -148,32 +148,32 @@ export default function Phase2Page() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pb-20">
+    <div className="relative mx-auto max-w-3xl px-4 pb-24 lg:px-6">
 
       {/* HEADER & PROGRESS */}
-      <header className="mb-12">
-        <div className="flex gap-1.5 mb-6">
+      <header className="mb-10 border-b border-white/10 pb-8">
+        <div className="mb-6 flex gap-1.5">
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
-              'h-1 flex-1 rounded-full transition-all duration-500',
-              i <= 2 ? 'bg-[#C8A2C8]' : 'bg-white/5',
-              i === 2 && 'shadow-[0_0_8px_rgba(200,162,200,0.4)]'
+              'h-1 flex-1 rounded-sm transition-all duration-500',
+              i <= 2 ? 'bg-[#C8A2C8]' : 'bg-white/[0.06]',
+              i === 2 && 'shadow-[0_0_12px_rgba(200,162,200,0.35)]'
             )} />
           ))}
         </div>
-        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-white/40 mb-4">
+        <div className="mb-4 inline-flex items-center border border-[#C8A2C8]/25 bg-[#C8A2C8]/10 px-2.5 py-1 text-[10px] font-black tracking-[2px] text-[#C8A2C8] uppercase">
           Phase 02 / Lifestyle Assessment
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight mb-2">Behavioral Variables</h1>
-        <p className="text-sm text-white/40">Environmental and lifestyle factors can cause a significant reduction in your hormonal output.</p>
+        <h1 className="mb-2 text-3xl font-black tracking-tight text-white">Behavioral Variables</h1>
+        <p className="text-sm text-white/45">Environmental and lifestyle factors can cause a significant reduction in your hormonal output.</p>
       </header>
 
       <form onSubmit={handleSubmit} className="space-y-8">
 
         {/* SLEEP & RECOVERY */}
-        <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
-            <Moon size={16} />
+        <Card className="rounded-lg p-6 lg:p-7" topAccent="rgba(200,162,200,0.55)">
+          <div className="mb-6 flex items-center gap-2 text-[#C8A2C8]">
+            <Moon size={16} aria-hidden />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Sleep & Recovery</h2>
           </div>
 
@@ -190,9 +190,9 @@ export default function Phase2Page() {
         </Card>
 
         {/* HABITUAL INPUTS */}
-        <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
-            <Wine size={16} />
+        <Card className="rounded-lg p-6 lg:p-7" topAccent="rgba(200,162,200,0.55)">
+          <div className="mb-6 flex items-center gap-2 text-[#C8A2C8]">
+            <Wine size={16} aria-hidden />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Habitual Inputs</h2>
           </div>
 
@@ -209,31 +209,38 @@ export default function Phase2Page() {
 
           <div onClick={() => set('keto_diet', !form.keto_diet)}
             className={cn(
-              'mt-6 p-4 border transition-all flex items-center justify-between cursor-pointer',
-              form.keto_diet ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-transparent border-white/5 opacity-40'
+              'mt-6 flex cursor-pointer items-center justify-between gap-4 rounded-lg border p-4 transition-all',
+              form.keto_diet
+                ? 'border-[#C8A2C8]/35 bg-[#C8A2C8]/[0.07] shadow-[inset_0_1px_0_rgba(200,162,200,0.12)]'
+                : 'border-white/[0.07] bg-[#141414]/40 opacity-40 hover:opacity-60'
             )}>
-            <div className="flex gap-4 items-center">
-              <ForkKnife size={18} className={form.keto_diet ? 'text-[#C8A2C8]' : 'text-white'} />
+            <div className="flex items-center gap-4">
+              <div className={cn(
+                'rounded-md border p-2',
+                form.keto_diet ? 'border-[#C8A2C8] text-[#C8A2C8]' : 'border-white/12 text-white'
+              )}>
+                <ForkKnife size={18} />
+              </div>
               <div>
                 <div className="text-[10px] font-black uppercase tracking-widest">Chronic Keto / Low-Carb</div>
                 <div className="text-[10px] text-white/40 uppercase font-bold tracking-tighter">Strict adherence for 3+ months</div>
               </div>
             </div>
-            <div className={cn('w-2 h-2 rounded-full', form.keto_diet ? 'bg-[#C8A2C8] animate-pulse' : 'bg-white/10')} />
+            <div className={cn('size-2 shrink-0 rounded-md', form.keto_diet ? 'animate-pulse bg-[#C8A2C8]' : 'bg-white/10')} />
           </div>
         </Card>
 
         {/* ACTIVITY & STRESS */}
-        <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
-            <Barbell size={16} />
+        <Card className="rounded-lg p-6 lg:p-7" topAccent="rgba(200,162,200,0.55)">
+          <div className="mb-6 flex items-center gap-2 text-[#C8A2C8]">
+            <Barbell size={16} aria-hidden />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pulse & CNS Stress</h2>
           </div>
 
           <SegmentedControl label="Training Frequency" value={form.exercise_frequency} onChange={v => set('exercise_frequency', v)}
             options={[{ label: 'None', value: 'none' }, { label: '1-2x', value: '1-2x' }, { label: '3-4x', value: '3-4x' }, { label: '5-6x', value: '5-6x' }, { label: 'Daily', value: 'daily' }]} />
 
-          <div className="py-4 space-y-3 border-b border-white/5">
+          <div className="space-y-3 border-b border-white/[0.07] py-4">
             <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Exercise Modalities</span>
             <div className="flex flex-wrap gap-2">
               {['Weightlifting', 'Running', 'HIIT', 'Cycling', 'Swimming', 'Sports', 'Yoga', 'Walking'].map(t => {
@@ -241,8 +248,10 @@ export default function Phase2Page() {
                 return (
                   <button key={t} type="button" onClick={() => toggleExercise(t)}
                     className={cn(
-                      'px-3 py-1.5 border text-[10px] font-bold transition-all uppercase',
-                      active ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black' : 'bg-white/5 border-white/5 text-white/40 hover:border-white/20'
+                      'rounded-lg border px-3 py-1.5 text-[10px] font-bold uppercase transition-all',
+                      active
+                        ? 'border-[#C8A2C8] bg-[#C8A2C8] text-black shadow-[0_6px_20px_rgba(200,162,200,0.15)]'
+                        : 'border-white/[0.08] bg-[#141414]/50 text-white/40 hover:border-white/18'
                     )}>
                     {t}
                   </button>
@@ -251,7 +260,7 @@ export default function Phase2Page() {
             </div>
           </div>
 
-          <div className="py-4 space-y-3 border-b border-white/5">
+          <div className="space-y-3 border-b border-white/[0.07] py-4">
             <div className="flex justify-between items-end">
               <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Sedentary Hours / Day</span>
               <span className={cn(
@@ -267,15 +276,15 @@ export default function Phase2Page() {
         </Card>
 
         {/* ENDOCRINE INDICATORS */}
-        <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center gap-2 mb-6 text-[#C8A2C8]">
-            <Heart size={16} />
+        <Card className="rounded-lg p-6 lg:p-7" topAccent="rgba(200,162,200,0.55)">
+          <div className="mb-6 flex items-center gap-2 text-[#C8A2C8]">
+            <Heart size={16} aria-hidden />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Endocrine Indicators</h2>
           </div>
 
-          <div className="flex items-center gap-2 p-3 bg-white/5 border border-white/10 mb-6">
-            <Info size={14} className="text-white/40 shrink-0" />
-            <p className="text-[9px] font-bold uppercase tracking-widest text-white/40 leading-tight">Private data used strictly for hormonal calibration. Never shared.</p>
+          <div className="mb-6 flex items-start gap-2 rounded-lg border border-white/[0.1] bg-black/30 p-3 backdrop-blur-sm">
+            <Info size={14} className="mt-0.5 shrink-0 text-white/40" aria-hidden />
+            <p className="text-[9px] font-bold uppercase leading-tight tracking-widest text-white/45">Private data used strictly for hormonal calibration. Never shared.</p>
           </div>
 
           <SegmentedControl label="Morning Erections (Last 4 Weeks)" value={form.morning_erection_frequency} onChange={v => set('morning_erection_frequency', v)}
@@ -285,14 +294,14 @@ export default function Phase2Page() {
         </Card>
 
         {/* ACTIONS */}
-        <div className="pt-4 space-y-4">
+        <div className="space-y-4 border-t border-white/[0.07] pt-8">
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[11px] font-bold uppercase tracking-widest">
-              <Info size={14} /> {error}
+            <div className="flex items-center gap-2 rounded-lg border border-red-500/25 bg-red-500/[0.08] p-3 text-[11px] font-bold tracking-widest text-red-400 uppercase">
+              <Info size={14} aria-hidden /> {error}
             </div>
           )}
-          <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
-            {!loading && <>Execute Phase 03 <CaretRight size={16} /></>}
+          <Button type="submit" loading={loading} fullWidth className="flex items-center justify-center gap-2 rounded-lg py-5 shadow-[0_10px_36px_rgba(200,162,200,0.2)]">
+            {!loading && <>Execute Phase 03 <CaretRight size={16} aria-hidden /></>}
           </Button>
         </div>
       </form>
