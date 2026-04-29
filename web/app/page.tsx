@@ -58,7 +58,7 @@ export default async function Home() {
         }}
       />
 
-      <header className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-black/50 shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl">
+      <header className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-black/20 shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl backdrop-saturate-150">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:px-8">
           <Link href="/" className="flex min-w-0 items-center gap-2.5">
             <Image
