@@ -140,14 +140,14 @@ export default function Phase1Page() {
 
         {/* PHYSICAL STATS */}
         <Card className="rounded-lg p-6 lg:p-7" topAccent="rgba(200,162,200,0.55)">
-          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-            <h2 className="text-[10px] font-black tracking-[3px] text-[#C8A2C8] uppercase">Physical Stats</h2>
-            <div className="flex rounded-md border border-white/10 bg-black/40 p-0.5 backdrop-blur-sm">
+          <div className="mb-6 flex items-center justify-between gap-2 sm:gap-4">
+            <h2 className="shrink-0 text-[10px] font-black tracking-[3px] text-[#C8A2C8] uppercase">Physical Stats</h2>
+            <div className="flex min-w-0 flex-1 rounded-md border border-white/10 bg-black/40 p-0.5 backdrop-blur-sm sm:max-w-none sm:flex-none">
               {(['metric', 'imperial'] as const).map(u => (
                 <button key={u} type="button"
                   onClick={() => toggleUnit(u)}
                   className={cn(
-                    'rounded-[5px] px-3 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all',
+                    'min-w-0 flex-1 rounded-[5px] px-2 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all sm:flex-none sm:px-3',
                     form.unit_preference === u ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]' : 'text-white/25 hover:text-white/45'
                   )}>
                   {u}
