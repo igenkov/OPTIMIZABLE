@@ -8,10 +8,13 @@ const DEFAULT_SRC = '/hero-bg.mp4';
 export function HomeVideoBackground({
   src = DEFAULT_SRC,
   overlayOpacityClassName = 'bg-bg/72',
+  /** Soft darkening toward edges — hides obvious bands when using `object-contain`. */
+  edgeVignette = true,
 }: {
   src?: string;
   /** Tailwind bg-* classes for the fixed tint above video (below dots/grids). */
   overlayOpacityClassName?: string;
+  edgeVignette?: boolean;
 }) {
   const ref = useRef<HTMLVideoElement>(null);
 
@@ -40,19 +43,52 @@ export function HomeVideoBackground({
 
   return (
     <>
-      <video
-        ref={ref}
-        className="pointer-events-none fixed inset-0 z-0 h-[100dvh] min-h-full w-full object-cover"
-        autoPlay
-        loop
-        muted
-        playsInline
-        preload="metadata"
-        aria-hidden
-      >
-        <source src={src} type="video/mp4" />
-      </video>
-      <div className={`pointer-events-none fixed inset-0 z-[1] ${overlayOpacityClassName}`} aria-hidden />
+      {/* `contain` = entire frame visible (may letterbox). `cover` = full bleed but crops edges. */}
+      <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-bg" aria-hidden>
+        <video
+          ref={ref}
+          className="pointer-events-none absolute inset-0 z-0 size-full object-contain object-center"
+          autoPlay
+          loop
+          muted
+          playsInline
+          preload="metadata"
+          aria-hidden
+        >
+          <source src={src} type="video/mp4" />
+        </video>
+        {edgeVignette && (
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 z-[1]"
+            style={{
+              background: `
+                radial-gradient(
+                  ellipse 90% 82% at 50% 48%,
+                  transparent 18%,
+                  color-mix(in oklch, var(--color-bg) 42%, transparent) 52%,
+                  color-mix(in oklch, var(--color-bg) 85%, black) 100%
+                ),
+                linear-gradient(
+                  to bottom,
+                  color-mix(in oklch, var(--color-bg) 58%, transparent) 0%,
+                  transparent 22%,
+                  transparent 78%,
+                  color-mix(in oklch, var(--color-bg) 58%, transparent) 100%
+                ),
+                linear-gradient(
+                  to right,
+                  color-mix(in oklch, var(--color-bg) 48%, transparent) 0%,
+                  transparent 15%,
+                  transparent 85%,
+                  color-mix(in oklch, var(--color-bg) 48%, transparent) 100%
+                )
+              `,
+            }}
+          />
+        )}
+      </div>
+      <div className={`pointer-events-none fixed inset-0 z-[1] overflow-hidden ${overlayOpacityClassName}`} aria-hidden />
     </>
   );
 }
