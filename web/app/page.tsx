@@ -80,6 +80,18 @@ export default async function Home() {
 
           <div className="flex shrink-0 items-center gap-3 sm:gap-6">
             <Link
+              href="/blog"
+              className="font-display hidden text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:inline sm:text-sm sm:tracking-wide"
+            >
+              Blog
+            </Link>
+            <Link
+              href="/faq"
+              className="font-display hidden text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:inline sm:text-sm sm:tracking-wide"
+            >
+              FAQ
+            </Link>
+            <Link
               href="/how-it-works"
               className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:text-sm sm:tracking-wide"
             >
@@ -114,10 +126,10 @@ export default async function Home() {
                 <span className="block">something is off.</span>
               </h1>
               <p
-                className="mt-3 font-bold uppercase tracking-[0.06em] text-muted"
+                className="mt-3 font-bold normal-case tracking-[0.06em] text-muted"
                 style={{ fontSize: '0.6em', lineHeight: 1.25 }}
               >
-                Find it and optimize it!
+                Optimize it!
               </p>
             </div>
             <p className="home-reveal home-reveal-delay-1 mb-6 max-w-[65ch] text-[13px] leading-relaxed text-muted sm:mb-7 sm:text-[14px] sm:leading-[1.72]">
@@ -175,7 +187,7 @@ export default async function Home() {
       <footer className="relative z-10 border-t border-white/[0.06] bg-surface-deep/80 py-2 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-6 sm:gap-y-1 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 sm:justify-start">
-            {['Clinical grade analysis', 'Encrypted & private', 'AI protocol', '90-day track'].map((text, i) => (
+            {['Deep Clinical Data Knowledge Base', 'Encrypted and Private', 'Personalized Approach', 'Iterative Progress Tracking'].map((text, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="size-1 shrink-0 rounded-full bg-lilac/45" />
                 <span className="font-display text-[8px] uppercase leading-none tracking-[0.12em] text-dim sm:text-[9px] sm:tracking-[2px]">
