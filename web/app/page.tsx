@@ -2,352 +2,8 @@ import { createClient } from '@/lib/supabase/server';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  ArrowRight,
-  UserCircle,
-  Barbell,
-  Brain,
-  ChartBar,
-  Flask,
-  TrendUp,
-  ClockCounterClockwise,
-  Drop,
-  Microscope,
-  Target,
-  Pulse,
-} from '@phosphor-icons/react/dist/ssr';
+import { ArrowRight } from '@phosphor-icons/react/dist/ssr';
 import { HomeVideoBackground } from '@/components/home/HomeVideoBackground';
-
-// -- Step definitions ----------------------------------------------------------
-
-const STEPS = [
-  {
-    id: '01',
-    icon: UserCircle,
-    label: 'Personal Details',
-    sub: 'Age, body composition, medical history',
-    pro: false,
-  },
-  {
-    id: '02',
-    icon: Barbell,
-    label: 'Lifestyle Assessment',
-    sub: 'Sleep, stress, bad habits, physical activity',
-    pro: false,
-  },
-  {
-    id: '03',
-    icon: Brain,
-    label: 'Symptoms Audit',
-    sub: 'Energy, libido, recovery, cognition',
-    pro: false,
-  },
-  {
-    id: '04',
-    icon: ChartBar,
-    label: 'Risk Score',
-    sub: 'Hormonal coefficient + bloodwork panel recommendation',
-    pro: false,
-    full: true,
-  },
-  {
-    id: '05',
-    icon: Flask,
-    label: 'Lab Analysis',
-    sub: 'Deep AI analysis of bloodwork. Actual hormonal health status',
-    pro: true,
-    glow: true,
-  },
-  {
-    id: '06',
-    icon: TrendUp,
-    label: 'Optimization',
-    sub: '90-day optimization protocol',
-    pro: true,
-  },
-  {
-    id: '07',
-    icon: ClockCounterClockwise,
-    label: 'Progress Tracking',
-    sub: 'Daily progress assessment',
-    pro: true,
-  },
-];
-
-const freeSteps = STEPS.filter(s => !s.pro && !s.full);
-const riskStep = STEPS.find(s => s.full)!;
-const proSteps = STEPS.filter(s => s.pro);
-type Step = (typeof STEPS)[number];
-
-// -- Orbital hero (clinical diagram; colors = theme lilac) --
-
-function HeroOrbital() {
-  return (
-    <div className="relative mx-auto mt-12 flex aspect-square w-full max-w-[350px] items-center justify-center md:max-w-[450px] lg:mt-0 lg:max-w-[500px]">
-      <div className="home-orb-glow absolute inset-0 opacity-55" aria-hidden />
-
-      <svg
-        className="pointer-events-none absolute inset-0 size-full text-white"
-        viewBox="0 0 500 500"
-        preserveAspectRatio="xMidYMid meet"
-        aria-hidden
-      >
-        <path className="home-connecting-line opacity-50" d="M 120 120 Q 250 20 380 120" />
-        <path className="home-connecting-line opacity-50" d="M 120 380 Q 250 480 380 380" />
-        <path className="home-connecting-line opacity-50" d="M 120 120 Q 20 250 120 380" />
-        <path className="home-connecting-line opacity-50" d="M 380 120 Q 480 250 380 380" />
-
-        <path className="home-connecting-line" d="M 250 250 L 120 120" />
-        <path className="home-connecting-line" d="M 250 250 L 60 250" />
-        <path className="home-connecting-line" d="M 250 250 L 120 380" />
-        <path className="home-connecting-line" d="M 250 250 L 380 120" />
-        <path className="home-connecting-line" d="M 250 250 L 440 250" />
-        <path className="home-connecting-line" d="M 250 250 L 380 380" />
-
-        <circle className="home-connecting-line opacity-30" cx="250" cy="250" r="100" strokeDasharray="4 4" fill="none" />
-        <circle className="home-connecting-line opacity-20" cx="250" cy="250" r="180" strokeDasharray="2 6" fill="none" />
-      </svg>
-
-      <div className="relative z-10 flex size-24 items-center justify-center rounded-full border border-lilac/40 bg-white/[0.03] shadow-[0_0_42px_rgba(200,162,200,0.28)] backdrop-blur-[6px] md:size-32">
-        <div className="absolute size-12 rounded-full bg-gradient-to-br from-lilac to-lilac-muted opacity-75 blur-md md:size-16" aria-hidden />
-        <Image
-          src="/logo_trsp.png"
-          alt=""
-          width={96}
-          height={96}
-          className="relative z-10 size-16 object-contain drop-shadow-[0_0_10px_rgba(200,162,200,0.35)] md:size-20"
-        />
-      </div>
-
-      <div className="protocol-node-dim absolute top-[20%] left-[22%] z-10 flex w-[80px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center space-y-1 rounded-xl p-2 md:w-[85px] lg:w-[110px]">
-        <ChartBar
-          weight="duotone"
-          className="size-3 shrink-0 text-muted md:size-4"
-        />
-        <span className="text-center text-[6px] font-black uppercase leading-tight tracking-widest text-muted md:text-[7px] lg:text-[8px]">
-          Hormonal
-          <br />
-          Risk Score
-        </span>
-      </div>
-
-      <div className="protocol-node-dim absolute top-[28%] left-[82%] z-10 flex w-[85px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-xl p-2 lg:w-[115px] lg:p-3">
-        <Drop
-          weight="duotone"
-          className="size-3 shrink-0 text-muted md:size-4 lg:size-5"
-        />
-        <span className="text-center text-[6px] font-black uppercase leading-tight tracking-widest text-muted md:text-[7px] lg:text-[8px]">
-          Personalized
-          <br />
-          Bloodwork
-        </span>
-      </div>
-
-      <div className="protocol-node absolute top-[55%] left-[8%] z-10 flex w-[90px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-xl p-2 lg:w-[125px] lg:space-y-2 lg:p-3">
-        <TrendUp
-          weight="duotone"
-          className="size-3 shrink-0 text-lilac md:size-4 lg:size-5"
-        />
-        <span className="text-center text-[7px] font-black uppercase leading-tight tracking-widest text-white md:text-[8px] lg:text-[9px]">
-          Progress
-          <br />
-          Tracking
-        </span>
-      </div>
-
-      <div className="protocol-node absolute top-[45%] left-[88%] z-10 flex w-[95px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-xl p-2.5 lg:w-[135px] lg:space-y-2 lg:p-3.5">
-        <Microscope
-          weight="duotone"
-          className="size-3 shrink-0 text-lilac md:size-4 lg:size-5"
-        />
-        <span className="text-center text-[7px] font-black uppercase leading-tight tracking-widest text-white md:text-[8px] lg:text-[9px]">
-          Bloodwork
-          <br />
-          Analysis
-        </span>
-      </div>
-
-      <div className="protocol-node absolute top-[82%] left-[28%] z-10 flex w-[100px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-xl p-3 lg:w-[145px] lg:space-y-2 lg:p-4">
-        <Target
-          weight="duotone"
-          className="size-4 shrink-0 text-lilac md:size-5 lg:size-6"
-        />
-        <span className="text-center text-[7px] font-black uppercase leading-tight tracking-widest text-white md:text-[8px] lg:text-[9.5px]">
-          90-Day
-          <br />
-          Optimization
-        </span>
-      </div>
-
-      <div className="protocol-node absolute top-[72%] left-[78%] z-10 flex w-[85px] -translate-x-1/2 -translate-y-1/2 flex-col items-center justify-center space-y-1.5 rounded-xl p-2 lg:w-[120px] lg:space-y-2 lg:p-3">
-        <Pulse
-          weight="duotone"
-          className="size-3 shrink-0 text-lilac md:size-4 lg:size-5"
-        />
-        <span className="text-center text-[7px] font-black uppercase leading-tight tracking-widest text-white md:text-[8px] lg:text-[9px]">
-          Daily
-          <br />
-          Wellbeing
-        </span>
-      </div>
-
-      <div
-        className="absolute top-1/4 right-1/4 size-1.5 animate-pulse rounded-full bg-lilac shadow-[0_0_10px_rgba(200,162,200,0.55)]"
-        aria-hidden
-      />
-      <div
-        className="absolute bottom-1/3 left-1/3 size-1.5 animate-ping rounded-full bg-lilac-muted opacity-80"
-        aria-hidden
-      />
-      <div className="absolute top-1/2 left-1/4 size-2 rounded-full bg-white/15" aria-hidden />
-    </div>
-  );
-}
-
-// -- Asymmetric bento ------------------------------------------------------------
-
-function StepTile({
-  step,
-  className = '',
-  tone = 'neutral',
-  emphasis = 'standard',
-  meta,
-}: {
-  step: Step;
-  className?: string;
-  tone?: 'neutral' | 'lab';
-  emphasis?: 'standard' | 'large';
-  meta?: string;
-}) {
-  const Icon = step.icon;
-  const isLab = tone === 'lab';
-  const isLarge = emphasis === 'large';
-
-  return (
-    <article
-      className={`group relative overflow-hidden rounded-[18px] border p-4 transition-[border-color,background-color] duration-300 ease-out sm:p-5 lg:p-4 ${className} ${
-        isLab
-          ? 'border-lilac/25 bg-lilac/[0.045] hover:border-lilac/40'
-          : 'border-white/[0.08] bg-white/[0.025] hover:border-white/[0.14] hover:bg-white/[0.04]'
-      }`}
-    >
-      <div
-        aria-hidden="true"
-        className={`pointer-events-none absolute inset-0 opacity-0 transition-opacity duration-300 ease-out group-hover:opacity-100 ${
-          isLab
-            ? 'bg-[radial-gradient(circle_at_20%_0%,color-mix(in_oklch,var(--color-lilac)_18%,transparent),transparent_45%)]'
-            : 'bg-[radial-gradient(circle_at_15%_0%,rgba(255,255,255,0.08),transparent_42%)]'
-        }`}
-      />
-      <div className="relative flex h-full flex-col justify-between gap-6">
-        <div className="flex items-start justify-between gap-4">
-          <Icon
-            weight="duotone"
-            size={isLarge ? 34 : 28}
-            className={`shrink-0 ${isLab ? 'text-lilac' : 'text-label'} transition-colors duration-300`}
-          />
-          {meta && (
-            <span
-              className={`font-display text-[8px] font-black uppercase tracking-[0.2em] ${
-                isLab ? 'text-lilac/70' : 'text-muted'
-              }`}
-            >
-              {meta}
-            </span>
-          )}
-        </div>
-        <div>
-          <div
-            className={`font-display font-black uppercase tracking-wide leading-tight text-white ${
-              isLarge ? 'text-[14px] sm:text-[15px]' : 'text-[11px]'
-            }`}
-          >
-            {step.label}
-          </div>
-          <p
-            className={`mt-1.5 leading-snug text-muted tracking-normal ${
-              isLarge ? 'text-[10px] sm:text-[10.5px]' : 'text-[9px]'
-            }`}
-          >
-            {step.sub}
-          </p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function StepBento() {
-  return (
-    <div id="clinical-flow" className="min-w-0 w-full scroll-mt-28">
-      <div className="mb-4 flex items-center gap-3 sm:mb-5 lg:max-w-[92%]">
-        <div className="h-px flex-1 bg-gradient-to-r from-lilac/50 to-transparent" />
-        <span className="font-display text-[8px] uppercase tracking-[0.18em] text-label">Clinical Flow</span>
-      </div>
-
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 lg:gap-5">
-        <StepTile
-          step={riskStep}
-          meta="Free"
-          emphasis="large"
-          className="lg:min-h-[192px]"
-        />
-
-        <div className="min-w-0">
-          <div className="mb-3 flex flex-wrap items-baseline justify-between gap-2">
-            <span className="font-display text-[8px] font-black tracking-[0.2em] text-lilac/70 uppercase">Lab</span>
-            <span className="font-display text-[7px] font-black tracking-[0.16em] text-lilac uppercase">
-              Unlock
-            </span>
-          </div>
-
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 lg:gap-3.5">
-            <StepTile
-              step={proSteps[0]}
-              tone="lab"
-              emphasis="large"
-              className="sm:col-span-4 lg:col-span-4 lg:min-h-[132px]"
-            />
-            <StepTile
-              step={proSteps[1]}
-              tone="lab"
-              className="sm:col-span-2 lg:col-span-2 lg:min-h-[132px]"
-            />
-            <StepTile
-              step={proSteps[2]}
-              tone="lab"
-              className="sm:col-span-6 lg:col-span-6 lg:min-h-[96px]"
-            />
-          </div>
-        </div>
-      </div>
-
-      <div className="mt-6 sm:mt-7">
-        <div className="mb-3 flex items-center justify-between gap-4">
-          <span className="font-display text-[8px] font-black tracking-[0.2em] text-muted">Baseline</span>
-          <span className="h-px flex-1 bg-white/[0.08]" />
-        </div>
-
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-6 lg:gap-3.5">
-          <StepTile
-            step={freeSteps[0]}
-            className="sm:col-span-3 lg:col-span-2 lg:min-h-[120px]"
-          />
-          <StepTile
-            step={freeSteps[1]}
-            className="sm:col-span-3 lg:col-span-2 lg:min-h-[120px]"
-          />
-          <StepTile
-            step={freeSteps[2]}
-            className="sm:col-span-6 lg:col-span-2 lg:min-h-[120px]"
-          />
-        </div>
-      </div>
-    </div>
-  );
-}
-
-// -- Page ----------------------------------------------------------------------
 
 export default async function Home() {
   const supabase = await createClient();
@@ -439,11 +95,10 @@ export default async function Home() {
         </nav>
       </header>
 
-      <main className="relative z-10 flex-1 overflow-hidden pb-12 pt-[4.75rem] sm:pb-14 sm:pt-28 lg:pb-16 lg:pt-32">
-        {/* Hero */}
-        <section className="mx-auto grid max-w-7xl items-center gap-10 px-4 py-10 sm:px-6 lg:grid-cols-2 lg:gap-14 lg:px-8 lg:py-12">
-          <div className="relative z-10">
-            <div className="home-reveal mb-6 inline-flex items-center gap-2 rounded-full border border-lilac/20 bg-lilac/[0.07] px-3 py-1.5">
+      <main className="relative z-10 flex flex-1 flex-col justify-center px-4 pb-8 pt-[4.75rem] sm:px-6 sm:pb-10 sm:pt-28 lg:px-8 lg:pt-32">
+        <section className="mx-auto w-full max-w-2xl">
+          <div className="relative z-10 mx-auto text-center">
+            <div className="home-reveal mb-4 inline-flex items-center gap-2 rounded-full border border-lilac/20 bg-lilac/[0.07] px-3 py-1.5 sm:mb-5">
               <span className="size-2 shrink-0 animate-pulse rounded-full bg-lilac" aria-hidden />
               <span className="font-display text-[10px] font-black uppercase tracking-[0.14em] text-lilac">
                 Assessment pipeline active
@@ -451,22 +106,22 @@ export default async function Home() {
             </div>
 
             <h1
-              className="home-reveal home-reveal-delay-1 mb-3 max-w-[min(100%,38ch)] font-display font-bold uppercase tracking-[0.03em] text-white"
+              className="home-reveal home-reveal-delay-1 mx-auto mb-3 max-w-[min(100%,36ch)] font-display font-bold uppercase tracking-[0.03em] text-white sm:mb-4"
               style={{
-                fontSize: 'clamp(1.35rem, 2.85vw + 0.55rem, 2.35rem)',
+                fontSize: 'clamp(1.2rem, 4.2vw + 0.35rem, 2.2rem)',
                 lineHeight: 1.12,
               }}
             >
               If you don&apos;t wake up hard, something is off. Optimize it!
             </h1>
-            <p className="home-reveal home-reveal-delay-1 mb-8 max-w-md text-[13px] leading-relaxed text-muted sm:text-[14px]">
+            <p className="home-reveal home-reveal-delay-1 mx-auto mb-6 max-w-md text-[12px] leading-relaxed text-muted sm:mb-8 sm:text-[14px]">
               From a 3-minute assessment to your full hormonal system insights
             </p>
 
-            <div className="home-reveal home-reveal-delay-2 flex max-w-prose flex-col gap-4 sm:flex-row sm:gap-5">
+            <div className="home-reveal home-reveal-delay-2 flex max-w-md flex-col gap-3 sm:mx-auto sm:flex-row sm:justify-center sm:gap-5">
               <Link
                 href="/onboarding/phase1"
-                className="font-display group inline-flex items-center justify-center gap-2.5 rounded-full bg-lilac px-8 py-4 text-[11px] font-black uppercase tracking-[0.22em] text-black shadow-[0_12px_40px_rgba(200,162,200,0.22)] transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-10"
+                className="font-display group inline-flex items-center justify-center gap-2.5 rounded-full bg-lilac px-8 py-3.5 text-[11px] font-black uppercase tracking-[0.22em] text-black shadow-[0_12px_40px_rgba(200,162,200,0.22)] transition-transform duration-200 ease-out hover:scale-[1.02] active:scale-[0.98] sm:px-10 sm:py-4"
               >
                 Get started
                 <ArrowRight
@@ -476,20 +131,12 @@ export default async function Home() {
               </Link>
               <Link
                 href="/how-it-works"
-                className="font-display inline-flex items-center justify-center rounded-full border border-white/[0.18] bg-white/[0.03] px-8 py-4 text-[11px] font-bold uppercase tracking-[0.18em] text-muted backdrop-blur-[6px] transition-colors duration-200 hover:bg-white/[0.06] hover:text-white sm:px-10"
+                className="font-display inline-flex items-center justify-center rounded-full border border-white/[0.18] bg-white/[0.03] px-8 py-3.5 text-[11px] font-bold uppercase tracking-[0.18em] text-muted backdrop-blur-[6px] transition-colors duration-200 hover:bg-white/[0.06] hover:text-white sm:px-10 sm:py-4"
               >
                 How it works
               </Link>
             </div>
           </div>
-
-          <div className="home-reveal home-reveal-delay-3 min-w-0">
-            <HeroOrbital />
-          </div>
-        </section>
-
-        <section className="home-reveal home-reveal-delay-4 mx-auto mt-4 max-w-7xl px-4 sm:px-6 lg:mt-6 lg:px-8">
-          <StepBento />
         </section>
       </main>
 
