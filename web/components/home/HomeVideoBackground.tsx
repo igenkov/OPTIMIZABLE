@@ -43,11 +43,11 @@ export function HomeVideoBackground({
 
   return (
     <>
-      {/* `contain` = entire frame visible (may letterbox). `cover` = full bleed but crops edges. */}
+      {/* Mobile/portrait: `cover` fills the viewport (hero-style). `lg+`: `contain` shows full frame + vignette hides bands. */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-bg" aria-hidden>
         <video
           ref={ref}
-          className="pointer-events-none absolute inset-0 z-0 size-full object-contain object-center"
+          className="pointer-events-none absolute inset-0 z-0 size-full object-cover object-center lg:object-contain"
           autoPlay
           loop
           muted
@@ -60,7 +60,7 @@ export function HomeVideoBackground({
         {edgeVignette && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 z-[1]"
+            className="pointer-events-none absolute inset-0 z-[1] hidden lg:block"
             style={{
               background: `
                 radial-gradient(
