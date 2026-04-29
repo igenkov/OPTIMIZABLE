@@ -105,15 +105,24 @@ export default async function Home() {
               </span>
             </div>
 
-            <h1
-              className="home-reveal home-reveal-delay-1 mb-3 max-w-[min(100%,38ch)] font-display font-bold uppercase tracking-[0.03em] text-white"
-              style={{
-                fontSize: 'clamp(1.35rem, 2.85vw + 0.55rem, 2.35rem)',
-                lineHeight: 1.12,
-              }}
+            <div
+              className="home-reveal home-reveal-delay-1 mb-8 max-w-[min(100%,22ch)] font-display"
+              style={{ fontSize: 'clamp(1.35rem, 2.85vw + 0.55rem, 2.35rem)' }}
             >
-              If you don&apos;t wake up hard, something is off. Optimize it!
-            </h1>
+              <h1 className="font-bold uppercase tracking-[0.03em] leading-[1.08] text-white">
+                <span className="block">If you don&apos;t</span>
+                <span className="block">
+                  <span className="text-lilac">wake up hard</span>,{' '}
+                </span>
+                <span className="block">something is off.</span>
+              </h1>
+              <p
+                className="mt-3 font-bold uppercase tracking-[0.06em] text-muted"
+                style={{ fontSize: '0.6em', lineHeight: 1.25 }}
+              >
+                Find it and optimize it!
+              </p>
+            </div>
             <p className="home-reveal home-reveal-delay-1 mb-8 max-w-md text-[13px] leading-relaxed text-muted sm:text-[14px]">
               From a 3-minute assessment to your full hormonal system insights
             </p>
