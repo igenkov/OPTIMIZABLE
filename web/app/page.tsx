@@ -19,10 +19,7 @@ export default async function Home() {
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col bg-bg text-white">
-      <HomeVideoBackground
-        overlayOpacityClassName="bg-bg/45"
-        mobilePortraitSrc="/hero-bg-mobile.mp4"
-      />
+      <HomeVideoBackground overlayOpacityClassName="bg-bg/45" />
 
       {/* Dot grid — lab paper texture */}
       <div
