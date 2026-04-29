@@ -16,6 +16,7 @@ import {
   Target,
   Pulse,
 } from '@phosphor-icons/react/dist/ssr';
+import { HomeVideoBackground } from '@/components/home/HomeVideoBackground';
 
 // -- Step definitions ----------------------------------------------------------
 
@@ -361,11 +362,13 @@ export default async function Home() {
   }
 
   return (
-    <div className="flex min-h-[100dvh] flex-col bg-bg text-white">
+    <div className="relative flex min-h-[100dvh] flex-col bg-bg text-white">
+      <HomeVideoBackground />
+
       {/* Dot grid — lab paper texture */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 select-none lg:hidden"
+        className="pointer-events-none fixed inset-0 z-[2] select-none lg:hidden"
         style={{
           backgroundImage:
             'radial-gradient(color-mix(in oklch, white 2.8%, transparent) 1px, transparent 1px)',
@@ -374,7 +377,7 @@ export default async function Home() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed inset-0 hidden select-none lg:block"
+        className="pointer-events-none fixed inset-0 z-[2] hidden select-none lg:block"
         style={{
           backgroundImage:
             'radial-gradient(color-mix(in oklch, white 3.8%, transparent) 1px, transparent 1px)',
@@ -384,7 +387,7 @@ export default async function Home() {
 
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed top-0 right-0 h-[min(100vh,420px)] w-[min(100vw,520px)] select-none lg:hidden"
+        className="pointer-events-none fixed top-0 right-0 z-[2] h-[min(100vh,420px)] w-[min(100vw,520px)] select-none lg:hidden"
         style={{
           background:
             'radial-gradient(ellipse at top right, color-mix(in oklch, var(--color-lilac) 5%, transparent) 0%, transparent 65%)',
@@ -392,7 +395,7 @@ export default async function Home() {
       />
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed top-0 right-0 hidden h-[min(75vh,580px)] w-[min(92vw,900px)] select-none lg:block"
+        className="pointer-events-none fixed top-0 right-0 z-[2] hidden h-[min(75vh,580px)] w-[min(92vw,900px)] select-none lg:block"
         style={{
           background:
             'radial-gradient(ellipse 85% 70% at 100% 0%, color-mix(in oklch, var(--color-lilac) 12%, transparent) 0%, color-mix(in oklch, var(--color-lilac) 4%, transparent) 45%, transparent 70%)',
