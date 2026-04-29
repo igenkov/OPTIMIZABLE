@@ -147,8 +147,8 @@ export default async function Home() {
             </Link>
           </div>
 
-          <div className="hidden min-h-[1px] lg:flex lg:flex-col lg:col-start-2 lg:row-start-2 lg:items-end">
-            <div className="home-reveal home-reveal-delay-2 grid w-full max-w-xl grid-cols-3 gap-3">
+          <div className="hidden min-h-[1px] lg:flex lg:flex-col lg:col-start-2 lg:row-start-2 lg:items-end lg:pt-8">
+            <div className="home-reveal home-reveal-delay-2 grid w-full max-w-[26rem] grid-cols-3 gap-3">
               {[
                 { value: '3 min', label: 'Assessment' },
                 { value: '24+', label: 'Hormonal markers' },
