@@ -43,11 +43,11 @@ export function HomeVideoBackground({
 
   return (
     <>
-      {/* Mobile/portrait: `cover` fills the viewport (hero-style). `lg+`: `contain` shows full frame + vignette hides bands. */}
+      {/* Full-bleed `cover` — avoids pillarboxing on wide viewports. */}
       <div className="pointer-events-none fixed inset-0 z-0 overflow-hidden bg-bg" aria-hidden>
         <video
           ref={ref}
-          className="pointer-events-none absolute inset-0 z-0 size-full object-cover object-center lg:object-contain"
+          className="pointer-events-none absolute inset-0 z-0 size-full object-cover object-center"
           autoPlay
           loop
           muted
@@ -60,28 +60,15 @@ export function HomeVideoBackground({
         {edgeVignette && (
           <div
             aria-hidden
-            className="pointer-events-none absolute inset-0 z-[1] hidden lg:block"
+            className="pointer-events-none absolute inset-0 z-[1]"
             style={{
+              /* Radial only — avoid left/right linear fades that read as pillarbox “margins”. */
               background: `
                 radial-gradient(
-                  ellipse 90% 82% at 50% 48%,
-                  transparent 18%,
-                  color-mix(in oklch, var(--color-bg) 42%, transparent) 52%,
-                  color-mix(in oklch, var(--color-bg) 85%, black) 100%
-                ),
-                linear-gradient(
-                  to bottom,
-                  color-mix(in oklch, var(--color-bg) 58%, transparent) 0%,
-                  transparent 22%,
-                  transparent 78%,
-                  color-mix(in oklch, var(--color-bg) 58%, transparent) 100%
-                ),
-                linear-gradient(
-                  to right,
-                  color-mix(in oklch, var(--color-bg) 48%, transparent) 0%,
-                  transparent 15%,
-                  transparent 85%,
-                  color-mix(in oklch, var(--color-bg) 48%, transparent) 100%
+                  ellipse 95% 88% at 50% 48%,
+                  transparent 20%,
+                  color-mix(in oklch, var(--color-bg) 38%, transparent) 58%,
+                  color-mix(in oklch, var(--color-bg) 82%, black) 100%
                 )
               `,
             }}

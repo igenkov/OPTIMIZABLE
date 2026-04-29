@@ -19,7 +19,7 @@ export default async function Home() {
 
   return (
     <div className="relative flex min-h-[100dvh] flex-col bg-bg text-white">
-      <HomeVideoBackground />
+      <HomeVideoBackground overlayOpacityClassName="bg-bg/45" />
 
       {/* Dot grid — lab paper texture */}
       <div
@@ -58,7 +58,7 @@ export default async function Home() {
         }}
       />
 
-      <header className="fixed top-0 z-50 w-full border-b border-white/[0.06] bg-black/20 shadow-[inset_0_-1px_0_rgba(255,255,255,0.04)] backdrop-blur-xl backdrop-saturate-150">
+      <header className="fixed top-0 z-50 w-full border-b border-white/[0.08] bg-black/[0.12] shadow-[inset_0_-1px_0_rgba(255,255,255,0.05)] backdrop-blur-sm supports-[backdrop-filter]:bg-black/[0.06]">
         <nav className="mx-auto flex h-16 max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:h-20 lg:px-8">
           <Link href="/" className="flex min-w-0 items-center gap-2.5">
             <Image
