@@ -95,89 +95,103 @@ export default function SummaryPage() {
   const trtPanel = BIOMARKERS.filter(b => TRT_PANEL_IDS.includes(b.id));
 
   if (!loaded) return (
-    <div className="flex flex-col items-center justify-center min-h-[400px] gap-4">
-      <Pulse className="text-[#C8A2C8] animate-pulse" size={40} />
-      <div className="text-[10px] font-black uppercase tracking-[4px] text-white/40">Synthesizing Profile...</div>
+    <div className="relative mx-auto flex max-w-3xl flex-col items-center justify-center px-4 py-24">
+      <div className="w-full max-w-sm rounded-lg border border-white/[0.08] bg-[#141414]/60 px-8 py-12 text-center shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]">
+        <Pulse className="mx-auto mb-5 animate-pulse text-[#C8A2C8]" size={36} aria-hidden />
+        <div className="text-[10px] font-black uppercase tracking-[0.28em] text-white/45">Synthesizing Profile...</div>
+      </div>
     </div>
   );
 
   if (riskScore === null && !excluded) return (
-    <div className="max-w-2xl mx-auto pb-32 text-center">
-      <div className="flex items-center justify-center gap-3 text-yellow-500 mb-6 mt-20">
-        <Warning size={24} />
-        <h2 className="text-lg font-black uppercase tracking-tight">Incomplete Profile Data</h2>
+    <div className="relative mx-auto max-w-3xl px-4 pb-32 pt-12 text-center lg:px-6">
+      <div className="mx-auto mb-8 flex max-w-md flex-col items-center gap-4 rounded-lg border border-[#E8C470]/25 bg-[#E8C470]/[0.06] px-6 py-8 backdrop-blur-sm">
+        <Warning size={28} className="text-[#E8C470]" aria-hidden />
+        <h2 className="text-lg font-black uppercase tracking-tight text-white">Incomplete Profile Data</h2>
       </div>
-      <p className="text-sm text-white/40 mb-8">Complete all four phases of the onboarding assessment to generate your diagnostic report.</p>
-      <Button onClick={() => router.push('/onboarding/phase1')} fullWidth className="py-4">
-        Start Assessment <ArrowRight size={16} className="ml-2" />
+      <p className="mx-auto mb-10 max-w-md text-sm leading-relaxed text-white/45">
+        Complete all four phases of the onboarding assessment to generate your diagnostic report.
+      </p>
+      <Button onClick={() => router.push('/onboarding/phase1')} fullWidth className="mx-auto max-w-md rounded-lg py-4 shadow-[0_10px_36px_rgba(200,162,200,0.18)]">
+        Start Assessment <ArrowRight size={16} className="ml-2" aria-hidden />
       </Button>
     </div>
   );
 
   return (
-    <div className="px-4 lg:px-10 py-4 pb-16 max-w-[1600px] mx-auto">
+    <div className="relative mx-auto max-w-6xl px-4 pb-24 lg:px-8">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 opacity-90"
+        style={{
+          background:
+            'radial-gradient(ellipse 65% 42% at 0% 0%, rgba(200,162,200,0.08) 0%, transparent 52%), radial-gradient(ellipse 45% 28% at 100% 8%, rgba(74,222,128,0.05) 0%, transparent 55%)',
+        }}
+      />
 
       {/* HEADER */}
-      <header className="mb-8">
-        <div className="flex gap-1.5 mb-6">
+      <header className="mb-8 border-b border-white/10 pb-8 lg:mb-10">
+        <div className="mb-6 flex gap-1.5">
           {[1, 2, 3, 4, 5].map(i => (
-            <div key={i} className="h-1 flex-1 rounded-full bg-[#C8A2C8] shadow-[0_0_8px_rgba(200,162,200,0.4)]" />
+            <div
+              key={i}
+              className="h-1 flex-1 rounded-sm bg-[#C8A2C8] shadow-[0_0_10px_rgba(200,162,200,0.25)]"
+            />
           ))}
         </div>
-        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-[#C8A2C8] mb-4">
+        <div className="mb-4 inline-flex items-center border border-[#C8A2C8]/25 bg-[#C8A2C8]/10 px-2.5 py-1 text-[10px] font-black tracking-[2px] text-[#C8A2C8] uppercase">
           Onboarding Complete / Final Assessment
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight mb-2">Diagnostic Report</h1>
-        <p className="text-white/40 text-sm">Aggregated results, based on biometric profile, lifestyle habits, clinical history, symptoms audit:</p>
+        <h1 className="mb-2 text-3xl font-black tracking-tight text-white">Diagnostic Report</h1>
+        <p className="max-w-2xl text-sm leading-relaxed text-white/45">
+          Aggregated results, based on biometric profile, lifestyle habits, clinical history, symptoms audit:
+        </p>
       </header>
 
       {/* ROW 1: Score + Signals */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6 mb-6">
+      <div className="mb-8 grid grid-cols-1 gap-5 lg:mb-10 lg:grid-cols-12 lg:gap-6">
 
         {/* Score / Exclusion */}
         <div className="lg:col-span-7">
           {excluded ? (
-            <Card className="p-8 h-full" style={{ border: '1px solid rgba(234,179,8,0.2)', background: 'rgba(234,179,8,0.02)' }}>
-              <div className="flex items-center gap-3 text-yellow-500 mb-6">
-                <Warning size={24} />
-                <h2 className="text-lg font-black uppercase tracking-tight">Monitoring Protocol Required</h2>
+            <Card className="h-full rounded-lg p-6 lg:p-8" topAccent="rgba(232,196,112,0.55)" style={{ background: 'linear-gradient(165deg, rgba(232,196,112,0.06) 0%, rgba(20,20,20,0) 55%), #141414' }}>
+              <div className="mb-6 flex items-center gap-3 text-[#E8C470]">
+                <Warning size={24} aria-hidden />
+                <h2 className="text-lg font-black uppercase tracking-tight text-white">Monitoring Protocol Required</h2>
               </div>
-              <div className="p-4 bg-white/5 border border-white/5 mb-6">
-                <div className="text-[10px] font-black uppercase tracking-widest text-white/40 mb-1 text-center">Current Status</div>
-                <div className="text-xl font-black text-white text-center uppercase tracking-tighter">
+              <div className="mb-6 rounded-lg border border-white/[0.08] bg-black/30 px-4 py-4 backdrop-blur-sm">
+                <div className="mb-1 text-center text-[10px] font-black uppercase tracking-widest text-white/40">Current Status</div>
+                <div className="text-center text-xl font-black uppercase tracking-tighter text-white">
                   {excludedReason === 'both' ? 'Exogenous Overload' : excludedReason === 'steroids' ? 'Active AAS Cycle' : 'Exogenous Replacement (TRT)'}
                 </div>
               </div>
-              <p className="text-sm text-white/60 leading-relaxed text-center italic">
-                "Natural risk scoring is inapplicable during exogenous administration. Objective monitoring of safety markers is the priority sequence."
+              <p className="text-center text-sm italic leading-relaxed text-white/55">
+                &quot;Natural risk scoring is inapplicable during exogenous administration. Objective monitoring of safety markers is the priority sequence.&quot;
               </p>
             </Card>
           ) : (
-            <Card className="p-8 lg:p-10 relative overflow-hidden text-center h-full" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.1)' }}>
-              <div className="absolute top-0 right-0 p-4 opacity-5">
-                <Pulse size={120} />
-              </div>
+            <Card className="relative h-full overflow-hidden rounded-lg p-6 text-center lg:p-10" topAccent={color}>
               <div className="relative z-10">
-                <div className="text-[10px] tracking-[4px] text-white/40 uppercase mb-6 font-black">Hormonal Risk Coefficient</div>
-                <div className="flex items-center justify-center mb-4">
-                  <div className="text-7xl md:text-9xl font-black tracking-tighter" style={{ color }}>{riskScore}</div>
-                  <div className="text-left ml-4">
-                    <div className="text-[10px] font-black text-white/20 uppercase tracking-widest">Scales</div>
-                    <div className="text-xs font-mono text-white/40">0—100</div>
+                <div className="mb-5 text-[10px] font-black uppercase tracking-[0.28em] text-white/45">Hormonal Risk Coefficient</div>
+                <div className="mb-4 flex flex-wrap items-end justify-center gap-3 sm:gap-4">
+                  <div className="text-6xl font-black tracking-tighter sm:text-7xl md:text-8xl" style={{ color }}>{riskScore}</div>
+                  <div className="mb-1 text-left">
+                    <div className="text-[10px] font-black uppercase tracking-widest text-white/30">Scales</div>
+                    <div className="font-mono text-xs text-white/45">0—100</div>
                   </div>
                 </div>
                 <div className={cn(
-                  'inline-block px-4 py-1 text-[10px] font-black uppercase tracking-[3px] mb-8 border',
-                  level === 'critical' ? 'border-red-600/60 text-red-400 bg-red-500/15' :
-                  level === 'high' ? 'border-red-500/50 text-red-500 bg-red-500/10' :
-                  level === 'moderate' ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10' :
-                  'border-[#C8A2C8]/50 text-[#C8A2C8] bg-[#C8A2C8]/10'
+                  'mb-6 inline-flex border px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em]',
+                  level === 'critical' ? 'border-[#E88080]/50 bg-[#E88080]/10 text-[#E88080]' :
+                  level === 'high' ? 'border-[#E88080]/40 bg-[#E88080]/[0.08] text-[#E88080]' :
+                  level === 'moderate' ? 'border-[#E8C470]/45 bg-[#E8C470]/10 text-[#E8C470]' :
+                  'border-[#C8A2C8]/45 bg-[#C8A2C8]/10 text-[#C8A2C8]'
                 )}>
                   {label} Detected
                 </div>
-                <div className="max-w-sm mx-auto p-4 bg-white/5 border border-white/5">
-                  <p className="text-[11px] font-bold text-white/60 uppercase tracking-tight leading-relaxed">
-                    <span className="text-[#E8C470] mr-2 underline underline-offset-4 decoration-yellow-500/30">Immediate Action:</span>
+                <div className="mx-auto max-w-md rounded-lg border border-white/[0.08] bg-black/25 px-4 py-3 backdrop-blur-sm">
+                  <p className="text-left text-[11px] font-bold uppercase leading-relaxed tracking-tight text-white/60">
+                    <span className="mr-2 text-[#E8C470] underline decoration-[#E8C470]/35 underline-offset-4">Immediate Action:</span>
                     {action}
                   </p>
                 </div>
@@ -187,27 +201,28 @@ export default function SummaryPage() {
         </div>
 
         {/* Key factors + Balancing factors */}
-        <div className="lg:col-span-5 space-y-4">
+        <div className="flex flex-col gap-5 lg:col-span-5">
           {!excluded && keyFactors.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-white/40 px-1">
-                <ClipboardText size={14} />
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-white/[0.07] pb-2 text-[#C8A2C8]">
+                <ClipboardText size={14} aria-hidden />
                 <h2 className="text-[10px] font-black tracking-[3px] uppercase">Critical Factors</h2>
               </div>
               <div className="grid grid-cols-1 gap-2">
                 {keyFactors.map((f, i) => {
                   const open = openKeyFactors.has(i);
                   return (
-                    <div key={i} className="bg-white/[0.03] border border-white/5 hover:border-white/10 transition-all">
+                    <div key={i} className="overflow-hidden rounded-lg border border-white/[0.08] bg-[#141414]/40 transition-colors hover:border-white/15">
                       <button
+                        type="button"
                         onClick={() => toggleSet(openKeyFactors, setOpenKeyFactors, i)}
-                        className="w-full flex items-center justify-between px-4 py-3 text-left"
+                        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8A2C8]/40"
                       >
-                        <span className="text-xs font-bold text-[#C8A2C8] uppercase tracking-tight">{f.title}</span>
-                        <CaretDown size={11} className={`text-white/30 shrink-0 ml-3 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
+                        <span className="text-xs font-bold uppercase tracking-tight text-[#C8A2C8]">{f.title}</span>
+                        <CaretDown size={14} className={cn('shrink-0 text-white/35 transition-transform duration-200', open ? '' : '-rotate-90')} aria-hidden />
                       </button>
                       {open && (
-                        <p className="px-4 pb-3 text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+                        <p className="border-t border-white/[0.06] px-4 pb-3 pt-2 text-[11px] italic leading-relaxed text-white/50">{f.explanation}</p>
                       )}
                     </div>
                   );
@@ -217,25 +232,26 @@ export default function SummaryPage() {
           )}
 
           {!excluded && protectiveFactors.length > 0 && (
-            <div className="space-y-2">
-              <div className="flex items-center gap-2 text-white/40 px-1">
-                <ShieldCheck size={14} />
+            <div className="space-y-3">
+              <div className="flex items-center gap-2 border-b border-white/[0.07] pb-2 text-[#4ade80]">
+                <ShieldCheck size={14} aria-hidden />
                 <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
               </div>
               <div className="grid grid-cols-1 gap-2">
                 {protectiveFactors.map((f, i) => {
                   const open = openBalancing.has(i);
                   return (
-                    <div key={i} className="bg-[#4ade80]/[0.02] border border-[#4ade80]/10 hover:border-[#4ade80]/20 transition-all">
+                    <div key={i} className="overflow-hidden rounded-lg border border-[#4ade80]/15 bg-[#4ade80]/[0.04] transition-colors hover:border-[#4ade80]/25">
                       <button
+                        type="button"
                         onClick={() => toggleSet(openBalancing, setOpenBalancing, i)}
-                        className="w-full flex items-center justify-between px-4 py-3 text-left"
+                        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ade80]/35"
                       >
-                        <span className="text-xs font-bold text-[#4ade80] uppercase tracking-tight">{f.title}</span>
-                        <CaretDown size={11} className={`text-white/30 shrink-0 ml-3 transition-transform duration-200 ${open ? '' : '-rotate-90'}`} />
+                        <span className="text-xs font-bold uppercase tracking-tight text-[#4ade80]">{f.title}</span>
+                        <CaretDown size={14} className={cn('shrink-0 text-white/35 transition-transform duration-200', open ? '' : '-rotate-90')} aria-hidden />
                       </button>
                       {open && (
-                        <p className="px-4 pb-3 text-[11px] text-white/40 leading-relaxed italic">{f.explanation}</p>
+                        <p className="border-t border-[#4ade80]/10 px-4 pb-3 pt-2 text-[11px] italic leading-relaxed text-white/50">{f.explanation}</p>
                       )}
                     </div>
                   );
@@ -247,25 +263,25 @@ export default function SummaryPage() {
       </div>
 
       {/* ROW 2: BLOODWORK PANELS */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 text-white/40 px-1 mb-4">
-          <Flask size={14} />
+      <div className="mb-8 lg:mb-10">
+        <div className="mb-4 flex items-center gap-2 border-b border-white/[0.07] pb-2 text-[#C8A2C8]">
+          <Flask size={14} aria-hidden />
           <h2 className="text-[10px] font-black tracking-[3px] uppercase">Recommended Laboratory Sequence</h2>
         </div>
 
         {excluded ? (
-          <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
-            <div className="p-4 bg-white/5 border-b border-white/5 flex justify-between items-center">
-              <span className="text-[10px] font-black uppercase tracking-widest text-yellow-500">Monitoring Panel</span>
-              <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Safety Biomarkers</span>
+          <Card className="overflow-hidden rounded-lg p-0" topAccent="rgba(232,196,112,0.45)">
+            <div className="flex items-center justify-between border-b border-white/[0.08] bg-black/25 px-4 py-3">
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Monitoring Panel</span>
+              <span className="text-[9px] font-bold uppercase tracking-tighter text-white/35">Safety Biomarkers</span>
             </div>
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-white/[0.06]">
               {trtPanel.map(b => (
-                <div key={b.id} className="p-4 flex gap-4 items-start hover:bg-white/[0.02] transition-colors group">
-                  <div className="mt-1 w-2 h-2 rounded-full bg-yellow-500 shrink-0" />
-                  <div className="flex-1">
-                    <div className="text-xs font-bold text-white group-hover:text-yellow-500 transition-colors uppercase tracking-tight">{b.name}</div>
-                    <div className="text-[10px] text-white/30 font-medium leading-relaxed mt-1 uppercase tracking-tighter">{b.description}</div>
+                <div key={b.id} className="group flex items-start gap-4 p-4 transition-colors hover:bg-white/[0.02]">
+                  <div className="mt-1.5 size-1.5 shrink-0 rounded-sm bg-[#E8C470]" aria-hidden />
+                  <div className="min-w-0 flex-1">
+                    <div className="text-xs font-bold uppercase tracking-tight text-white transition-colors group-hover:text-[#E8C470]">{b.name}</div>
+                    <div className="mt-1 text-[10px] font-medium uppercase leading-relaxed tracking-tighter text-white/35">{b.description}</div>
                   </div>
                 </div>
               ))}
@@ -273,25 +289,25 @@ export default function SummaryPage() {
           </Card>
         ) : panel && (
           <>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-3 lg:gap-5">
               {/* ESSENTIAL */}
               {panel.essential.length > 0 && (
-                <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(200,162,200,0.15)' }}>
-                  <div className="p-4 bg-[#C8A2C8]/5 border-b border-[#C8A2C8]/10 flex justify-between items-center">
+                <Card className="overflow-hidden rounded-lg p-0" topAccent="rgba(200,162,200,0.55)">
+                  <div className="flex items-center justify-between border-b border-[#C8A2C8]/15 bg-[#C8A2C8]/[0.06] px-4 py-3">
                     <span className="text-[10px] font-black uppercase tracking-widest text-[#C8A2C8]">Essential</span>
-                    <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Required</span>
+                    <span className="text-[9px] font-bold uppercase tracking-tighter text-white/35">Required</span>
                   </div>
-                  <div className="divide-y divide-white/5">
+                  <div className="divide-y divide-white/[0.06]">
                     {panel.essential.map(m => {
                       const bio = BIOMARKERS.find(b => b.id === m.id);
                       if (!bio) return null;
                       return (
-                        <div key={m.id} className="p-3 flex gap-3 items-start hover:bg-white/[0.02] transition-colors group">
-                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#C8A2C8] shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-xs font-bold text-white group-hover:text-[#C8A2C8] transition-colors uppercase tracking-tight">{bio.name}</div>
+                        <div key={m.id} className="group flex items-start gap-3 p-3 transition-colors hover:bg-white/[0.02]">
+                          <div className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#C8A2C8]" aria-hidden />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold uppercase tracking-tight text-white transition-colors group-hover:text-[#C8A2C8]">{bio.name}</div>
                             {m.reasons.length > 0 && (
-                              <div className="text-[9px] text-[#C8A2C8]/50 font-medium leading-relaxed mt-0.5 tracking-tight truncate">{m.reasons.join(' · ')}</div>
+                              <div className="mt-0.5 truncate text-[9px] font-medium leading-relaxed tracking-tight text-[#C8A2C8]/55">{m.reasons.join(' · ')}</div>
                             )}
                           </div>
                         </div>
@@ -303,22 +319,22 @@ export default function SummaryPage() {
 
               {/* RECOMMENDED */}
               {panel.recommended.length > 0 && (
-                <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(232,196,112,0.15)' }}>
-                  <div className="p-4 bg-[#E8C470]/5 border-b border-[#E8C470]/10 flex justify-between items-center">
+                <Card className="overflow-hidden rounded-lg p-0" topAccent="rgba(232,196,112,0.5)">
+                  <div className="flex items-center justify-between border-b border-[#E8C470]/15 bg-[#E8C470]/[0.06] px-4 py-3">
                     <span className="text-[10px] font-black uppercase tracking-widest text-[#E8C470]">Recommended</span>
-                    <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Advised</span>
+                    <span className="text-[9px] font-bold uppercase tracking-tighter text-white/35">Advised</span>
                   </div>
-                  <div className="divide-y divide-white/5">
+                  <div className="divide-y divide-white/[0.06]">
                     {panel.recommended.map(m => {
                       const bio = BIOMARKERS.find(b => b.id === m.id);
                       if (!bio) return null;
                       return (
-                        <div key={m.id} className="p-3 flex gap-3 items-start hover:bg-white/[0.02] transition-colors group">
-                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-[#E8C470] shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-xs font-bold text-white group-hover:text-[#E8C470] transition-colors uppercase tracking-tight">{bio.name}</div>
+                        <div key={m.id} className="group flex items-start gap-3 p-3 transition-colors hover:bg-white/[0.02]">
+                          <div className="mt-1.5 size-1.5 shrink-0 rounded-full bg-[#E8C470]" aria-hidden />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold uppercase tracking-tight text-white transition-colors group-hover:text-[#E8C470]">{bio.name}</div>
                             {m.reasons.length > 0 && (
-                              <div className="text-[9px] text-[#E8C470]/50 font-medium leading-relaxed mt-0.5 tracking-tight truncate">{m.reasons.join(' · ')}</div>
+                              <div className="mt-0.5 truncate text-[9px] font-medium leading-relaxed tracking-tight text-[#E8C470]/55">{m.reasons.join(' · ')}</div>
                             )}
                           </div>
                         </div>
@@ -330,22 +346,22 @@ export default function SummaryPage() {
 
               {/* EXTENDED */}
               {panel.extended.length > 0 && (
-                <Card className="p-0 overflow-hidden" style={{ background: 'transparent', border: '1px solid rgba(255,255,255,0.05)' }}>
-                  <div className="p-4 bg-white/[0.03] border-b border-white/5 flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase tracking-widest text-white/40">Extended</span>
-                    <span className="text-[9px] font-bold text-white/20 uppercase tracking-tighter">Additional</span>
+                <Card className="overflow-hidden rounded-lg p-0" topAccent="rgba(255,255,255,0.14)">
+                  <div className="flex items-center justify-between border-b border-white/[0.08] bg-white/[0.03] px-4 py-3">
+                    <span className="text-[10px] font-black uppercase tracking-widest text-white/45">Extended</span>
+                    <span className="text-[9px] font-bold uppercase tracking-tighter text-white/35">Additional</span>
                   </div>
-                  <div className="divide-y divide-white/5">
+                  <div className="divide-y divide-white/[0.06]">
                     {panel.extended.map(m => {
                       const bio = BIOMARKERS.find(b => b.id === m.id);
                       if (!bio) return null;
                       return (
-                        <div key={m.id} className="p-3 flex gap-3 items-start hover:bg-white/[0.02] transition-colors group">
-                          <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-white/20 shrink-0" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-xs font-bold text-white/60 group-hover:text-white transition-colors uppercase tracking-tight">{bio.name}</div>
+                        <div key={m.id} className="group flex items-start gap-3 p-3 transition-colors hover:bg-white/[0.02]">
+                          <div className="mt-1.5 size-1.5 shrink-0 rounded-full bg-white/25" aria-hidden />
+                          <div className="min-w-0 flex-1">
+                            <div className="text-xs font-bold uppercase tracking-tight text-white/65 transition-colors group-hover:text-white">{bio.name}</div>
                             {m.reasons.length > 0 && (
-                              <div className="text-[9px] text-white/25 font-medium leading-relaxed mt-0.5 tracking-tight truncate">{m.reasons.join(' · ')}</div>
+                              <div className="mt-0.5 truncate text-[9px] font-medium leading-relaxed tracking-tight text-white/30">{m.reasons.join(' · ')}</div>
                             )}
                           </div>
                         </div>
@@ -357,8 +373,8 @@ export default function SummaryPage() {
             </div>
 
             {/* DISCLAIMER */}
-            <div className="mt-4 px-4 py-3 border border-red-800/50 bg-red-950/30">
-              <p className="text-[10px] text-red-400/80 leading-relaxed italic">
+            <div className="mt-5 rounded-lg border border-[#E88080]/25 bg-[#E88080]/[0.06] px-4 py-3 backdrop-blur-sm">
+              <p className="text-[10px] italic leading-relaxed text-[#E8A0A0]/90">
                 The endocrine system is a complex dynamic system where all markers work in correlation.
                 Essential markers are required for a meaningful result - recommended and extended markers
                 significantly improve diagnostic precision.
@@ -369,15 +385,15 @@ export default function SummaryPage() {
       </div>
 
       {/* ROW 3: Pre-draw + CTA */}
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-6">
+      <div className="grid grid-cols-1 gap-5 lg:grid-cols-12 lg:gap-6">
 
         {/* PRE-DRAW */}
-        <Card className="lg:col-span-7 p-6 space-y-4" style={{ border: '1px solid rgba(200,162,200,0.2)', background: 'rgba(200,162,200,0.02)' }}>
+        <Card className="space-y-5 rounded-lg p-6 lg:col-span-7 lg:p-7" topAccent="rgba(200,162,200,0.5)">
           <div className="flex items-center gap-2 text-[#C8A2C8]">
-            <Clock size={16} />
+            <Clock size={16} aria-hidden />
             <h2 className="text-[10px] font-black tracking-[3px] uppercase">Pre-Draw Protocol</h2>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {[
               { label: 'Time Window', val: '07:00 – 10:00 AM', detail: 'Hormonal peak window' },
               { label: 'Metabolic State', val: 'Fasted (10-12 HR)', detail: 'Water only' },
@@ -385,40 +401,48 @@ export default function SummaryPage() {
               { label: 'Sleep Hygiene', val: 'Normal Duration', detail: 'Aim for 7+ hours prior' },
               { label: 'Sexual Pulse', val: 'Abstain 24HR Prior', detail: 'Preserves baseline LH and testosterone levels' },
             ].map((item, i) => (
-              <div key={i} className="p-3 bg-black/20 border border-white/5">
-                <div className="text-[9px] font-black text-white/20 uppercase tracking-widest mb-1">{item.label}</div>
-                <div className="text-xs font-bold text-white uppercase tracking-tight">{item.val}</div>
-                <div className="text-[9px] text-[#C8A2C8]/40 font-bold uppercase tracking-tighter mt-1">{item.detail}</div>
+              <div key={i} className="rounded-lg border border-white/[0.08] bg-black/25 px-3 py-3">
+                <div className="mb-1 text-[9px] font-black uppercase tracking-widest text-white/30">{item.label}</div>
+                <div className="text-xs font-bold uppercase tracking-tight text-white">{item.val}</div>
+                <div className="mt-1 text-[9px] font-bold uppercase tracking-tighter text-[#C8A2C8]/45">{item.detail}</div>
               </div>
             ))}
           </div>
         </Card>
 
         {/* CTA */}
-        <div className="lg:col-span-5 relative overflow-hidden p-8 border border-[#C8A2C8]/30 flex flex-col justify-between" style={{ background: 'rgba(200,162,200,0.05)' }}>
-          <div className="absolute top-0 right-0 p-4 opacity-10 rotate-12">
-            <Lock size={80} />
+        <div className="relative flex flex-col justify-between overflow-hidden rounded-lg border border-[#C8A2C8]/25 bg-[#C8A2C8]/[0.06] p-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] lg:col-span-5 lg:p-8">
+          <div className="pointer-events-none absolute right-0 top-0 p-4 opacity-[0.07]" aria-hidden>
+            <Lock size={72} />
           </div>
-          <div className="relative z-10">
-            <h2 className="text-xl font-black text-white uppercase tracking-tighter mb-2">
-              {isLoggedIn ? 'Unlock the Full Optimization Sequence' : 'What Happens Next'}
-            </h2>
-            <p className="text-xs text-white/40 mb-8 uppercase font-bold leading-relaxed tracking-tighter">
-              Start daily tracking now, upload bloodwork when ready, and get a personalized 90-day protocol built from your data.
-            </p>
-            <div className="space-y-3">
-              <Link href="/convert"
-                className="flex items-center justify-center w-full py-4 bg-[#C8A2C8] text-black font-black text-xs tracking-[4px] uppercase hover:bg-[#A882A8] transition-all">
-                See What&apos;s Included <CaretRight size={16} className="ml-1" />
+          <div className="relative z-10 flex flex-col gap-6">
+            <div>
+              <h2 className="mb-2 text-xl font-black uppercase tracking-tighter text-white">
+                {isLoggedIn ? 'Unlock the Full Optimization Sequence' : 'What Happens Next'}
+              </h2>
+              <p className="text-xs font-bold uppercase leading-relaxed tracking-tighter text-white/45">
+                Start daily tracking now, upload bloodwork when ready, and get a personalized 90-day protocol built from your data.
+              </p>
+            </div>
+            <div className="flex flex-col gap-3">
+              <Link
+                href="/convert"
+                className="flex w-full items-center justify-center gap-1 rounded-lg bg-[#C8A2C8] py-4 text-xs font-black uppercase tracking-[0.22em] text-black transition-colors hover:bg-[#A882A8] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8A2C8]/50"
+              >
+                See What&apos;s Included <CaretRight size={16} aria-hidden />
               </Link>
               {isLoggedIn ? (
-                <Link href="/dashboard"
-                  className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
+                <Link
+                  href="/dashboard"
+                  className="flex w-full items-center justify-center rounded-lg border border-white/[0.12] py-3 text-[10px] font-black uppercase tracking-[0.18em] text-white/45 transition-colors hover:border-white/22 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+                >
                   Go to Dashboard
                 </Link>
               ) : (
-                <Link href="/login"
-                  className="flex items-center justify-center w-full py-3 border border-white/10 text-white/40 text-[10px] font-black tracking-[2px] uppercase hover:border-white/20 transition-all">
+                <Link
+                  href="/login"
+                  className="flex w-full items-center justify-center rounded-lg border border-white/[0.12] py-3 text-[10px] font-black uppercase tracking-[0.18em] text-white/45 transition-colors hover:border-white/22 hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+                >
                   Existing Member Sign In
                 </Link>
               )}
