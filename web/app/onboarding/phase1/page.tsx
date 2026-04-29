@@ -118,38 +118,37 @@ export default function Phase1Page() {
   const selectedType = BODY_TYPES.find(t => t.level === form.body_type_level);
 
   return (
-    <div className="max-w-2xl mx-auto px-4 pb-20">
-
+    <div className="relative mx-auto max-w-3xl px-4 pb-24 lg:px-6">
       {/* HEADER & PROGRESS */}
-      <header className="mb-12">
-        <div className="flex gap-1.5 mb-6">
+      <header className="mb-10 border-b border-white/10 pb-8">
+        <div className="mb-6 flex gap-1.5">
           {[1, 2, 3, 4, 5].map(i => (
             <div key={i} className={cn(
-              'h-1 flex-1 rounded-full transition-all duration-500',
-              i === 1 ? 'bg-[#C8A2C8] shadow-[0_0_8px_rgba(200,162,200,0.4)]' : 'bg-white/5'
+              'h-1 flex-1 rounded-sm transition-all duration-500',
+              i === 1 ? 'bg-[#C8A2C8] shadow-[0_0_12px_rgba(200,162,200,0.35)]' : 'bg-white/[0.06]'
             )} />
           ))}
         </div>
-        <div className="inline-block px-2 py-0.5 bg-white/5 border border-white/10 text-[10px] font-black tracking-[2px] uppercase text-white/40 mb-4">
+        <div className="mb-4 inline-flex items-center border border-[#C8A2C8]/25 bg-[#C8A2C8]/10 px-2.5 py-1 text-[10px] font-black tracking-[2px] text-[#C8A2C8] uppercase">
           Phase 01 / Biometric Intake
         </div>
-        <h1 className="text-3xl font-black text-white tracking-tight mb-2">Build Your Profile</h1>
-        <p className="text-sm text-white/40">Physical data is used to calibrate hormonal reference ranges for your age and body composition.</p>
+        <h1 className="mb-2 text-3xl font-black tracking-tight text-white">Build Your Profile</h1>
+        <p className="text-sm text-white/45">Physical data is used to calibrate hormonal reference ranges for your age and body composition.</p>
       </header>
 
-      <form onSubmit={handleSubmit} className="space-y-6">
+      <form onSubmit={handleSubmit} className="space-y-8">
 
         {/* PHYSICAL STATS */}
-        <Card className="p-6" style={{ background: 'rgba(255,255,255,0.02)', border: '1px solid rgba(255,255,255,0.05)' }}>
-          <div className="flex items-center justify-between mb-6">
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#C8A2C8]">Physical Stats</h2>
-            <div className="flex p-0.5 bg-black border border-white/10">
+        <Card className="rounded-lg p-6 lg:p-7" topAccent="rgba(200,162,200,0.55)">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-[10px] font-black tracking-[3px] text-[#C8A2C8] uppercase">Physical Stats</h2>
+            <div className="flex rounded-md border border-white/10 bg-black/40 p-0.5 backdrop-blur-sm">
               {(['metric', 'imperial'] as const).map(u => (
                 <button key={u} type="button"
                   onClick={() => toggleUnit(u)}
                   className={cn(
-                    'px-3 py-1 text-[9px] font-black uppercase tracking-widest transition-all',
-                    form.unit_preference === u ? 'bg-white/10 text-white' : 'text-white/20 hover:text-white/40'
+                    'rounded-[5px] px-3 py-1.5 text-[9px] font-black uppercase tracking-widest transition-all',
+                    form.unit_preference === u ? 'bg-white/[0.12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.06)]' : 'text-white/25 hover:text-white/45'
                   )}>
                   {u}
                 </button>
@@ -182,8 +181,8 @@ export default function Phase1Page() {
         {/* BODY TYPE */}
         <section className="space-y-4">
           <div>
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#C8A2C8] mb-1">Visual Composition</h2>
-            <p className="text-xs text-white/40">Select the physique that most closely matches your current state.</p>
+            <h2 className="mb-1 text-[10px] font-black tracking-[3px] text-[#C8A2C8] uppercase">Visual Composition</h2>
+            <p className="text-xs text-white/45">Select the physique that most closely matches your current state.</p>
           </div>
 
           <div className="grid gap-2">
@@ -193,10 +192,12 @@ export default function Phase1Page() {
                 <button key={bt.level} type="button"
                   onClick={() => setForm(p => ({ ...p, body_type_level: bt.level }))}
                   className={cn(
-                    'group flex items-center gap-4 p-4 border text-left transition-all duration-200 relative overflow-hidden',
-                    isSelected ? 'bg-white/[0.04] border-white/20' : 'bg-transparent border-white/5 hover:border-white/10'
+                    'group relative flex items-center gap-4 overflow-hidden rounded-lg border p-4 text-left transition-all duration-200',
+                    isSelected
+                      ? 'border-white/[0.18] bg-white/[0.045] shadow-[inset_0_1px_0_rgba(255,255,255,0.04)]'
+                      : 'border-white/[0.07] bg-[#141414]/60 hover:border-white/12 hover:bg-white/[0.02]'
                   )}>
-                  {isSelected && <div className="absolute left-0 top-0 bottom-0 w-1" style={{ backgroundColor: bt.color }} />}
+                  {isSelected && <div className="absolute top-0 bottom-0 left-0 w-1 rounded-l-lg" style={{ backgroundColor: bt.color }} />}
 
                   <div className="flex flex-col min-w-[110px]">
                     <span className="text-[10px] font-black uppercase tracking-widest mb-1" style={{ color: bt.color }}>{bt.name}</span>
@@ -208,8 +209,8 @@ export default function Phase1Page() {
                   <div className="flex-1 text-[11px] text-white/40 leading-tight pr-4">{bt.markers}</div>
 
                   <div className={cn(
-                    'w-6 h-6 rounded-full border flex items-center justify-center shrink-0 transition-all',
-                    isSelected ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black' : 'border-white/10 text-transparent'
+                    'flex size-6 shrink-0 items-center justify-center rounded-md border transition-all',
+                    isSelected ? 'border-[#C8A2C8] bg-[#C8A2C8] text-black' : 'border-white/12 text-transparent'
                   )}>
                     <Check size={14} strokeWidth={4} />
                   </div>
@@ -219,32 +220,34 @@ export default function Phase1Page() {
           </div>
 
           {/* Muscle override */}
-          <div className="pt-4 border-t border-white/5">
-            <p className="text-[9px] font-black uppercase tracking-[2px] text-white/20 mb-3">Optional modifier</p>
+          <div className="border-t border-white/[0.07] pt-4">
+            <p className="mb-3 text-[9px] font-black uppercase tracking-[2px] text-white/25">Optional modifier</p>
           <div onClick={() => setForm(p => ({ ...p, high_muscle: !p.high_muscle }))}
             className={cn(
-              'cursor-pointer p-4 border transition-all flex items-start gap-4',
-              form.high_muscle ? 'bg-[#C8A2C8]/5 border-[#C8A2C8]/30' : 'bg-white/[0.02] border-white/5 hover:border-white/10'
+              'flex cursor-pointer items-start gap-4 rounded-lg border p-4 transition-all',
+              form.high_muscle
+                ? 'border-[#C8A2C8]/35 bg-[#C8A2C8]/[0.07] shadow-[inset_0_1px_0_rgba(200,162,200,0.12)]'
+                : 'border-white/[0.07] bg-[#141414]/40 hover:border-white/12'
             )}>
             <div className={cn(
-              'p-2 border',
-              form.high_muscle ? 'border-[#C8A2C8] text-[#C8A2C8]' : 'border-white/10 text-white/20'
+              'rounded-md border p-2',
+              form.high_muscle ? 'border-[#C8A2C8] text-[#C8A2C8]' : 'border-white/12 text-white/25'
             )}>
               <Barbell size={20} />
             </div>
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-1">
                 <span className="text-xs font-black uppercase tracking-widest text-white">Significant Muscle Mass</span>
-                {form.high_muscle && <span className="text-[9px] font-black text-[#C8A2C8] bg-[#C8A2C8]/10 px-1.5 py-0.5">Active</span>}
+                {form.high_muscle && <span className="rounded-md bg-[#C8A2C8]/12 px-1.5 py-0.5 text-[9px] font-black text-[#C8A2C8]">Active</span>}
               </div>
-              <p className="text-[11px] text-white/40 leading-relaxed">
+              <p className="text-[11px] leading-relaxed text-white/45">
                 Advanced strength training history (2+ years). High lean mass adjusts androgen receptor density calculations in your final score.
               </p>
             </div>
           </div>
 
           {form.high_muscle && selectedType && selectedType.level >= 5 && (
-            <div className="px-4 py-3 bg-[rgba(200,162,200,0.06)] border border-[rgba(200,162,200,0.2)] mt-2">
+            <div className="mt-2 rounded-lg border border-[rgba(200,162,200,0.22)] bg-[rgba(200,162,200,0.06)] px-4 py-3">
               <p className="text-xs text-[#C8A2C8]">Muscle override active — body fat risk contribution halved for your score.</p>
             </div>
           )}
@@ -252,20 +255,20 @@ export default function Phase1Page() {
         </section>
 
         {/* MEDICAL CONDITIONS */}
-        <section className="space-y-4 pt-2">
+        <section className="space-y-4 pt-1">
           <div>
-            <h2 className="text-[10px] font-black tracking-[3px] uppercase text-[#C8A2C8] mb-1">Clinical Background</h2>
-            <p className="text-xs text-white/40">Select any diagnosed conditions that may influence biomarker baselines.</p>
+            <h2 className="mb-1 text-[10px] font-black tracking-[3px] text-[#C8A2C8] uppercase">Clinical Background</h2>
+            <p className="text-xs text-white/45">Select any diagnosed conditions that may influence biomarker baselines.</p>
           </div>
 
           <div className="flex flex-wrap gap-2">
             <button type="button"
               onClick={() => setForm(p => ({ ...p, medical_conditions: [] }))}
               className={cn(
-                'px-4 py-2 text-[11px] font-bold border transition-all uppercase tracking-wider',
+                'rounded-lg border px-4 py-2 text-[11px] font-bold uppercase tracking-wider transition-all',
                 form.medical_conditions.length === 0
-                  ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black'
-                  : 'bg-white/[0.02] border-white/5 text-white/40 hover:border-white/20 hover:text-white/60'
+                  ? 'border-[#C8A2C8] bg-[#C8A2C8] text-black shadow-[0_8px_24px_rgba(200,162,200,0.18)]'
+                  : 'border-white/[0.08] bg-[#141414]/50 text-white/40 hover:border-white/18 hover:text-white/60'
               )}>
               None
             </button>
@@ -274,10 +277,10 @@ export default function Phase1Page() {
               return (
                 <button key={c} type="button" onClick={() => toggleCondition(c)}
                   className={cn(
-                    'px-4 py-2 text-[11px] font-bold border transition-all uppercase tracking-wider',
+                    'rounded-lg border px-4 py-2 text-[11px] font-bold uppercase tracking-wider transition-all',
                     active
-                      ? 'bg-[#C8A2C8] border-[#C8A2C8] text-black'
-                      : 'bg-white/[0.02] border-white/5 text-white/40 hover:border-white/20 hover:text-white/60'
+                      ? 'border-[#C8A2C8] bg-[#C8A2C8] text-black shadow-[0_6px_20px_rgba(200,162,200,0.15)]'
+                      : 'border-white/[0.08] bg-[#141414]/50 text-white/40 hover:border-white/18 hover:text-white/60'
                   )}>
                   {c}
                 </button>
@@ -287,13 +290,13 @@ export default function Phase1Page() {
         </section>
 
         {/* ACTIONS */}
-        <div className="pt-8 space-y-4">
+        <div className="space-y-4 border-t border-white/[0.07] pt-8">
           {error && (
-            <div className="flex items-center gap-2 p-3 bg-red-500/10 border border-red-500/20 text-red-500 text-[11px] font-bold uppercase tracking-widest">
+            <div className="flex items-center gap-2 rounded-lg border border-red-500/25 bg-red-500/[0.08] p-3 text-[11px] font-bold tracking-widest text-red-400 uppercase">
               <Info size={14} /> {error}
             </div>
           )}
-          <Button type="submit" loading={loading} fullWidth className="py-5 flex items-center justify-center gap-2">
+          <Button type="submit" loading={loading} fullWidth className="flex items-center justify-center gap-2 rounded-lg py-5 shadow-[0_10px_36px_rgba(200,162,200,0.2)]">
             {!loading && <>Execute Phase 02 <CaretRight size={16} /></>}
           </Button>
           <p className="text-[9px] text-center text-white/20 uppercase tracking-[2px]">
