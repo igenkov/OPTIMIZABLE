@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { CaretRight } from '@phosphor-icons/react/dist/ssr';
 import { HomeVideoBackground } from '@/components/home/HomeVideoBackground';
+import { MobileNav } from '@/components/home/MobileNav';
 
 export default async function Home() {
   const supabase = await createClient();
@@ -79,30 +80,33 @@ export default async function Home() {
           </Link>
 
           <div className="flex shrink-0 items-center gap-3 sm:gap-6">
-            <Link
-              href="/blog"
-              className="font-display hidden text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:inline sm:text-sm sm:tracking-wide"
-            >
-              Blog
-            </Link>
-            <Link
-              href="/faq"
-              className="font-display hidden text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:inline sm:text-sm sm:tracking-wide"
-            >
-              FAQ
-            </Link>
-            <Link
-              href="/how-it-works"
-              className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:text-sm sm:tracking-wide"
-            >
-              How It Works
-            </Link>
-            <Link
-              href="/login"
-              className="font-display text-[11px] font-bold uppercase tracking-[0.12em] text-label transition-colors duration-300 hover:text-white sm:text-sm sm:tracking-wide"
-            >
-              Sign In
-            </Link>
+            <div className="hidden items-center gap-6 sm:flex">
+              <Link
+                href="/blog"
+                className="font-display text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white"
+              >
+                Blog
+              </Link>
+              <Link
+                href="/faq"
+                className="font-display text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white"
+              >
+                FAQ
+              </Link>
+              <Link
+                href="/how-it-works"
+                className="font-display text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white"
+              >
+                How It Works
+              </Link>
+              <Link
+                href="/login"
+                className="font-display text-sm font-bold uppercase tracking-wide text-label transition-colors duration-300 hover:text-white"
+              >
+                Sign In
+              </Link>
+            </div>
+            <MobileNav />
           </div>
         </nav>
       </header>
