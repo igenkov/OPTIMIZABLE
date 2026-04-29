@@ -7,11 +7,14 @@ const DEFAULT_SRC = '/hero-bg.mp4';
 
 export function HomeVideoBackground({
   src = DEFAULT_SRC,
+  mobilePortraitSrc,
   overlayOpacityClassName = 'bg-bg/72',
   /** Soft darkening toward edges — hides obvious bands when using `object-contain`. */
   edgeVignette = true,
 }: {
   src?: string;
+  /** Optional source used only on portrait mobile screens. */
+  mobilePortraitSrc?: string;
   /** Tailwind bg-* classes for the fixed tint above video (below dots/grids). */
   overlayOpacityClassName?: string;
   edgeVignette?: boolean;
@@ -55,6 +58,13 @@ export function HomeVideoBackground({
           preload="metadata"
           aria-hidden
         >
+          {mobilePortraitSrc ? (
+            <source
+              src={mobilePortraitSrc}
+              type="video/mp4"
+              media="(max-width: 1023px) and (orientation: portrait)"
+            />
+          ) : null}
           <source src={src} type="video/mp4" />
         </video>
         {edgeVignette && (
