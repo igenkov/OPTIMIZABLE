@@ -134,39 +134,39 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          {/* Two zones */}
-          <div className="flex flex-col sm:flex-row divide-y sm:divide-y-0 sm:divide-x divide-white/[0.08]">
+          {/* Two zones — grid on lg keeps risk + lab scores aligned and equal width */}
+          <div className="grid grid-cols-1 divide-y divide-white/[0.08] lg:grid-cols-2 lg:divide-x lg:divide-y-0">
 
             {/* Zone A — Risk Coefficient */}
-            <div className="flex-1 p-8 flex flex-col gap-5 bg-white/[0.01]">
-              <div>
-                <div className="text-[10px] font-black uppercase tracking-[4px] text-[#C8A2C8] mb-1.5">Risk Coefficient</div>
-                <div className="text-[11px] text-white/40 leading-relaxed">
+            <div className="flex min-h-0 min-w-0 flex-col gap-4 bg-white/[0.01] p-6 sm:p-8">
+              <div className="min-w-0">
+                <div className="mb-1.5 text-[10px] font-black uppercase tracking-[4px] text-[#C8A2C8]">Risk Coefficient</div>
+                <div className="text-[11px] leading-relaxed text-white/40">
                   Objective score derived from your profile, lifestyle inputs, and reported symptoms. A predictive indicator — not a clinical assessment.
                 </div>
               </div>
-              <div className="flex items-center gap-6">
+              <div className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-x-5 gap-y-2">
                 <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
-                <div>
-                  <div className="text-[10px] font-black uppercase tracking-[3px] mb-1 text-white/30">Risk Level</div>
-                  <div className="text-2xl font-black uppercase tracking-tight mb-2" style={{ color }}>{label}</div>
+                <div className="min-w-0 pt-0.5">
+                  <div className="mb-1 text-[10px] font-black uppercase tracking-[3px] text-white/30">Risk Level</div>
+                  <div className="mb-2 text-2xl font-black uppercase tracking-tight" style={{ color }}>{label}</div>
                   <div className="flex flex-wrap gap-1.5">
                     {['Profile', 'Lifestyle', 'Symptoms'].map(src => (
-                      <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.05] border border-white/[0.1] text-white/35">{src}</span>
+                      <span key={src} className="border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white/35">{src}</span>
                     ))}
                   </div>
                   {excluded && (
-                    <p className="text-[10px] text-white/30 italic mt-2">TRT/Anabolic monitoring mode.</p>
+                    <p className="mt-2 text-[10px] italic text-white/30">TRT/Anabolic monitoring mode.</p>
                   )}
                 </div>
               </div>
             </div>
 
             {/* Zone B — Hormonal Health Status */}
-            <div className="flex-1 p-8 flex flex-col gap-5 bg-white/[0.015]">
-              <div>
-                <div className="text-[10px] font-black uppercase tracking-[4px] text-[#C8A2C8] mb-1.5">Hormonal Health Status</div>
-                <div className="text-[11px] text-white/40 leading-relaxed">
+            <div className="flex min-h-0 min-w-0 flex-col gap-4 bg-white/[0.015] p-6 sm:p-8">
+              <div className="min-w-0">
+                <div className="mb-1.5 text-[10px] font-black uppercase tracking-[4px] text-[#C8A2C8]">Hormonal Health Status</div>
+                <div className="text-[11px] leading-relaxed text-white/40">
                   Actual hormonal status, derived from your bloodwork results in correlation with your full profile.
                 </div>
               </div>
@@ -174,14 +174,14 @@ export default async function DashboardPage() {
               {/* Free tier — blurred teaser using risk score */}
               {!isPremium && (
                 <div style={{ filter: 'blur(7px)', pointerEvents: 'none', userSelect: 'none' }}>
-                  <div className="flex items-center gap-6">
+                  <div className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-x-5 gap-y-2">
                     <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
-                    <div>
-                      <div className="text-[10px] font-black uppercase tracking-[3px] mb-1 text-white/30">Health Status</div>
-                      <div className="text-2xl font-black uppercase tracking-tight mb-2" style={{ color }}>{label}</div>
+                    <div className="min-w-0 pt-0.5">
+                      <div className="mb-1 text-[10px] font-black uppercase tracking-[3px] text-white/30">Health Status</div>
+                      <div className="mb-2 text-2xl font-black uppercase tracking-tight" style={{ color }}>{label}</div>
                       <div className="flex flex-wrap gap-1.5">
                         {['Bloodwork', 'Profile', 'Correlation'].map(src => (
-                          <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.05] border border-white/[0.1] text-white/35">{src}</span>
+                          <span key={src} className="border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white/35">{src}</span>
                         ))}
                       </div>
                     </div>
@@ -191,14 +191,14 @@ export default async function DashboardPage() {
 
               {/* Premium + has report — real data */}
               {isPremium && hasReport && (
-                <div className="flex items-center gap-6">
+                <div className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-x-5 gap-y-2">
                   <ScoreRing score={labHealthScore ?? 0} size={110} strokeWidth={11} color={labColor} />
-                  <div>
-                    <div className="text-[10px] font-black uppercase tracking-[3px] mb-1 text-white/30">Health Status</div>
-                    <div className="text-2xl font-black uppercase tracking-tight mb-2" style={{ color: labColor }}>{labLabel}</div>
+                  <div className="min-w-0 pt-0.5">
+                    <div className="mb-1 text-[10px] font-black uppercase tracking-[3px] text-white/30">Health Status</div>
+                    <div className="mb-2 text-2xl font-black uppercase tracking-tight" style={{ color: labColor }}>{labLabel}</div>
                     <div className="flex flex-wrap gap-1.5">
                       {['Bloodwork', 'Profile', 'Correlation'].map(src => (
-                        <span key={src} className="text-[8px] font-bold uppercase tracking-widest px-2 py-0.5 bg-white/[0.05] border border-white/[0.1] text-white/35">{src}</span>
+                        <span key={src} className="border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white/35">{src}</span>
                       ))}
                     </div>
                   </div>
@@ -207,13 +207,13 @@ export default async function DashboardPage() {
 
               {/* Premium + no report — awaiting state */}
               {isPremium && !hasReport && (
-                <div className="flex-1 flex flex-col items-center justify-center gap-4 py-4">
-                  <div className="w-[110px] h-[110px] rounded-full border-[11px] border-white/[0.05] flex items-center justify-center shrink-0">
+                <div className="flex flex-col items-center justify-center gap-4 py-2 sm:flex-row sm:items-start sm:justify-start sm:gap-6">
+                  <div className="flex h-[110px] w-[110px] shrink-0 items-center justify-center rounded-full border-[11px] border-white/[0.05]">
                     <Flask weight="duotone" size={30} className="text-white/15" />
                   </div>
-                  <div className="text-center">
-                    <div className="text-[11px] font-black text-white/30 uppercase tracking-widest mb-1">Awaiting Bloodwork</div>
-                    <div className="text-[11px] text-white/20 leading-relaxed max-w-[180px]">
+                  <div className="max-w-[220px] text-center sm:min-w-0 sm:flex-1 sm:pt-1 sm:text-left">
+                    <div className="mb-1 text-[11px] font-black uppercase tracking-widest text-white/30">Awaiting Bloodwork</div>
+                    <div className="text-[11px] leading-relaxed text-white/20">
                       Upload your lab results to compute your actual hormonal health status.
                     </div>
                   </div>
