@@ -10,7 +10,7 @@ import { ExpandableFactors } from '@/components/ui/ExpandableFactors';
 import { Card } from '@/components/ui/Card';
 import { ScoreRing } from '@/components/ui/ScoreRing';
 import {
-  calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel, getRiskAction,
+  calculateRiskScore, getRiskLevel, getRiskColor, getRiskLabel,
   getKeyFactors, getPersonalizedPanel, getProtectiveFactors, isExcluded,
 } from '@/lib/scoring';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
@@ -114,14 +114,18 @@ export default async function DashboardPage() {
         </div>
       </div>
 
-      {/* ROW 1: Risk Score (7) + Biometrics (5) */}
+      {/* ROW 1: Risk + lab hero (wider) + Biometrics */}
       <div className="grid grid-cols-12 gap-4 lg:gap-6">
 
-        {/* Risk Score Hero */}
+        {/* Risk Score Hero — overflow visible so long labels are not clipped by Card */}
         <Card
-          className="col-span-12 lg:col-span-7 relative overflow-hidden"
+          className="relative col-span-12 min-w-0 lg:col-span-8"
           topAccent={level === 'critical' ? 'rgba(232,128,128,0.5)' : level === 'high' ? 'rgba(255,140,0,0.5)' : level === 'moderate' ? 'rgba(232,196,112,0.5)' : 'rgba(74,222,128,0.5)'}
-          style={{ borderRadius: '18px', boxShadow: '0 24px 70px rgba(0,0,0,0.35)' }}
+          style={{
+            borderRadius: '18px',
+            boxShadow: '0 24px 70px rgba(0,0,0,0.35)',
+            overflow: 'visible',
+          }}
         >
           {/* Top CTA — free tier only, above both zones */}
           {!isPremium && (
@@ -134,23 +138,29 @@ export default async function DashboardPage() {
             </div>
           )}
 
-          {/* Two zones — grid on lg keeps risk + lab scores aligned and equal width */}
-          <div className="grid grid-cols-1 divide-y divide-white/[0.08] lg:grid-cols-2 lg:divide-x lg:divide-y-0">
-
+          {/* Two zones: equal columns, min-w-0, vertical score stacks so narrow card width never clips rings vs labels */}
+          <div className="grid min-w-0 grid-cols-1 lg:grid-cols-2">
             {/* Zone A — Risk Coefficient */}
-            <div className="flex min-h-0 min-w-0 flex-col gap-4 bg-white/[0.01] p-6 sm:p-8">
-              <div className="min-w-0">
+            <div className="min-w-0 border-b border-white/[0.08] bg-white/[0.01] p-6 sm:p-8 lg:border-b-0 lg:border-r lg:pr-8">
+              <div className="mb-4 min-w-0">
                 <div className="mb-1.5 text-[10px] font-black uppercase tracking-[4px] text-[#C8A2C8]">Risk Coefficient</div>
                 <div className="text-[11px] leading-relaxed text-white/40">
                   Objective score derived from your profile, lifestyle inputs, and reported symptoms. A predictive indicator — not a clinical assessment.
                 </div>
               </div>
-              <div className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-x-5 gap-y-2">
-                <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
-                <div className="min-w-0 pt-0.5">
+              <div className="flex min-w-0 flex-col items-center gap-3 sm:items-start">
+                <div className="shrink-0 [&>div]:mx-auto sm:[&>div]:mx-0">
+                  <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
+                </div>
+                <div className="w-full min-w-0 text-center sm:text-left">
                   <div className="mb-1 text-[10px] font-black uppercase tracking-[3px] text-white/30">Risk Level</div>
-                  <div className="mb-2 text-2xl font-black uppercase tracking-tight" style={{ color }}>{label}</div>
-                  <div className="flex flex-wrap gap-1.5">
+                  <div
+                    className="mb-2 break-words text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl"
+                    style={{ color }}
+                  >
+                    {label}
+                  </div>
+                  <div className="flex flex-wrap justify-center gap-1.5 sm:justify-start">
                     {['Profile', 'Lifestyle', 'Symptoms'].map(src => (
                       <span key={src} className="border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white/35">{src}</span>
                     ))}
@@ -163,8 +173,8 @@ export default async function DashboardPage() {
             </div>
 
             {/* Zone B — Hormonal Health Status */}
-            <div className="flex min-h-0 min-w-0 flex-col gap-4 bg-white/[0.015] p-6 sm:p-8">
-              <div className="min-w-0">
+            <div className="min-w-0 bg-white/[0.015] p-6 sm:p-8 lg:pl-8">
+              <div className="mb-4 min-w-0">
                 <div className="mb-1.5 text-[10px] font-black uppercase tracking-[4px] text-[#C8A2C8]">Hormonal Health Status</div>
                 <div className="text-[11px] leading-relaxed text-white/40">
                   Actual hormonal status, derived from your bloodwork results in correlation with your full profile.
@@ -174,12 +184,14 @@ export default async function DashboardPage() {
               {/* Free tier — blurred teaser using risk score */}
               {!isPremium && (
                 <div style={{ filter: 'blur(7px)', pointerEvents: 'none', userSelect: 'none' }}>
-                  <div className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-x-5 gap-y-2">
-                    <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
-                    <div className="min-w-0 pt-0.5">
+                  <div className="flex min-w-0 flex-col items-center gap-3 sm:items-start">
+                    <div className="shrink-0 [&>div]:mx-auto sm:[&>div]:mx-0">
+                      <ScoreRing score={riskScore ?? 0} size={110} strokeWidth={11} color={color} />
+                    </div>
+                    <div className="w-full min-w-0 text-center sm:text-left">
                       <div className="mb-1 text-[10px] font-black uppercase tracking-[3px] text-white/30">Health Status</div>
-                      <div className="mb-2 text-2xl font-black uppercase tracking-tight" style={{ color }}>{label}</div>
-                      <div className="flex flex-wrap gap-1.5">
+                      <div className="mb-2 break-words text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl" style={{ color }}>{label}</div>
+                      <div className="flex flex-wrap justify-center gap-1.5 sm:justify-start">
                         {['Bloodwork', 'Profile', 'Correlation'].map(src => (
                           <span key={src} className="border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white/35">{src}</span>
                         ))}
@@ -191,12 +203,19 @@ export default async function DashboardPage() {
 
               {/* Premium + has report — real data */}
               {isPremium && hasReport && (
-                <div className="grid grid-cols-[110px_minmax(0,1fr)] items-start gap-x-5 gap-y-2">
-                  <ScoreRing score={labHealthScore ?? 0} size={110} strokeWidth={11} color={labColor} />
-                  <div className="min-w-0 pt-0.5">
+                <div className="flex min-w-0 flex-col items-center gap-3 sm:items-start">
+                  <div className="shrink-0 [&>div]:mx-auto sm:[&>div]:mx-0">
+                    <ScoreRing score={labHealthScore ?? 0} size={110} strokeWidth={11} color={labColor} />
+                  </div>
+                  <div className="w-full min-w-0 text-center sm:text-left">
                     <div className="mb-1 text-[10px] font-black uppercase tracking-[3px] text-white/30">Health Status</div>
-                    <div className="mb-2 text-2xl font-black uppercase tracking-tight" style={{ color: labColor }}>{labLabel}</div>
-                    <div className="flex flex-wrap gap-1.5">
+                    <div
+                      className="mb-2 break-words text-xl font-black uppercase leading-tight tracking-tight sm:text-2xl"
+                      style={{ color: labColor }}
+                    >
+                      {labLabel}
+                    </div>
+                    <div className="flex flex-wrap justify-center gap-1.5 sm:justify-start">
                       {['Bloodwork', 'Profile', 'Correlation'].map(src => (
                         <span key={src} className="border border-white/[0.1] bg-white/[0.05] px-2 py-0.5 text-[8px] font-bold uppercase tracking-widest text-white/35">{src}</span>
                       ))}
@@ -207,11 +226,11 @@ export default async function DashboardPage() {
 
               {/* Premium + no report — awaiting state */}
               {isPremium && !hasReport && (
-                <div className="flex flex-col items-center justify-center gap-4 py-2 sm:flex-row sm:items-start sm:justify-start sm:gap-6">
+                <div className="flex min-w-0 flex-col items-center gap-4 py-1 sm:flex-row sm:items-start sm:justify-start sm:gap-6">
                   <div className="flex h-[110px] w-[110px] shrink-0 items-center justify-center rounded-full border-[11px] border-white/[0.05]">
                     <Flask weight="duotone" size={30} className="text-white/15" />
                   </div>
-                  <div className="max-w-[220px] text-center sm:min-w-0 sm:flex-1 sm:pt-1 sm:text-left">
+                  <div className="min-w-0 max-w-[280px] text-center sm:flex-1 sm:pt-1 sm:text-left">
                     <div className="mb-1 text-[11px] font-black uppercase tracking-widest text-white/30">Awaiting Bloodwork</div>
                     <div className="text-[11px] leading-relaxed text-white/20">
                       Upload your lab results to compute your actual hormonal health status.
@@ -234,7 +253,7 @@ export default async function DashboardPage() {
         </Card>
 
         {/* Biometrics */}
-        <Card className="col-span-12 lg:col-span-5 p-8" style={{ background: 'rgba(255,255,255,0.015)', borderRadius: '18px', boxShadow: '0 24px 70px rgba(0,0,0,0.3)' }}>
+        <Card className="col-span-12 min-w-0 lg:col-span-4 p-8" style={{ background: 'rgba(255,255,255,0.015)', borderRadius: '18px', boxShadow: '0 24px 70px rgba(0,0,0,0.3)' }}>
           <div className="flex items-center gap-2 mb-8">
             <User weight="duotone" size={18} className="text-[#C8A2C8]" />
             <span className="text-[11px] font-black text-white uppercase tracking-[3px]">Biometrics</span>
