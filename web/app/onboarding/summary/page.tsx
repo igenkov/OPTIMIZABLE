@@ -204,7 +204,7 @@ export default function SummaryPage() {
         <div className="flex flex-col gap-5 lg:col-span-5">
           {!excluded && keyFactors.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 border-b border-white/[0.07] pb-2 text-[#C8A2C8]">
+              <div className="flex items-center gap-2 border-b border-[#E8C470]/25 pb-2 text-[#E8C470]">
                 <ClipboardText size={14} aria-hidden />
                 <h2 className="text-[10px] font-black tracking-[3px] uppercase">Critical Factors</h2>
               </div>
@@ -212,17 +212,17 @@ export default function SummaryPage() {
                 {keyFactors.map((f, i) => {
                   const open = openKeyFactors.has(i);
                   return (
-                    <div key={i} className="overflow-hidden rounded-lg border border-white/[0.08] bg-[#141414]/40 transition-colors hover:border-white/15">
+                    <div key={i} className="overflow-hidden rounded-lg border border-[#E8C470]/20 bg-[#141414]/40 transition-colors hover:border-[#E8C470]/35">
                       <button
                         type="button"
                         onClick={() => toggleSet(openKeyFactors, setOpenKeyFactors, i)}
-                        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C8A2C8]/40"
+                        className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#E8C470]/40"
                       >
-                        <span className="text-xs font-bold uppercase tracking-tight text-[#C8A2C8]">{f.title}</span>
-                        <CaretDown size={14} className={cn('shrink-0 text-white/35 transition-transform duration-200', open ? '' : '-rotate-90')} aria-hidden />
+                        <span className="text-xs font-bold uppercase tracking-tight text-white">{f.title}</span>
+                        <CaretDown size={14} className={cn('shrink-0 text-[#E8C470] transition-transform duration-200', open ? '' : '-rotate-90')} aria-hidden />
                       </button>
                       {open && (
-                        <p className="border-t border-white/[0.06] px-4 pb-3 pt-2 text-[11px] italic leading-relaxed text-white/50">{f.explanation}</p>
+                        <p className="border-t border-[#E8C470]/15 px-4 pb-3 pt-2 text-[11px] italic leading-relaxed text-white/65">{f.explanation}</p>
                       )}
                     </div>
                   );
@@ -233,7 +233,7 @@ export default function SummaryPage() {
 
           {!excluded && protectiveFactors.length > 0 && (
             <div className="space-y-3">
-              <div className="flex items-center gap-2 border-b border-white/[0.07] pb-2 text-[#4ade80]">
+              <div className="flex items-center gap-2 border-b border-[#4ade80]/30 pb-2 text-[#4ade80]">
                 <ShieldCheck size={14} aria-hidden />
                 <h2 className="text-[10px] font-black tracking-[3px] uppercase">Balancing Factors</h2>
               </div>
@@ -241,17 +241,17 @@ export default function SummaryPage() {
                 {protectiveFactors.map((f, i) => {
                   const open = openBalancing.has(i);
                   return (
-                    <div key={i} className="overflow-hidden rounded-lg border border-[#4ade80]/15 bg-[#4ade80]/[0.04] transition-colors hover:border-[#4ade80]/25">
+                    <div key={i} className="overflow-hidden rounded-lg border border-[#4ade80]/30 bg-[#141414]/40 transition-colors hover:border-[#4ade80]/45">
                       <button
                         type="button"
                         onClick={() => toggleSet(openBalancing, setOpenBalancing, i)}
                         className="flex w-full items-center justify-between gap-3 px-4 py-3 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#4ade80]/35"
                       >
-                        <span className="text-xs font-bold uppercase tracking-tight text-[#4ade80]">{f.title}</span>
-                        <CaretDown size={14} className={cn('shrink-0 text-white/35 transition-transform duration-200', open ? '' : '-rotate-90')} aria-hidden />
+                        <span className="text-xs font-bold uppercase tracking-tight text-white">{f.title}</span>
+                        <CaretDown size={14} className={cn('shrink-0 text-[#4ade80] transition-transform duration-200', open ? '' : '-rotate-90')} aria-hidden />
                       </button>
                       {open && (
-                        <p className="border-t border-[#4ade80]/10 px-4 pb-3 pt-2 text-[11px] italic leading-relaxed text-white/50">{f.explanation}</p>
+                        <p className="border-t border-[#4ade80]/20 px-4 pb-3 pt-2 text-[11px] italic leading-relaxed text-white/65">{f.explanation}</p>
                       )}
                     </div>
                   );
