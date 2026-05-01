@@ -366,27 +366,43 @@ async function callOpenAI(
   
   // Try multiple possible response formats from OpenAI Responses API
   let raw = '';
+  let formatUsed = 'unknown';
   
   // Format 1: Direct output_text
   if (data.output_text) {
     raw = data.output_text;
+    formatUsed = 'output_text';
   }
   // Format 2: output array with message type
   else if (data.output && Array.isArray(data.output)) {
     const message = data.output.find((o: { type: string }) => o.type === 'message');
     if (message?.content?.[0]?.text) {
       raw = message.content[0].text;
+      formatUsed = 'output[0].content[0].text';
     } else if (message?.content?.text) {
       raw = message.content.text;
+      formatUsed = 'output[0].content.text';
     }
   }
   // Format 3: choices array (older completion format fallback)
   else if (data.choices?.[0]?.message?.content) {
     raw = data.choices[0].message.content;
+    formatUsed = 'choices[0].message.content';
   }
   // Format 4: content directly as string
   else if (typeof data.content === 'string') {
     raw = data.content;
+    formatUsed = 'content';
+  }
+  
+  // Log extraction details
+  console.log(`OpenAI response: format=${formatUsed}, rawLength=${raw.length}, model=${model}`);
+  
+  // Check for truncation indicators
+  const message = data.output?.find?.((o: { type: string }) => o.type === 'message');
+  const finishReason = message?.status || message?.finish_reason || data.choices?.[0]?.finish_reason;
+  if (finishReason && finishReason !== 'completed') {
+    console.warn(`OpenAI finish reason: ${finishReason} - response may be incomplete`);
   }
   
   // If still empty, log what we got for debugging
@@ -408,18 +424,24 @@ async function callOpenAI(
       // Log the problematic text for debugging - show around the error position
       console.error('JSON parse failed. Original length:', text.length);
       
+      // Log the last 100 chars to see exactly where it was cut
+      console.error('Last 200 characters of response:', text.slice(-200));
+      console.error('Response ends with:', JSON.stringify(text.slice(-50)));
+      
       // Try to extract error position from the error message
       const posMatch = String(parseErr).match(/position\s+(\d+)/);
-      const errorPos = posMatch ? parseInt(posMatch[1], 10) : 0;
+      const errorPos = posMatch ? parseInt(posMatch[1], 10) : text.length;
       
-      if (errorPos > 0) {
-        const contextStart = Math.max(0, errorPos - 200);
-        const contextEnd = Math.min(text.length, errorPos + 200);
+      if (errorPos > 0 && errorPos < text.length) {
+        const contextStart = Math.max(0, errorPos - 100);
+        const contextEnd = Math.min(text.length, errorPos + 100);
         console.error(`Context around position ${errorPos}:`, text.slice(contextStart, contextEnd));
-        console.error('Character at error position:', text.charAt(errorPos));
-      } else {
-        console.error('Original (first 500 chars):', text.slice(0, 500));
-        console.error('Original (last 500 chars):', text.slice(-500));
+      }
+      
+      // Check if this looks like truncation (ends mid-value)
+      const endsMidString = text.slice(-100).match(/"[^"]*$/);
+      if (endsMidString) {
+        console.error('Response appears truncated - ends inside a quoted string');
       }
       
       throw new Error(`JSON parse error at position ${errorPos}: ${parseErr instanceof Error ? parseErr.message : 'Unknown error'}. Response length: ${text.length}`);
