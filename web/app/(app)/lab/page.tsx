@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
-import { coerceMarkerStatus, resolveMarkerId, submittedMarkerIdSet } from '@/lib/marker-ids';
+import { coerceMarkerStatus, mergedSubmittedMarkerIds, resolveMarkerId } from '@/lib/marker-ids';
 import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import type { IconWeight } from '@phosphor-icons/react';
 
@@ -82,11 +82,11 @@ export default async function LabPage() {
   const labP2 = (lifestyleRes.data ?? {}) as unknown as Phase2Data;
   const labP3 = (medHistRes.data ?? { steroid_history: 'never', trt_history: 'never' }) as unknown as Phase3Data;
   const labSymptomIds: string[] = (symptomsRes.data?.symptoms_selected as string[] | undefined) ?? [];
+  const labExcluded = Boolean(labP1) && isExcluded(labP3);
   let labRecommendedCount = 0;
   let labPanel: ReturnType<typeof getPersonalizedPanel> | null = null;
   if (labP1) {
-    const excluded = isExcluded(labP3);
-    if (excluded) {
+    if (labExcluded) {
       labRecommendedCount = TRT_PANEL_IDS.length;
     } else {
       labPanel = getPersonalizedPanel(labP1, labP2, labP3, labSymptomIds);
@@ -95,6 +95,28 @@ export default async function LabPage() {
   }
   const latest   = typedReports[typedReports.length - 1] ?? null;
   const previous = typedReports.length > 1 ? typedReports[typedReports.length - 2] : null;
+
+  let latestPanelValues: Record<string, unknown> | null = null;
+  if (latest?.bloodwork_panel_id) {
+    const { data: panelRow } = await supabase
+      .from('bloodwork_panels')
+      .select('values')
+      .eq('id', latest.bloodwork_panel_id)
+      .single();
+    latestPanelValues = (panelRow?.values as Record<string, unknown> | null) ?? null;
+  }
+
+  const submittedUnionForLatest = latest
+    ? mergedSubmittedMarkerIds(latest.marker_analysis, latestPanelValues)
+    : new Set<string>();
+
+  const panelsFilledRecommended = (() => {
+    if (!latest || labRecommendedCount === 0) return 0;
+    if (labExcluded) return TRT_PANEL_IDS.filter(id => submittedUnionForLatest.has(id)).length;
+    if (!labPanel) return submittedUnionForLatest.size;
+    const wantIds = [...labPanel.essential, ...labPanel.recommended].map(m => m.id);
+    return wantIds.filter(id => submittedUnionForLatest.has(id)).length;
+  })();
 
   const prevMarkers: Record<string, number> = {};
   if (previous?.marker_analysis) {
@@ -247,7 +269,7 @@ export default async function LabPage() {
       {/* Panel completeness note */}
       {labRecommendedCount > 0 && (
         <PanelCompletenessNote
-          submittedCount={latest.marker_analysis?.length ?? 0}
+          submittedCount={panelsFilledRecommended}
           recommendedCount={labRecommendedCount}
         />
       )}
@@ -329,7 +351,7 @@ export default async function LabPage() {
       {/* ── Recommended Next Tests ── */}
       {(() => {
         if (!labPanel) return null;
-        const submitted = submittedMarkerIdSet(latest.marker_analysis);
+        const submitted = submittedUnionForLatest;
         const essentialGaps = labPanel.essential.filter(m => !submitted.has(m.id));
         const recommendedGaps = labPanel.recommended.filter(m => !submitted.has(m.id));
         const extendedGaps = labPanel.extended.filter(m => !submitted.has(m.id)).slice(0, 5);

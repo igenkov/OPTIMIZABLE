@@ -39,6 +39,29 @@ export function submittedMarkerIdSet(
   return ids;
 }
 
+/** Keys from stored panel `values` (canonical ids from upload). */
+export function submittedIdsFromPanelValues(
+  values: Record<string, unknown> | null | undefined,
+): Set<string> {
+  const ids = new Set<string>();
+  if (!values || typeof values !== 'object') return ids;
+  for (const key of Object.keys(values)) {
+    const id = resolveMarkerId(key);
+    if (id) ids.add(id);
+  }
+  return ids;
+}
+
+/** Union: markers in analysis JSON and/or keys present on the submitted bloodwork panel. */
+export function mergedSubmittedMarkerIds(
+  markerAnalysis: Array<{ marker: string }> | null | undefined,
+  panelValues: Record<string, unknown> | null | undefined,
+): Set<string> {
+  const s = submittedMarkerIdSet(markerAnalysis);
+  for (const id of submittedIdsFromPanelValues(panelValues)) s.add(id);
+  return s;
+}
+
 /** Map legacy model status strings to the three UI tiers. */
 export function coerceMarkerStatus(status: string): MarkerStatus {
   if (status === 'optimal' || status === 'suboptimal' || status === 'out_of_range') return status;
