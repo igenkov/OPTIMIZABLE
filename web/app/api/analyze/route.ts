@@ -363,7 +363,38 @@ async function callOpenAI(
   }
 
   const data = await response.json();
-  const raw = data.output_text ?? data.output?.find((o: { type: string }) => o.type === 'message')?.content?.[0]?.text ?? '';
+  
+  // Try multiple possible response formats from OpenAI Responses API
+  let raw = '';
+  
+  // Format 1: Direct output_text
+  if (data.output_text) {
+    raw = data.output_text;
+  }
+  // Format 2: output array with message type
+  else if (data.output && Array.isArray(data.output)) {
+    const message = data.output.find((o: { type: string }) => o.type === 'message');
+    if (message?.content?.[0]?.text) {
+      raw = message.content[0].text;
+    } else if (message?.content?.text) {
+      raw = message.content.text;
+    }
+  }
+  // Format 3: choices array (older completion format fallback)
+  else if (data.choices?.[0]?.message?.content) {
+    raw = data.choices[0].message.content;
+  }
+  // Format 4: content directly as string
+  else if (typeof data.content === 'string') {
+    raw = data.content;
+  }
+  
+  // If still empty, log what we got for debugging
+  if (!raw) {
+    console.error('Unexpected OpenAI response structure:', JSON.stringify(data).slice(0, 1000));
+    throw new Error('Empty response from OpenAI API');
+  }
+  
   const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
   
   // Try parsing, repair if needed
@@ -374,11 +405,24 @@ async function callOpenAI(
     try {
       return { parsed: JSON.parse(repaired), model };
     } catch (repairErr) {
-      // Log the problematic text for debugging (truncated)
+      // Log the problematic text for debugging - show around the error position
       console.error('JSON parse failed. Original length:', text.length);
-      console.error('Original (first 500 chars):', text.slice(0, 500));
-      console.error('Repaired (first 500 chars):', repaired.slice(0, 500));
-      throw new Error(`JSON parse error: ${parseErr instanceof Error ? parseErr.message : 'Unknown error'}. Response may have been truncated.`);
+      
+      // Try to extract error position from the error message
+      const posMatch = String(parseErr).match(/position\s+(\d+)/);
+      const errorPos = posMatch ? parseInt(posMatch[1], 10) : 0;
+      
+      if (errorPos > 0) {
+        const contextStart = Math.max(0, errorPos - 200);
+        const contextEnd = Math.min(text.length, errorPos + 200);
+        console.error(`Context around position ${errorPos}:`, text.slice(contextStart, contextEnd));
+        console.error('Character at error position:', text.charAt(errorPos));
+      } else {
+        console.error('Original (first 500 chars):', text.slice(0, 500));
+        console.error('Original (last 500 chars):', text.slice(-500));
+      }
+      
+      throw new Error(`JSON parse error at position ${errorPos}: ${parseErr instanceof Error ? parseErr.message : 'Unknown error'}. Response length: ${text.length}`);
     }
   }
 }
