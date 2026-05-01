@@ -302,6 +302,37 @@ function getRatioKey(name: string): string | null {
   return null;
 }
 
+/* ── JSON repair helper ── */
+function repairJSON(text: string): string {
+  // Remove markdown code blocks
+  let cleaned = text.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
+  
+  // Try to fix unterminated strings by truncating at the last complete property
+  // Find the last complete "key": "value" or "key": number pattern
+  const lastCompleteMatch = cleaned.match(/,\s*"[^"]+"\s*:\s*(?:"[^"]*"|\d+(?:\.\d+)?|true|false|null)\s*(?=,|$)/g);
+  if (lastCompleteMatch && lastCompleteMatch.length > 0) {
+    const lastMatch = lastCompleteMatch[lastCompleteMatch.length - 1];
+    const lastIndex = cleaned.lastIndexOf(lastMatch) + lastMatch.length;
+    if (lastIndex < cleaned.length) {
+      cleaned = cleaned.slice(0, lastIndex);
+    }
+  }
+  
+  // Remove trailing commas before closing braces/brackets
+  cleaned = cleaned.replace(/,\s*([}\]])/g, '$1');
+  
+  // Ensure the JSON is properly closed
+  const openBraces = (cleaned.match(/\{/g) || []).length;
+  const closeBraces = (cleaned.match(/\}/g) || []).length;
+  const openBrackets = (cleaned.match(/\[/g) || []).length;
+  const closeBrackets = (cleaned.match(/\]/g) || []).length;
+  
+  for (let i = 0; i < openBraces - closeBraces; i++) cleaned += '}';
+  for (let i = 0; i < openBrackets - closeBrackets; i++) cleaned += ']';
+  
+  return cleaned;
+}
+
 /* ── OpenAI Responses API call helper ── */
 async function callOpenAI(
   prompt: string,
@@ -334,7 +365,22 @@ async function callOpenAI(
   const data = await response.json();
   const raw = data.output_text ?? data.output?.find((o: { type: string }) => o.type === 'message')?.content?.[0]?.text ?? '';
   const text = raw.replace(/^```(?:json)?\s*/i, '').replace(/\s*```$/i, '').trim();
-  return { parsed: JSON.parse(text), model };
+  
+  // Try parsing, repair if needed
+  try {
+    return { parsed: JSON.parse(text), model };
+  } catch (parseErr) {
+    const repaired = repairJSON(text);
+    try {
+      return { parsed: JSON.parse(repaired), model };
+    } catch (repairErr) {
+      // Log the problematic text for debugging (truncated)
+      console.error('JSON parse failed. Original length:', text.length);
+      console.error('Original (first 500 chars):', text.slice(0, 500));
+      console.error('Repaired (first 500 chars):', repaired.slice(0, 500));
+      throw new Error(`JSON parse error: ${parseErr instanceof Error ? parseErr.message : 'Unknown error'}. Response may have been truncated.`);
+    }
+  }
 }
 
 /* ── Output validation — triggers Pro fallback ── */
