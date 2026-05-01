@@ -5,6 +5,7 @@ import { createClient } from '@/lib/supabase/client';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
 import { Cpu, Dna, ShieldCheck, Lightning, CircleNotch, Check } from '@phosphor-icons/react';
+import { resolveMarkerId } from '@/lib/marker-ids';
 
 const LOG_MESSAGES = [
   'Initializing neural biomarker engine...',
@@ -145,12 +146,13 @@ export default function LabAnalyzePage() {
           if (initialAnalysis?.marker_analysis) {
             const initialMap: Record<string, number> = {};
             for (const m of initialAnalysis.marker_analysis as { marker: string; value: number }[]) {
-              initialMap[m.marker] = m.value;
+              initialMap[resolveMarkerId(m.marker)] = m.value;
             }
             const deltas: { marker: string; delta: number }[] = [];
             for (const m of analysisData.marker_analysis as { marker: string; value: number }[]) {
-              if (initialMap[m.marker] != null) {
-                deltas.push({ marker: m.marker, delta: m.value - initialMap[m.marker] });
+              const id = resolveMarkerId(m.marker);
+              if (initialMap[id] != null) {
+                deltas.push({ marker: id, delta: m.value - initialMap[id] });
               }
             }
             deltas.sort((a, b) => b.delta - a.delta);

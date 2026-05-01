@@ -15,6 +15,7 @@ import { cn } from '@/lib/utils';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
+import { coerceMarkerStatus, resolveMarkerId, submittedMarkerIdSet } from '@/lib/marker-ids';
 import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import type { IconWeight } from '@phosphor-icons/react';
 
@@ -97,7 +98,9 @@ export default async function LabPage() {
 
   const prevMarkers: Record<string, number> = {};
   if (previous?.marker_analysis) {
-    for (const m of previous.marker_analysis) prevMarkers[m.marker] = m.value;
+    for (const m of previous.marker_analysis) {
+      prevMarkers[resolveMarkerId(m.marker)] = m.value;
+    }
   }
 
   // ── Empty state ──────────────────────────────────────────────────────────
@@ -205,7 +208,8 @@ export default async function LabPage() {
 
   const grouped: Record<string, MarkerAnalysis[]> = {};
   for (const m of latest.marker_analysis ?? []) {
-    const cat = BIOMARKER_CATEGORY.get(m.marker) ?? 'metabolic';
+    const id = resolveMarkerId(m.marker);
+    const cat = BIOMARKER_CATEGORY.get(id) ?? 'metabolic';
     if (!grouped[cat]) grouped[cat] = [];
     grouped[cat].push(m);
   }
@@ -306,7 +310,7 @@ export default async function LabPage() {
                 style={{ background: c.severity === 'urgent' ? '#E88080' : c.severity === 'address' ? '#E8C470' : '#C8A2C8' }} />
               <div className="flex-1 min-w-0">
                 <div className="text-[11px] font-bold text-white tracking-widest uppercase mb-0.5">
-                  {c.marker.replace(/_/g, ' ')}
+                  {BIOMARKER_NAME.get(resolveMarkerId(c.marker)) ?? c.marker.replace(/_/g, ' ')}
                 </div>
                 <div className="text-[11px] text-[#9A9A9A]">{c.explanation}</div>
               </div>
@@ -325,7 +329,7 @@ export default async function LabPage() {
       {/* ── Recommended Next Tests ── */}
       {(() => {
         if (!labPanel) return null;
-        const submitted = new Set(latest.marker_analysis?.map(m => m.marker) ?? []);
+        const submitted = submittedMarkerIdSet(latest.marker_analysis);
         const essentialGaps = labPanel.essential.filter(m => !submitted.has(m.id));
         const recommendedGaps = labPanel.recommended.filter(m => !submitted.has(m.id));
         const extendedGaps = labPanel.extended.filter(m => !submitted.has(m.id)).slice(0, 5);
@@ -455,15 +459,18 @@ export default async function LabPage() {
 
                 <div className="divide-y divide-[rgba(255,255,255,0.03)]">
                   {markers.map(m => {
-                    const prevValue = prevMarkers[m.marker];
+                    const markerId = resolveMarkerId(m.marker);
+                    const prevValue = prevMarkers[markerId];
                     const diff = prevValue !== undefined ? m.value - prevValue : null;
+                    const heading = BIOMARKER_NAME.get(markerId) ?? m.marker.replace(/_/g, ' ');
+                    const rowStatus = coerceMarkerStatus(String(m.status));
                     return (
-                      <details key={m.marker} className="group">
+                      <details key={markerId} className="group">
                         <summary className="flex flex-col px-5 py-4 cursor-pointer list-none hover:bg-[rgba(255,255,255,0.02)] transition-colors">
                           <div className="flex items-start justify-between mb-1">
                             <div>
                               <span className="text-[11px] font-black text-white uppercase tracking-tight">
-                                {m.marker.replace(/_/g, ' ')}
+                                {heading}
                               </span>
                               <div className="flex items-center gap-2 mt-1">
                                 <span className="text-lg font-black text-white tabular-nums font-mono">{Number.isFinite(m.value) ? Math.round(m.value * 10) / 10 : m.value}</span>
@@ -476,11 +483,11 @@ export default async function LabPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
-                              <StatusBadge status={m.status} />
+                              <StatusBadge status={rowStatus} />
                               <CaretRight weight="duotone" size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
                             </div>
                           </div>
-                          <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={m.status} />
+                          <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={rowStatus} />
                         </summary>
                         <div className="px-5 pb-4 bg-[rgba(0,0,0,0.2)]">
                           <p className="text-[11px] text-[#9A9A9A] leading-relaxed italic border-l border-[rgba(200,162,200,0.3)] pl-3 py-1 mb-3">

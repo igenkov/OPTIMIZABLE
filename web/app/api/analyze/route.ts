@@ -5,16 +5,7 @@ import { calculateFreeTestosterone } from '@/lib/vermeulen';
 import { SYMPTOMS } from '@/constants/symptoms';
 import { calculateRiskScore, getRiskLevel, getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { buildPass1Prompt, buildSynthesisPrompt } from '@/lib/prompts/analysis';
-
-/* ── Resolve marker display name → canonical ID ── */
-const _nameToId = new Map<string, string>();
-BIOMARKERS.forEach(b => {
-  _nameToId.set(b.name.toLowerCase(), b.id);
-  _nameToId.set(b.id.toLowerCase(), b.id);
-});
-function resolveMarkerId(marker: string): string {
-  return _nameToId.get(marker.toLowerCase()) ?? marker;
-}
+import { normalizePersistedAnalysisMarkers, resolveMarkerId } from '@/lib/marker-ids';
 
 /* ── Server-side marker status computation ── */
 function computeMarkerStatus(
@@ -477,6 +468,9 @@ export async function POST(req: NextRequest) {
 
     // Merge both passes into final response
     const analysis = { ...pass1.parsed, ...pass2.parsed };
+
+    // Canonical marker ids on persisted JSON (display names break downstream joins)
+    normalizePersistedAnalysisMarkers(analysis as Record<string, unknown>);
 
     // ── Server-side overrides ──
 
