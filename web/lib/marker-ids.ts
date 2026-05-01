@@ -1,5 +1,4 @@
 import { BIOMARKERS } from '@/constants/biomarkers';
-import type { MarkerStatus } from '@/types';
 
 const LOWER_NAME_OR_ID_TO_CANONICAL = new Map<string, string>();
 for (const b of BIOMARKERS) {
@@ -60,13 +59,6 @@ export function mergedSubmittedMarkerIds(
   const s = submittedMarkerIdSet(markerAnalysis);
   for (const id of submittedIdsFromPanelValues(panelValues)) s.add(id);
   return s;
-}
-
-/** Map legacy model status strings to the three UI tiers. */
-export function coerceMarkerStatus(status: string): MarkerStatus {
-  if (status === 'optimal' || status === 'suboptimal' || status === 'out_of_range') return status;
-  if (status === 'attention' || status === 'address' || status === 'monitor') return 'suboptimal';
-  return 'out_of_range';
 }
 
 /**

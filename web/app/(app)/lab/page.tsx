@@ -15,7 +15,7 @@ import { cn } from '@/lib/utils';
 import { PanelCompletenessNote } from '@/components/ui/PanelCompletenessNote';
 import { getPersonalizedPanel, isExcluded } from '@/lib/scoring';
 import { BIOMARKERS, TRT_PANEL_IDS } from '@/constants/biomarkers';
-import { coerceMarkerStatus, mergedSubmittedMarkerIds, resolveMarkerId } from '@/lib/marker-ids';
+import { mergedSubmittedMarkerIds, resolveMarkerId } from '@/lib/marker-ids';
 import type { AnalysisReport, MarkerAnalysis, MarkerStatus, Phase1Data, Phase2Data, Phase3Data } from '@/types';
 import type { IconWeight } from '@phosphor-icons/react';
 
@@ -485,7 +485,6 @@ export default async function LabPage() {
                     const prevValue = prevMarkers[markerId];
                     const diff = prevValue !== undefined ? m.value - prevValue : null;
                     const heading = BIOMARKER_NAME.get(markerId) ?? m.marker.replace(/_/g, ' ');
-                    const rowStatus = coerceMarkerStatus(String(m.status));
                     return (
                       <details key={markerId} className="group">
                         <summary className="flex flex-col px-5 py-4 cursor-pointer list-none hover:bg-[rgba(255,255,255,0.02)] transition-colors">
@@ -505,11 +504,11 @@ export default async function LabPage() {
                               </div>
                             </div>
                             <div className="flex items-center gap-2 shrink-0">
-                              <StatusBadge status={rowStatus} />
+                              <StatusBadge status={m.status} />
                               <CaretRight weight="duotone" size={13} className="text-[#3A3A3A] group-open:rotate-90 transition-transform duration-200" />
                             </div>
                           </div>
-                          <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={rowStatus} />
+                          <RangeTrack value={m.value} standardRange={m.standard_range} optimalRange={m.optimal_range} status={m.status} />
                         </summary>
                         <div className="px-5 pb-4 bg-[rgba(0,0,0,0.2)]">
                           <p className="text-[11px] text-[#9A9A9A] leading-relaxed italic border-l border-[rgba(200,162,200,0.3)] pl-3 py-1 mb-3">
