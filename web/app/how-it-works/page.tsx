@@ -228,7 +228,7 @@ export default function HowItWorksPage() {
             <div>
               <div className="text-[10px] font-black uppercase tracking-[2px] text-white mb-2">Privacy & Data</div>
               <p className="text-[12px] text-[#6A6A6A] leading-relaxed">
-                Your health data is encrypted in transit and at rest. It is never sold, never used for advertising, and never shared with third parties. The AI analysis runs server-side — your bloodwork values are processed once to generate the report and are not retained by the AI provider.
+                Your health data is secured with industry-standard encryption in transit and at rest. It is never sold, never used for advertising, and never shared with third parties. The AI analysis runs server-side — your bloodwork values are processed once to generate the report and are not retained by the AI provider.
               </p>
             </div>
           </div>
@@ -250,7 +250,7 @@ export default function HowItWorksPage() {
       <footer className="border-t border-[rgba(255,255,255,0.05)] px-6 lg:px-12 py-5">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
           <div className="flex flex-wrap justify-center gap-8">
-            {['Clinical Grade Analysis', 'Encrypted & Private', 'AI-Powered Protocol', '90-Day Optimization'].map((text, i) => (
+            {['Clinical Grade Analysis', 'Isolated & Protected', 'AI-Powered Protocol', '90-Day Optimization'].map((text, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="w-1 h-1 rounded-full bg-[#C8A2C8] opacity-60" />
                 <span className="text-[9px] text-[#5A5A5A] uppercase tracking-widest">{text}</span>

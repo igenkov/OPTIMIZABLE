@@ -403,7 +403,7 @@ export default function ConvertPage() {
 
             {isPremiumSignup && (
               <p className="text-[9px] text-white/20 text-center mt-4 uppercase tracking-wide">
-                You will be redirected to secure checkout after account creation
+                You will be redirected to checkout after account creation
               </p>
             )}
             {isBetaSignup && (
@@ -789,7 +789,7 @@ export default function ConvertPage() {
               <Lightning size={16} weight="duotone" className="text-[#E8C470]" />
             </div>
             <p className="text-[9px] text-white/35 leading-relaxed uppercase font-bold tracking-tight">
-              Your data is encrypted and used exclusively for your personalized optimization protocol. This is a wellness tool, not a medical device. Cancel anytime.
+              Your data is isolated per-account and used exclusively for your personalized optimization protocol. This is a wellness tool, not a medical device. Cancel anytime.
             </p>
           </div>
         </div>

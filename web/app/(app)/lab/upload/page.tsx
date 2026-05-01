@@ -314,11 +314,6 @@ export default function LabUploadPage() {
               {isEditMode ? 'Edit Panel Data' : 'Enter Panel Data'}
             </h1>
             <div className="flex items-center gap-3 text-[9px] font-mono text-white/25 uppercase tracking-wider">
-              <span className="flex items-center gap-1.5">
-                <ShieldCheck size={12} className="text-[#4ade80]/70" />
-                AES-256 Encrypted
-              </span>
-              <span className="text-white/10">|</span>
               <span>{filled.length} Values Entered</span>
             </div>
           </div>

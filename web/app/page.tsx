@@ -191,7 +191,7 @@ export default async function Home() {
       <footer className="relative z-10 border-t border-white/[0.06] bg-surface-deep/80 py-2 backdrop-blur-md">
         <div className="mx-auto flex max-w-7xl flex-col items-center gap-2 px-4 sm:flex-row sm:flex-wrap sm:justify-between sm:gap-x-6 sm:gap-y-1 sm:px-6 lg:px-8">
           <div className="flex flex-wrap items-center justify-center gap-x-5 gap-y-1 sm:justify-start">
-            {['Deep Clinical Data Knowledge Base', 'Encrypted and Private', 'Personalized Approach', 'Iterative Progress Tracking'].map((text, i) => (
+            {['Deep Clinical Data Knowledge Base', 'Isolated & Protected', 'Personalized Approach', 'Iterative Progress Tracking'].map((text, i) => (
               <div key={i} className="flex items-center gap-2">
                 <div className="size-1 shrink-0 rounded-full bg-lilac/45" />
                 <span className="font-display text-[8px] uppercase leading-none tracking-[0.12em] text-dim sm:text-[9px] sm:tracking-[2px]">

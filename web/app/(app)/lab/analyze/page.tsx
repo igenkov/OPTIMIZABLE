@@ -9,7 +9,7 @@ import { resolveMarkerId } from '@/lib/marker-ids';
 
 const LOG_MESSAGES = [
   'Initializing neural biomarker engine...',
-  'Establishing secure clinical handshake...',
+  'Establishing clinical data connection...',
   'Mapping values to optimal physiological ranges...',
   'Calculating Free Testosterone Index...',
   'Analyzing LH/FSH signaling efficiency...',

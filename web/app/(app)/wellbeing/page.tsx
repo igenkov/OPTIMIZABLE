@@ -318,7 +318,7 @@ export default function WellbeingPage() {
                 </div>
                 <div>
                   <div className="text-sm font-black text-white uppercase tracking-wider">Mission Accomplished</div>
-                  <div className="text-[10px] font-mono text-[#4A4A4A]">BIO_DATA_SECURED // {today}</div>
+                  <div className="text-[10px] font-mono text-[#4A4A4A]">DATA_LOGGED // {today}</div>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-3 mb-4">

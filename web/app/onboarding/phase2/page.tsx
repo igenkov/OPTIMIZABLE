@@ -284,7 +284,7 @@ export default function Phase2Page() {
 
           <div className="mb-6 flex items-start gap-2 rounded-lg border border-white/[0.1] bg-black/30 p-3 backdrop-blur-sm">
             <Info size={14} className="mt-0.5 shrink-0 text-white/40" aria-hidden />
-            <p className="text-[9px] font-bold uppercase leading-tight tracking-widest text-white/45">Private data used strictly for hormonal calibration. Never shared.</p>
+            <p className="text-[9px] font-bold uppercase leading-tight tracking-widest text-white/45">Your data is isolated per-account and used strictly for hormonal calibration. Never shared.</p>
           </div>
 
           <SegmentedControl label="Morning Erections (Last 4 Weeks)" value={form.morning_erection_frequency} onChange={v => set('morning_erection_frequency', v)}

@@ -159,12 +159,12 @@ export default function SignupPage() {
                 </h1>
                 <p className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/45">
                   <Envelope size={12} className="shrink-0 text-[#C8A2C8]" aria-hidden />
-                  Secure Link Dispatched
+                  Verification Link Sent
                 </p>
               </header>
 
               <p className="mb-6 text-[11px] font-medium leading-relaxed text-white/45 lg:mb-7">
-                A secure initialization link has been sent to{' '}
+                A verification link has been sent to{' '}
                 <span className="font-semibold text-white/80">{email}</span>. Confirm your identity to unlock your
                 diagnostic workspace.
               </p>
@@ -185,7 +185,7 @@ export default function SignupPage() {
               </p>
               <div className="flex shrink-0 items-center gap-1.5 text-white/25">
                 <ShieldCheck size={16} className="text-[#4ade80]/70" aria-hidden />
-                <span className="text-[8px] font-black uppercase tracking-[0.2em]">System Secure</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.2em]">Connection Secure</span>
               </div>
             </div>
           </div>
@@ -241,7 +241,7 @@ export default function SignupPage() {
               </h1>
               <p className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/45">
                 <ShieldCheck size={12} className="shrink-0 text-[#C8A2C8]" aria-hidden />
-                Encrypted Data Initialization
+                Protected Account Setup
               </p>
             </header>
 
@@ -335,11 +335,11 @@ export default function SignupPage() {
               </p>
               <div className="flex items-center gap-1.5 text-white/25">
                 <ShieldCheck size={16} className="text-[#4ade80]/70" aria-hidden />
-                <span className="text-[8px] font-black uppercase tracking-[0.2em]">System Secure</span>
+                <span className="text-[8px] font-black uppercase tracking-[0.2em]">Connection Secure</span>
               </div>
             </div>
             <p className="text-center text-[8px] font-black uppercase leading-relaxed tracking-[0.12em] text-white/22 lg:text-left">
-              By initializing, you confirm this is a personal health dashboard. Data is encrypted and used only for your
+              By initializing, you confirm this is a personal health dashboard. Data is isolated per-account and used only for your
               90-day optimization protocol.
             </p>
           </div>

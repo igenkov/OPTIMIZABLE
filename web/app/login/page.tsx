@@ -148,7 +148,7 @@ export default function LoginPage() {
               </h1>
               <p className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.2em] text-white/45">
                 <Key size={12} className="shrink-0 text-[#C8A2C8]" aria-hidden />
-                Secure Session Authorization
+                Session Authorization
               </p>
             </header>
 
@@ -249,7 +249,7 @@ export default function LoginPage() {
             </p>
             <div className="flex items-center gap-1.5 text-white/25">
               <ShieldCheck size={16} className="text-[#4ade80]/70" aria-hidden />
-              <span className="text-[8px] font-black uppercase tracking-[0.2em]">System Secure</span>
+              <span className="text-[8px] font-black uppercase tracking-[0.2em]">Connection Secure</span>
             </div>
           </div>
         </div>
